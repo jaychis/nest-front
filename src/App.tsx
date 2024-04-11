@@ -3,6 +3,7 @@ import "./App.css";
 import GlobalBar from "./pages/Global/GlobalBar";
 import GlobalSideBar from "./pages/Global/GlobalSideBar";
 import BoardList from "./pages/Board/BoardList";
+import Card from "./components/Card";
 
 function App() {
   return (
