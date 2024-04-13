@@ -67,6 +67,7 @@ const BoardList = () => {
   }, []);
 
   useEffect(() => console.log("list : ", list), [list]);
+
   return (
     <>
       <MainContainer>

@@ -1,7 +1,10 @@
 import React from "react";
 import { FaSistrix, FaUserAlt, FaPlus } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const GlobalBar = () => {
+  const navigate = useNavigate();
+  const postSubmit = () => navigate("/submit");
   return (
     <nav
       style={{
@@ -46,7 +49,7 @@ const GlobalBar = () => {
       <div style={{ display: "flex", alignItems: "center" }}>
         <FaUserAlt style={{ marginRight: "20px" }} /> {/* User Icon */}
         <button style={{ background: "none", border: "none" }}>
-          <FaPlus /> {/* Plus/Create Icon */}
+          <FaPlus onClick={postSubmit} /> {/* Plus/Create Icon */}
         </button>
       </div>
     </nav>
