@@ -5,6 +5,7 @@ import GlobalSideBar from "./pages/Global/GlobalSideBar";
 import BoardList from "./pages/Board/BoardList";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import BoardSubmit from "./pages/Board/BoardSubmit";
+import BoardRead from "./pages/Board/BoardRead";
 
 const Layout = () => {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="/" element={<Layout />} />
           {/*<Route path="login" element={<BoardSubmit />} />*/}
           <Route path="/submit" element={<BoardSubmit />} />
+          <Route path="/read" element={<BoardRead />} />
         </Routes>
       </Router>
     </>

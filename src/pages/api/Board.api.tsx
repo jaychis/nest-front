@@ -15,6 +15,16 @@ export const ListAPI = ({ take, lastId, category }: ListParams) => {
   return client.get(URL);
 };
 
+interface ReadParams {
+  readonly id: string;
+  readonly title: string;
+}
+export const ReadAPI = ({ id, title }: ReadParams) => {
+  const URL: string = `${BACK_URL}/boards/read?id=${id}&title=${title}`;
+
+  return client.get(URL);
+};
+
 export interface SubmitParams {
   readonly category: string;
   readonly title: string;
