@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import BoardBar from "./BoardBar";
 import { SubmitAPI, SubmitParams } from "../api/Board.api";
+import { useNavigate } from "react-router-dom";
 
 const BoardSubmit = () => {
+  const navigate = useNavigate();
   const [board, setBoard] = useState<SubmitParams>({
     title: "",
     content: "",
@@ -16,7 +18,7 @@ const BoardSubmit = () => {
     setBoard({
       ...board,
       category: "경제",
-      identifierId: "966f05ce-ae43-4b3c-b509-9edf3c36b3d0 ",
+      identifierId: "966f05ce-ae43-4b3c-b509-9edf3c36b3d0",
       nickname: "master2",
     });
   }, []);
@@ -35,13 +37,18 @@ const BoardSubmit = () => {
     console.log(board);
   }, [board]);
 
-  const handleSubmit = () => {
-    // event.preventDefault();
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     // Form 제출 로직
     SubmitAPI(board)
       .then((res) => {
-        const response = res.data;
-        console.log(response);
+        const response = res.data.response;
+        console.log("response : ", response);
+        console.log("res.status : ", res.status);
+
+        if (res.status === 201) {
+          navigate(`/read?id=${response.id}&title=${response.title}`);
+        }
       })
       .catch((err) => console.error(err));
   };
