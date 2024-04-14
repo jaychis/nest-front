@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaSistrix, FaUserAlt, FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 const GlobalBar = () => {
+  const [postHover, setPostHover] = useState<boolean>(false);
+  const [userHover, setUserHover] = useState<boolean>(false);
   const navigate = useNavigate();
   const postSubmit = () => navigate("/submit");
+
   return (
     <nav
       style={{
@@ -47,9 +50,26 @@ const GlobalBar = () => {
 
       {/* Navigation Icons */}
       <div style={{ display: "flex", alignItems: "center" }}>
-        <FaUserAlt style={{ marginRight: "20px" }} /> {/* User Icon */}
-        <button style={{ background: "none", border: "none" }}>
-          <FaPlus onClick={postSubmit} /> {/* Plus/Create Icon */}
+        <button
+          style={{
+            background: userHover ? "#4F657755" : "white",
+            border: "none",
+          }}
+          onMouseEnter={() => setUserHover(true)}
+          onMouseLeave={() => setUserHover(false)}
+        >
+          <FaUserAlt style={{ marginRight: "20px" }} /> {/* User Icon */}
+        </button>
+        <button
+          onMouseEnter={() => setPostHover(true)}
+          onMouseLeave={() => setPostHover(false)}
+          style={{
+            background: postHover ? "#4F657755" : "white",
+            border: "none",
+          }}
+        >
+          <FaPlus onClick={postSubmit} />
+          {/* Plus/Create Icon */}
         </button>
       </div>
     </nav>
