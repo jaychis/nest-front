@@ -8,11 +8,11 @@ interface ListParams {
 export const ListAPI = ({ take, lastId, category }: ListParams) => {
   let URL: string = `${BACK_URL}/boards?take=${take}`;
 
-  if (lastId && category) {
-    URL += `&lastId=${lastId}&category=${category}`;
-  }
+  if (lastId) URL += `&lastId=${lastId}`;
+  if (category) URL += `&category=${category}`;
 
-  return client.get(URL);
+  const res = client.get(URL);
+  return res;
 };
 
 interface ReadParams {
@@ -36,6 +36,5 @@ export const SubmitAPI = (params: SubmitParams) => {
   const URL: string = `${BACK_URL}/boards/`;
 
   const res = client.post(URL, params);
-  console.log("res : ", res);
   return res;
 };

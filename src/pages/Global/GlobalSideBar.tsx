@@ -1,6 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const GlobalSideBar = () => {
+  const navigate = useNavigate();
+  const goHome = () => navigate("/");
   return (
     <div
       style={{
@@ -17,8 +20,12 @@ const GlobalSideBar = () => {
         style={{ display: "flex", justifyContent: "center", padding: "10px 0" }}
       >
         {/* Icon placeholders, replace with actual icons */}
-        <span style={{ fontSize: "24px" }}>🏠</span>
-        <span style={{ marginLeft: "8px" }}>Home</span>
+        <span onClick={goHome} style={{ fontSize: "24px" }}>
+          🏠
+        </span>
+        <span onClick={goHome} style={{ marginLeft: "8px" }}>
+          Home
+        </span>
       </div>
       <div
         style={{ display: "flex", justifyContent: "center", padding: "10px 0" }}

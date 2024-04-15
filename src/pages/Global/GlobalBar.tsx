@@ -20,7 +20,12 @@ const GlobalBar = () => {
       }}
     >
       {/* Logo */}
-      <img src="logo.png" alt="Logo" style={{ width: "50px" }} />
+      <img
+        src="logo.png"
+        alt="Logo"
+        style={{ width: "50px" }}
+        onClick={() => navigate("/")}
+      />
 
       {/* Search Bar */}
       <div

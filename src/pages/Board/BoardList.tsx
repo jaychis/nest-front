@@ -56,36 +56,68 @@ const BoardList = () => {
   const [list, setList] = useState<ListType[]>([]);
 
   useEffect(() => {
-    ListAPI({ take: 10, lastId: null, category: null })
+    ListAPI({ take: 3, lastId: null, category: null })
       .then((res) => {
-        const response = res.data.response.current_list;
-        console.log("response : ", response);
+        const response: ListType[] = res.data.response.current_list;
 
         setList(response);
       })
       .catch((err) => console.error(err));
-  }, []);
 
-  useEffect(() => console.log("list : ", list), [list]);
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+  const handleScroll = async () => {
+    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+
+    // 페이지 하단에 도달햇는지 확인
+    if (scrollTop + clientHeight >= scrollHeight - 5) {
+      // 데이타 불러오는 함수 호출
+      await fetchData();
+    }
+  };
+
+  window.addEventListener("scroll", handleScroll);
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const fetchData = async () => {
+    if (loading || list.length === 0) return;
+    setLoading(true);
+
+    const ID = list[list.length - 1].id;
+    ListAPI({ take: 3, lastId: ID, category: null })
+      .then((res) => {
+        const response: ListType[] = res.data.response.current_list;
+        const totalList: ListType[] = [...list, ...response];
+
+        setList(totalList);
+      })
+      .catch((err) => console.error(err));
+    setLoading(false);
+  };
 
   return (
     <>
       <MainContainer>
         <CardsContainer>
-          {list.map((el, index) => {
-            return (
-              <>
-                <Card
-                  key={index}
-                  category={el.category}
-                  title={el.title}
-                  nickname={el.nickname}
-                  createdAt={el.created_at}
-                  content={el.content}
-                />
-              </>
-            );
-          })}
+          {list
+            ? list.map((el, index) => {
+                return (
+                  <>
+                    <Card
+                      key={index}
+                      category={el.category}
+                      title={el.title}
+                      nickname={el.nickname}
+                      createdAt={el.created_at}
+                      content={el.content}
+                    />
+                  </>
+                );
+              })
+            : []}
         </CardsContainer>
       </MainContainer>
     </>
