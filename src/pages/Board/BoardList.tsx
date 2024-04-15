@@ -54,9 +54,10 @@ interface ListType {
 }
 const BoardList = () => {
   const [list, setList] = useState<ListType[]>([]);
+  const TAKE: number = 6;
 
   useEffect(() => {
-    ListAPI({ take: 3, lastId: null, category: null })
+    ListAPI({ take: TAKE, lastId: null, category: null })
       .then((res) => {
         const response: ListType[] = res.data.response.current_list;
 
@@ -73,7 +74,7 @@ const BoardList = () => {
     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
 
     // 페이지 하단에 도달햇는지 확인
-    if (scrollTop + clientHeight >= scrollHeight - 5) {
+    if (scrollTop + clientHeight >= scrollHeight - 15) {
       // 데이타 불러오는 함수 호출
       await fetchData();
     }
@@ -87,7 +88,7 @@ const BoardList = () => {
     setLoading(true);
 
     const ID = list[list.length - 1].id;
-    ListAPI({ take: 3, lastId: ID, category: null })
+    ListAPI({ take: TAKE, lastId: ID, category: null })
       .then((res) => {
         const response: ListType[] = res.data.response.current_list;
         const totalList: ListType[] = [...list, ...response];
