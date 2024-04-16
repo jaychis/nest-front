@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaSistrix, FaUserAlt, FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import Modal from "../../components/Modal";
 import Login from "../User/Login";
 
 const GlobalBar = () => {
@@ -9,8 +10,6 @@ const GlobalBar = () => {
 
   const [postHover, setPostHover] = useState<boolean>(false);
   const [userHover, setUserHover] = useState<boolean>(false);
-
-  const [isModalOpen, setModalOpen] = useState<boolean>(false);
 
   return (
     <nav
@@ -80,11 +79,7 @@ const GlobalBar = () => {
           <FaPlus onClick={postSubmit} />
           {/* Plus/Create Icon */}
         </button>
-        <button onClick={() => setModalOpen(true)}>Open Modal</button>
-        <Login isOpen={isModalOpen} onClose={() => setModalOpen(false)}>
-          <h2>Login</h2>
-          <p>This is modal content!</p>
-        </Login>
+        <Login />
       </div>
     </nav>
   );
