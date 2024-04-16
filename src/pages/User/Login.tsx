@@ -10,12 +10,13 @@ const Login = () => {
       <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)}>
         <div
           style={{
-            minWidth: "300px",
-            margin: "auto",
+            width: "80%",
+            height: "80%",
+            // margin: "auto",
             // border: "1px solid #ccc",
             padding: "20px",
-            boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-            borderRadius: "4px",
+            // boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+            // borderRadius: "4px",
           }}
         >
           <h2 style={{ textAlign: "center" }}>Login</h2>
@@ -34,9 +35,10 @@ const Login = () => {
                 border: "1px solid #ccc",
                 backgroundColor: "white",
                 minWidth: "100px",
-                width: "500px",
+                width: "95%",
                 borderRadius: "10px",
               }}
+              onClick={() => alert("Continue with Google")}
             >
               Continue with Google
             </button>
@@ -45,9 +47,10 @@ const Login = () => {
                 border: "1px solid #ccc",
                 backgroundColor: "white",
                 minWidth: "100px",
-                width: "500px",
+                width: "95%",
                 borderRadius: "10px",
               }}
+              onClick={() => alert("Continue with Apple")}
             >
               Continue with Apple
             </button>
@@ -56,9 +59,10 @@ const Login = () => {
                 border: "1px solid #ccc",
                 backgroundColor: "white",
                 minWidth: "100px",
-                width: "500px",
+                width: "95%",
                 borderRadius: "10px",
               }}
+              onClick={() => alert("Continue with Naver")}
             >
               Continue with Naver
             </button>
@@ -67,9 +71,10 @@ const Login = () => {
                 border: "1px solid #ccc",
                 backgroundColor: "white",
                 minWidth: "100px",
-                width: "500px",
+                width: "95%",
                 borderRadius: "10px",
               }}
+              onClick={() => alert("Continue with Kakao")}
             >
               Continue with Kakao
             </button>
@@ -96,41 +101,38 @@ const Login = () => {
           </div>
 
           <form>
-            <div
+            <input
               style={{
-                display: "flex",
-                alignItems: "center",
+                width: "95%",
+                padding: "10px",
+                border: "1px solid #ddd",
+                borderRadius: "4px",
                 marginBottom: "10px",
+                boxSizing: "border-box",
               }}
-            >
-              {/*<label*/}
-              {/*  htmlFor="email"*/}
-              {/*  style={{*/}
-              {/*    display: "block",*/}
-              {/*    marginRight: "10px",*/}
-              {/*  }}*/}
-              {/*>*/}
-              {/*  Email **/}
-              {/*</label>*/}
-              <input
-                style={{
-                  flex: 1,
-                  width: "100%",
-                  padding: "10px",
-                  border: "1px solid #ddd",
-                  borderRadius: "4px",
-                }}
-                placeholder="Email *"
-                type="email"
-                id="email"
-                name="email"
-                required
-              />
-            </div>
-            <div>
-              <label htmlFor="password">Password *</label>
-              <input type="password" id="password" name="password" required />
-            </div>
+              placeholder="Email *"
+              type="email"
+              id="email"
+              name="email"
+              required
+            />
+
+            <input
+              style={{
+                width: "95%",
+                padding: "10px",
+                border: "1px solid #ddd",
+                borderRadius: "4px",
+                marginBottom: "10px",
+                boxSizing: "border-box",
+              }}
+              placeholder="Password *"
+              type="password"
+              id="password"
+              name="password"
+              required
+            />
+
             <a href="/forgot-password">Forgot password?</a>
             <a href="/sign-up">Sign Up</a>
             <button type="submit">Log In</button>
