@@ -5,8 +5,9 @@ interface Props {
   readonly isOpen: boolean;
   readonly onClose: () => void;
   readonly buttonLabel: string;
+  readonly onSubmit: () => void;
 }
-const Modal = ({ children, isOpen, onClose, buttonLabel }: Props) => {
+const Modal = ({ children, isOpen, onClose, buttonLabel, onSubmit }: Props) => {
   if (!isOpen) return null;
 
   return (
@@ -76,6 +77,7 @@ const Modal = ({ children, isOpen, onClose, buttonLabel }: Props) => {
               }}
             >
               <button
+                type="submit"
                 style={{
                   padding: "20px",
                   width: "40vh",
@@ -83,7 +85,7 @@ const Modal = ({ children, isOpen, onClose, buttonLabel }: Props) => {
                   border: "none",
                   cursor: "pointer",
                 }}
-                onClick={() => alert(`${buttonLabel} 버튼 클릭`)}
+                onClick={() => onSubmit()}
               >
                 {buttonLabel}
               </button>

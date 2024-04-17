@@ -32,9 +32,9 @@ export interface SubmitParams {
   readonly identifierId: string;
   readonly nickname: string;
 }
-export const SubmitAPI = (params: SubmitParams) => {
+export const SubmitAPI = async (params: SubmitParams) => {
   const URL: string = `${BACK_URL}/boards/`;
 
-  const res = client.post(URL, params);
+  const res = await client.post(URL, params);
   return res;
 };

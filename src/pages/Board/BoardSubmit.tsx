@@ -81,10 +81,14 @@ const BoardSubmit = () => {
             </div>
             <div style={{ marginBottom: "20px" }}>
               <input
+                name={"title"}
                 type="text"
                 placeholder="제목"
                 onChange={(value) =>
-                  handleChange({ name: "title", value: value.target.value })
+                  handleChange({
+                    name: value.target.name,
+                    value: value.target.value,
+                  })
                 }
                 style={{
                   width: "100%",
@@ -98,8 +102,12 @@ const BoardSubmit = () => {
               />
               <textarea
                 placeholder="본문(선택사항)"
+                name={"content"}
                 onChange={(value) =>
-                  handleChange({ name: "content", value: value.target.value })
+                  handleChange({
+                    name: value.target.name,
+                    value: value.target.value,
+                  })
                 }
                 style={{
                   width: "100%",

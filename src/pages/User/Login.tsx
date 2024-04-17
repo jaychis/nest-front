@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import Modal from "../../components/Modal";
-import { LoginParams } from "../api/UserApi";
+import { LoginAPI, LoginParams } from "../api/UserApi";
 import { HandleChangeType } from "../../_common/HandleChangeType";
 
 const Login = () => {
@@ -13,6 +13,23 @@ const Login = () => {
 
   const handleChange = (event: HandleChangeType): void => {
     const { name, value } = event;
+
+    setLogin({
+      ...login,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = (event?: FormEvent<HTMLFormElement>) => {
+    if (event) event.preventDefault();
+
+    LoginAPI(login)
+      .then((res): void => {
+        const response = res.data.response;
+
+        if (res.status === 201 && response) setModalOpen(false);
+      })
+      .catch((err) => console.error(err));
   };
 
   return (
@@ -22,6 +39,7 @@ const Login = () => {
         buttonLabel={"Log In"}
         isOpen={isModalOpen}
         onClose={() => setModalOpen(false)}
+        onSubmit={handleSubmit}
       >
         <div
           style={{
@@ -137,7 +155,13 @@ const Login = () => {
               placeholder="Email *"
               type="email"
               id="email"
-              name="email"
+              name={"email"}
+              onChange={(value) =>
+                handleChange({
+                  name: value.target.name,
+                  value: value.target.value,
+                })
+              }
               required
             />
 
@@ -151,10 +175,16 @@ const Login = () => {
                 boxSizing: "border-box",
                 height: "4vh",
               }}
+              onChange={(value) =>
+                handleChange({
+                  name: value.target.name,
+                  value: value.target.value,
+                })
+              }
               placeholder="Password *"
               type="password"
               id="password"
-              name="password"
+              name={"password"}
               required
             />
 
