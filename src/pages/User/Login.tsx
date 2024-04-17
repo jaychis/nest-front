@@ -1,8 +1,19 @@
 import React, { useState } from "react";
 import Modal from "../../components/Modal";
+import { LoginParams } from "../api/UserApi";
+import { HandleChangeType } from "../../_common/HandleChangeType";
 
 const Login = () => {
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
+
+  const [login, setLogin] = useState<LoginParams>({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (event: HandleChangeType): void => {
+    const { name, value } = event;
+  };
 
   return (
     <>
@@ -115,12 +126,13 @@ const Login = () => {
           <form>
             <input
               style={{
-                width: "100%",
                 padding: "10px",
                 border: "1px solid #ddd",
                 borderRadius: "4px",
                 marginBottom: "10px",
                 boxSizing: "border-box",
+                width: "100%",
+                height: "4vh",
               }}
               placeholder="Email *"
               type="email"
@@ -137,6 +149,7 @@ const Login = () => {
                 borderRadius: "4px",
                 marginBottom: "10px",
                 boxSizing: "border-box",
+                height: "4vh",
               }}
               placeholder="Password *"
               type="password"
@@ -148,12 +161,17 @@ const Login = () => {
             <div
               style={{
                 width: "100%",
+                padding: "10px 0",
               }}
             >
-              <a href="/forgot-password">Forgot password?</a>
+              <a href="/forgot-password" style={{ fontSize: "20px" }}>
+                Forgot password?
+              </a>
             </div>
-            <div style={{ width: "100%" }}>
-              <a href="/sign-up">Sign Up</a>
+            <div style={{ width: "100%", padding: "10px 0" }}>
+              <a href="/sign-up" style={{ fontSize: "20px" }}>
+                Sign Up
+              </a>
             </div>
             {/*<button type="submit">Log In</button>*/}
           </form>

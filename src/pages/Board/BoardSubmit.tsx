@@ -1,7 +1,8 @@
 import React, { FormEvent, useEffect, useState } from "react";
 import BoardBar from "./BoardBar";
-import { SubmitAPI, SubmitParams } from "../api/Board.api";
+import { SubmitAPI, SubmitParams } from "../api/BoardApi";
 import { useNavigate } from "react-router-dom";
+import { HandleChangeType } from "../../_common/HandleChangeType";
 
 const BoardSubmit = () => {
   const navigate = useNavigate();
@@ -23,10 +24,7 @@ const BoardSubmit = () => {
     });
   }, []);
 
-  const handleChange = (event: {
-    readonly name: string;
-    readonly value: string;
-  }): void => {
+  const handleChange = (event: HandleChangeType): void => {
     const { name, value } = event;
     setBoard({
       ...board,

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ListAPI } from "../api/Board.api";
+import { ListAPI } from "../api/BoardApi";
 import Card from "../../components/Card";
 
 interface ContainerProps {

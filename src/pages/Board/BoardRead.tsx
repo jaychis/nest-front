@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import GlobalBar from "../Global/GlobalBar";
 import GlobalSideBar from "../Global/GlobalSideBar";
 import Card from "../../components/Card";
-import { ReadAPI } from "../api/Board.api";
+import { ReadAPI } from "../api/BoardApi";
 import { useLocation, useSearchParams } from "react-router-dom";
 
 interface CardType {
