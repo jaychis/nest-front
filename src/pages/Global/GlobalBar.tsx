@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { FaSistrix, FaUserAlt, FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import Modal from "../../components/Modal";
 import Login from "../User/Login";
 
 const GlobalBar = () => {

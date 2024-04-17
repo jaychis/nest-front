@@ -6,8 +6,12 @@ const Login = () => {
 
   return (
     <>
-      <button onClick={() => setModalOpen(true)}>Open Modal</button>
-      <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)}>
+      <button onClick={() => setModalOpen(true)}>Log In</button>
+      <Modal
+        buttonLabel={"Log In"}
+        isOpen={isModalOpen}
+        onClose={() => setModalOpen(false)}
+      >
         <div
           style={{
             width: "70%",

@@ -4,8 +4,9 @@ interface Props {
   readonly children: React.ReactNode;
   readonly isOpen: boolean;
   readonly onClose: () => void;
+  readonly buttonLabel: string;
 }
-const Modal = ({ children, isOpen, onClose }: Props) => {
+const Modal = ({ children, isOpen, onClose, buttonLabel }: Props) => {
   if (!isOpen) return null;
 
   return (
@@ -82,8 +83,9 @@ const Modal = ({ children, isOpen, onClose }: Props) => {
                   border: "none",
                   cursor: "pointer",
                 }}
+                onClick={() => alert(`${buttonLabel} 버튼 클릭`)}
               >
-                버튼
+                {buttonLabel}
               </button>
             </div>
           </div>
