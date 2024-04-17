@@ -10,11 +10,11 @@ const Login = () => {
       <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)}>
         <div
           style={{
-            width: "80%",
-            height: "80%",
+            width: "70%",
+            height: "100%",
             // margin: "auto",
             // border: "1px solid #ccc",
-            padding: "20px",
+            // padding: "20px",
             // boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
             // borderRadius: "4px",
           }}
@@ -35,8 +35,10 @@ const Login = () => {
                 border: "1px solid #ccc",
                 backgroundColor: "white",
                 minWidth: "100px",
-                width: "95%",
+                width: "100%",
                 borderRadius: "10px",
+                cursor: "pointer",
+                height: "4vh",
               }}
               onClick={() => alert("Continue with Google")}
             >
@@ -47,8 +49,10 @@ const Login = () => {
                 border: "1px solid #ccc",
                 backgroundColor: "white",
                 minWidth: "100px",
-                width: "95%",
+                width: "100%",
                 borderRadius: "10px",
+                cursor: "pointer",
+                height: "4vh",
               }}
               onClick={() => alert("Continue with Apple")}
             >
@@ -59,8 +63,10 @@ const Login = () => {
                 border: "1px solid #ccc",
                 backgroundColor: "white",
                 minWidth: "100px",
-                width: "95%",
+                width: "100%",
                 borderRadius: "10px",
+                cursor: "pointer",
+                height: "4vh",
               }}
               onClick={() => alert("Continue with Naver")}
             >
@@ -71,8 +77,10 @@ const Login = () => {
                 border: "1px solid #ccc",
                 backgroundColor: "white",
                 minWidth: "100px",
-                width: "95%",
+                width: "100%",
                 borderRadius: "10px",
+                cursor: "pointer",
+                height: "4vh",
               }}
               onClick={() => alert("Continue with Kakao")}
             >
@@ -103,7 +111,7 @@ const Login = () => {
           <form>
             <input
               style={{
-                width: "95%",
+                width: "100%",
                 padding: "10px",
                 border: "1px solid #ddd",
                 borderRadius: "4px",
@@ -119,7 +127,7 @@ const Login = () => {
 
             <input
               style={{
-                width: "95%",
+                width: "100%",
                 padding: "10px",
                 border: "1px solid #ddd",
                 borderRadius: "4px",
@@ -133,9 +141,17 @@ const Login = () => {
               required
             />
 
-            <a href="/forgot-password">Forgot password?</a>
-            <a href="/sign-up">Sign Up</a>
-            <button type="submit">Log In</button>
+            <div
+              style={{
+                width: "100%",
+              }}
+            >
+              <a href="/forgot-password">Forgot password?</a>
+            </div>
+            <div style={{ width: "100%" }}>
+              <a href="/sign-up">Sign Up</a>
+            </div>
+            {/*<button type="submit">Log In</button>*/}
           </form>
         </div>
       </Modal>

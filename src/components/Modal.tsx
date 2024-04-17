@@ -26,38 +26,68 @@ const Modal = ({ children, isOpen, onClose }: Props) => {
         }}
       >
         <div>
-          <button
-            style={{
-              alignSelf: "flex-end",
-              padding: "5px 10px",
-              background: "red",
-              color: "white",
-              border: "none",
-              borderRadius: "5px",
-              cursor: "pointer",
-            }}
-            onClick={onClose}
-          >
-            Close
-          </button>
-        </div>
-        <div>
           <div
             style={{
               backgroundColor: "#fff",
               borderRadius: "25px",
-              padding: "20px",
-              minWidth: "50vh",
+              padding: "25px",
+              minWidth: "55vh",
               minHeight: "65vh",
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
             }}
           >
-            {children}
+            <div style={{ display: "flex", height: "20%" }}>
+              <button
+                style={{
+                  alignSelf: "flex-end",
+                  padding: "20px",
+                  background: "red",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "35px",
+                  cursor: "pointer",
+                  marginLeft: "auto",
+                  marginRight: "10px",
+                }}
+                onClick={onClose}
+              >
+                Close
+              </button>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                // height: "650px",
+                height: "53vh",
+                justifyContent: "center",
+              }}
+            >
+              {children}
+            </div>
+            <div
+              style={{
+                display: "flex",
+                height: "20%",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <button
+                style={{
+                  padding: "20px",
+                  width: "40vh",
+                  borderRadius: "35px",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+              >
+                버튼
+              </button>
+            </div>
           </div>
         </div>
-        <div>버튼</div>
       </div>
     </>
   );
