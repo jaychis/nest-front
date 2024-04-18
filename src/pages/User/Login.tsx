@@ -199,9 +199,13 @@ const Login = () => {
               </a>
             </div>
             <div style={{ width: "100%", padding: "10px 0" }}>
-              <a href="/sign-up" style={{ fontSize: "20px" }}>
-                Sign Up
-              </a>
+              {/*<a href="/sign-up">Sign Up</a>*/}
+              <button
+                onClick={() => setModalOpen(true)}
+                style={{ fontSize: "20px" }}
+              >
+                Sign up
+              </button>
             </div>
             {/*<button type="submit">Log In</button>*/}
           </form>
