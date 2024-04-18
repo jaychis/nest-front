@@ -1,4 +1,6 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../store/store";
 
 interface Props {
   readonly children: React.ReactNode;
@@ -8,6 +10,9 @@ interface Props {
   readonly onSubmit: () => void;
 }
 const Modal = ({ children, isOpen, onClose, buttonLabel, onSubmit }: Props) => {
+  // const dispatch = useDispatch();
+  // const { isOpen } = useSelector((state: RootState) => state.modal);
+
   if (!isOpen) return null;
 
   return (

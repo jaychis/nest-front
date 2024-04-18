@@ -2,14 +2,22 @@ import React, { FormEvent, useEffect, useState } from "react";
 import Modal from "../../components/Modal";
 import { LoginAPI, LoginParams } from "../api/UserApi";
 import { HandleChangeType } from "../../_common/HandleChangeType";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store/store";
+import { ModalState, openModal } from "../../reducers/modalSlice";
 
 const Login = () => {
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
-
   const [login, setLogin] = useState<LoginParams>({
     email: "",
     password: "",
   });
+
+  // const dispatch = useDispatch();
+  // const modalState: ModalState = useSelector((state: RootState) => state.modal);
+  // useEffect(() => {
+  //   console.log("modalState : ", modalState);
+  // }, [modalState]);
 
   const handleChange = (event: HandleChangeType): void => {
     const { name, value } = event;
@@ -34,7 +42,13 @@ const Login = () => {
 
   return (
     <>
-      <button onClick={() => setModalOpen(true)}>Log In</button>
+      <button
+        onClick={() => {
+          setModalOpen(true);
+        }}
+      >
+        Log In
+      </button>
       <Modal
         buttonLabel={"Log In"}
         isOpen={isModalOpen}
