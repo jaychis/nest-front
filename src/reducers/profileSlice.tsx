@@ -9,14 +9,22 @@ interface ProfileState {
     phone: string;
     created_at: Date;
     updated_at: Date;
-    deleted_at?: Date | number;
-  } | null;
+    deleted_at?: Date | null;
+  };
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | undefined | null;
 }
 
 const initialState: ProfileState = {
-  data: null,
+  data: {
+    id: "",
+    email: "",
+    nickname: "",
+    phone: "",
+    created_at: new Date(),
+    updated_at: new Date(),
+    deleted_at: null,
+  },
   status: "idle",
   error: null,
 };
@@ -24,7 +32,17 @@ const initialState: ProfileState = {
 const profileSlice = createSlice({
   name: "profile",
   initialState,
-  reducers: {},
+  reducers: {
+    profile(state, action: PayloadAction<ProfileState>) {
+      state.data.id = action.payload.data.id;
+      state.data.email = action.payload.data.email;
+      state.data.nickname = action.payload.data.nickname;
+      state.data.phone = action.payload.data.phone;
+      state.data.created_at = action.payload.data.created_at;
+      state.data.updated_at = action.payload.data.updated_at;
+      state.data.deleted_at = action.payload.data.deleted_at;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(ProfileAPI.pending, (state) => {
