@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ProfileAPI } from "../pages/api/UserApi";
 
-interface ProfileState {
+export interface ProfileState {
   data: {
     id: string;
     email: string;
