@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaSistrix, FaUserAlt, FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import Login from "../User/Login";
+import UserModalForm from "../User/UserModalForm";
 
 const GlobalBar = () => {
   const navigate = useNavigate();
@@ -78,7 +79,8 @@ const GlobalBar = () => {
           <FaPlus onClick={postSubmit} />
           {/* Plus/Create Icon */}
         </button>
-        <Login />
+        {/*<Login />*/}
+        <UserModalForm />
       </div>
     </nav>
   );
