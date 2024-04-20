@@ -28,6 +28,23 @@ export interface LoginParams {
   readonly password: string;
 }
 
+// export const LoginAPI = createAsyncThunk(
+//   "LoginAPI",
+//   async (params: LoginParams) => {
+//     try {
+//       const URL: string = `${BACK_URL}/users/login`;
+//
+//       const res = await client.post(URL, params);
+//       return res.data.response;
+//     } catch (e: any) {
+//       if (!e.response) {
+//         throw error;
+//       }
+//       return isRejectedWithValue(e.response.data());
+//     }
+//   },
+// );
+
 export const LoginAPI = async (params: LoginParams) => {
   const URL: string = `${BACK_URL}/users/login`;
 
