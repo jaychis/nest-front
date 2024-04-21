@@ -3,7 +3,10 @@ import { SignupParams } from "../api/UserApi";
 import Modal from "../../components/Modal";
 import { HandleChangeType } from "../../_common/HandleChangeType";
 
-const Signup = () => {
+interface Props {
+  readonly onSwitchView: () => void;
+}
+const Signup = ({ onSwitchView }: Props) => {
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const [signup, setSignup] = useState<SignupParams>({
     email: "",

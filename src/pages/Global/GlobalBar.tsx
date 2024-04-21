@@ -79,8 +79,8 @@ const GlobalBar = () => {
           <FaPlus onClick={postSubmit} />
           {/* Plus/Create Icon */}
         </button>
-        <Login />
-        {/*<UserModalForm />*/}
+        {/*<Login />*/}
+        <UserModalForm />
       </div>
     </nav>
   );

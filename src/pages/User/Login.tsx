@@ -4,7 +4,10 @@ import { HandleChangeType } from "../../_common/HandleChangeType";
 import { useDispatch } from "react-redux";
 import { openSignup } from "../../reducers/userModalSlice";
 
-const Login = () => {
+interface Props {
+  readonly onSwitchView: () => void;
+}
+const Login = ({ onSwitchView }: Props) => {
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const [login, setLogin] = useState<LoginParams>({
     email: "",
@@ -255,10 +258,7 @@ const Login = () => {
                   </div>
                 </form>
                 <div style={{ width: "100%", padding: "10px 0" }}>
-                  <button
-                    onClick={() => dispatch(openSignup())}
-                    style={{ fontSize: "20px" }}
-                  >
+                  <button onClick={onSwitchView} style={{ fontSize: "20px" }}>
                     Sign up
                   </button>
                 </div>

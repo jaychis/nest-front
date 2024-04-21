@@ -10,63 +10,37 @@ import { openLogin } from "../../reducers/userModalSlice";
 
 type modalType = "login" | "signup";
 const UserModalForm = () => {
-  // const [isModalOpen, setModalOpen] = useState<boolean>(false);
-  // const [isModalType, setModalType] = useState<modalType>("login");
-  // const [login, setLogin] = useState<LoginParams>({
-  //   email: "",
-  //   password: "",
-  // });
-  //
-  // const dispatch = useDispatch();
-  // const { modalType } = useSelector((state: RootState) => state.userModal);
-  //
-  // useEffect(() => {
-  //   console.log("isModalType : ", isModalType);
-  //   console.log("modalType : ", modalType);
-  //   setModalType(modalType);
-  // }, [isModalType, modalType]);
-  //
-  // const handleChange = (event: HandleChangeType): void => {
-  //   const { name, value } = event;
-  //
-  //   setLogin({
-  //     ...login,
-  //     [name]: value,
-  //   });
-  // };
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+  const [activeView, setActiveView] = useState<modalType>("login");
 
-  // const handleSubmit = (event?: FormEvent<HTMLFormElement>) => {
-  //   if (event) event.preventDefault();
-  //
-  //   LoginAPI(login)
-  //     .then((res): void => {
-  //       const response = res.data.response;
-  //
-  //       if (res.status === 201 && response) setModalOpen(false);
-  //     })
-  //     .catch((err) => console.error(err));
-  // };
+  const switchView = (view: modalType) => {
+    setActiveView(view);
+  };
+
   return (
     <>
-      userModalForm
-      {/*<button*/}
-      {/*  onClick={() => {*/}
-      {/*    setModalOpen(true);*/}
-      {/*  }}*/}
-      {/*>*/}
-      {/*  Log In!!*/}
-      {/*</button>*/}
-      {/*<Modal*/}
-      {/*  buttonLabel={isModalType}*/}
-      {/*  isOpen={isModalOpen}*/}
-      {/*  onClose={() => {*/}
-      {/*    setModalOpen(false);*/}
-      {/*    dispatch(openLogin());*/}
-      {/*  }}*/}
-      {/*  // onSubmit={handleSubmit}*/}
-      {/*>*/}
-      {/*  {isModalType === "login" ? <Login /> : <Signup />}*/}
-      {/*</Modal>*/}
+      <button
+        onClick={() => {
+          setModalIsOpen(true);
+          setActiveView("login");
+        }}
+      >
+        Log In!!
+      </button>
+      <Modal
+        buttonLabel={activeView}
+        isOpen={modalIsOpen}
+        onClose={() => {
+          setModalIsOpen(false);
+        }}
+        // onSubmit={handleSubmit}
+      >
+        {activeView === "login" ? (
+          <Login onSwitchView={() => switchView("signup")} />
+        ) : (
+          <Signup onSwitchView={() => switchView("login")} />
+        )}
+      </Modal>
     </>
   );
 };
