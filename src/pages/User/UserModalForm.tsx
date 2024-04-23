@@ -20,7 +20,7 @@ const UserModalForm = () => {
           setActiveView("login");
         }}
       >
-        Log In!!
+        Log In
       </button>
 
       <Modal

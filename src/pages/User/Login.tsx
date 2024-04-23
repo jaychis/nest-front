@@ -12,8 +12,7 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
     email: "",
     password: "",
   });
-  const dispatch = useDispatch();
-  const regex =
+  const regex: RegExp =
     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
 
   const handleChange = (event: HandleChangeType): void => {
@@ -80,8 +79,8 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
               backgroundColor: "#fff",
               borderRadius: "25px",
               padding: "25px",
-              minWidth: "55vh",
-              minHeight: "65vh",
+              minWidth: "65vh",
+              minHeight: "75vh",
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
@@ -111,7 +110,7 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
             <div
               style={{
                 display: "flex",
-                height: "53vh",
+                height: "56vh",
                 justifyContent: "center",
               }}
             >
