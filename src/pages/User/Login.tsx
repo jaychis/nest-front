@@ -2,18 +2,19 @@ import React, { MouseEventHandler, useState } from "react";
 import { LoginAPI, LoginParams } from "../api/UserApi";
 import { HandleChangeType } from "../../_common/HandleChangeType";
 import { useDispatch } from "react-redux";
-import { openSignup } from "../../reducers/userModalSlice";
 
 interface Props {
   readonly onSwitchView: () => void;
+  readonly modalIsOpen: (state: boolean) => void;
 }
-const Login = ({ onSwitchView }: Props) => {
-  const [isModalOpen, setModalOpen] = useState<boolean>(false);
+const Login = ({ onSwitchView, modalIsOpen }: Props) => {
   const [login, setLogin] = useState<LoginParams>({
     email: "",
     password: "",
   });
   const dispatch = useDispatch();
+  const regex =
+    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
 
   const handleChange = (event: HandleChangeType): void => {
     const { name, value } = event;
@@ -27,27 +28,38 @@ const Login = ({ onSwitchView }: Props) => {
   const handleSubmit: MouseEventHandler<HTMLButtonElement> = (event) => {
     event.preventDefault();
 
-    LoginAPI(login)
-      .then((res): void => {
-        const response = res.data.response;
-        if (res.status === 201 && response) {
-          setModalOpen(false);
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    const isPasswordValid: boolean = regex.test(login.password);
+    if (isPasswordValid) {
+      LoginAPI(login)
+        .then((res): void => {
+          const data = res.data;
+          console.log("data : ", data);
+          const response = res.data.response;
+          console.log("login api response : ", response);
+
+          if (res.status === 201 && response) {
+            modalIsOpen(false);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    } else {
+      alert(
+        "비밀번호는 최소 8자, 하나 이상의 문자, 하나의 숫자 및 하나의 특수문자입니다.",
+      );
+    }
   };
 
   return (
     <>
-      <button
-        onClick={() => {
-          setModalOpen(true);
-        }}
-      >
-        Log In!!
-      </button>
+      {/*<button*/}
+      {/*  onClick={() => {*/}
+      {/*    setModalOpen(true);*/}
+      {/*  }}*/}
+      {/*>*/}
+      {/*  Log In!!*/}
+      {/*</button>*/}
       <div
         style={{
           position: "fixed",
@@ -55,12 +67,11 @@ const Login = ({ onSwitchView }: Props) => {
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundColor: "rgba(0, 0, 0, 0.7)",
+          backgroundColor: "rgba(0, 0, 0, 0.1)",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          // zIndex: 1000,
         }}
       >
         <div>
@@ -89,7 +100,10 @@ const Login = ({ onSwitchView }: Props) => {
                   marginLeft: "auto",
                   marginRight: "10px",
                 }}
-                onClick={() => setModalOpen(false)}
+                onClick={() => {
+                  console.log("close click");
+                  modalIsOpen(false);
+                }}
               >
                 Close
               </button>

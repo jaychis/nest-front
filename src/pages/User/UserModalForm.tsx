@@ -1,12 +1,7 @@
-import React, { FormEvent, useEffect, useState } from "react";
-import { LoginAPI, LoginParams } from "../api/UserApi";
-import { HandleChangeType } from "../../_common/HandleChangeType";
+import React, { useState } from "react";
 import Modal from "../../components/Modal";
 import Login from "./Login";
 import Signup from "./Signup";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store/store";
-import { openLogin } from "../../reducers/userModalSlice";
 
 type modalType = "login" | "signup";
 const UserModalForm = () => {
@@ -27,6 +22,7 @@ const UserModalForm = () => {
       >
         Log In!!
       </button>
+
       <Modal
         buttonLabel={activeView}
         isOpen={modalIsOpen}
@@ -36,9 +32,15 @@ const UserModalForm = () => {
         // onSubmit={handleSubmit}
       >
         {activeView === "login" ? (
-          <Login onSwitchView={() => switchView("signup")} />
+          <Login
+            onSwitchView={() => switchView("signup")}
+            modalIsOpen={setModalIsOpen}
+          />
         ) : (
-          <Signup onSwitchView={() => switchView("login")} />
+          <Signup
+            onSwitchView={() => switchView("login")}
+            modalIsOpen={setModalIsOpen}
+          />
         )}
       </Modal>
     </>
