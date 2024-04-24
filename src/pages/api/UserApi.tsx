@@ -1,4 +1,4 @@
-import { BACK_URL, client } from "./Client";
+import { client } from "./Client";
 import { createAsyncThunk, isRejectedWithValue } from "@reduxjs/toolkit";
 import { Simulate } from "react-dom/test-utils";
 import error = Simulate.error;
@@ -10,7 +10,7 @@ export const ProfileAPI = createAsyncThunk(
   "ProfileAPI",
   async ({ id }: ProfileParams, thunkAPI) => {
     try {
-      const URL: string = `${BACK_URL}/users/profile/${id}`;
+      const URL: string = `users/profile/${id}`;
 
       const res = await client.get(URL);
       return res.data.response;
@@ -46,7 +46,7 @@ export interface LoginParams {
 // );
 
 export const LoginAPI = async (params: LoginParams) => {
-  const URL: string = `${BACK_URL}/users/login`;
+  const URL: string = `users/login`;
 
   const res = await client.post(URL, params);
   return res;
@@ -60,7 +60,7 @@ export interface SignupParams {
   readonly phone: string;
 }
 export const SignupAPI = async (params: SignupParams) => {
-  const URL: string = `${BACK_URL}/users`;
+  const URL: string = `users`;
 
   const res = await client.post(URL, params);
   return res;

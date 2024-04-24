@@ -1,4 +1,4 @@
-import { BACK_URL, client } from "./Client";
+import { client } from "./Client";
 
 interface ListParams {
   readonly take: number;
@@ -6,7 +6,7 @@ interface ListParams {
   readonly category?: string | null;
 }
 export const ListAPI = ({ take, lastId, category }: ListParams) => {
-  let URL: string = `${BACK_URL}/boards?take=${take}`;
+  let URL: string = `boards?take=${take}`;
 
   if (lastId) URL += `&lastId=${lastId}`;
   if (category) URL += `&category=${category}`;
@@ -20,7 +20,7 @@ interface ReadParams {
   readonly title: string;
 }
 export const ReadAPI = ({ id, title }: ReadParams) => {
-  const URL: string = `${BACK_URL}/boards/read?id=${id}&title=${title}`;
+  const URL: string = `boards/read?id=${id}&title=${title}`;
 
   return client.get(URL);
 };
@@ -33,7 +33,7 @@ export interface SubmitParams {
   readonly nickname: string;
 }
 export const SubmitAPI = async (params: SubmitParams) => {
-  const URL: string = `${BACK_URL}/boards/`;
+  const URL: string = `boards/`;
 
   const res = await client.post(URL, params);
   return res;
