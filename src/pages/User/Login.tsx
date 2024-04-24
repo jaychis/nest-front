@@ -1,7 +1,7 @@
 import React, { MouseEventHandler, useState } from "react";
 import { LoginAPI, LoginParams } from "../api/UserApi";
 import { HandleChangeType } from "../../_common/HandleChangeType";
-import { useDispatch } from "react-redux";
+import { isValidPasswordFormat } from "../../_common/PasswordRegex";
 
 interface Props {
   readonly onSwitchView: () => void;
@@ -12,8 +12,6 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
     email: "",
     password: "",
   });
-  const regex: RegExp =
-    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
 
   const handleChange = (event: HandleChangeType): void => {
     const { name, value } = event;
@@ -27,7 +25,7 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
   const handleSubmit: MouseEventHandler<HTMLButtonElement> = (event) => {
     event.preventDefault();
 
-    const isPasswordValid: boolean = regex.test(login.password);
+    const isPasswordValid: boolean = isValidPasswordFormat(login.password);
     if (isPasswordValid) {
       LoginAPI(login)
         .then((res): void => {
@@ -40,9 +38,7 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
             modalIsOpen(false);
           }
         })
-        .catch((err) => {
-          console.error(err);
-        });
+        .catch((err): void => console.error(err));
     } else {
       alert(
         "비밀번호는 최소 8자, 하나 이상의 문자, 하나의 숫자 및 하나의 특수문자입니다.",
@@ -79,8 +75,8 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
               backgroundColor: "#fff",
               borderRadius: "25px",
               padding: "25px",
-              minWidth: "65vh",
-              minHeight: "75vh",
+              minWidth: "80vh",
+              minHeight: "85vh",
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
@@ -110,7 +106,7 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
             <div
               style={{
                 display: "flex",
-                height: "56vh",
+                height: "70vh",
                 justifyContent: "center",
               }}
             >

@@ -56,5 +56,12 @@ export interface SignupParams {
   readonly email: string;
   readonly nickname: string;
   readonly password: string;
+  readonly confirmPassword: string;
   readonly phone: string;
 }
+export const SignupAPI = async (params: SignupParams) => {
+  const URL: string = `${BACK_URL}/users`;
+
+  const res = await client.post(URL, params);
+  return res;
+};

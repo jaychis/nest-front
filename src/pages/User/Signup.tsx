@@ -1,7 +1,13 @@
-import React, { FormEvent, MouseEventHandler, useState } from "react";
-import { SignupParams } from "../api/UserApi";
+import React, {
+  FormEvent,
+  MouseEventHandler,
+  useEffect,
+  useState,
+} from "react";
+import { SignupAPI, SignupParams } from "../api/UserApi";
 import Modal from "../../components/Modal";
 import { HandleChangeType } from "../../_common/HandleChangeType";
+import { isValidPasswordFormat } from "../../_common/PasswordRegex";
 
 interface Props {
   readonly onSwitchView: () => void;
@@ -12,15 +18,47 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
     email: "",
     nickname: "",
     password: "",
+    confirmPassword: "",
     phone: "",
   });
 
   const handleChange = (event: HandleChangeType) => {
     const { name, value } = event;
+    // console.log(`name: ${name}, value: ${value}`);
+
+    setSignup({
+      ...signup,
+      [name]: value,
+    });
   };
+  useEffect(() => {
+    console.log("signup : ", signup);
+  }, [signup]);
 
   const handleSubmit: MouseEventHandler<HTMLButtonElement> = (event) => {
     if (event) event.preventDefault();
+
+    const isPasswordValid: boolean = isValidPasswordFormat(signup.password);
+    const isConfirmPasswordValid: boolean = isValidPasswordFormat(
+      signup.confirmPassword,
+    );
+
+    if (isPasswordValid && isConfirmPasswordValid) {
+      SignupAPI(signup)
+        .then((res): void => {
+          const response = res.data.response;
+          console.log("signup api response : ", response);
+
+          if (res.status === 201 && response) {
+            modalIsOpen(false);
+          }
+        })
+        .catch((err): void => console.error(err));
+    } else {
+      alert(
+        "비밀번호는 최소 8자, 하나 이상의 문자, 하나의 숫자 및 하나의 특수문자입니다.",
+      );
+    }
   };
 
   return (
@@ -45,8 +83,8 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
               backgroundColor: "#fff",
               borderRadius: "25px",
               padding: "25px",
-              minWidth: "65vh",
-              minHeight: "75vh",
+              minWidth: "80vh",
+              minHeight: "85vh",
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
@@ -76,7 +114,7 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
             <div
               style={{
                 display: "flex",
-                height: "56vh",
+                height: "70vh",
                 justifyContent: "center",
               }}
             >
@@ -244,7 +282,7 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
                     placeholder="Comfirm Password *"
                     type="password"
                     id="confirm password"
-                    name={"confirm password"}
+                    name={"confirmPassword"}
                     required
                   />
 
@@ -268,6 +306,29 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
                     type="text"
                     id="phone"
                     name={"phone"}
+                    required
+                  />
+
+                  <input
+                    style={{
+                      width: "100%",
+                      padding: "10px",
+                      border: "1px solid #ddd",
+                      borderRadius: "4px",
+                      marginBottom: "10px",
+                      boxSizing: "border-box",
+                      height: "4vh",
+                    }}
+                    onChange={(value) =>
+                      handleChange({
+                        name: value.target.name,
+                        value: value.target.value,
+                      })
+                    }
+                    placeholder="Nickname *"
+                    type="text"
+                    id="nickname"
+                    name={"nickname"}
                     required
                   />
                 </form>
