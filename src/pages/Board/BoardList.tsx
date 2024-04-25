@@ -103,22 +103,24 @@ const BoardList = () => {
     <>
       <MainContainer>
         <CardsContainer>
-          {list
-            ? list.map((el, index) => {
-                return (
-                  <>
-                    <Card
-                      key={index}
-                      category={el.category}
-                      title={el.title}
-                      nickname={el.nickname}
-                      createdAt={el.created_at}
-                      content={el.content}
-                    />
-                  </>
-                );
-              })
-            : []}
+          {list.length > 0 ? (
+            list.map((el, index) => {
+              return (
+                <>
+                  <Card
+                    key={index}
+                    category={el.category}
+                    title={el.title}
+                    nickname={el.nickname}
+                    createdAt={el.created_at}
+                    content={el.content}
+                  />
+                </>
+              );
+            })
+          ) : (
+            <div>텅!!</div>
+          )}
         </CardsContainer>
       </MainContainer>
     </>

@@ -1,17 +1,18 @@
-import React, {
-  FormEvent,
-  MouseEventHandler,
-  useEffect,
-  useState,
-} from "react";
+import React, { MouseEventHandler, useEffect, useState } from "react";
 import { SignupAPI, SignupParams } from "../api/UserApi";
-import Modal from "../../components/Modal";
+
 import { HandleChangeType } from "../../_common/HandleChangeType";
 import { isValidPasswordFormat } from "../../_common/PasswordRegex";
 
 interface Props {
   readonly onSwitchView: () => void;
   readonly modalIsOpen: (state: boolean) => void;
+}
+
+interface ValidSignupType {
+  readonly email: null | boolean;
+  readonly phone: null | boolean;
+  readonly nickname: null | boolean;
 }
 const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
   const [signup, setSignup] = useState<SignupParams>({
@@ -22,18 +23,54 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
     phone: "",
   });
 
+  const [validSignup, setValidSignup] = useState<ValidSignupType>({
+    email: null,
+    phone: null,
+    nickname: null,
+  });
+
+  // email, nickname, phone exist api 만들기
+  useEffect(() => {
+    if (signup.email.length >= 12) {
+      const timeOutEmail: NodeJS.Timeout = setTimeout(() => {
+        // api
+        console.log("email 동작");
+      }, 500); // 500ms
+
+      return () => clearTimeout(timeOutEmail);
+    }
+  }, [signup.email]);
+
+  useEffect(() => {
+    if (signup.nickname.length >= 3) {
+      const timeOutNickname: NodeJS.Timeout = setTimeout(() => {
+        // api
+        console.log("nickname 동작");
+      }, 500);
+
+      return () => clearTimeout(timeOutNickname);
+    }
+  }, [signup.nickname]);
+
+  useEffect(() => {
+    if (signup.phone.length >= 11) {
+      const timeOutPhone: NodeJS.Timeout = setTimeout(() => {
+        // api
+        console.log("phone 동작");
+      }, 500);
+
+      return () => clearTimeout(timeOutPhone);
+    }
+  }, [signup.phone]);
+
   const handleChange = (event: HandleChangeType) => {
     const { name, value } = event;
-    // console.log(`name: ${name}, value: ${value}`);
 
     setSignup({
       ...signup,
       [name]: value,
     });
   };
-  useEffect(() => {
-    console.log("signup : ", signup);
-  }, [signup]);
 
   const handleSubmit: MouseEventHandler<HTMLButtonElement> = (event) => {
     if (event) event.preventDefault();
@@ -217,28 +254,36 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
                 </div>
 
                 <form>
-                  <input
-                    style={{
-                      padding: "10px",
-                      border: "1px solid #ddd",
-                      borderRadius: "4px",
-                      marginBottom: "10px",
-                      boxSizing: "border-box",
-                      width: "100%",
-                      height: "4vh",
-                    }}
-                    placeholder="Email *"
-                    type="email"
-                    id="email"
-                    name={"email"}
-                    onChange={(value) =>
-                      handleChange({
-                        name: value.target.name,
-                        value: value.target.value,
-                      })
-                    }
-                    required
-                  />
+                  <div>
+                    <input
+                      style={{
+                        padding: "10px",
+                        border: "1px solid #ddd",
+                        borderRadius: "4px",
+                        marginBottom: "10px",
+                        boxSizing: "border-box",
+                        width: "100%",
+                        height: "4vh",
+                      }}
+                      placeholder="Email *"
+                      type="email"
+                      id="email"
+                      name={"email"}
+                      onChange={(value) =>
+                        handleChange({
+                          name: value.target.name,
+                          value: value.target.value,
+                        })
+                      }
+                      required
+                    />
+                    {validSignup.email === null ? null : validSignup.email ===
+                      true ? (
+                      <div>유효한 이메일 주소입니다.</div>
+                    ) : (
+                      <div>유효하지 않은 이메일 주소입니다.</div>
+                    )}
+                  </div>
 
                   <input
                     style={{
