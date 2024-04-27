@@ -1,8 +1,15 @@
 import React, { MouseEventHandler, useEffect, useState } from "react";
-import { SignupAPI, SignupParams } from "../api/UserApi";
-
+import {
+  ExistingEmailAPI,
+  ExistingNicknameAPI,
+  ExistingPhoneAPI,
+  SignupAPI,
+  SignupParams,
+} from "../api/UserApi";
 import { HandleChangeType } from "../../_common/HandleChangeType";
 import { isValidPasswordFormat } from "../../_common/PasswordRegex";
+import vLogo from "../../assets/img/v-check.png";
+import xLogo from "../../assets/img/x-check.png";
 
 interface Props {
   readonly onSwitchView: () => void;
@@ -33,9 +40,18 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
   useEffect(() => {
     if (signup.email.length >= 12) {
       const timeOutEmail: NodeJS.Timeout = setTimeout(() => {
-        // api
-        console.log("email 동작");
-      }, 500); // 500ms
+        const email: string = signup.email as string;
+        ExistingEmailAPI({ email })
+          .then((res) => {
+            const response = res.data.response?.existing_email;
+
+            setValidSignup({
+              ...validSignup,
+              email: response,
+            });
+          })
+          .catch((err) => console.error(err));
+      }, 1000); // 1000ms
 
       return () => clearTimeout(timeOutEmail);
     }
@@ -44,9 +60,18 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
   useEffect(() => {
     if (signup.nickname.length >= 3) {
       const timeOutNickname: NodeJS.Timeout = setTimeout(() => {
-        // api
-        console.log("nickname 동작");
-      }, 500);
+        const nickname: string = signup.nickname as string;
+        ExistingNicknameAPI({ nickname })
+          .then((res) => {
+            const response = res.data.response?.existing_nickname;
+
+            setValidSignup({
+              ...validSignup,
+              nickname: response,
+            });
+          })
+          .catch((err) => console.error(err));
+      }, 1000);
 
       return () => clearTimeout(timeOutNickname);
     }
@@ -55,9 +80,18 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
   useEffect(() => {
     if (signup.phone.length >= 11) {
       const timeOutPhone: NodeJS.Timeout = setTimeout(() => {
-        // api
-        console.log("phone 동작");
-      }, 500);
+        const phone: string = signup.phone as string;
+        ExistingPhoneAPI({ phone })
+          .then((res) => {
+            const response = res.data.response?.existing_phone;
+
+            setValidSignup({
+              ...validSignup,
+              phone: response,
+            });
+          })
+          .catch((err) => console.error(err));
+      }, 1000);
 
       return () => clearTimeout(timeOutPhone);
     }
@@ -84,7 +118,6 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
       SignupAPI(signup)
         .then((res): void => {
           const response = res.data.response;
-          console.log("signup api response : ", response);
 
           if (res.status === 201 && response) {
             modalIsOpen(false);
@@ -254,15 +287,22 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
                 </div>
 
                 <form>
-                  <div>
+                  <div
+                    style={{
+                      position: "relative",
+                      width: "100%",
+                      marginBottom: "10px",
+                    }}
+                  >
                     <input
                       style={{
+                        width: "100%",
                         padding: "10px",
+                        paddingRight: "50px",
                         border: "1px solid #ddd",
                         borderRadius: "4px",
-                        marginBottom: "10px",
+                        // marginBottom: "10px",
                         boxSizing: "border-box",
-                        width: "100%",
                         height: "4vh",
                       }}
                       placeholder="Email *"
@@ -279,9 +319,35 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
                     />
                     {validSignup.email === null ? null : validSignup.email ===
                       true ? (
-                      <div>유효한 이메일 주소입니다.</div>
+                      <div>
+                        <img
+                          src={vLogo}
+                          alt={"v logo"}
+                          style={{
+                            width: "30px",
+                            height: "25px",
+                            position: "absolute",
+                            right: "10px",
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                          }}
+                        />
+                      </div>
                     ) : (
-                      <div>유효하지 않은 이메일 주소입니다.</div>
+                      <div>
+                        <img
+                          src={xLogo}
+                          alt={"x logo"}
+                          style={{
+                            width: "30px",
+                            height: "25px",
+                            position: "absolute",
+                            right: "10px",
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                          }}
+                        />
+                      </div>
                     )}
                   </div>
 
@@ -331,51 +397,133 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
                     required
                   />
 
-                  <input
+                  <div
                     style={{
+                      position: "relative",
                       width: "100%",
-                      padding: "10px",
-                      border: "1px solid #ddd",
-                      borderRadius: "4px",
                       marginBottom: "10px",
-                      boxSizing: "border-box",
-                      height: "4vh",
                     }}
-                    onChange={(value) =>
-                      handleChange({
-                        name: value.target.name,
-                        value: value.target.value,
-                      })
-                    }
-                    placeholder="Phone *"
-                    type="text"
-                    id="phone"
-                    name={"phone"}
-                    required
-                  />
+                  >
+                    <input
+                      style={{
+                        width: "100%",
+                        padding: "10px",
+                        paddingRight: "50px",
+                        border: "1px solid #ddd",
+                        borderRadius: "4px",
+                        // marginBottom: "10px",
+                        boxSizing: "border-box",
+                        height: "4vh",
+                      }}
+                      onChange={(value) =>
+                        handleChange({
+                          name: value.target.name,
+                          value: value.target.value,
+                        })
+                      }
+                      placeholder="Phone *"
+                      type="text"
+                      id="phone"
+                      name={"phone"}
+                      required
+                    />
+                    {validSignup.phone === null ? null : validSignup.phone ===
+                      true ? (
+                      <div>
+                        <img
+                          src={vLogo}
+                          alt={"v logo"}
+                          style={{
+                            width: "30px",
+                            height: "25px",
+                            position: "absolute",
+                            right: "10px",
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <div>
+                        <img
+                          src={xLogo}
+                          alt={"x logo"}
+                          style={{
+                            width: "30px",
+                            height: "25px",
+                            position: "absolute",
+                            right: "10px",
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                          }}
+                        />
+                      </div>
+                    )}
+                  </div>
 
-                  <input
+                  <div
                     style={{
+                      position: "relative",
                       width: "100%",
-                      padding: "10px",
-                      border: "1px solid #ddd",
-                      borderRadius: "4px",
                       marginBottom: "10px",
-                      boxSizing: "border-box",
-                      height: "4vh",
                     }}
-                    onChange={(value) =>
-                      handleChange({
-                        name: value.target.name,
-                        value: value.target.value,
-                      })
-                    }
-                    placeholder="Nickname *"
-                    type="text"
-                    id="nickname"
-                    name={"nickname"}
-                    required
-                  />
+                  >
+                    <input
+                      style={{
+                        width: "100%",
+                        padding: "10px",
+                        paddingRight: "50px",
+                        border: "1px solid #ddd",
+                        borderRadius: "4px",
+                        // marginBottom: "10px",
+                        boxSizing: "border-box",
+                        height: "4vh",
+                      }}
+                      onChange={(value) =>
+                        handleChange({
+                          name: value.target.name,
+                          value: value.target.value,
+                        })
+                      }
+                      placeholder="Nickname *"
+                      type="text"
+                      id="nickname"
+                      name={"nickname"}
+                      required
+                    />
+                    {validSignup.nickname ===
+                    null ? null : validSignup.nickname === true ? (
+                      <div>
+                        <img
+                          src={vLogo}
+                          alt={"v logo"}
+                          style={{
+                            width: "30px",
+                            height: "25px",
+                            position: "absolute",
+                            right: "10px",
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <div>
+                        <img
+                          src={xLogo}
+                          alt={"x logo"}
+                          style={{
+                            width: "30px",
+                            height: "25px",
+                            position: "absolute",
+                            right: "10px",
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                          }}
+                        />
+                      </div>
+                    )}
+                  </div>
                 </form>
                 <div style={{ width: "100%", padding: "10px 0" }}>
                   <button onClick={onSwitchView} style={{ fontSize: "20px" }}>

@@ -6,19 +6,21 @@ import error = Simulate.error;
 export interface ExistingEmailParams {
   readonly email: string;
 }
-export const ExistingEmail = async ({ email }: ExistingEmailParams) =>
+export const ExistingEmailAPI = async ({ email }: ExistingEmailParams) =>
   await client.get(`users/existing/email/${email}`);
 
 export interface ExistingNicknameParams {
   readonly nickname: string;
 }
-export const ExistingNickname = async ({ nickname }: ExistingNicknameParams) =>
+export const ExistingNicknameAPI = async ({
+  nickname,
+}: ExistingNicknameParams) =>
   await client.get(`users/existing/nickname/${nickname}`);
 
 export interface ExistingPhoneParams {
   readonly phone: string;
 }
-export const ExistingPhone = async ({ phone }: ExistingPhoneParams) =>
+export const ExistingPhoneAPI = async ({ phone }: ExistingPhoneParams) =>
   await client.get(`users/existing/phone/${phone}`);
 
 export interface ProfileParams {
