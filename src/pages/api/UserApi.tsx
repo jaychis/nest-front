@@ -3,6 +3,24 @@ import { createAsyncThunk, isRejectedWithValue } from "@reduxjs/toolkit";
 import { Simulate } from "react-dom/test-utils";
 import error = Simulate.error;
 
+export interface ExistingEmailParams {
+  readonly email: string;
+}
+export const ExistingEmail = async ({ email }: ExistingEmailParams) =>
+  await client.get(`users/existing/email/${email}`);
+
+export interface ExistingNicknameParams {
+  readonly nickname: string;
+}
+export const ExistingNickname = async ({ nickname }: ExistingNicknameParams) =>
+  await client.get(`users/existing/nickname/${nickname}`);
+
+export interface ExistingPhoneParams {
+  readonly phone: string;
+}
+export const ExistingPhone = async ({ phone }: ExistingPhoneParams) =>
+  await client.get(`users/existing/phone/${phone}`);
+
 export interface ProfileParams {
   readonly id: string;
 }
