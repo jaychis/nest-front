@@ -45,7 +45,7 @@ const BoardSubmit = () => {
         console.log("res.status : ", res.status);
 
         if (res.status === 201) {
-          navigate(`/read?id=${response.id}&title=${response.title}`);
+          navigate(`/boards/read?id=${response.id}&title=${response.title}`);
         }
       })
       .catch((err) => console.error(err));

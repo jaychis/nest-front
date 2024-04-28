@@ -26,7 +26,7 @@ const GlobalBar = () => {
       <img
         src="logo.png"
         alt="Logo"
-        style={{ width: "50px" }}
+        style={{ width: "50px", cursor: "pointer" }}
         onClick={() => navigate("/")}
       />
 

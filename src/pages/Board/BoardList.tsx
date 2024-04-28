@@ -104,11 +104,11 @@ const BoardList = () => {
       <MainContainer>
         <CardsContainer>
           {list.length > 0 ? (
-            list.map((el, index) => {
+            list.map((el) => {
               return (
                 <>
                   <Card
-                    key={index}
+                    id={el.id}
                     category={el.category}
                     title={el.title}
                     nickname={el.nickname}

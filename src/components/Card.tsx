@@ -1,7 +1,8 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
-  readonly key: number;
+  readonly id: string;
   readonly category: string;
   readonly content: string;
   readonly nickname: string;
@@ -9,14 +10,9 @@ interface Props {
   readonly createdAt: Date;
 }
 
-const Card = ({
-  key,
-  category,
-  content,
-  createdAt,
-  nickname,
-  title,
-}: Props) => {
+const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
+  const navigate = useNavigate();
+
   return (
     <>
       <div
@@ -33,6 +29,7 @@ const Card = ({
           // padding: "10px",
           borderRadius: "10px",
           // overflow: "auto",
+          cursor: "pointer",
         }}
       >
         {/* Card Image */}
@@ -55,7 +52,9 @@ const Card = ({
             }}
           />
 
-          {nickname}
+          <div onClick={() => navigate(`/users/inquiry?nickname=${nickname}`)}>
+            {nickname}
+          </div>
         </div>
 
         {/* Card Content */}
@@ -74,9 +73,11 @@ const Card = ({
               textAlign: "left",
               whiteSpace: "normal",
             }}
+            onClick={() => navigate(`/boards/read?id=${id}&title=${title}`)}
           >
             {title}
           </h3>
+
           <p
             style={{
               textAlign: "left",

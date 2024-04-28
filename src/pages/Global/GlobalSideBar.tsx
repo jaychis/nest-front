@@ -20,24 +20,24 @@ const GlobalSideBar = () => {
         style={{ display: "flex", justifyContent: "center", padding: "10px 0" }}
       >
         {/* Icon placeholders, replace with actual icons */}
-        <span onClick={goHome} style={{ fontSize: "24px" }}>
+        <span onClick={goHome} style={{ fontSize: "24px", cursor: "pointer" }}>
           🏠
         </span>
-        <span onClick={goHome} style={{ marginLeft: "8px" }}>
+        <span onClick={goHome} style={{ marginLeft: "8px", cursor: "pointer" }}>
           Home
         </span>
       </div>
       <div
         style={{ display: "flex", justifyContent: "center", padding: "10px 0" }}
       >
-        <span style={{ fontSize: "24px" }}>🔥</span>
-        <span style={{ marginLeft: "8px" }}>Popular</span>
+        <span style={{ fontSize: "24px", cursor: "pointer" }}>🔥</span>
+        <span style={{ marginLeft: "8px", cursor: "pointer" }}>Popular</span>
       </div>
       <div
         style={{ display: "flex", justifyContent: "center", padding: "10px 0" }}
       >
-        <span style={{ fontSize: "24px" }}>🌐</span>
-        <span style={{ marginLeft: "8px" }}>All</span>
+        <span style={{ fontSize: "24px", cursor: "pointer" }}>🌐</span>
+        <span style={{ marginLeft: "8px", cursor: "pointer" }}>All</span>
       </div>
       <div style={{ borderBottom: "1px solid #ccc", margin: "20px 0" }}></div>
       <div style={{ fontWeight: "bold", paddingLeft: "10px" }}>RECENT</div>

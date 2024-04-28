@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import BoardSubmit from "./pages/Board/BoardSubmit";
 import BoardRead from "./pages/Board/BoardRead";
 import Profile from "./pages/User/Profile";
+import UsersInquiry from "./pages/User/UsersInquiry";
 
 const Layout = () => {
   return (
@@ -28,11 +29,12 @@ function App() {
           <Route path="/" element={<Layout />} />
 
           {/*게시판*/}
-          <Route path="/submit" element={<BoardSubmit />} />
-          <Route path="/read" element={<BoardRead />} />
+          <Route path="/boards/submit" element={<BoardSubmit />} />
+          <Route path="/boards/read" element={<BoardRead />} />
 
           {/*유저*/}
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/users/profile" element={<Profile />} />
+          <Route path={"/users/inquiry"} element={<UsersInquiry />} />
         </Routes>
       </Router>
     </>

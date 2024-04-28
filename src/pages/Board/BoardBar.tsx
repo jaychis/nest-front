@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 const BoardBar = () => {
   const navigate = useNavigate();
-  const postSubmit = () => navigate("/submit");
+  const postSubmit = () => navigate("/boards/submit");
 
   return (
     <nav
