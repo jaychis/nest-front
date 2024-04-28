@@ -3,6 +3,25 @@ import { createAsyncThunk, isRejectedWithValue } from "@reduxjs/toolkit";
 import { Simulate } from "react-dom/test-utils";
 import error = Simulate.error;
 
+export interface UsersInquiryParams {
+  readonly nickname: string;
+  readonly take: number;
+  readonly lastId?: string | null;
+}
+
+export const UsersInquiryAPI = async ({
+  nickname,
+  take,
+  lastId,
+}: UsersInquiryParams) => {
+  let URL: string = `users/inquiry?nickname=${nickname}&take=${take}`;
+  if (lastId) URL += `&lastId=${lastId}`;
+
+  const res = await client.get(URL);
+  console.log("res : ", res);
+
+  return res;
+};
 export interface ExistingEmailParams {
   readonly email: string;
 }
