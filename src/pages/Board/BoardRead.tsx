@@ -16,6 +16,18 @@ interface CardType {
   readonly updated_at: Date;
   readonly deleted_at?: Date | null;
 }
+
+interface CommentType {
+  readonly id: string;
+  readonly board_id: string;
+  readonly content: string;
+  readonly nickname: string;
+  readonly category: string;
+  readonly replies: [];
+  readonly created_at: Date;
+  readonly updated_at: Date;
+  readonly deleted_at: null | Date;
+}
 const BoardRead = () => {
   const [params, setParams] = useSearchParams();
   const [board, setBoard] = useState<CardType>({
@@ -25,6 +37,17 @@ const BoardRead = () => {
     content: "",
     title: "",
     nickname: "",
+    created_at: new Date(),
+    updated_at: new Date(),
+    deleted_at: null,
+  });
+  const [comment, setComment] = useState<CommentType>({
+    id: "",
+    board_id: "",
+    content: "",
+    nickname: "",
+    category: "",
+    replies: [],
     created_at: new Date(),
     updated_at: new Date(),
     deleted_at: null,
@@ -47,6 +70,29 @@ const BoardRead = () => {
     console.log("board : ", board);
   }, [board]);
 
+  const renderComments = (comments: CommentType[]) => {
+    return (
+      <div>
+        {comments.map((co) => {
+          return (
+            <>
+              <div>
+                <div>
+                  <img alt={`${co.nickname}'s avatar`} />
+                </div>
+                <div>
+                  <div>{co.nickname}</div>
+                  {/*<div>{co.updated_at}</div>*/}
+                  <div>{co.content}</div>
+                </div>
+              </div>
+            </>
+          );
+        })}
+      </div>
+    );
+  };
+
   return (
     <>
       <GlobalBar />
@@ -54,7 +100,7 @@ const BoardRead = () => {
         <GlobalSideBar />
         <div>
           <Card
-            key={1}
+            id={board.id}
             category={board.category}
             title={board.title}
             nickname={board.nickname}
