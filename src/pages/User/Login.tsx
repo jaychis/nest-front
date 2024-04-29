@@ -36,6 +36,8 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
 
           if (res.status === 201 && response) {
             modalIsOpen(false);
+            localStorage.setItem("access_token", response.access_token);
+            localStorage.setItem("refresh_token", response.refresh_token);
           }
         })
         .catch((err): void => console.error(err));
@@ -48,13 +50,6 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
 
   return (
     <>
-      {/*<button*/}
-      {/*  onClick={() => {*/}
-      {/*    setModalOpen(true);*/}
-      {/*  }}*/}
-      {/*>*/}
-      {/*  Log In!!*/}
-      {/*</button>*/}
       <div
         style={{
           position: "fixed",

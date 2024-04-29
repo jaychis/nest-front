@@ -6,7 +6,7 @@ import UserModalForm from "../User/UserModalForm";
 
 const GlobalBar = () => {
   const navigate = useNavigate();
-  const postSubmit = () => navigate("/submit");
+  const postSubmit = () => navigate("/boards/submit");
 
   const [postHover, setPostHover] = useState<boolean>(false);
   const [userHover, setUserHover] = useState<boolean>(false);
@@ -58,29 +58,36 @@ const GlobalBar = () => {
 
       {/* Navigation Icons */}
       <div style={{ display: "flex", alignItems: "center" }}>
-        <button
-          style={{
-            background: userHover ? "#4F657755" : "white",
-            border: "none",
-          }}
-          onMouseEnter={() => setUserHover(true)}
-          onMouseLeave={() => setUserHover(false)}
-        >
-          <FaUserAlt style={{ marginRight: "20px" }} /> {/* User Icon */}
-        </button>
-        <button
-          onMouseEnter={() => setPostHover(true)}
-          onMouseLeave={() => setPostHover(false)}
-          style={{
-            background: postHover ? "#4F657755" : "white",
-            border: "none",
-          }}
-        >
-          <FaPlus onClick={postSubmit} />
-          {/* Plus/Create Icon */}
-        </button>
+        {localStorage.getItem("access_token") ? (
+          <>
+            <button
+              style={{
+                background: userHover ? "#4F657755" : "white",
+                border: "none",
+              }}
+              onMouseEnter={() => setUserHover(true)}
+              onMouseLeave={() => setUserHover(false)}
+            >
+              <FaUserAlt style={{ marginRight: "20px" }} /> {/* User Icon */}
+            </button>
+            <button
+              onMouseEnter={() => setPostHover(true)}
+              onMouseLeave={() => setPostHover(false)}
+              style={{
+                background: postHover ? "#4F657755" : "white",
+                border: "none",
+              }}
+            >
+              <FaPlus onClick={postSubmit} />
+              {/* Plus/Create Icon */}
+            </button>
+          </>
+        ) : (
+          <>
+            <UserModalForm />
+          </>
+        )}
         {/*<Login />*/}
-        <UserModalForm />
       </div>
     </nav>
   );
