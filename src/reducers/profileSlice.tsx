@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ProfileAPI } from "../pages/api/UserApi";
+import { ReduxProfileAPI } from "../pages/api/UserApi";
 
 export interface ProfileState {
   data: {
@@ -45,17 +45,17 @@ const profileSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(ProfileAPI.pending, (state) => {
+      .addCase(ReduxProfileAPI.pending, (state) => {
         state.status = "loading";
       })
       .addCase(
-        ProfileAPI.fulfilled,
+        ReduxProfileAPI.fulfilled,
         (state, action: PayloadAction<typeof initialState.data>) => {
           state.status = "succeeded";
           state.data = action.payload;
         },
       )
-      .addCase(ProfileAPI.rejected, (state, action) => {
+      .addCase(ReduxProfileAPI.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

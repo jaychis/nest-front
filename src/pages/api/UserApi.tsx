@@ -45,8 +45,12 @@ export const ExistingPhoneAPI = async ({ phone }: ExistingPhoneParams) =>
 export interface ProfileParams {
   readonly id: string;
 }
-export const ProfileAPI = createAsyncThunk(
-  "ProfileAPI",
+
+export const ProfileAPI = async ({ id }: ProfileParams) =>
+  await client.get(`users/profile/${id}`);
+
+export const ReduxProfileAPI = createAsyncThunk(
+  "ReduxProfileAPI",
   async ({ id }: ProfileParams, thunkAPI) => {
     try {
       const URL: string = `users/profile/${id}`;

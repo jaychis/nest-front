@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
-import { ProfileAPI } from "../api/UserApi";
+import { ReduxProfileAPI } from "../api/UserApi";
 import { ProfileState } from "../../reducers/profileSlice";
 
 const Profile = () => {
@@ -12,7 +12,7 @@ const Profile = () => {
   }, [user]);
 
   useEffect(() => {
-    dispatch(ProfileAPI({ id: "54870c90-ab34-4555-ad44-338c0478670b" }));
+    dispatch(ReduxProfileAPI({ id: "54870c90-ab34-4555-ad44-338c0478670b" }));
   }, [dispatch]);
   return (
     <>

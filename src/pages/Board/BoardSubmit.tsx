@@ -3,6 +3,7 @@ import BoardBar from "./BoardBar";
 import { SubmitAPI, SubmitParams } from "../api/BoardApi";
 import { useNavigate } from "react-router-dom";
 import { HandleChangeType } from "../../_common/HandleChangeType";
+import { ProfileAPI } from "../api/UserApi";
 
 const BoardSubmit = () => {
   const navigate = useNavigate();
@@ -15,15 +16,24 @@ const BoardSubmit = () => {
   });
 
   useEffect(() => {
-    // 임시로 만들어놓은 고정값
-    setBoard({
-      ...board,
-      category: "경제",
-      identifierId: "966f05ce-ae43-4b3c-b509-9edf3c36b3d0",
-      nickname: "master2",
-    });
-  }, []);
+    ProfileAPI({ id: localStorage.getItem("access_token") as string })
+      .then((res) => {
+        const response = res.data.response;
+        console.log("response : ", response);
 
+        console.log("res.data : ", res.data);
+
+        setBoard({
+          ...board,
+          identifierId: response.identifier_id,
+          nickname: response.nickname,
+        });
+      })
+      .catch((err) => console.error(err));
+  }, []);
+  useEffect(() => {
+    console.log("board : ", board);
+  }, [board]);
   const handleChange = (event: HandleChangeType): void => {
     const { name, value } = event;
     setBoard({
@@ -31,18 +41,13 @@ const BoardSubmit = () => {
       [name]: value,
     });
   };
-  useEffect(() => {
-    console.log(board);
-  }, [board]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Form 제출 로직
+
     SubmitAPI(board)
       .then((res) => {
         const response = res.data.response;
-        console.log("response : ", response);
-        console.log("res.status : ", res.status);
 
         if (res.status === 201) {
           navigate(`/boards/read?id=${response.id}&title=${response.title}`);
