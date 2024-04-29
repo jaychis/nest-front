@@ -12,9 +12,11 @@ client.defaults.headers.post["Content-Type"] = "application/json";
 client.interceptors.request.use(
   async function (config) {
     const [accessToken, refreshToken] = await Promise.all([
-      sessionStorage.getItem("access_token"),
-      sessionStorage.getItem("refresh_token"),
+      localStorage.getItem("access_token"),
+      localStorage.getItem("refresh_token"),
     ]);
+
+    console.log(`accessToken: ${accessToken}, refreshToken: ${refreshToken}`);
 
     if (!accessToken && config.headers) {
       config.headers.Authorization = "";
@@ -37,8 +39,10 @@ client.interceptors.response.use(
   (response) => response,
   async (error) => {
     const { refreshToken } = error.config.headers;
+    console.log("refreshToken ::: ", refreshToken);
 
     if (error.response && error.response.status === 401) {
+      console.log("check");
       try {
         const { status, data } = await axios({
           url: `http://${BACK_URL}/users/refresh/token`,
@@ -48,13 +52,12 @@ client.interceptors.response.use(
           },
         });
 
-        if (status && data) {
-          await sessionStorage.setItem(
-            "access_token",
-            data.response.accessToken,
-          );
+        console.log(`status: ${status}, data: ${data}`);
 
-          await sessionStorage.setItem(
+        if (status && data) {
+          await localStorage.setItem("access_token", data.response.accessToken);
+
+          await localStorage.setItem(
             "refresh_token",
             data.response.refreshToken,
           );
