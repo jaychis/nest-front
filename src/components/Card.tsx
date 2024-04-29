@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface Props {
@@ -12,6 +12,7 @@ interface Props {
 
 const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
   const navigate = useNavigate();
+  const [isHovered, setIsHovered] = useState<boolean>(false);
 
   return (
     <>
@@ -23,14 +24,13 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
           alignItems: "flex-start",
           width: "800px",
           minHeight: "200px",
-          backgroundColor: "#fff",
-          boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)",
           margin: "10px",
-          // padding: "10px",
           borderRadius: "10px",
-          // overflow: "auto",
           cursor: "pointer",
+          backgroundColor: isHovered ? "#f0f0f0" : "white",
         }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
       >
         {/* Card Image */}
         <div
@@ -90,6 +90,15 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
           </p>
         </div>
       </div>
+      <hr
+        style={{
+          border: "none",
+          height: "2px",
+          backgroundColor: "#f0f0f0",
+          margin: "16px 0",
+          width: "800px", // Make sure the <hr> takes the full width
+        }}
+      />
     </>
   );
 };
