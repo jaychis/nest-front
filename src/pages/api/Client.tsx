@@ -38,14 +38,17 @@ client.interceptors.request.use(
 client.interceptors.response.use(
   (response) => response,
   async (error) => {
+    console.log("error : ", error);
     const { refreshToken } = error.config.headers;
     console.log("refreshToken ::: ", refreshToken);
 
+    console.log("error.response.status : ", error.response.status);
+    console.log("error.response : ", error.response);
     if (error.response && error.response.status === 401) {
       console.log("check");
       try {
         const { status, data } = await axios({
-          url: `http://${BACK_URL}/users/refresh/token`,
+          url: `${BACK_URL}/users/refresh/token`,
           method: "GET",
           headers: {
             Authorization: refreshToken,
@@ -66,6 +69,7 @@ client.interceptors.response.use(
         }
       } catch (e: any) {
         if (e instanceof AxiosError && e.response) {
+          console.log("catch check e : ", e);
           const code = e.response.status;
 
           if (code === 500) {

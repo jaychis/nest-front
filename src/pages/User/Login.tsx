@@ -32,12 +32,12 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
           const data = res.data;
           console.log("data : ", data);
           const response = res.data.response;
-          console.log("login api response : ", response);
 
           if (res.status === 201 && response) {
             modalIsOpen(false);
             localStorage.setItem("access_token", response.access_token);
             localStorage.setItem("refresh_token", response.refresh_token);
+            window.location.reload();
           }
         })
         .catch((err): void => console.error(err));
