@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { FaSistrix, FaUserAlt, FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import Login from "../User/Login";
 import UserModalForm from "../User/UserModalForm";
+import logo from "../../assets/img/logo.png";
 
 const GlobalBar = () => {
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ const GlobalBar = () => {
     >
       {/* Logo */}
       <img
-        src="logo.png"
+        src={logo}
         alt="Logo"
         style={{ width: "50px", cursor: "pointer" }}
         onClick={() => navigate("/")}
@@ -42,8 +42,8 @@ const GlobalBar = () => {
       >
         <input
           type="search"
-          placeholder="Search Reddit"
-          style={{ width: "35%", padding: "10px" }}
+          placeholder="Search"
+          style={{ width: "35%", padding: "10px", borderRadius: "20px" }}
         />
         <FaSistrix
           style={{

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import logo from "../assets/img/logo.png";
 
 interface Props {
   readonly id: string;
@@ -43,7 +44,7 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
           }}
         >
           <img
-            src="image_url_here.jpg" // Replace with your image URL
+            src={logo} // Replace with your image URL
             style={{
               width: "50px",
               height: "50px",
@@ -52,7 +53,10 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
             }}
           />
 
-          <div onClick={() => navigate(`/users/inquiry?nickname=${nickname}`)}>
+          <div
+            style={{ fontSize: "15px" }}
+            onClick={() => navigate(`/users/inquiry?nickname=${nickname}`)}
+          >
             {nickname}
           </div>
         </div>
@@ -72,6 +76,7 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
               fontWeight: "bold",
               textAlign: "left",
               whiteSpace: "normal",
+              fontSize: "30px",
             }}
             onClick={() => navigate(`/boards/read?id=${id}&title=${title}`)}
           >
@@ -84,6 +89,7 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
               whiteSpace: "normal",
               wordBreak: "break-word",
               width: "100%",
+              fontSize: "20px",
             }}
           >
             {content}
