@@ -13,8 +13,14 @@ interface Props {
 
 const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
   const navigate = useNavigate();
-  const [isHovered, setIsHovered] = useState<boolean>(false);
+  const [isCardCount, setIsCardCount] = useState<number>(0);
 
+  const [isCardHovered, setIsCardHovered] = useState<boolean>(false);
+  const [isCardUpHovered, setIsCardUpHovered] = useState<boolean>(false);
+  const [isCardDownHovered, setIsCardDownHovered] = useState<boolean>(false);
+  const [isCardCommentHovered, setIsCardCommentHovered] =
+    useState<boolean>(false);
+  const [isCardShareHovered, setIsCardShareHovered] = useState<boolean>(false);
   return (
     <>
       <div
@@ -28,10 +34,10 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
           margin: "10px",
           borderRadius: "10px",
           cursor: "pointer",
-          backgroundColor: isHovered ? "#f0f0f0" : "white",
+          backgroundColor: isCardHovered ? "#f0f0f0" : "white",
         }}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        onMouseEnter={() => setIsCardHovered(true)}
+        onMouseLeave={() => setIsCardHovered(false)}
       >
         {/* Card Image */}
         <div
@@ -64,11 +70,8 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
         {/* Card Content */}
         <div
           style={{
-            // padding: "0 10px",
             width: "100%",
             overflow: "visible",
-            // wordBreak: "break-all",
-            // overflowWrap: "break-word",
           }}
         >
           <h3
@@ -94,6 +97,50 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
           >
             {content}
           </p>
+        </div>
+
+        <div style={{ display: "flex" }}>
+          <div>
+            <button
+              onMouseEnter={() => setIsCardUpHovered(true)}
+              onMouseLeave={() => setIsCardUpHovered(false)}
+              style={{
+                borderColor: isCardUpHovered ? "red" : "#E0E0E0",
+                backgroundColor: "#D6D6D6",
+              }}
+            >
+              up
+            </button>
+            {isCardCount}
+            <button
+              onMouseEnter={() => setIsCardDownHovered(true)}
+              onMouseLeave={() => setIsCardDownHovered(false)}
+              style={{
+                borderColor: isCardDownHovered ? "blue" : "#E0E0E0",
+                backgroundColor: "#D6D6D6",
+              }}
+            >
+              down
+            </button>
+          </div>
+          <button
+            onMouseEnter={() => setIsCardCommentHovered(true)}
+            onMouseLeave={() => setIsCardCommentHovered(false)}
+            style={{
+              backgroundColor: isCardCommentHovered ? "#D6D6D6" : "#E0E0E0",
+            }}
+          >
+            댓글
+          </button>
+          <button
+            onMouseEnter={() => setIsCardShareHovered(true)}
+            onMouseLeave={() => setIsCardShareHovered(false)}
+            style={{
+              backgroundColor: isCardShareHovered ? "#D6D6D6" : "#E0E0E0",
+            }}
+          >
+            공유
+          </button>
         </div>
       </div>
       <hr
