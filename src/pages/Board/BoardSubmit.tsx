@@ -15,6 +15,7 @@ const BoardSubmit = () => {
     nickname: "",
   });
 
+  // 보드 식별자아이디 닉네임 수정
   useEffect(() => {
     ProfileAPI({ id: localStorage.getItem("access_token") as string })
       .then((res) => {
@@ -44,7 +45,9 @@ const BoardSubmit = () => {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    console.log("checkkkkkk");
 
+    console.log("handleSubmit board : ", board);
     SubmitAPI(board)
       .then((res) => {
         const response = res.data.response;
