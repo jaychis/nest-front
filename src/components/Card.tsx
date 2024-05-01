@@ -29,7 +29,7 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
           flexDirection: "column",
           justifyContent: "flex-start",
           alignItems: "flex-start",
-          width: "800px",
+          width: "1100px",
           minHeight: "200px",
           margin: "10px",
           borderRadius: "10px",
