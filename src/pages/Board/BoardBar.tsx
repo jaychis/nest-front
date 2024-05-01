@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaPlus, FaSistrix, FaUserAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import logo from "../../assets/img/logo.png";
+import UserModalForm from "../User/UserModalForm";
 
 const BoardBar = () => {
   const navigate = useNavigate();
   const postSubmit = () => navigate("/boards/submit");
+  const [postHover, setPostHover] = useState<boolean>(false);
+  const [userHover, setUserHover] = useState<boolean>(false);
 
   return (
     <nav
@@ -19,7 +23,7 @@ const BoardBar = () => {
     >
       {/* Logo */}
       <img
-        src="logo.png"
+        src={logo}
         alt="Logo"
         style={{ width: "50px" }}
         onClick={() => navigate("/")}
@@ -37,8 +41,8 @@ const BoardBar = () => {
       >
         <input
           type="search"
-          placeholder="Search Reddit"
-          style={{ width: "35%", padding: "10px" }}
+          placeholder="Search"
+          style={{ width: "35%", padding: "10px", borderRadius: "20px" }}
         />
         <FaSistrix
           style={{
@@ -53,10 +57,35 @@ const BoardBar = () => {
 
       {/* Navigation Icons */}
       <div style={{ display: "flex", alignItems: "center" }}>
-        <FaUserAlt style={{ marginRight: "20px" }} /> {/* User Icon */}
-        <button style={{ background: "none", border: "none" }}>
-          <FaPlus onClick={postSubmit} /> {/* Plus/Create Icon */}
-        </button>
+        {localStorage.getItem("access_token") ? (
+          <>
+            <button
+              style={{
+                background: userHover ? "#4F657755" : "white",
+                border: "none",
+              }}
+              onMouseEnter={() => setUserHover(true)}
+              onMouseLeave={() => setUserHover(false)}
+            >
+              <FaUserAlt style={{ marginRight: "20px" }} /> {/* User Icon */}
+            </button>
+            <button
+              onMouseEnter={() => setPostHover(true)}
+              onMouseLeave={() => setPostHover(false)}
+              style={{
+                background: postHover ? "#4F657755" : "white",
+                border: "none",
+              }}
+            >
+              <FaPlus onClick={postSubmit} />
+              {/* Plus/Create Icon */}
+            </button>
+          </>
+        ) : (
+          <>
+            <UserModalForm />
+          </>
+        )}
       </div>
     </nav>
   );
