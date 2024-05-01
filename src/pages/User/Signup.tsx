@@ -36,7 +36,6 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
     nickname: null,
   });
 
-  // email, nickname, phone exist api 만들기
   useEffect(() => {
     if (signup.email.length >= 12) {
       const timeOutEmail: NodeJS.Timeout = setTimeout(() => {
@@ -174,7 +173,6 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
                   marginRight: "10px",
                 }}
                 onClick={() => {
-                  console.log("close click");
                   modalIsOpen(false);
                 }}
               >

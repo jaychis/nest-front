@@ -29,14 +29,15 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
     if (isPasswordValid) {
       LoginAPI(login)
         .then((res): void => {
-          const data = res.data;
-          console.log("data : ", data);
           const response = res.data.response;
+          console.log("response ", response);
 
           if (res.status === 201 && response) {
             modalIsOpen(false);
             localStorage.setItem("access_token", response.access_token);
             localStorage.setItem("refresh_token", response.refresh_token);
+            localStorage.setItem("id", response.id);
+            localStorage.setItem("nickname", response.nickname);
             window.location.reload();
           }
         })

@@ -7,7 +7,6 @@ import logo from "../../assets/img/logo.png";
 const GlobalBar = () => {
   const navigate = useNavigate();
   const postSubmit = () => navigate("/boards/submit");
-
   const [postHover, setPostHover] = useState<boolean>(false);
   const [userHover, setUserHover] = useState<boolean>(false);
 
@@ -87,7 +86,6 @@ const GlobalBar = () => {
             <UserModalForm />
           </>
         )}
-        {/*<Login />*/}
       </div>
     </nav>
   );
