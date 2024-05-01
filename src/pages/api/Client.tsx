@@ -55,14 +55,18 @@ client.interceptors.response.use(
           },
         });
 
-        console.log(`status: ${status}, data: ${data}`);
+        console.log(`status: ${status}`);
+        console.log("data : ", data);
 
         if (status && data) {
-          await localStorage.setItem("access_token", data.response.accessToken);
+          await localStorage.setItem(
+            "access_token",
+            data.response.access_token,
+          );
 
           await localStorage.setItem(
             "refresh_token",
-            data.response.refreshToken,
+            data.response.refresh_token,
           );
 
           return await axios.request(error.conig);
