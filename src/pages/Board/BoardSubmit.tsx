@@ -3,7 +3,6 @@ import BoardBar from "./BoardBar";
 import { SubmitAPI, SubmitParams } from "../api/BoardApi";
 import { useNavigate } from "react-router-dom";
 import { HandleChangeType } from "../../_common/HandleChangeType";
-import { ProfileAPI } from "../api/UserApi";
 
 const BoardSubmit = () => {
   const navigate = useNavigate();
@@ -11,27 +10,10 @@ const BoardSubmit = () => {
     title: "",
     content: "",
     category: "",
-    identifierId: "",
-    nickname: "",
+    identifierId: localStorage.getItem("id") as string,
+    nickname: localStorage.getItem("nickname") as string,
   });
 
-  // 보드 식별자아이디 닉네임 수정
-  useEffect(() => {
-    ProfileAPI({ id: localStorage.getItem("access_token") as string })
-      .then((res) => {
-        const response = res.data.response;
-        console.log("response : ", response);
-
-        console.log("res.data : ", res.data);
-
-        setBoard({
-          ...board,
-          identifierId: response.identifier_id,
-          nickname: response.nickname,
-        });
-      })
-      .catch((err) => console.error(err));
-  }, []);
   useEffect(() => {
     console.log("board : ", board);
   }, [board]);
@@ -45,7 +27,6 @@ const BoardSubmit = () => {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("checkkkkkk");
 
     console.log("handleSubmit board : ", board);
     SubmitAPI(board)
