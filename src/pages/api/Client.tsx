@@ -38,14 +38,9 @@ client.interceptors.request.use(
 client.interceptors.response.use(
   (response) => response,
   async (error) => {
-    console.log("error : ", error);
     const { refreshToken } = error.config.headers;
-    console.log("refreshToken ::: ", refreshToken);
 
-    console.log("error.response.status : ", error.response.status);
-    console.log("error.response : ", error.response);
     if (error.response && error.response.status === 401) {
-      console.log("check");
       try {
         const { status, data } = await axios({
           url: `${BACK_URL}/users/refresh/token`,
@@ -54,9 +49,6 @@ client.interceptors.response.use(
             Authorization: refreshToken,
           },
         });
-
-        console.log(`status: ${status}`);
-        console.log("data : ", data);
 
         if (status && data) {
           await localStorage.setItem(
