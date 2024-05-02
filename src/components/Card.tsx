@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/img/logo.png";
+import { ReactionAPI, ReactionCountAPI } from "../pages/api/ReactionApi";
 
 interface Props {
   readonly id: string;
@@ -10,6 +11,8 @@ interface Props {
   readonly title: string;
   readonly createdAt: Date;
 }
+
+type ReactionType = "LIKE" | "DISLIKE" | null;
 
 const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
   const navigate = useNavigate();
@@ -21,6 +24,44 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
   const [isCardCommentHovered, setIsCardCommentHovered] =
     useState<boolean>(false);
   const [isCardShareHovered, setIsCardShareHovered] = useState<boolean>(false);
+
+  const [isReaction, setIsReaction] = useState<ReactionType>(null);
+  const reactionButton = async (type: ReactionType) => {
+    if (type !== null) {
+      const param = {
+        boardId: id,
+        userId: localStorage.getItem("id") as string,
+        type,
+      };
+      ReactionAPI(param)
+        .then((res) => {
+          const status: number = res.status;
+          console.log("status : ", status);
+
+          const type = res.data.response?.type;
+          console.log("type : ", type);
+          if (type === undefined) setIsReaction(null);
+          if (type === "LIKE") setIsReaction("LIKE");
+          if (type === "DISLIKE") setIsReaction("DISLIKE");
+        })
+        .catch((err) => console.error(err));
+    }
+  };
+
+  const goBoardRead = () => navigate(`/boards/read?id=${id}&title=${title}`);
+
+  useEffect(() => {
+    console.log("check");
+    ReactionCountAPI({
+      boardId: id,
+      userId: localStorage.getItem("id") as string,
+    }).then((res) => {
+      const resCount = res.data.response;
+      console.log("resCount : ", resCount);
+      setIsCardCount(resCount);
+    });
+  }, [isReaction]);
+
   return (
     <>
       <div
@@ -81,7 +122,7 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
               whiteSpace: "normal",
               fontSize: "30px",
             }}
-            onClick={() => navigate(`/boards/read?id=${id}&title=${title}`)}
+            onClick={goBoardRead}
           >
             {title}
           </h3>
@@ -100,7 +141,16 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
         </div>
 
         <div style={{ display: "flex" }}>
-          <div>
+          <div
+            style={{
+              backgroundColor:
+                isReaction === null
+                  ? "#C6C6C6"
+                  : isReaction === "LIKE"
+                    ? "red"
+                    : "blue",
+            }}
+          >
             <button
               onMouseEnter={() => setIsCardUpHovered(true)}
               onMouseLeave={() => setIsCardUpHovered(false)}
@@ -108,6 +158,7 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
                 borderColor: isCardUpHovered ? "red" : "#E0E0E0",
                 backgroundColor: "#D6D6D6",
               }}
+              onClick={() => reactionButton("LIKE")}
             >
               up
             </button>
@@ -119,6 +170,7 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
                 borderColor: isCardDownHovered ? "blue" : "#E0E0E0",
                 backgroundColor: "#D6D6D6",
               }}
+              onClick={() => reactionButton("DISLIKE")}
             >
               down
             </button>
@@ -129,6 +181,7 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
             style={{
               backgroundColor: isCardCommentHovered ? "#D6D6D6" : "#E0E0E0",
             }}
+            onClick={goBoardRead}
           >
             댓글
           </button>
