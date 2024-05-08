@@ -16,5 +16,8 @@ export interface ReactionParams {
   readonly userId: string;
 }
 
-export const ReactionAPI = async (params: ReactionParams) =>
-  await client.post("reactions/", params);
+export const ReactionAPI = async (params: ReactionParams) => {
+  const response = await client.post("reactions", params);
+
+  return response;
+};

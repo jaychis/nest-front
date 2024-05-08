@@ -67,10 +67,13 @@ const UsersInquiry = () => {
       take: 10,
     })
       .then((res) => {
-        const response = res.data.response?.current_list;
+        const status = res.data.status;
 
-        console.log("response : ", response);
-        setList(response);
+        if (status === 200) {
+          const response = res.data.response?.current_list;
+
+          setList(response);
+        }
       })
       .catch((err) => console.error(err));
   }, []);

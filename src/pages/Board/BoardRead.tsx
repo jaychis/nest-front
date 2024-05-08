@@ -178,7 +178,7 @@ const BoardRead = () => {
                 deleted_at={co.deleted_at}
               />
               <div style={{ marginLeft: "40px" }}>
-                {co.replies.length > 0 ? renderReplies(co.replies) : null}
+                {co.replies.length > 0 ? renderReplies(co.replies) : []}
               </div>
             </>
           );
@@ -217,7 +217,7 @@ const BoardRead = () => {
             createdAt={board.created_at}
             content={board.content}
           />
-          {board.comments?.length > 0 ? renderComments(board.comments) : null}
+          {board.comments?.length > 0 ? renderComments(board.comments) : []}
         </div>
       </div>
     </>
