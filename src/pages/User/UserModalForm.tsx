@@ -7,6 +7,7 @@ type modalType = "login" | "signup";
 const UserModalForm = () => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [activeView, setActiveView] = useState<modalType>("login");
+  const [isLoginHovered, setIsLoginHovered] = useState<boolean>(false);
 
   const switchView = (view: modalType) => {
     setActiveView(view);
@@ -14,14 +15,37 @@ const UserModalForm = () => {
 
   return (
     <>
-      <button
-        onClick={() => {
-          setModalIsOpen(true);
-          setActiveView("login");
+      <div
+        style={{
+          marginRight: "5px",
+          marginLeft: "5px",
+          backgroundColor: isLoginHovered ? "#C00000" : "red",
+          width: "70px",
+          height: "50px",
+          display: "flex",
+          justifyContent: "center", // 가로 중앙 정렬
+          alignItems: "center", // 세로 중앙 정렬
+          borderRadius: "30px",
         }}
       >
-        Log In
-      </button>
+        <button
+          onClick={() => {
+            setModalIsOpen(true);
+            setActiveView("login");
+          }}
+          style={{
+            height: "100%",
+            width: "100%",
+            border: "none",
+            backgroundColor: isLoginHovered ? "#C00000" : "red",
+            borderRadius: "30px",
+          }}
+          onMouseEnter={() => setIsLoginHovered(true)}
+          onMouseLeave={() => setIsLoginHovered(false)}
+        >
+          Log In
+        </button>
+      </div>
 
       <Modal
         buttonLabel={activeView}
