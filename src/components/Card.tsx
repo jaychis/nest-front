@@ -26,6 +26,7 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
   const [isCardShareHovered, setIsCardShareHovered] = useState<boolean>(false);
 
   const [isReaction, setIsReaction] = useState<ReactionType>(null);
+
   const reactionButton = async (type: ReactionType) => {
     if (type !== null) {
       const param = {
@@ -90,7 +91,7 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
           }}
         >
           <img
-            src={logo} // Replace with your image URL
+            src={logo}
             style={{
               width: "50px",
               height: "50px",
@@ -138,108 +139,114 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
             {content}
           </p>
         </div>
-
-        <div style={{ display: "flex" }}>
-          <div
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-start",
+          alignItems: "flex-start",
+          width: "1100px",
+        }}
+      >
+        <div
+          style={{
+            backgroundColor:
+              isReaction === null
+                ? "#C6C6C6"
+                : isReaction === "LIKE"
+                  ? "red"
+                  : "blue",
+            padding: "10px",
+            marginRight: "10px",
+            borderRadius: "20px",
+          }}
+        >
+          <button
+            onMouseEnter={() => setIsCardUpHovered(true)}
+            onMouseLeave={() => setIsCardUpHovered(false)}
             style={{
-              backgroundColor:
-                isReaction === null
-                  ? "#C6C6C6"
-                  : isReaction === "LIKE"
-                    ? "red"
-                    : "blue",
-              padding: "10px",
-              marginRight: "10px",
-              borderRadius: "20px",
+              borderColor: isCardUpHovered ? "red" : "#E0E0E0",
+              backgroundColor: "#D6D6D6",
+              // border: "none",
+              width: "65px",
+              height: "30px",
+              borderRadius: "30px",
             }}
+            onClick={() => reactionButton("LIKE")}
           >
-            <button
-              onMouseEnter={() => setIsCardUpHovered(true)}
-              onMouseLeave={() => setIsCardUpHovered(false)}
-              style={{
-                borderColor: isCardUpHovered ? "red" : "#E0E0E0",
-                backgroundColor: "#D6D6D6",
-                // border: "none",
-                width: "65px",
-                height: "30px",
-                borderRadius: "30px",
-              }}
-              onClick={() => reactionButton("LIKE")}
-            >
-              up
-            </button>
-            <span style={{ margin: "10px", width: "10px", height: "10px" }}>
-              {isCardCount}
-            </span>
-            <button
-              onMouseEnter={() => setIsCardDownHovered(true)}
-              onMouseLeave={() => setIsCardDownHovered(false)}
-              style={{
-                borderColor: isCardDownHovered ? "blue" : "#E0E0E0",
-                backgroundColor: "#D6D6D6",
-                // border: "none",
-                width: "65px",
-                height: "30px",
-                borderRadius: "30px",
-              }}
-              onClick={() => reactionButton("DISLIKE")}
-            >
-              down
-            </button>
-          </div>
-          <div
+            up
+          </button>
+          <span style={{ margin: "10px", width: "10px", height: "10px" }}>
+            {isCardCount}
+          </span>
+          <button
+            onMouseEnter={() => setIsCardDownHovered(true)}
+            onMouseLeave={() => setIsCardDownHovered(false)}
+            style={{
+              borderColor: isCardDownHovered ? "blue" : "#E0E0E0",
+              backgroundColor: "#D6D6D6",
+              // border: "none",
+              width: "65px",
+              height: "30px",
+              borderRadius: "30px",
+            }}
+            onClick={() => reactionButton("DISLIKE")}
+          >
+            down
+          </button>
+        </div>
+        <div
+          style={{
+            backgroundColor: isCardCommentHovered ? "#E0E0E0" : "#C6C6C6",
+            marginRight: "10px",
+            borderRadius: "30px",
+            width: "75px",
+            height: "50px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <button
+            onMouseEnter={() => setIsCardCommentHovered(true)}
+            onMouseLeave={() => setIsCardCommentHovered(false)}
             style={{
               backgroundColor: isCardCommentHovered ? "#E0E0E0" : "#C6C6C6",
-              marginRight: "10px",
+              border: "none",
+              height: "100%",
+              width: "100%",
               borderRadius: "30px",
-              width: "75px",
-              height: "50px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
             }}
+            onClick={goBoardRead}
           >
-            <button
-              onMouseEnter={() => setIsCardCommentHovered(true)}
-              onMouseLeave={() => setIsCardCommentHovered(false)}
-              style={{
-                backgroundColor: isCardCommentHovered ? "#E0E0E0" : "#C6C6C6",
-                border: "none",
-                height: "100%",
-                width: "100%",
-                borderRadius: "30px",
-              }}
-              onClick={goBoardRead}
-            >
-              댓글
-            </button>
-          </div>
-          <div
+            댓글
+          </button>
+        </div>
+        <div
+          style={{
+            backgroundColor: isCardShareHovered ? "#E0E0E0" : "#C6C6C6",
+            marginRight: "10px",
+            borderRadius: "30px",
+            width: "75px",
+            height: "50px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <button
+            onMouseEnter={() => setIsCardShareHovered(true)}
+            onMouseLeave={() => setIsCardShareHovered(false)}
             style={{
               backgroundColor: isCardShareHovered ? "#E0E0E0" : "#C6C6C6",
-              marginRight: "10px",
+              border: "none",
+              height: "100%",
+              width: "100%",
               borderRadius: "30px",
-              width: "75px",
-              height: "50px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
             }}
           >
-            <button
-              onMouseEnter={() => setIsCardShareHovered(true)}
-              onMouseLeave={() => setIsCardShareHovered(false)}
-              style={{
-                backgroundColor: isCardShareHovered ? "#E0E0E0" : "#C6C6C6",
-                border: "none",
-                height: "100%",
-                width: "100%",
-                borderRadius: "30px",
-              }}
-            >
-              공유
-            </button>
-          </div>
+            공유
+          </button>
         </div>
       </div>
       <hr
@@ -248,7 +255,7 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
           height: "2px",
           backgroundColor: "#f0f0f0",
           margin: "16px 0",
-          width: "800px", // Make sure the <hr> takes the full width
+          width: "1100px",
         }}
       />
     </>

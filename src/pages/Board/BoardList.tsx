@@ -12,11 +12,11 @@ const MainContainer = ({ children }: ContainerProps) => {
       style={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "center", // This centers the cards horizontally
-        justifyContent: "flex-start", // This aligns the cards to the top
-        paddingTop: "20px", // Add space at the top
-        height: "100vh", // Use the full height of the viewport
-        width: "100vw", // Use the full width of the viewport
+        alignItems: "center",
+        justifyContent: "flex-start",
+        paddingTop: "20px",
+        height: "100vh",
+        width: "100vw",
       }}
     >
       {children}
@@ -31,9 +31,9 @@ const CardsContainer = ({ children }: ContainerProps) => {
       style={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "center", // This centers the cards horizontally
-        width: "100%", // Full width of its parent
-        maxWidth: "600px", // Maximum width of the cards container
+        alignItems: "center",
+        width: "100%",
+        maxWidth: "1100px",
       }}
     >
       {children}
