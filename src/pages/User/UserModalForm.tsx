@@ -1,3 +1,4 @@
+import "./UserModalForm.css";
 import React, { useState } from "react";
 import Modal from "../../components/Modal";
 import Login from "./Login";
@@ -39,11 +40,13 @@ const UserModalForm = () => {
             border: "none",
             backgroundColor: isLoginHovered ? "#C00000" : "red",
             borderRadius: "30px",
+            fontWeight: "bold",
           }}
+          className="my-component"
           onMouseEnter={() => setIsLoginHovered(true)}
           onMouseLeave={() => setIsLoginHovered(false)}
         >
-          Log In
+          <span style={{ fontWeight: "10000" }}>Log In</span>
         </button>
       </div>
 
