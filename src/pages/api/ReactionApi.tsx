@@ -2,13 +2,9 @@ import { client } from "./Client";
 
 interface ReactionCountParams {
   readonly boardId: string;
-  readonly userId: string;
 }
-export const ReactionCountAPI = async ({
-  boardId,
-  userId,
-}: ReactionCountParams) =>
-  await client.get(`reactions?boardId=${boardId}&userId=${userId}`);
+export const ReactionCountAPI = async ({ boardId }: ReactionCountParams) =>
+  await client.get(`reactions?boardId=${boardId}`);
 
 export interface ReactionParams {
   readonly type: "LIKE" | "DISLIKE";

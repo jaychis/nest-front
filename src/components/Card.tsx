@@ -54,7 +54,6 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
     console.log("check");
     ReactionCountAPI({
       boardId: id,
-      userId: localStorage.getItem("id") as string,
     }).then((res) => {
       const resCount = res.data.response;
       console.log("resCount : ", resCount);
@@ -149,6 +148,9 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
                   : isReaction === "LIKE"
                     ? "red"
                     : "blue",
+              padding: "10px",
+              marginRight: "10px",
+              borderRadius: "20px",
             }}
           >
             <button
@@ -157,43 +159,87 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
               style={{
                 borderColor: isCardUpHovered ? "red" : "#E0E0E0",
                 backgroundColor: "#D6D6D6",
+                // border: "none",
+                width: "65px",
+                height: "30px",
+                borderRadius: "30px",
               }}
               onClick={() => reactionButton("LIKE")}
             >
               up
             </button>
-            {isCardCount}
+            <span style={{ margin: "10px", width: "10px", height: "10px" }}>
+              {isCardCount}
+            </span>
             <button
               onMouseEnter={() => setIsCardDownHovered(true)}
               onMouseLeave={() => setIsCardDownHovered(false)}
               style={{
                 borderColor: isCardDownHovered ? "blue" : "#E0E0E0",
                 backgroundColor: "#D6D6D6",
+                // border: "none",
+                width: "65px",
+                height: "30px",
+                borderRadius: "30px",
               }}
               onClick={() => reactionButton("DISLIKE")}
             >
               down
             </button>
           </div>
-          <button
-            onMouseEnter={() => setIsCardCommentHovered(true)}
-            onMouseLeave={() => setIsCardCommentHovered(false)}
+          <div
             style={{
-              backgroundColor: isCardCommentHovered ? "#D6D6D6" : "#E0E0E0",
-            }}
-            onClick={goBoardRead}
-          >
-            댓글
-          </button>
-          <button
-            onMouseEnter={() => setIsCardShareHovered(true)}
-            onMouseLeave={() => setIsCardShareHovered(false)}
-            style={{
-              backgroundColor: isCardShareHovered ? "#D6D6D6" : "#E0E0E0",
+              backgroundColor: isCardCommentHovered ? "#E0E0E0" : "#C6C6C6",
+              marginRight: "10px",
+              borderRadius: "30px",
+              width: "75px",
+              height: "50px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            공유
-          </button>
+            <button
+              onMouseEnter={() => setIsCardCommentHovered(true)}
+              onMouseLeave={() => setIsCardCommentHovered(false)}
+              style={{
+                backgroundColor: isCardCommentHovered ? "#E0E0E0" : "#C6C6C6",
+                border: "none",
+                height: "100%",
+                width: "100%",
+                borderRadius: "30px",
+              }}
+              onClick={goBoardRead}
+            >
+              댓글
+            </button>
+          </div>
+          <div
+            style={{
+              backgroundColor: isCardShareHovered ? "#E0E0E0" : "#C6C6C6",
+              marginRight: "10px",
+              borderRadius: "30px",
+              width: "75px",
+              height: "50px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <button
+              onMouseEnter={() => setIsCardShareHovered(true)}
+              onMouseLeave={() => setIsCardShareHovered(false)}
+              style={{
+                backgroundColor: isCardShareHovered ? "#E0E0E0" : "#C6C6C6",
+                border: "none",
+                height: "100%",
+                width: "100%",
+                borderRadius: "30px",
+              }}
+            >
+              공유
+            </button>
+          </div>
         </div>
       </div>
       <hr
