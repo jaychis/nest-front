@@ -152,7 +152,7 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
           style={{
             backgroundColor:
               isReaction === null
-                ? "#C6C6C6"
+                ? "#e0e0e0"
                 : isReaction === "LIKE"
                   ? "red"
                   : "blue",
@@ -165,8 +165,8 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
             onMouseEnter={() => setIsCardUpHovered(true)}
             onMouseLeave={() => setIsCardUpHovered(false)}
             style={{
-              borderColor: isCardUpHovered ? "red" : "#E0E0E0",
-              backgroundColor: "#D6D6D6",
+              borderColor: isCardUpHovered ? "red" : "#e0e0e0",
+              backgroundColor: isCardUpHovered ? "#c9c6c5" : "#e0e0e0",
               // border: "none",
               width: "65px",
               height: "30px",
@@ -183,8 +183,8 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
             onMouseEnter={() => setIsCardDownHovered(true)}
             onMouseLeave={() => setIsCardDownHovered(false)}
             style={{
-              borderColor: isCardDownHovered ? "blue" : "#E0E0E0",
-              backgroundColor: "#D6D6D6",
+              borderColor: isCardDownHovered ? "blue" : "#e0e0e0",
+              backgroundColor: isCardDownHovered ? "#c9c6c5" : "#e0e0e0",
               // border: "none",
               width: "65px",
               height: "30px",
@@ -197,7 +197,6 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
         </div>
         <div
           style={{
-            backgroundColor: isCardCommentHovered ? "#E0E0E0" : "#C6C6C6",
             marginRight: "10px",
             borderRadius: "30px",
             width: "75px",
@@ -211,7 +210,7 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
             onMouseEnter={() => setIsCardCommentHovered(true)}
             onMouseLeave={() => setIsCardCommentHovered(false)}
             style={{
-              backgroundColor: isCardCommentHovered ? "#E0E0E0" : "#C6C6C6",
+              backgroundColor: isCardCommentHovered ? "#c9c6c5" : "#e0e0e0",
               border: "none",
               height: "100%",
               width: "100%",
@@ -224,7 +223,6 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
         </div>
         <div
           style={{
-            backgroundColor: isCardShareHovered ? "#E0E0E0" : "#C6C6C6",
             marginRight: "10px",
             borderRadius: "30px",
             width: "75px",
@@ -238,7 +236,7 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
             onMouseEnter={() => setIsCardShareHovered(true)}
             onMouseLeave={() => setIsCardShareHovered(false)}
             style={{
-              backgroundColor: isCardShareHovered ? "#E0E0E0" : "#C6C6C6",
+              backgroundColor: isCardShareHovered ? "#c9c6c5" : "#e0e0e0",
               border: "none",
               height: "100%",
               width: "100%",
