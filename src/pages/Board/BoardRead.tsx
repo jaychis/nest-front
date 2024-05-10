@@ -43,7 +43,8 @@ interface ReplyType {
 
 const Reply = (re: ReplyType) => {
   const [isHovered, setIsHovered] = useState<boolean>(false);
-
+  const [isCommentHovered, setIsCommentHovered] = useState<boolean>(false);
+  const [isCancelHovered, setIsCancelHovered] = useState<boolean>(false);
   return (
     <>
       <div
@@ -221,6 +222,61 @@ const BoardRead = () => {
             createdAt={board.created_at}
             content={board.content}
           />
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              width: "100%",
+              margin: "10px",
+            }}
+          >
+            <textarea
+              style={{
+                width: "100%",
+                padding: "8px",
+                border: "3px solid #ccc",
+                borderRadius: "14px",
+                resize: "vertical",
+                boxSizing: "border-box",
+              }}
+            ></textarea>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                marginTop: "10px",
+              }}
+            >
+              <button
+                style={{
+                  padding: "6px 12px",
+                  marginLeft: "5px",
+                  border: "none",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  fontSize: "14px",
+                  backgroundColor: "#f5f5f5",
+                  color: "#333",
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                style={{
+                  padding: "6px 12px",
+                  marginLeft: "5px",
+                  border: "none",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  fontSize: "14px",
+                  backgroundColor: "#007BFF",
+                  color: "white",
+                }}
+              >
+                Comment
+              </button>
+            </div>
+          </div>
           {board.comments?.length > 0 ? renderComments(board.comments) : []}
         </div>
       </div>

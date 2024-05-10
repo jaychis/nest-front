@@ -63,7 +63,7 @@ const BoardList = () => {
       .then((res) => {
         const response: ListType[] = res.data.response.current_list;
 
-        setList([...mockingList, ...response]);
+        setList([...response, ...mockingList]);
       })
       .catch((err) => console.error(err));
 
