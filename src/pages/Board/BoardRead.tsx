@@ -4,6 +4,7 @@ import GlobalSideBar from "../Global/GlobalSideBar";
 import Card from "../../components/Card";
 import { ReadAPI } from "../api/BoardApi";
 import { useSearchParams } from "react-router-dom";
+import logo from "../../assets/img/panda_logo.png";
 
 interface CardType {
   readonly id: string;
@@ -49,7 +50,7 @@ const Reply = (re: ReplyType) => {
         style={{
           display: "flex",
           flexDirection: "column",
-          // alignItems: "center",
+
           fontFamily: "Arial, sans-serif",
           marginBottom: "10px",
         }}
@@ -57,12 +58,12 @@ const Reply = (re: ReplyType) => {
         <div style={{ display: "flex" }}>
           <div style={{ marginRight: "18px" }}>
             <img
-              src={""}
+              src={logo}
               alt={`${re.nickname}'s avatar`}
               style={{
                 width: "40px",
                 height: "40px",
-                borderRadius: "50%",
+                borderRadius: "30%",
               }}
             />
           </div>
@@ -101,12 +102,12 @@ const Comment = (co: CommentType) => {
         <div style={{ display: "flex" }}>
           <div style={{ marginRight: "18px" }}>
             <img
-              src={""}
+              src={logo}
               alt={`${co.nickname}'s avatar`}
               style={{
                 width: "40px",
                 height: "40px",
-                borderRadius: "50%",
+                borderRadius: "30%",
               }}
             />
           </div>
@@ -131,11 +132,11 @@ const Comment = (co: CommentType) => {
 const BoardRead = () => {
   const [params, setParams] = useSearchParams();
   const [board, setBoard] = useState<CardType>({
-    id: "",
+    id: params.get("id") as string,
     identifier_id: "",
     category: "",
-    content: "",
-    title: "",
+    content: params.get("content") as string,
+    title: params.get("title") as string,
     nickname: "",
     comments: [],
     created_at: new Date(),
@@ -144,9 +145,12 @@ const BoardRead = () => {
   });
 
   useEffect(() => {
+    const ID: string = board.id;
+    const TITLE: string = board.title;
+
     ReadAPI({
-      id: params.get("id") as string,
-      title: params.get("title") as string,
+      id: ID,
+      title: TITLE,
     })
       .then((res) => {
         const response = res.data.response;
