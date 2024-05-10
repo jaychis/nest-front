@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/img/logo.png";
+import logo from "../assets/img/panda_logo.png";
 import { ReactionAPI, ReactionCountAPI } from "../pages/api/ReactionApi";
 
 interface Props {
@@ -49,7 +49,8 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
     }
   };
 
-  const goBoardRead = () => navigate(`/boards/read?id=${id}&title=${title}`);
+  const goBoardRead = () =>
+    navigate(`/boards/read?id=${id}&title=${title}&content=${content}`);
 
   useEffect(() => {
     console.log("check");
@@ -97,6 +98,7 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
               height: "50px",
               objectFit: "cover",
               marginRight: "10px", // 이미지와 닉네임 사이의 간격
+              borderRadius: "30px",
             }}
           />
 

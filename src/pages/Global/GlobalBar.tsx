@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FaSistrix, FaUserAlt, FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import UserModalForm from "../User/UserModalForm";
-import logo from "../../assets/img/logo.png";
+import logo from "../../assets/img/panda_logo.png";
 
 const GlobalBar = () => {
   const navigate = useNavigate();
