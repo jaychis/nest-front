@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ListAPI } from "../api/BoardApi";
 import Card from "../../components/Card";
+import { mockingList } from "../../_common/mocking/BoardMocking";
 
 interface ContainerProps {
   children?: React.ReactNode;
@@ -50,8 +51,9 @@ interface ListType {
   readonly nickname: string;
   readonly created_at: Date;
   readonly updated_at: Date;
-  readonly deleted_at?: Date;
+  readonly deleted_at?: Date | null;
 }
+
 const BoardList = () => {
   const [list, setList] = useState<ListType[]>([]);
   const TAKE: number = 6;
@@ -61,7 +63,7 @@ const BoardList = () => {
       .then((res) => {
         const response: ListType[] = res.data.response.current_list;
 
-        setList(response);
+        setList([...mockingList, ...response]);
       })
       .catch((err) => console.error(err));
 
