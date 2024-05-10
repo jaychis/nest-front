@@ -12,6 +12,7 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
     email: "",
     password: "",
   });
+  const [isCloseHovered, setIsCloseHovered] = useState<boolean>(false);
 
   const handleChange = (event: HandleChangeType): void => {
     const { name, value } = event;
@@ -83,7 +84,7 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
                 style={{
                   alignSelf: "flex-end",
                   padding: "20px",
-                  background: "red",
+                  backgroundColor: isCloseHovered ? "#77C2E2" : "#84d7fb",
                   color: "white",
                   border: "none",
                   borderRadius: "35px",
@@ -91,6 +92,8 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
                   marginLeft: "auto",
                   marginRight: "10px",
                 }}
+                onMouseEnter={() => setIsCloseHovered(true)}
+                onMouseLeave={() => setIsCloseHovered(false)}
                 onClick={() => {
                   console.log("close click");
                   modalIsOpen(false);

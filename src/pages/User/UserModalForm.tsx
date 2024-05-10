@@ -20,7 +20,6 @@ const UserModalForm = () => {
         style={{
           marginRight: "5px",
           marginLeft: "5px",
-          backgroundColor: isLoginHovered ? "#C00000" : "red",
           width: "70px",
           height: "50px",
           display: "flex",
@@ -38,9 +37,10 @@ const UserModalForm = () => {
             height: "100%",
             width: "100%",
             border: "none",
-            backgroundColor: isLoginHovered ? "#C00000" : "red",
+            backgroundColor: isLoginHovered ? "#77C2E2" : "#84d7fb",
             borderRadius: "30px",
             fontWeight: "bold",
+            color: "white",
           }}
           className="my-component"
           onMouseEnter={() => setIsLoginHovered(true)}

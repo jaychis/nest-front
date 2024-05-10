@@ -29,6 +29,7 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
     confirmPassword: "",
     phone: "",
   });
+  const [isCloseHovered, setIsCloseHovered] = useState<boolean>(false);
 
   const [validSignup, setValidSignup] = useState<ValidSignupType>({
     email: null,
@@ -164,7 +165,7 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
                 style={{
                   alignSelf: "flex-end",
                   padding: "20px",
-                  background: "red",
+                  backgroundColor: isCloseHovered ? "#77C2E2" : "#84d7fb",
                   color: "white",
                   border: "none",
                   borderRadius: "35px",
@@ -172,6 +173,8 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
                   marginLeft: "auto",
                   marginRight: "10px",
                 }}
+                onMouseEnter={() => setIsCloseHovered(true)}
+                onMouseLeave={() => setIsCloseHovered(false)}
                 onClick={() => {
                   modalIsOpen(false);
                 }}
