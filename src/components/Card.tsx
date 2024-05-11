@@ -12,18 +12,18 @@ interface Props {
   readonly createdAt: Date;
 }
 
-type ReactionType = "LIKE" | "DISLIKE" | null;
+export type ReactionType = "LIKE" | "DISLIKE" | null;
 
 const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
   const navigate = useNavigate();
   const [isCardCount, setIsCardCount] = useState<number>(0);
-
   const [isCardHovered, setIsCardHovered] = useState<boolean>(false);
   const [isCardUpHovered, setIsCardUpHovered] = useState<boolean>(false);
   const [isCardDownHovered, setIsCardDownHovered] = useState<boolean>(false);
   const [isCardCommentHovered, setIsCardCommentHovered] =
     useState<boolean>(false);
   const [isCardShareHovered, setIsCardShareHovered] = useState<boolean>(false);
+  const [isCardSendHovered, setIsCardSendHovered] = useState<boolean>(false);
 
   const [isReaction, setIsReaction] = useState<ReactionType>(null);
 
@@ -176,7 +176,7 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
             }}
             onClick={() => reactionButton("LIKE")}
           >
-            up
+            좋아요
           </button>
           <span style={{ margin: "10px", width: "10px", height: "10px" }}>
             {isCardCount}
@@ -194,7 +194,7 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
             }}
             onClick={() => reactionButton("DISLIKE")}
           >
-            down
+            싫어요
           </button>
         </div>
         <div
@@ -246,6 +246,31 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
             }}
           >
             공유
+          </button>
+        </div>
+        <div
+          style={{
+            marginRight: "10px",
+            borderRadius: "30px",
+            width: "75px",
+            height: "50px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <button
+            onMouseEnter={() => setIsCardSendHovered(true)}
+            onMouseLeave={() => setIsCardSendHovered(false)}
+            style={{
+              backgroundColor: isCardSendHovered ? "#c9c6c5" : "#e0e0e0",
+              border: "none",
+              height: "100%",
+              width: "100%",
+              borderRadius: "30px",
+            }}
+          >
+            보내기
           </button>
         </div>
       </div>
