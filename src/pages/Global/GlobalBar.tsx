@@ -57,35 +57,57 @@ const GlobalBar = () => {
 
       {/* Navigation Icons */}
       <div style={{ display: "flex", alignItems: "center" }}>
-        {localStorage.getItem("access_token") ? (
-          <>
-            <button
-              style={{
-                background: userHover ? "#4F657755" : "white",
-                border: "none",
-              }}
-              onMouseEnter={() => setUserHover(true)}
-              onMouseLeave={() => setUserHover(false)}
-            >
-              <FaUserAlt style={{ marginRight: "20px" }} /> {/* User Icon */}
-            </button>
-            <button
-              onMouseEnter={() => setPostHover(true)}
-              onMouseLeave={() => setPostHover(false)}
-              style={{
-                background: postHover ? "#4F657755" : "white",
-                border: "none",
-              }}
-            >
-              <FaPlus onClick={postSubmit} />
-              {/* Plus/Create Icon */}
-            </button>
-          </>
-        ) : (
-          <>
-            <UserModalForm />
-          </>
-        )}
+        <button
+          style={{
+            background: userHover ? "#4F657755" : "white",
+            border: "none",
+          }}
+          onMouseEnter={() => setUserHover(true)}
+          onMouseLeave={() => setUserHover(false)}
+        >
+          <FaUserAlt style={{ marginRight: "20px" }} /> {/* User Icon */}
+        </button>
+        <button
+          onMouseEnter={() => setPostHover(true)}
+          onMouseLeave={() => setPostHover(false)}
+          style={{
+            background: postHover ? "#4F657755" : "white",
+            border: "none",
+          }}
+        >
+          <FaPlus onClick={postSubmit} />
+          {/* Plus/Create Icon */}
+        </button>
+        <UserModalForm />
+        {/*{localStorage.getItem("access_token") ? (*/}
+        {/*  <>*/}
+        {/*    <button*/}
+        {/*      style={{*/}
+        {/*        background: userHover ? "#4F657755" : "white",*/}
+        {/*        border: "none",*/}
+        {/*      }}*/}
+        {/*      onMouseEnter={() => setUserHover(true)}*/}
+        {/*      onMouseLeave={() => setUserHover(false)}*/}
+        {/*    >*/}
+        {/*      <FaUserAlt style={{ marginRight: "20px" }} /> /!* User Icon *!/*/}
+        {/*    </button>*/}
+        {/*    <button*/}
+        {/*      onMouseEnter={() => setPostHover(true)}*/}
+        {/*      onMouseLeave={() => setPostHover(false)}*/}
+        {/*      style={{*/}
+        {/*        background: postHover ? "#4F657755" : "white",*/}
+        {/*        border: "none",*/}
+        {/*      }}*/}
+        {/*    >*/}
+        {/*      <FaPlus onClick={postSubmit} />*/}
+        {/*      /!* Plus/Create Icon *!/*/}
+        {/*    </button>*/}
+        {/*  </>*/}
+        {/*) : (*/}
+        {/*  <>*/}
+        {/*    <UserModalForm />*/}
+        {/*  </>*/}
+        {/*)}*/}
       </div>
     </nav>
   );
