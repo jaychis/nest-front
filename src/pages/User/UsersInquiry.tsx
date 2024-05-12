@@ -55,6 +55,27 @@ interface CardType {
   readonly created_at: Date;
   readonly updated_at: Date;
   readonly deleted_at?: Date | null;
+
+  readonly reactions: {
+    id: string;
+    type: string;
+    user_id: string;
+    board_id: string;
+    created_at: Date;
+    updated_at: Date;
+    board: null | {
+      id: string;
+      identifier_id: string;
+      title: string;
+      content: string;
+      category: string;
+      nickname: string;
+      board_score: number;
+      created_at: Date;
+      updated_at: Date;
+      deleted_at: null | Date;
+    };
+  }[];
 }
 
 const UsersInquiry = () => {
@@ -96,6 +117,7 @@ const UsersInquiry = () => {
                       nickname={el.nickname}
                       createdAt={el.created_at}
                       content={el.content}
+                      reactions={el.reactions}
                     />
                   </>
                 );

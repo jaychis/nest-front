@@ -52,6 +52,27 @@ interface ListType {
   readonly created_at: Date;
   readonly updated_at: Date;
   readonly deleted_at?: Date | null;
+
+  readonly reactions: {
+    id: string;
+    type: string;
+    user_id: string;
+    board_id: string;
+    created_at: Date;
+    updated_at: Date;
+    board: null | {
+      id: string;
+      identifier_id: string;
+      title: string;
+      content: string;
+      category: string;
+      nickname: string;
+      board_score: number;
+      created_at: Date;
+      updated_at: Date;
+      deleted_at: null | Date;
+    };
+  }[];
 }
 
 const BoardList = () => {
@@ -62,8 +83,10 @@ const BoardList = () => {
     ListAPI({ take: TAKE, lastId: null, category: null })
       .then((res) => {
         const response: ListType[] = res.data.response.current_list;
+        console.log("list response : ", response);
 
-        setList([...response, ...mockingList]);
+        // setList([...response, ...mockingList]);
+        setList([...response]);
       })
       .catch((err) => console.error(err));
 
@@ -107,6 +130,7 @@ const BoardList = () => {
         <CardsContainer>
           {list.length > 0 ? (
             list.map((el) => {
+              console.log("el : ", el);
               return (
                 <>
                   <Card
@@ -116,6 +140,7 @@ const BoardList = () => {
                     nickname={el.nickname}
                     createdAt={el.created_at}
                     content={el.content}
+                    reactions={el.reactions}
                   />
                 </>
               );

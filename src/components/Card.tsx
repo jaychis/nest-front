@@ -10,11 +10,39 @@ interface Props {
   readonly nickname: string;
   readonly title: string;
   readonly createdAt: Date;
+  readonly reactions: {
+    id: string;
+    type: string;
+    user_id: string;
+    board_id: string;
+    created_at: Date;
+    updated_at: Date;
+    board: null | {
+      id: string;
+      identifier_id: string;
+      title: string;
+      content: string;
+      category: string;
+      nickname: string;
+      board_score: number;
+      created_at: Date;
+      updated_at: Date;
+      deleted_at: null | Date;
+    };
+  }[];
 }
 
 export type ReactionType = "LIKE" | "DISLIKE" | null;
 
-const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
+const Card = ({
+  id,
+  category,
+  content,
+  createdAt,
+  nickname,
+  title,
+  reactions,
+}: Props) => {
   const navigate = useNavigate();
   const [isCardCount, setIsCardCount] = useState<number>(0);
   const [isCardHovered, setIsCardHovered] = useState<boolean>(false);
@@ -59,7 +87,7 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
     }).then((res) => {
       const resCount = res.data.response;
       console.log("resCount : ", resCount);
-      setIsCardCount(resCount);
+      setIsCardCount(resCount.count);
     });
   }, [isReaction]);
 

@@ -18,6 +18,27 @@ interface CardType {
   readonly created_at: Date;
   readonly updated_at: Date;
   readonly deleted_at?: Date | null;
+
+  readonly reactions: {
+    id: string;
+    type: string;
+    user_id: string;
+    board_id: string;
+    created_at: Date;
+    updated_at: Date;
+    board: null | {
+      id: string;
+      identifier_id: string;
+      title: string;
+      content: string;
+      category: string;
+      nickname: string;
+      board_score: number;
+      created_at: Date;
+      updated_at: Date;
+      deleted_at: null | Date;
+    };
+  }[];
 }
 
 interface CommentType {
@@ -142,6 +163,7 @@ const BoardRead = () => {
     created_at: new Date(),
     updated_at: new Date(),
     deleted_at: null,
+    reactions: [],
   });
 
   const [isCardCommentCount, setIsCardCommentCount] = useState<number>(0);
@@ -717,6 +739,7 @@ const BoardRead = () => {
             nickname={board.nickname}
             createdAt={board.created_at}
             content={board.content}
+            reactions={board.reactions}
           />
           <div
             style={{
