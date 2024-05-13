@@ -21,7 +21,7 @@ interface CardType {
 
   readonly reactions: {
     id: string;
-    type: string;
+    type: "LIKE" | "DISLIKE" | null;
     user_id: string;
     board_id: string;
     created_at: Date;

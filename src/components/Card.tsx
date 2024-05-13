@@ -12,7 +12,7 @@ interface Props {
   readonly createdAt: Date;
   readonly reactions: {
     id: string;
-    type: string;
+    type: "LIKE" | "DISLIKE" | null;
     user_id: string;
     board_id: string;
     created_at: Date;
@@ -55,11 +55,12 @@ const Card = ({
 
   const [isReaction, setIsReaction] = useState<ReactionType>(null);
 
+  const USER_ID: string = localStorage.getItem("id") as string;
   const reactionButton = async (type: ReactionType) => {
     if (type !== null) {
       const param = {
         boardId: id,
-        userId: localStorage.getItem("id") as string,
+        userId: USER_ID,
         type,
       };
       ReactionAPI(param)
@@ -81,12 +82,18 @@ const Card = ({
     navigate(`/boards/read?id=${id}&title=${title}&content=${content}`);
 
   useEffect(() => {
-    console.log("check");
+    reactions.forEach((el) => {
+      if (USER_ID === el.user_id) {
+        setIsReaction(el.type);
+      }
+    });
+
     ReactionCountAPI({
       boardId: id,
     }).then((res) => {
       const resCount = res.data.response;
       console.log("resCount : ", resCount);
+
       setIsCardCount(resCount.count);
     });
   }, [isReaction]);
