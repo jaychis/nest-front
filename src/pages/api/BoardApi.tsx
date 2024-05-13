@@ -6,7 +6,27 @@ interface ListParams {
   readonly category?: string | null;
 }
 export const ListAPI = ({ take, lastId, category }: ListParams) => {
-  let URL: string = `boards?take=${take}`;
+  let URL: string = `boards/list?take=${take}`;
+
+  if (lastId) URL += `&lastId=${lastId}`;
+  if (category) URL += `&category=${category}`;
+
+  const res = client.get(URL);
+  return res;
+};
+
+export const AllListAPI = ({ take, lastId, category }: ListParams) => {
+  let URL: string = `boards/list/all?take=${take}`;
+
+  if (lastId) URL += `&lastId=${lastId}`;
+  if (category) URL += `&category=${category}`;
+
+  const res = client.get(URL);
+  return res;
+};
+
+export const PopularListAPI = ({ take, lastId, category }: ListParams) => {
+  let URL: string = `boards/list/all?take=${take}`;
 
   if (lastId) URL += `&lastId=${lastId}`;
   if (category) URL += `&category=${category}`;
