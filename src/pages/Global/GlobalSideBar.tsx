@@ -1,14 +1,18 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+type SideHoveredType = "HOME" | "POPULAR" | "ALL";
 const GlobalSideBar = () => {
   const navigate = useNavigate();
 
-  const [isHomeHovered, setIseHomeHovered] = useState<boolean>(false);
-  const [isPopularHovered, setIsPopularHovered] = useState<boolean>(false);
-  const [isAllHovered, setIsAllHovered] = useState<boolean>(false);
+  const [isSideHovered, setIsSideHovered] = useState<SideHoveredType>("HOME");
+  const [selectedButton, setSelectedButton] = useState<SideHoveredType>("HOME");
 
-  const goHome = () => navigate("/");
+  const handleClick = (button: SideHoveredType) => {
+    setSelectedButton(button);
+    navigate("/");
+  };
+
   return (
     <div
       style={{
@@ -26,19 +30,24 @@ const GlobalSideBar = () => {
           display: "flex",
           justifyContent: "center",
           padding: "10px 0",
-          backgroundColor: isHomeHovered ? "#f0f0f0" : "white",
+          backgroundColor:
+            selectedButton === "HOME" || isSideHovered === "HOME"
+              ? "#f0f0f0"
+              : "white",
           borderRadius: "5px",
           margin: "5px",
         }}
-        onMouseEnter={() => setIseHomeHovered(true)}
-        onMouseLeave={() => setIseHomeHovered(false)}
+        onMouseEnter={() => setIsSideHovered("HOME")}
+        onMouseLeave={() => setIsSideHovered("HOME")}
       >
-        {/* Icon placeholders, replace with actual icons */}
-        <span onClick={goHome} style={{ fontSize: "24px", cursor: "pointer" }}>
+        <span
+          onClick={() => handleClick("HOME")}
+          style={{ fontSize: "24px", cursor: "pointer" }}
+        >
           🏠
         </span>
         <span
-          onClick={goHome}
+          onClick={() => handleClick("HOME")}
           style={{ marginLeft: "8px", cursor: "pointer", fontSize: "24px" }}
         >
           Home
@@ -49,15 +58,24 @@ const GlobalSideBar = () => {
           display: "flex",
           justifyContent: "center",
           padding: "10px 0",
-          backgroundColor: isPopularHovered ? "#f0f0f0" : "white",
+          backgroundColor:
+            selectedButton === "POPULAR" || isSideHovered === "POPULAR"
+              ? "#f0f0f0"
+              : "white",
           borderRadius: "5px",
           margin: "5px",
         }}
-        onMouseEnter={() => setIsPopularHovered(true)}
-        onMouseLeave={() => setIsPopularHovered(false)}
+        onMouseEnter={() => setIsSideHovered("POPULAR")}
+        onMouseLeave={() => setIsSideHovered("POPULAR")}
       >
-        <span style={{ fontSize: "24px", cursor: "pointer" }}>🔥</span>
         <span
+          onClick={() => handleClick("POPULAR")}
+          style={{ fontSize: "24px", cursor: "pointer" }}
+        >
+          🔥
+        </span>
+        <span
+          onClick={() => handleClick("POPULAR")}
           style={{ marginLeft: "8px", cursor: "pointer", fontSize: "24px" }}
         >
           Popular
@@ -68,15 +86,24 @@ const GlobalSideBar = () => {
           display: "flex",
           justifyContent: "center",
           padding: "10px 0",
-          backgroundColor: isAllHovered ? "#f0f0f0" : "white",
+          backgroundColor:
+            selectedButton === "ALL" || isSideHovered === "ALL"
+              ? "#f0f0f0"
+              : "white",
           borderRadius: "5px",
           margin: "5px",
         }}
-        onMouseEnter={() => setIsAllHovered(true)}
-        onMouseLeave={() => setIsAllHovered(false)}
+        onMouseEnter={() => setIsSideHovered("ALL")}
+        onMouseLeave={() => setIsSideHovered("ALL")}
       >
-        <span style={{ fontSize: "24px", cursor: "pointer" }}>🌐</span>
         <span
+          onClick={() => handleClick("ALL")}
+          style={{ fontSize: "24px", cursor: "pointer" }}
+        >
+          🌐
+        </span>
+        <span
+          onClick={() => handleClick("ALL")}
           style={{ marginLeft: "8px", cursor: "pointer", fontSize: "24px" }}
         >
           All
@@ -85,25 +112,21 @@ const GlobalSideBar = () => {
       <div style={{ borderBottom: "1px solid #ccc", margin: "20px 0" }}></div>
       <div style={{ fontWeight: "bold", paddingLeft: "10px" }}>RECENT</div>
       <div style={{ padding: "10px 0 20px 10px" }}>
-        {/* Repeat for each item, replace emojis with actual icons */}
         <div
           style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}
         >
           <span style={{ fontSize: "24px" }}>🇰🇷</span>
           <span style={{ marginLeft: "8px" }}>r/korea</span>
         </div>
-        {/* ... other recent items */}
       </div>
       <div style={{ fontWeight: "bold", paddingLeft: "10px" }}>COMMUNITIES</div>
       <div style={{ padding: "10px 0 20px 10px" }}>
-        {/* Repeat for each item, replace emojis with actual icons */}
         <div
           style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}
         >
           <span style={{ fontSize: "24px" }}>📢</span>
           <span style={{ marginLeft: "8px" }}>r/announcements</span>
         </div>
-        {/* ... other community items */}
       </div>
     </div>
   );
