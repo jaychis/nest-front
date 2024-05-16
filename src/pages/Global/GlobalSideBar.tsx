@@ -1,12 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-type SelectButtonType = "HOME" | "POPULAR" | "ALL";
 const GlobalSideBar = () => {
   const navigate = useNavigate();
 
-  const [isSelectButton, setIsSelectButton] =
-    useState<SelectButtonType>("HOME");
   const [isHomeHovered, setIseHomeHovered] = useState<boolean>(false);
   const [isPopularHovered, setIsPopularHovered] = useState<boolean>(false);
   const [isAllHovered, setIsAllHovered] = useState<boolean>(false);
@@ -28,43 +25,24 @@ const GlobalSideBar = () => {
         style={{
           display: "flex",
           justifyContent: "center",
-          // padding: "10px 0",
+          padding: "10px 0",
           backgroundColor: isHomeHovered ? "#f0f0f0" : "white",
           borderRadius: "5px",
-          // margin: "5px",
+          margin: "5px",
         }}
         onMouseEnter={() => setIseHomeHovered(true)}
         onMouseLeave={() => setIseHomeHovered(false)}
       >
-        <div
-          style={{
-            // backgroundColor: "red",
-            height: "100%",
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            padding: "10px 0",
-            margin: "10px",
-          }}
+        {/* Icon placeholders, replace with actual icons */}
+        <span onClick={goHome} style={{ fontSize: "24px", cursor: "pointer" }}>
+          🏠
+        </span>
+        <span
+          onClick={goHome}
+          style={{ marginLeft: "8px", cursor: "pointer", fontSize: "24px" }}
         >
-          {/* Icon placeholders, replace with actual icons */}
-          <span
-            onClick={goHome}
-            style={{ fontSize: "24px", cursor: "pointer" }}
-          >
-            🏠
-          </span>
-          <span
-            onClick={goHome}
-            style={{
-              marginLeft: "8px",
-              cursor: "pointer",
-              fontSize: "24px",
-            }}
-          >
-            Home
-          </span>
-        </div>
+          Home
+        </span>
       </div>
       <div
         style={{
