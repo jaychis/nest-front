@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ListAPI } from "../api/BoardApi";
 import Card from "../../components/Card";
-import { mockingList } from "../../_common/mocking/BoardMocking";
+import { ReactionTypes } from "../../_common/CollectionTypes";
 
 interface ContainerProps {
   children?: React.ReactNode;
@@ -55,7 +55,7 @@ interface ListType {
 
   readonly reactions: {
     id: string;
-    type: "LIKE" | "DISLIKE" | null;
+    type: ReactionTypes;
     user_id: string;
     board_id: string;
     created_at: Date;

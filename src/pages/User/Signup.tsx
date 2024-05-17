@@ -6,7 +6,7 @@ import {
   SignupAPI,
   SignupParams,
 } from "../api/UserApi";
-import { HandleChangeType } from "../../_common/HandleChangeType";
+import { CollectionTypes } from "../../_common/CollectionTypes";
 import { isValidPasswordFormat } from "../../_common/PasswordRegex";
 import vLogo from "../../assets/img/v-check.png";
 import xLogo from "../../assets/img/x-check.png";
@@ -97,7 +97,7 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
     }
   }, [signup.phone]);
 
-  const handleChange = (event: HandleChangeType) => {
+  const handleChange = (event: CollectionTypes) => {
     const { name, value } = event;
 
     setSignup({

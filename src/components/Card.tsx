@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/img/panda_logo.png";
 import { ReactionAPI, ReactionCountAPI } from "../pages/api/ReactionApi";
+import { ReactionTypes } from "../_common/CollectionTypes";
 
 interface Props {
   readonly id: string;
@@ -12,7 +13,7 @@ interface Props {
   readonly createdAt: Date;
   readonly reactions: {
     id: string;
-    type: "LIKE" | "DISLIKE" | null;
+    type: ReactionTypes;
     user_id: string;
     board_id: string;
     created_at: Date;
@@ -31,8 +32,6 @@ interface Props {
     };
   }[];
 }
-
-export type ReactionType = "LIKE" | "DISLIKE" | null;
 
 const Card = ({
   id,
@@ -53,10 +52,10 @@ const Card = ({
   const [isCardShareHovered, setIsCardShareHovered] = useState<boolean>(false);
   const [isCardSendHovered, setIsCardSendHovered] = useState<boolean>(false);
 
-  const [isReaction, setIsReaction] = useState<ReactionType>(null);
+  const [isReaction, setIsReaction] = useState<ReactionTypes>(null);
 
   const USER_ID: string = localStorage.getItem("id") as string;
-  const reactionButton = async (type: ReactionType) => {
+  const reactionButton = async (type: ReactionTypes) => {
     if (type !== null) {
       const param = {
         boardId: id,

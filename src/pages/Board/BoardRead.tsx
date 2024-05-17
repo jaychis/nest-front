@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import GlobalBar from "../Global/GlobalBar";
 import GlobalSideBar from "../Global/GlobalSideBar";
-import Card, { ReactionType } from "../../components/Card";
+import Card from "../../components/Card";
 import { ReadAPI } from "../api/BoardApi";
 import { useSearchParams } from "react-router-dom";
 import logo from "../../assets/img/panda_logo.png";
-import { ReactionAPI, ReactionCountAPI } from "../api/ReactionApi";
+import { ReactionAPI } from "../api/ReactionApi";
+import { ReactionTypes } from "../../_common/CollectionTypes";
 
 interface CardType {
   readonly id: string;
@@ -21,7 +22,7 @@ interface CardType {
 
   readonly reactions: {
     id: string;
-    type: "LIKE" | "DISLIKE" | null;
+    type: ReactionTypes;
     user_id: string;
     board_id: string;
     created_at: Date;
@@ -178,7 +179,7 @@ const BoardRead = () => {
   const [isCardCommentSendHovered, setIsCardCommentSendHovered] =
     useState<boolean>(false);
   const [isCommentReaction, setCommentIsReaction] =
-    useState<ReactionType>(null);
+    useState<ReactionTypes>(null);
 
   const [isCardReplyCount, setIsCardReplyCount] = useState<number>(0);
   const [isCardReplyUpHovered, setIsCardReplyUpHovered] =
@@ -191,13 +192,13 @@ const BoardRead = () => {
     useState<boolean>(false);
   const [isCardReplySendHovered, setIsCardReplySendHovered] =
     useState<boolean>(false);
-  const [isReplyReaction, setReplyIsReaction] = useState<ReactionType>(null);
+  const [isReplyReaction, setReplyIsReaction] = useState<ReactionTypes>(null);
 
   const [isCommentReplyButton, setIsCommentReplyButton] =
     useState<boolean>(false);
   const [isReplyReplyButton, setIsReplyReplyButton] = useState<boolean>(false);
 
-  const reactionReplyButton = async (type: ReactionType) => {
+  const reactionReplyButton = async (type: ReactionTypes) => {
     if (type !== null) {
       const param = {
         boardId: board.id,
@@ -219,7 +220,7 @@ const BoardRead = () => {
     }
   };
 
-  const reactionCommentButton = async (type: ReactionType) => {
+  const reactionCommentButton = async (type: ReactionTypes) => {
     if (type !== null) {
       const param = {
         boardId: board.id,

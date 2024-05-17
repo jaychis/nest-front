@@ -1,6 +1,6 @@
 import React, { MouseEventHandler, useState } from "react";
 import { LoginAPI, LoginParams } from "../api/UserApi";
-import { HandleChangeType } from "../../_common/HandleChangeType";
+import { CollectionTypes } from "../../_common/CollectionTypes";
 import { isValidPasswordFormat } from "../../_common/PasswordRegex";
 
 interface Props {
@@ -14,7 +14,7 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
   });
   const [isCloseHovered, setIsCloseHovered] = useState<boolean>(false);
 
-  const handleChange = (event: HandleChangeType): void => {
+  const handleChange = (event: CollectionTypes): void => {
     const { name, value } = event;
 
     setLogin({
