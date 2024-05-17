@@ -1,7 +1,8 @@
 import axios from "axios";
 import { AxiosError } from "axios";
 
-const BACK_URL = "http://127.0.0.1:9898";
+const BACK_URL = process.env.REACT_APP_API_BASE_URL;
+console.log("BACK_URL : ", BACK_URL);
 
 export const client = axios.create({
   baseURL: BACK_URL,
@@ -15,8 +16,6 @@ client.interceptors.request.use(
       localStorage.getItem("access_token"),
       localStorage.getItem("refresh_token"),
     ]);
-
-    console.log(`accessToken: ${accessToken}, refreshToken: ${refreshToken}`);
 
     if (!accessToken && config.headers) {
       config.headers.Authorization = "";
