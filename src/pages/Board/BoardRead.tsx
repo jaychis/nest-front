@@ -6,7 +6,8 @@ import { ReadAPI } from "../api/BoardApi";
 import { useSearchParams } from "react-router-dom";
 import logo from "../../assets/img/panda_logo.png";
 import { ReactionAPI } from "../api/ReactionApi";
-import { ReactionTypes } from "../../_common/CollectionTypes";
+import { CollectionTypes, ReactionTypes } from "../../_common/CollectionTypes";
+import { CommentsSubmitAPI, CommentsSubmitParams } from "../api/CommentsApi";
 
 interface CardType {
   readonly id: string;
@@ -44,14 +45,13 @@ interface CardType {
 
 interface CommentType {
   readonly id: string;
-  readonly board_id: string;
+  readonly boardId: string;
   readonly content: string;
   readonly nickname: string;
-  readonly category: string;
   readonly replies: ReplyType[];
-  readonly created_at: Date;
-  readonly updated_at: Date;
-  readonly deleted_at: null | Date;
+  readonly createdAt: Date;
+  readonly updatedAt: Date;
+  readonly deletedAt: null | Date;
 }
 
 interface ReplyType {
@@ -259,6 +259,42 @@ const BoardRead = () => {
       .catch((err) => console.error(err));
   }, []);
 
+  const [isCommentState, setIsCommentState] = useState<CommentType>({
+    id: "",
+    boardId: board.id,
+    content: "",
+    nickname: localStorage.getItem("nickname") as string,
+    replies: [],
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    deletedAt: null,
+  });
+  const commentHandleChange = (event: CollectionTypes) => {
+    const { name, value } = event;
+
+    setIsCommentState({
+      ...isCommentState,
+      [name]: value,
+    });
+  };
+  const commentWrite = () => {
+    const param: CommentsSubmitParams = {
+      boardId: isCommentState.boardId,
+      content: isCommentState.content,
+      nickname: isCommentState.nickname,
+    };
+
+    CommentsSubmitAPI(param)
+      .then((res) => {
+        const response = res.data.response;
+        console.log("response : ", response);
+
+        setIsCommentState(response);
+        window.location.reload();
+      })
+      .catch((err) => console.error(err));
+  };
+
   const renderComments = (comments: CommentType[], commentStatus: boolean) => {
     return (
       <div>
@@ -267,14 +303,13 @@ const BoardRead = () => {
             <>
               <Comment
                 id={co.id}
-                board_id={co.board_id}
+                boardId={co.boardId}
                 content={co.content}
                 nickname={co.nickname}
-                category={co.category}
                 replies={co.replies}
-                created_at={co.created_at}
-                updated_at={co.updated_at}
-                deleted_at={co.deleted_at}
+                createdAt={co.createdAt}
+                updatedAt={co.updatedAt}
+                deletedAt={co.deletedAt}
               />
               <div
                 style={{
@@ -481,6 +516,7 @@ const BoardRead = () => {
                         backgroundColor: "#007BFF",
                         color: "white",
                       }}
+                      onClick={() => alert("Comment Button Click")}
                     >
                       Comment
                     </button>
@@ -655,6 +691,7 @@ const BoardRead = () => {
                       height: "30px",
                       borderRadius: "30px",
                     }}
+                    onClick={() => alert("Reply Button Click")}
                   >
                     보내기
                   </button>
@@ -762,6 +799,13 @@ const BoardRead = () => {
                 boxSizing: "border-box",
                 outline: "none",
               }}
+              name={"content"}
+              onChange={(value) =>
+                commentHandleChange({
+                  name: value.target.name,
+                  value: value.target.value,
+                })
+              }
             ></textarea>
             <div
               style={{
@@ -795,6 +839,7 @@ const BoardRead = () => {
                   backgroundColor: "#007BFF",
                   color: "white",
                 }}
+                onClick={commentWrite}
               >
                 Comment
               </button>
