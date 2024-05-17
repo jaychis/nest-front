@@ -1,15 +1,28 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { MainListTypes } from "../../_common/CollectionTypes";
+import { AppDispatch } from "../../store/store";
+import {
+  allButton,
+  homeButton,
+  popularButton,
+} from "../../reducers/mainListTypeSlice";
 
-type SideHoveredType = "HOME" | "POPULAR" | "ALL";
 const GlobalSideBar = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
 
-  const [isSideHovered, setIsSideHovered] = useState<SideHoveredType>("HOME");
-  const [selectedButton, setSelectedButton] = useState<SideHoveredType>("HOME");
+  const [isSideHovered, setIsSideHovered] = useState<MainListTypes>("HOME");
+  const [selectedButton, setSelectedButton] = useState<MainListTypes>("HOME");
 
-  const handleClick = (button: SideHoveredType) => {
+  const handleClick = (button: MainListTypes) => {
     setSelectedButton(button);
+
+    if (button === "HOME") dispatch(homeButton());
+    if (button === "POPULAR") dispatch(popularButton());
+    if (button === "ALL") dispatch(allButton());
+
     navigate("/");
   };
 
