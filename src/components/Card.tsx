@@ -65,10 +65,9 @@ const Card = ({
       ReactionAPI(param)
         .then((res) => {
           const status: number = res.status;
-          console.log("status : ", status);
 
           const type = res.data.response?.type;
-          console.log("type : ", type);
+
           if (type === undefined) setIsReaction(null);
           if (type === "LIKE") setIsReaction("LIKE");
           if (type === "DISLIKE") setIsReaction("DISLIKE");
@@ -91,7 +90,6 @@ const Card = ({
       boardId: id,
     }).then((res) => {
       const resCount = res.data.response;
-      console.log("resCount : ", resCount);
 
       setIsCardCount(resCount.count);
     });

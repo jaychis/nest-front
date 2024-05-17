@@ -3,8 +3,8 @@ import GlobalBar from "../Global/GlobalBar";
 import GlobalSideBar from "../Global/GlobalSideBar";
 import Card from "../../components/Card";
 import { useSearchParams } from "react-router-dom";
-import { ReadAPI } from "../api/BoardApi";
 import { UsersInquiryAPI } from "../api/UserApi";
+import { ReactionTypes } from "../../_common/CollectionTypes";
 
 interface ContainerProps {
   children?: React.ReactNode;
@@ -58,7 +58,7 @@ interface CardType {
 
   readonly reactions: {
     id: string;
-    type: "LIKE" | "DISLIKE" | null;
+    type: ReactionTypes;
     user_id: string;
     board_id: string;
     created_at: Date;
