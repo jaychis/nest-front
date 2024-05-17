@@ -110,6 +110,43 @@ const Reply = (re: ReplyType) => {
 
 const Comment = (co: CommentType) => {
   const [isHovered, setIsHovered] = useState<boolean>(false);
+  const [isCardCommentCount, setIsCardCommentCount] = useState<number>(0);
+  const [isCardCommentUpHovered, setIsCardCommentUpHovered] =
+    useState<boolean>(false);
+  const [isCardCommentDownHovered, setIsCardCommentDownHovered] =
+    useState<boolean>(false);
+  const [isCardCommentReplyHovered, setIsCardCommentReplyHovered] =
+    useState<boolean>(false);
+  const [isCardCommentShareHovered, setIsCardCommentShareHovered] =
+    useState<boolean>(false);
+  const [isCardCommentSendHovered, setIsCardCommentSendHovered] =
+    useState<boolean>(false);
+  const [isCommentReaction, setCommentIsReaction] =
+    useState<ReactionTypes>(null);
+  const [isCommentReplyButton, setIsCommentReplyButton] =
+    useState<boolean>(false);
+
+  const reactionCommentButton = async (type: ReactionTypes) => {
+    if (type !== null) {
+      const param = {
+        boardId: "",
+        userId: localStorage.getItem("id") as string,
+        type,
+      };
+      ReactionAPI(param)
+        .then((res) => {
+          const status: number = res.status;
+          console.log("status : ", status);
+
+          const type = res.data.response?.type;
+          console.log("type : ", type);
+          if (type === undefined) setCommentIsReaction(null);
+          if (type === "LIKE") setCommentIsReaction("LIKE");
+          if (type === "DISLIKE") setCommentIsReaction("DISLIKE");
+        })
+        .catch((err) => console.error(err));
+    }
+  };
 
   return (
     <>
@@ -148,6 +185,205 @@ const Comment = (co: CommentType) => {
           <div style={{ marginTop: "4px" }}>{co.content}</div>
         </div>
       </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-start",
+          alignItems: "flex-start",
+          width: "1100px",
+          marginBottom: "10px",
+        }}
+      >
+        <div
+          style={{
+            backgroundColor:
+              isCommentReaction === null
+                ? "yellow"
+                : isCommentReaction === "LIKE"
+                  ? "red"
+                  : "blue",
+            padding: "10px",
+            marginRight: "10px",
+            borderRadius: "20px",
+          }}
+        >
+          <button
+            onMouseEnter={() => setIsCardCommentUpHovered(true)}
+            onMouseLeave={() => setIsCardCommentUpHovered(false)}
+            style={{
+              borderColor: isCardCommentUpHovered ? "red" : "#e0e0e0",
+              backgroundColor: isCardCommentUpHovered ? "#c9c6c5" : "#f5f5f5",
+              border: "none",
+              width: "65px",
+              height: "30px",
+              borderRadius: "30px",
+            }}
+            onClick={() => reactionCommentButton("LIKE")}
+          >
+            좋아요
+          </button>
+          <span style={{ margin: "10px", width: "10px", height: "10px" }}>
+            {isCardCommentCount}
+          </span>
+          <button
+            onMouseEnter={() => setIsCardCommentDownHovered(true)}
+            onMouseLeave={() => setIsCardCommentDownHovered(false)}
+            style={{
+              borderColor: isCardCommentDownHovered ? "blue" : "#e0e0e0",
+              backgroundColor: isCardCommentDownHovered ? "#c9c6c5" : "#f5f5f5",
+              border: "none",
+              width: "65px",
+              height: "30px",
+              borderRadius: "30px",
+            }}
+            onClick={() => reactionCommentButton("DISLIKE")}
+          >
+            싫어요
+          </button>
+        </div>
+        <div
+          style={{
+            marginRight: "10px",
+            borderRadius: "30px",
+            width: "75px",
+            height: "50px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <button
+            onMouseEnter={() => setIsCardCommentReplyHovered(true)}
+            onMouseLeave={() => setIsCardCommentReplyHovered(false)}
+            style={{
+              backgroundColor: isCardCommentReplyHovered
+                ? "#c9c6c5"
+                : "#f5f5f5",
+              border: "none",
+              width: "65px",
+              height: "30px",
+              borderRadius: "30px",
+            }}
+            onClick={() => setIsCommentReplyButton(!isCommentReplyButton)}
+          >
+            답글
+          </button>
+        </div>
+        <div
+          style={{
+            marginRight: "10px",
+            borderRadius: "30px",
+            width: "75px",
+            height: "50px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <button
+            onMouseEnter={() => setIsCardCommentShareHovered(true)}
+            onMouseLeave={() => setIsCardCommentShareHovered(false)}
+            style={{
+              backgroundColor: isCardCommentShareHovered
+                ? "#c9c6c5"
+                : "#f5f5f5",
+              border: "none",
+              width: "65px",
+              height: "30px",
+              borderRadius: "30px",
+            }}
+          >
+            공유
+          </button>
+        </div>
+        <div
+          style={{
+            marginRight: "10px",
+            borderRadius: "30px",
+            width: "75px",
+            height: "50px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <button
+            onMouseEnter={() => setIsCardCommentSendHovered(true)}
+            onMouseLeave={() => setIsCardCommentSendHovered(false)}
+            style={{
+              backgroundColor: isCardCommentSendHovered ? "#c9c6c5" : "#f5f5f5",
+              border: "none",
+              width: "65px",
+              height: "30px",
+              borderRadius: "30px",
+            }}
+          >
+            보내기
+          </button>
+        </div>
+      </div>
+      {isCommentReplyButton ? (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            width: "100%",
+            margin: "10px",
+            border: "3px solid #ccc",
+            borderRadius: "30px",
+            padding: "10px",
+          }}
+        >
+          <textarea
+            style={{
+              width: "100%",
+              border: "none",
+              borderRadius: "14px",
+              resize: "vertical",
+              boxSizing: "border-box",
+              outline: "none",
+            }}
+          ></textarea>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginTop: "10px",
+            }}
+          >
+            <button
+              style={{
+                padding: "6px 12px",
+                marginLeft: "5px",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+                fontSize: "14px",
+                backgroundColor: "#f5f5f5",
+                color: "#333",
+              }}
+              onClick={() => setIsCommentReplyButton(false)}
+            >
+              Cancel
+            </button>
+            <button
+              style={{
+                padding: "6px 12px",
+                marginLeft: "5px",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+                fontSize: "14px",
+                backgroundColor: "#007BFF",
+                color: "white",
+              }}
+              onClick={() => alert("Comment Button Click")}
+            >
+              Comment
+            </button>
+          </div>
+        </div>
+      ) : null}
     </>
   );
 };
@@ -167,20 +403,6 @@ const BoardRead = () => {
     reactions: [],
   });
 
-  const [isCardCommentCount, setIsCardCommentCount] = useState<number>(0);
-  const [isCardCommentUpHovered, setIsCardCommentUpHovered] =
-    useState<boolean>(false);
-  const [isCardCommentDownHovered, setIsCardCommentDownHovered] =
-    useState<boolean>(false);
-  const [isCardCommentReplyHovered, setIsCardCommentReplyHovered] =
-    useState<boolean>(false);
-  const [isCardCommentShareHovered, setIsCardCommentShareHovered] =
-    useState<boolean>(false);
-  const [isCardCommentSendHovered, setIsCardCommentSendHovered] =
-    useState<boolean>(false);
-  const [isCommentReaction, setCommentIsReaction] =
-    useState<ReactionTypes>(null);
-
   const [isCardReplyCount, setIsCardReplyCount] = useState<number>(0);
   const [isCardReplyUpHovered, setIsCardReplyUpHovered] =
     useState<boolean>(false);
@@ -194,8 +416,6 @@ const BoardRead = () => {
     useState<boolean>(false);
   const [isReplyReaction, setReplyIsReaction] = useState<ReactionTypes>(null);
 
-  const [isCommentReplyButton, setIsCommentReplyButton] =
-    useState<boolean>(false);
   const [isReplyReplyButton, setIsReplyReplyButton] = useState<boolean>(false);
 
   const reactionReplyButton = async (type: ReactionTypes) => {
@@ -215,28 +435,6 @@ const BoardRead = () => {
           if (type === undefined) setReplyIsReaction(null);
           if (type === "LIKE") setReplyIsReaction("LIKE");
           if (type === "DISLIKE") setReplyIsReaction("DISLIKE");
-        })
-        .catch((err) => console.error(err));
-    }
-  };
-
-  const reactionCommentButton = async (type: ReactionTypes) => {
-    if (type !== null) {
-      const param = {
-        boardId: board.id,
-        userId: localStorage.getItem("id") as string,
-        type,
-      };
-      ReactionAPI(param)
-        .then((res) => {
-          const status: number = res.status;
-          console.log("status : ", status);
-
-          const type = res.data.response?.type;
-          console.log("type : ", type);
-          if (type === undefined) setCommentIsReaction(null);
-          if (type === "LIKE") setCommentIsReaction("LIKE");
-          if (type === "DISLIKE") setCommentIsReaction("DISLIKE");
         })
         .catch((err) => console.error(err));
     }
@@ -295,7 +493,8 @@ const BoardRead = () => {
       .catch((err) => console.error(err));
   };
 
-  const renderComments = (comments: CommentType[], commentStatus: boolean) => {
+  // Comments
+  const renderComments = (comments: CommentType[]) => {
     return (
       <div>
         {comments.map((co) => {
@@ -311,218 +510,6 @@ const BoardRead = () => {
                 updatedAt={co.updatedAt}
                 deletedAt={co.deletedAt}
               />
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-start",
-                  alignItems: "flex-start",
-                  width: "1100px",
-                  marginBottom: "10px",
-                }}
-              >
-                <div
-                  style={{
-                    backgroundColor:
-                      isCommentReaction === null
-                        ? "white"
-                        : isCommentReaction === "LIKE"
-                          ? "red"
-                          : "blue",
-                    padding: "10px",
-                    marginRight: "10px",
-                    borderRadius: "20px",
-                  }}
-                >
-                  <button
-                    onMouseEnter={() => setIsCardCommentUpHovered(true)}
-                    onMouseLeave={() => setIsCardCommentUpHovered(false)}
-                    style={{
-                      borderColor: isCardCommentUpHovered ? "red" : "#e0e0e0",
-                      backgroundColor: isCardCommentUpHovered
-                        ? "#c9c6c5"
-                        : "#f5f5f5",
-                      border: "none",
-                      width: "65px",
-                      height: "30px",
-                      borderRadius: "30px",
-                    }}
-                    onClick={() => reactionCommentButton("LIKE")}
-                  >
-                    좋아요
-                  </button>
-                  <span
-                    style={{ margin: "10px", width: "10px", height: "10px" }}
-                  >
-                    {isCardCommentCount}
-                  </span>
-                  <button
-                    onMouseEnter={() => setIsCardCommentDownHovered(true)}
-                    onMouseLeave={() => setIsCardCommentDownHovered(false)}
-                    style={{
-                      borderColor: isCardCommentDownHovered
-                        ? "blue"
-                        : "#e0e0e0",
-                      backgroundColor: isCardCommentDownHovered
-                        ? "#c9c6c5"
-                        : "#f5f5f5",
-                      border: "none",
-                      width: "65px",
-                      height: "30px",
-                      borderRadius: "30px",
-                    }}
-                    onClick={() => reactionCommentButton("DISLIKE")}
-                  >
-                    싫어요
-                  </button>
-                </div>
-                <div
-                  style={{
-                    marginRight: "10px",
-                    borderRadius: "30px",
-                    width: "75px",
-                    height: "50px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <button
-                    onMouseEnter={() => setIsCardCommentReplyHovered(true)}
-                    onMouseLeave={() => setIsCardCommentReplyHovered(false)}
-                    style={{
-                      backgroundColor: isCardCommentReplyHovered
-                        ? "#c9c6c5"
-                        : "#f5f5f5",
-                      border: "none",
-                      width: "65px",
-                      height: "30px",
-                      borderRadius: "30px",
-                    }}
-                    onClick={() =>
-                      setIsCommentReplyButton(!isCommentReplyButton)
-                    }
-                  >
-                    답글
-                  </button>
-                </div>
-                <div
-                  style={{
-                    marginRight: "10px",
-                    borderRadius: "30px",
-                    width: "75px",
-                    height: "50px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <button
-                    onMouseEnter={() => setIsCardCommentShareHovered(true)}
-                    onMouseLeave={() => setIsCardCommentShareHovered(false)}
-                    style={{
-                      backgroundColor: isCardCommentShareHovered
-                        ? "#c9c6c5"
-                        : "#f5f5f5",
-                      border: "none",
-                      width: "65px",
-                      height: "30px",
-                      borderRadius: "30px",
-                    }}
-                  >
-                    공유
-                  </button>
-                </div>
-                <div
-                  style={{
-                    marginRight: "10px",
-                    borderRadius: "30px",
-                    width: "75px",
-                    height: "50px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <button
-                    onMouseEnter={() => setIsCardCommentSendHovered(true)}
-                    onMouseLeave={() => setIsCardCommentSendHovered(false)}
-                    style={{
-                      backgroundColor: isCardCommentSendHovered
-                        ? "#c9c6c5"
-                        : "#f5f5f5",
-                      border: "none",
-                      width: "65px",
-                      height: "30px",
-                      borderRadius: "30px",
-                    }}
-                  >
-                    보내기
-                  </button>
-                </div>
-              </div>
-
-              {commentStatus ? (
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    width: "100%",
-                    margin: "10px",
-                    border: "3px solid #ccc",
-                    borderRadius: "30px",
-                    padding: "10px",
-                  }}
-                >
-                  <textarea
-                    style={{
-                      width: "100%",
-                      border: "none",
-                      borderRadius: "14px",
-                      resize: "vertical",
-                      boxSizing: "border-box",
-                      outline: "none",
-                    }}
-                  ></textarea>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "flex-end",
-                      marginTop: "10px",
-                    }}
-                  >
-                    <button
-                      style={{
-                        padding: "6px 12px",
-                        marginLeft: "5px",
-                        border: "none",
-                        borderRadius: "4px",
-                        cursor: "pointer",
-                        fontSize: "14px",
-                        backgroundColor: "#f5f5f5",
-                        color: "#333",
-                      }}
-                      onClick={() => setIsCommentReplyButton(false)}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      style={{
-                        padding: "6px 12px",
-                        marginLeft: "5px",
-                        border: "none",
-                        borderRadius: "4px",
-                        cursor: "pointer",
-                        fontSize: "14px",
-                        backgroundColor: "#007BFF",
-                        color: "white",
-                      }}
-                      onClick={() => alert("Comment Button Click")}
-                    >
-                      Comment
-                    </button>
-                  </div>
-                </div>
-              ) : null}
 
               <div style={{ marginLeft: "40px" }}>
                 {co.replies.length > 0
@@ -535,6 +522,8 @@ const BoardRead = () => {
       </div>
     );
   };
+
+  // Reply
   const renderReplies = (replies: ReplyType[], replyStatus: boolean) => {
     return (
       <div>
@@ -845,9 +834,7 @@ const BoardRead = () => {
               </button>
             </div>
           </div>
-          {board.comments?.length > 0
-            ? renderComments(board.comments, isCommentReplyButton)
-            : []}
+          {board.comments?.length > 0 ? renderComments(board.comments) : []}
         </div>
       </div>
     </>
