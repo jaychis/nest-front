@@ -75,10 +75,14 @@ const BoardBar = () => {
               style={{
                 background: postHover ? "#4F657755" : "white",
                 border: "none",
+                display: "flex",
+                alignItems: "center",
+                cursor: "pointer",
               }}
+              onClick={postSubmit}
             >
-              <FaPlus onClick={postSubmit} />
-              {/* Plus/Create Icon */}
+              <FaPlus style={{ marginRight: "5px" }} />
+              <span>Create</span>
             </button>
           </>
         ) : (

@@ -8,6 +8,8 @@ import {
 } from "../api/UserApi";
 import { CollectionTypes } from "../../_common/CollectionTypes";
 import { isValidPasswordFormat } from "../../_common/PasswordRegex";
+import { FaGoogle, FaApple, FaComment } from "react-icons/fa";
+import { SiNaver } from "react-icons/si";
 import vLogo from "../../assets/img/v-check.png";
 import xLogo from "../../assets/img/x-check.png";
 
@@ -21,6 +23,7 @@ interface ValidSignupType {
   readonly phone: null | boolean;
   readonly nickname: null | boolean;
 }
+
 const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
   const [signup, setSignup] = useState<SignupParams>({
     email: "",
@@ -147,419 +150,321 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
           justifyContent: "center",
         }}
       >
-        <div>
+        <div
+          style={{
+            backgroundColor: "#fff",
+            borderRadius: "25px",
+            padding: "25px",
+            minWidth: "400px",
+            maxWidth: "600px",
+            width: "80%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <button
+              style={{
+                padding: "10px 20px",
+                backgroundColor: isCloseHovered ? "#77C2E2" : "#84d7fb",
+                color: "white",
+                border: "none",
+                borderRadius: "35px",
+                cursor: "pointer",
+              }}
+              onMouseEnter={() => setIsCloseHovered(true)}
+              onMouseLeave={() => setIsCloseHovered(false)}
+              onClick={() => {
+                modalIsOpen(false);
+              }}
+            >
+              Close
+            </button>
+          </div>
+
+          <div style={{ textAlign: "center", marginBottom: "20px" }}>
+            <h2>회원가입</h2>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            <button
+              style={styles.socialButton}
+              onClick={() => alert("Continue with Google")}
+            >
+              <FaGoogle style={styles.socialLogo} />
+              구글로 가입
+            </button>
+            <button
+              style={styles.socialButton}
+              onClick={() => alert("Continue with Apple")}
+            >
+              <FaApple style={styles.socialLogo} />
+              애플로 가입
+            </button>
+            <button
+              style={styles.socialButton}
+              onClick={() => alert("Continue with Naver")}
+            >
+              <SiNaver style={styles.socialLogo} />
+              네이버로 가입
+            </button>
+            <button
+              style={styles.socialButton}
+              onClick={() => alert("Continue with Kakao")}
+            >
+              <FaComment style={styles.socialLogo} />
+              카카오로 가입
+            </button>
+          </div>
+
           <div
             style={{
-              backgroundColor: "#fff",
-              borderRadius: "25px",
-              padding: "25px",
-              minWidth: "80vh",
-              minHeight: "85vh",
               display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
+              alignItems: "center",
+              textAlign: "center",
+              color: "#aaa",
+              margin: "20px 0",
             }}
           >
-            <div style={{ display: "flex", height: "20%" }}>
-              <button
-                style={{
-                  alignSelf: "flex-end",
-                  padding: "20px",
-                  backgroundColor: isCloseHovered ? "#77C2E2" : "#84d7fb",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "35px",
-                  cursor: "pointer",
-                  marginLeft: "auto",
-                  marginRight: "10px",
-                }}
-                onMouseEnter={() => setIsCloseHovered(true)}
-                onMouseLeave={() => setIsCloseHovered(false)}
-                onClick={() => {
-                  modalIsOpen(false);
-                }}
-              >
-                Close
-              </button>
-            </div>
+            <div style={{ flex: 1, height: "1px", background: "#aaa" }}></div>
+            <div style={{ margin: "0 10px" }}>OR</div>
+            <div style={{ flex: 1, height: "1px", background: "#aaa" }}></div>
+          </div>
+
+          <form>
             <div
               style={{
-                display: "flex",
-                height: "70vh",
-                justifyContent: "center",
+                position: "relative",
+                width: "100%",
+                marginBottom: "10px",
               }}
             >
-              <div
-                style={{
-                  width: "70%",
-                  height: "100%",
-                }}
-              >
-                <h2 style={{ textAlign: "center" }}>Signup</h2>
-                <div
+              <input
+                style={styles.input}
+                placeholder="이메일 *"
+                type="email"
+                id="email"
+                name="email"
+                onChange={(value) =>
+                  handleChange({
+                    name: value.target.name,
+                    value: value.target.value,
+                  })
+                }
+                required
+              />
+              {validSignup.email === null ? null : validSignup.email === true ? (
+                <img
+                  src={vLogo}
+                  alt={"v logo"}
                   style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    gap: "10px",
-                    margin: "20px 0",
+                    width: "20px",
+                    height: "20px",
+                    position: "absolute",
+                    right: "10px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
                   }}
-                >
-                  <button
-                    style={{
-                      border: "1px solid #ccc",
-                      backgroundColor: "white",
-                      minWidth: "100px",
-                      width: "100%",
-                      borderRadius: "10px",
-                      cursor: "pointer",
-                      height: "4vh",
-                    }}
-                    onClick={() => alert("Continue with Google")}
-                  >
-                    Continue with Google
-                  </button>
-                  <button
-                    style={{
-                      border: "1px solid #ccc",
-                      backgroundColor: "white",
-                      minWidth: "100px",
-                      width: "100%",
-                      borderRadius: "10px",
-                      cursor: "pointer",
-                      height: "4vh",
-                    }}
-                    onClick={() => alert("Continue with Apple")}
-                  >
-                    Continue with Apple
-                  </button>
-                  <button
-                    style={{
-                      border: "1px solid #ccc",
-                      backgroundColor: "white",
-                      minWidth: "100px",
-                      width: "100%",
-                      borderRadius: "10px",
-                      cursor: "pointer",
-                      height: "4vh",
-                    }}
-                    onClick={() => alert("Continue with Naver")}
-                  >
-                    Continue with Naver
-                  </button>
-                  <button
-                    style={{
-                      border: "1px solid #ccc",
-                      backgroundColor: "white",
-                      minWidth: "100px",
-                      width: "100%",
-                      borderRadius: "10px",
-                      cursor: "pointer",
-                      height: "4vh",
-                    }}
-                    onClick={() => alert("Continue with Kakao")}
-                  >
-                    Continue with Kakao
-                  </button>
-                </div>
-
-                <div
+                />
+              ) : (
+                <img
+                  src={xLogo}
+                  alt={"x logo"}
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    textAlign: "center",
-                    color: "#aaa",
-                    margin: "20px 0",
+                    width: "20px",
+                    height: "20px",
+                    position: "absolute",
+                    right: "10px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
                   }}
-                >
-                  <div
-                    style={{ flex: 1, height: "1px", background: "#aaa" }}
-                  ></div>
-                  <div
-                    style={{
-                      margin: "10px 10px",
-                    }}
-                  >
-                    OR
-                  </div>
-                  <div
-                    style={{ flex: 1, height: "1px", background: "#aaa" }}
-                  ></div>
-                </div>
-
-                <form>
-                  <div
-                    style={{
-                      position: "relative",
-                      width: "100%",
-                      marginBottom: "10px",
-                    }}
-                  >
-                    <input
-                      style={{
-                        width: "100%",
-                        padding: "10px",
-                        paddingRight: "50px",
-                        border: "1px solid #ddd",
-                        borderRadius: "4px",
-                        // marginBottom: "10px",
-                        boxSizing: "border-box",
-                        height: "4vh",
-                      }}
-                      placeholder="Email *"
-                      type="email"
-                      id="email"
-                      name={"email"}
-                      onChange={(value) =>
-                        handleChange({
-                          name: value.target.name,
-                          value: value.target.value,
-                        })
-                      }
-                      required
-                    />
-                    {validSignup.email === null ? null : validSignup.email ===
-                      true ? (
-                      <div>
-                        <img
-                          src={vLogo}
-                          alt={"v logo"}
-                          style={{
-                            width: "30px",
-                            height: "25px",
-                            position: "absolute",
-                            right: "10px",
-                            top: "50%",
-                            transform: "translateY(-50%)",
-                          }}
-                        />
-                      </div>
-                    ) : (
-                      <div>
-                        <img
-                          src={xLogo}
-                          alt={"x logo"}
-                          style={{
-                            width: "30px",
-                            height: "25px",
-                            position: "absolute",
-                            right: "10px",
-                            top: "50%",
-                            transform: "translateY(-50%)",
-                          }}
-                        />
-                      </div>
-                    )}
-                  </div>
-
-                  <input
-                    style={{
-                      width: "100%",
-                      padding: "10px",
-                      border: "1px solid #ddd",
-                      borderRadius: "4px",
-                      marginBottom: "10px",
-                      boxSizing: "border-box",
-                      height: "4vh",
-                    }}
-                    onChange={(value) =>
-                      handleChange({
-                        name: value.target.name,
-                        value: value.target.value,
-                      })
-                    }
-                    placeholder="Password *"
-                    type="password"
-                    id="password"
-                    name={"password"}
-                    required
-                  />
-
-                  <input
-                    style={{
-                      width: "100%",
-                      padding: "10px",
-                      border: "1px solid #ddd",
-                      borderRadius: "4px",
-                      marginBottom: "10px",
-                      boxSizing: "border-box",
-                      height: "4vh",
-                    }}
-                    onChange={(value) =>
-                      handleChange({
-                        name: value.target.name,
-                        value: value.target.value,
-                      })
-                    }
-                    placeholder="Comfirm Password *"
-                    type="password"
-                    id="confirm password"
-                    name={"confirmPassword"}
-                    required
-                  />
-
-                  <div
-                    style={{
-                      position: "relative",
-                      width: "100%",
-                      marginBottom: "10px",
-                    }}
-                  >
-                    <input
-                      style={{
-                        width: "100%",
-                        padding: "10px",
-                        paddingRight: "50px",
-                        border: "1px solid #ddd",
-                        borderRadius: "4px",
-                        // marginBottom: "10px",
-                        boxSizing: "border-box",
-                        height: "4vh",
-                      }}
-                      onChange={(value) =>
-                        handleChange({
-                          name: value.target.name,
-                          value: value.target.value,
-                        })
-                      }
-                      placeholder="Phone *"
-                      type="text"
-                      id="phone"
-                      name={"phone"}
-                      required
-                    />
-                    {validSignup.phone === null ? null : validSignup.phone ===
-                      true ? (
-                      <div>
-                        <img
-                          src={vLogo}
-                          alt={"v logo"}
-                          style={{
-                            width: "30px",
-                            height: "25px",
-                            position: "absolute",
-                            right: "10px",
-                            top: "50%",
-                            transform: "translateY(-50%)",
-                          }}
-                        />
-                      </div>
-                    ) : (
-                      <div>
-                        <img
-                          src={xLogo}
-                          alt={"x logo"}
-                          style={{
-                            width: "30px",
-                            height: "25px",
-                            position: "absolute",
-                            right: "10px",
-                            top: "50%",
-                            transform: "translateY(-50%)",
-                          }}
-                        />
-                      </div>
-                    )}
-                  </div>
-
-                  <div
-                    style={{
-                      position: "relative",
-                      width: "100%",
-                      marginBottom: "10px",
-                    }}
-                  >
-                    <input
-                      style={{
-                        width: "100%",
-                        padding: "10px",
-                        paddingRight: "50px",
-                        border: "1px solid #ddd",
-                        borderRadius: "4px",
-                        // marginBottom: "10px",
-                        boxSizing: "border-box",
-                        height: "4vh",
-                      }}
-                      onChange={(value) =>
-                        handleChange({
-                          name: value.target.name,
-                          value: value.target.value,
-                        })
-                      }
-                      placeholder="Nickname *"
-                      type="text"
-                      id="nickname"
-                      name={"nickname"}
-                      required
-                    />
-                    {validSignup.nickname ===
-                    null ? null : validSignup.nickname === true ? (
-                      <div>
-                        <img
-                          src={vLogo}
-                          alt={"v logo"}
-                          style={{
-                            width: "30px",
-                            height: "25px",
-                            position: "absolute",
-                            right: "10px",
-                            top: "50%",
-                            transform: "translateY(-50%)",
-                          }}
-                        />
-                      </div>
-                    ) : (
-                      <div>
-                        <img
-                          src={xLogo}
-                          alt={"x logo"}
-                          style={{
-                            width: "30px",
-                            height: "25px",
-                            position: "absolute",
-                            right: "10px",
-                            top: "50%",
-                            transform: "translateY(-50%)",
-                          }}
-                        />
-                      </div>
-                    )}
-                  </div>
-                </form>
-                <div style={{ width: "100%", padding: "10px 0" }}>
-                  <button onClick={onSwitchView} style={{ fontSize: "20px" }}>
-                    Login
-                  </button>
-                </div>
-              </div>
+                />
+              )}
             </div>
+
             <div
               style={{
-                display: "flex",
-                height: "20%",
-                justifyContent: "center",
-                alignItems: "center",
+                position: "relative",
+                width: "100%",
+                marginBottom: "10px",
               }}
             >
-              <button
-                type="submit"
-                style={{
-                  padding: "20px",
-                  width: "40vh",
-                  borderRadius: "35px",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-                onClick={handleSubmit}
-              >
-                {"Continue"}
-              </button>
+              <input
+                style={styles.input}
+                placeholder="닉네임 *"
+                type="text"
+                id="nickname"
+                name="nickname"
+                onChange={(value) =>
+                  handleChange({
+                    name: value.target.name,
+                    value: value.target.value,
+                  })
+                }
+                required
+              />
+              {validSignup.nickname === null ? null : validSignup.nickname === true ? (
+                <img
+                  src={vLogo}
+                  alt={"v logo"}
+                  style={{
+                    width: "20px",
+                    height: "20px",
+                    position: "absolute",
+                    right: "10px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                  }}
+                />
+              ) : (
+                <img
+                  src={xLogo}
+                  alt={"x logo"}
+                  style={{
+                    width: "20px",
+                    height: "20px",
+                    position: "absolute",
+                    right: "10px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                  }}
+                />
+              )}
             </div>
+
+            <input
+              style={styles.input}
+              placeholder="비밀번호 *"
+              type="password"
+              id="password"
+              name="password"
+              onChange={(value) =>
+                handleChange({
+                  name: value.target.name,
+                  value: value.target.value,
+                })
+              }
+              required
+            />
+
+            <input
+              style={styles.input}
+              placeholder="비밀번호 확인 *"
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              onChange={(value) =>
+                handleChange({
+                  name: value.target.name,
+                  value: value.target.value,
+                })
+              }
+              required
+            />
+
+            <div
+              style={{
+                position: "relative",
+                width: "100%",
+                marginBottom: "10px",
+              }}
+            >
+              <input
+                style={styles.input}
+                placeholder="전화번호 *"
+                type="text"
+                id="phone"
+                name="phone"
+                onChange={(value) =>
+                  handleChange({
+                    name: value.target.name,
+                    value: value.target.value,
+                  })
+                }
+                required
+              />
+              {validSignup.phone === null ? null : validSignup.phone === true ? (
+                <img
+                  src={vLogo}
+                  alt={"v logo"}
+                  style={{
+                    width: "20px",
+                    height: "20px",
+                    position: "absolute",
+                    right: "10px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                  }}
+                />
+              ) : (
+                <img
+                  src={xLogo}
+                  alt={"x logo"}
+                  style={{
+                    width: "20px",
+                    height: "20px",
+                    position: "absolute",
+                    right: "10px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                  }}
+                />
+              )}
+            </div>
+          </form>
+
+          <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+            <button
+              type="submit"
+              style={styles.submitButton}
+              onClick={handleSubmit}
+            >
+              회원가입
+            </button>
           </div>
         </div>
       </div>
     </>
   );
+};
+
+const styles: { [key: string]: React.CSSProperties } = {
+  socialButton: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "10px",
+    border: "1px solid #ccc",
+    backgroundColor: "white",
+    borderRadius: "10px",
+    cursor: "pointer",
+    height: "40px",
+  },
+  socialLogo: {
+    width: "20px",
+    height: "20px",
+    marginRight: "10px",
+  },
+  input: {
+    padding: "10px",
+    border: "1px solid #ddd",
+    borderRadius: "4px",
+    marginBottom: "10px",
+    boxSizing: "border-box",
+    width: "100%",
+    height: "40px",
+  },
+  submitButton: {
+    padding: "10px 20px",
+    width: "200px",
+    borderRadius: "25px",
+    border: "none",
+    backgroundColor: "#007BFF",
+    color: "white",
+    cursor: "pointer",
+  },
 };
 
 export default Signup;
