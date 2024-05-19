@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ReactionTypes } from "../../_common/CollectionTypes";
 import { ReactionAPI, ReactionParams } from "../api/ReactionApi";
 import logo from "../../assets/img/panda_logo.png";
@@ -33,11 +33,13 @@ const BoardComment = (co: CommentType) => {
   const [isCommentReplyButton, setIsCommentReplyButton] =
     useState<boolean>(false);
 
+  const USER_ID: string = localStorage.getItem("id") as string;
+
   const reactionCommentButton = async (type: ReactionTypes) => {
     if (type !== null) {
       const param: ReactionParams = {
-        boardId: co.boardId,
-        userId: localStorage.getItem("id") as string,
+        boardId: co.id,
+        userId: USER_ID,
         type,
       };
       ReactionAPI(param)
@@ -54,6 +56,8 @@ const BoardComment = (co: CommentType) => {
         .catch((err) => console.error(err));
     }
   };
+
+  useEffect(() => {}, []);
 
   return (
     <>

@@ -70,7 +70,7 @@ const BoardRead = () => {
       .then((res) => {
         const response = res.data.response;
 
-        console.log("response : ", response);
+        console.log("BoardRead ReadAPI response : ", response);
         setBoard(response);
       })
       .catch((err) => console.error(err));
@@ -104,7 +104,7 @@ const BoardRead = () => {
     CommentsSubmitAPI(param)
       .then((res) => {
         const response = res.data.response;
-        console.log("response : ", response);
+        console.log("BoardRead CommentsSubmitAPI response : ", response);
 
         setIsCommentState(response);
         window.location.reload();
@@ -176,7 +176,6 @@ const BoardRead = () => {
             nickname={board.nickname}
             createdAt={board.created_at}
             content={board.content}
-            reactions={board.reactions}
           />
           <div
             style={{

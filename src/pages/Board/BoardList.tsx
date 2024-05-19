@@ -186,7 +186,6 @@ const BoardList = () => {
                     nickname={el.nickname}
                     createdAt={el.created_at}
                     content={el.content}
-                    reactions={el.reactions}
                   />
                 </>
               );

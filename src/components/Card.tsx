@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/img/panda_logo.png";
-import { ReactionAPI, ReactionCountAPI } from "../pages/api/ReactionApi";
+import {
+  ReactionAPI,
+  ReactionCountAPI,
+  ReactionListAPI,
+} from "../pages/api/ReactionApi";
 import { ReactionTypes } from "../_common/CollectionTypes";
 
 interface Props {
@@ -11,37 +15,18 @@ interface Props {
   readonly nickname: string;
   readonly title: string;
   readonly createdAt: Date;
-  readonly reactions: {
-    id: string;
-    type: ReactionTypes;
-    user_id: string;
-    board_id: string;
-    created_at: Date;
-    updated_at: Date;
-    board: null | {
-      id: string;
-      identifier_id: string;
-      title: string;
-      content: string;
-      category: string;
-      nickname: string;
-      board_score: number;
-      created_at: Date;
-      updated_at: Date;
-      deleted_at: null | Date;
-    };
-  }[];
 }
 
-const Card = ({
-  id,
-  category,
-  content,
-  createdAt,
-  nickname,
-  title,
-  reactions,
-}: Props) => {
+interface ReactionType {
+  readonly id: string;
+  readonly boardI_id: string;
+  readonly type: ReactionTypes;
+  readonly user_id: string;
+  readonly created_at: Date;
+  readonly updated_at: Date;
+}
+
+const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
   const navigate = useNavigate();
   const [isCardCount, setIsCardCount] = useState<number>(0);
   const [isCardHovered, setIsCardHovered] = useState<boolean>(false);
@@ -67,6 +52,7 @@ const Card = ({
           const status: number = res.status;
 
           const type = res.data.response?.type;
+          console.log("ReactionAPI type : ", type);
 
           if (type === undefined) setIsReaction(null);
           if (type === "LIKE") setIsReaction("LIKE");
@@ -80,16 +66,22 @@ const Card = ({
     navigate(`/boards/read?id=${id}&title=${title}&content=${content}`);
 
   useEffect(() => {
-    reactions.forEach((el) => {
-      if (USER_ID === el.user_id) {
-        setIsReaction(el.type);
-      }
+    ReactionListAPI({ boardId: id }).then((res) => {
+      const response = res.data.response;
+      console.log("response : ", response);
+
+      response.forEach((el: ReactionType) => {
+        if (USER_ID === el.user_id) {
+          setIsReaction(el.type);
+        }
+      });
     });
 
     ReactionCountAPI({
       boardId: id,
     }).then((res) => {
       const resCount = res.data.response;
+      console.log("ReactionCountAPI resCount : ", resCount.count);
 
       setIsCardCount(resCount.count);
     });
