@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import MarkdownIt from 'markdown-it';
 import MdEditor from 'react-markdown-editor-lite';
 import 'react-markdown-editor-lite/lib/index.css';
-
+import TextareaAutosize from 'react-textarea-autosize';
 
 const mdParser = new MarkdownIt();
 
@@ -77,7 +77,7 @@ const BoardSubmit = () => {
       .catch((err) => console.error(err));
   };
 
-  const inputStyle = {
+  const inputStyle= {
     width: "100%",
     height: "30px",
     marginBottom: "10px",
@@ -89,19 +89,40 @@ const BoardSubmit = () => {
 
   const textareaStyle = {
     ...inputStyle,
-    minHeight: "100px",
-    height: "400px",
+    minHeight: "50px", // 기본 높이를 작게 설정
+    maxHeight: "700px", // 최대 높이를 설정
+    overflowY: "auto" as 'auto', // 최대 높이를 넘으면 스크롤이 생기도록 설정
+    resize: "none" // 사용자가 높이를 조정할 수 없도록 설정
   };
 
   const submitButtonStyle = {
     padding: "10px 20px",
-    backgroundColor: "#ddd",
+    backgroundColor: "#0079D3",
     color: "white",
     border: "none",
     borderRadius: "4px",
     cursor: "pointer",
+    fontWeight: "bold",
+    marginTop: "20px"
   };
 
+  const buttonStyle = {
+    padding: "10px 20px",
+    margin: "0 0",
+    border: "1px solid #0079D3",
+    borderRadius: "4px",
+    cursor: "pointer",
+    backgroundColor: "white",
+    color: "#0079D3",
+    fontWeight: "bold",
+    transition: "background-color 0.3s, color 0.3s"
+  };
+
+  const activeButtonStyle = {
+    ...buttonStyle,
+    backgroundColor: "#007BFF",
+    color: "white"
+  };
   return (
     <>
       <div style={{ backgroundColor: "#4F657755", height: "100vh" }}>
@@ -116,13 +137,28 @@ const BoardSubmit = () => {
           borderRadius: "8px",
           background: "#fff",
         }}>
-          <div style={{ marginBottom: "20px" }}>
-            <button onClick={() => setInputType('TEXT')}>텍스트</button>
-            <button onClick={() => setInputType('MEDIA')}>이미지 & 비디오</button>
-            <button onClick={() => setInputType('LINK')}>링크</button>
+           <div style={{ marginBottom: "20px", display: "flex", justifyContent: "flex-start" }}>
+            <button
+              onClick={() => setInputType('TEXT')}
+              style={inputType === 'TEXT' ? activeButtonStyle : buttonStyle}
+            >
+              텍스트
+            </button>
+            <button
+              onClick={() => setInputType('MEDIA')}
+              style={inputType === 'MEDIA' ? activeButtonStyle : buttonStyle}
+            >
+              이미지 & 비디오
+            </button>
+            <button
+              onClick={() => setInputType('LINK')}
+              style={inputType === 'LINK' ? activeButtonStyle : buttonStyle}
+            >
+              링크
+            </button>
           </div>
           <form onSubmit={handleSubmit}>
-            {inputType === 'TEXT' && (
+          {inputType === 'TEXT' && (
               <>
                 <input
                   name="title"
@@ -131,10 +167,11 @@ const BoardSubmit = () => {
                   onChange={handleChange}
                   style={inputStyle}
                 />
-               <MdEditor
-                  style={{ height: "500px" }}
+                <MdEditor
+                  style={{ height: "200px" }}
                   renderHTML={(text) => mdParser.render(text)}
                   onChange={handleEditorChange}
+                  view={{ menu: true, md: true, html: false }}
                 />
               </>
             )}

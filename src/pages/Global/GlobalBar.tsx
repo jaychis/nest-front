@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { FaSistrix, FaUserAlt, FaPlus } from "react-icons/fa";
+import { FaSistrix, FaUserAlt, FaPlus, FaBell } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import UserModalForm from "../User/UserModalForm";
 import logo from "../../assets/img/panda_logo.png";
@@ -107,6 +107,22 @@ const GlobalBar = () => {
             </button>
             {/* Plus/Create Icon */}
 
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: "50%",
+                width: "40px",
+                height: "40px",
+                background: "transparent",
+                cursor: "pointer",
+                marginLeft: "10px",
+              }}
+            >
+              <FaBell style={{ color: "black" }} />
+            </div>
+            {/* Notification Icon */}
           </>
         ) : (
           <>
@@ -117,4 +133,5 @@ const GlobalBar = () => {
     </nav>
   );
 };
+
 export default GlobalBar;
