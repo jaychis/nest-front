@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { ReactionTypes } from "../../_common/CollectionTypes";
+import { CollectionTypes, ReactionTypes } from "../../_common/CollectionTypes";
 import { ReactionAPI, ReactionParams } from "../api/ReactionApi";
 import logo from "../../assets/img/panda_logo.png";
 import { ReplyType } from "./BoardReply";
+import { ReplySubmitAPI, ReplySubmitParams } from "../api/ReplyApi";
 
 export interface CommentType {
   readonly id: string;
@@ -57,7 +58,40 @@ const BoardComment = (co: CommentType) => {
     }
   };
 
-  useEffect(() => {}, []);
+  const [isReplyState, setIsReplyState] = useState<ReplyType>({
+    id: "",
+    commentId: co.id,
+    content: "",
+    nickname: localStorage.getItem("nickname") as string,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    deletedAt: null,
+  });
+  const replyHandleChange = (event: CollectionTypes) => {
+    const { name, value } = event;
+
+    setIsReplyState({
+      ...isReplyState,
+      [name]: value,
+    });
+  };
+  const replyWrite = () => {
+    const param: ReplySubmitParams = {
+      commentId: isReplyState.commentId,
+      content: isReplyState.content,
+      nickname: isReplyState.nickname,
+    };
+
+    ReplySubmitAPI(param)
+      .then((res) => {
+        const response = res.data.response;
+        console.log("ReplySubmitAPI response : ", response);
+
+        setIsReplyState(response);
+        window.location.reload();
+      })
+      .catch((err) => console.error(err));
+  };
 
   return (
     <>
@@ -254,6 +288,13 @@ const BoardComment = (co: CommentType) => {
               boxSizing: "border-box",
               outline: "none",
             }}
+            name={"content"}
+            onChange={(value) =>
+              replyHandleChange({
+                name: value.target.name,
+                value: value.target.value,
+              })
+            }
           ></textarea>
           <div
             style={{
@@ -288,7 +329,7 @@ const BoardComment = (co: CommentType) => {
                 backgroundColor: "#007BFF",
                 color: "white",
               }}
-              onClick={() => alert("BoardComment Button Click")}
+              onClick={replyWrite}
             >
               Comment
             </button>

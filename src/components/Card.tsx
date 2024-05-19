@@ -68,7 +68,7 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
   useEffect(() => {
     ReactionListAPI({ boardId: id }).then((res) => {
       const response = res.data.response;
-      console.log("response : ", response);
+      // console.log("response : ", response);
 
       response.forEach((el: ReactionType) => {
         if (USER_ID === el.user_id) {
@@ -81,7 +81,7 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
       boardId: id,
     }).then((res) => {
       const resCount = res.data.response;
-      console.log("ReactionCountAPI resCount : ", resCount.count);
+      // console.log("ReactionCountAPI resCount : ", resCount.count);
 
       setIsCardCount(resCount.count);
     });

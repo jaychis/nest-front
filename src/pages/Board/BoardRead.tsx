@@ -5,7 +5,7 @@ import Card from "../../components/Card";
 import { ReadAPI } from "../api/BoardApi";
 import { useSearchParams } from "react-router-dom";
 import { CollectionTypes, ReactionTypes } from "../../_common/CollectionTypes";
-import { CommentsSubmitAPI, CommentsSubmitParams } from "../api/CommentsApi";
+import { CommentSubmitAPI, CommentSubmitParams } from "../api/CommentApi";
 import BoardComment, { CommentType } from "./BoardComment";
 import BoardReply, { ReplyType } from "./BoardReply";
 
@@ -95,13 +95,13 @@ const BoardRead = () => {
     });
   };
   const commentWrite = () => {
-    const param: CommentsSubmitParams = {
+    const param: CommentSubmitParams = {
       boardId: isCommentState.boardId,
       content: isCommentState.content,
       nickname: isCommentState.nickname,
     };
 
-    CommentsSubmitAPI(param)
+    CommentSubmitAPI(param)
       .then((res) => {
         const response = res.data.response;
         console.log("BoardRead CommentsSubmitAPI response : ", response);
