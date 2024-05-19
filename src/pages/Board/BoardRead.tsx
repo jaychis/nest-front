@@ -5,7 +5,11 @@ import Card from "../../components/Card";
 import { ReadAPI } from "../api/BoardApi";
 import { useSearchParams } from "react-router-dom";
 import { CollectionTypes, ReactionTypes } from "../../_common/CollectionTypes";
-import { CommentSubmitAPI, CommentSubmitParams } from "../api/CommentApi";
+import {
+  CommentListAPI,
+  CommentSubmitAPI,
+  CommentSubmitParams,
+} from "../api/CommentApi";
 import BoardComment, { CommentType } from "./BoardComment";
 import BoardReply, { ReplyType } from "./BoardReply";
 
@@ -16,7 +20,6 @@ interface CardType {
   readonly content: string;
   readonly title: string;
   readonly nickname: string;
-  readonly comments: CommentType[];
   readonly created_at: Date;
   readonly updated_at: Date;
   readonly deleted_at?: Date | null;
@@ -45,23 +48,32 @@ interface CardType {
 
 const BoardRead = () => {
   const [params, setParams] = useSearchParams();
-  const [board, setBoard] = useState<CardType>({
+  const [isBoardState, setIsBoardStateBoard] = useState<CardType>({
     id: params.get("id") as string,
     identifier_id: "",
     category: "",
     content: params.get("content") as string,
     title: params.get("title") as string,
     nickname: "",
-    comments: [],
     created_at: new Date(),
     updated_at: new Date(),
     deleted_at: null,
     reactions: [],
   });
+  const [isCommentState, setIsCommentState] = useState<CommentType[]>([]);
 
   useEffect(() => {
-    const ID: string = board.id;
-    const TITLE: string = board.title;
+    const ID: string = isBoardState.id;
+    const TITLE: string = isBoardState.title;
+
+    CommentListAPI({ boardId: ID })
+      .then((commentRes) => {
+        const commentResponse = commentRes.data.response;
+        console.log("CommentListAPI commentResponse : ", commentResponse);
+
+        setIsCommentState([...commentResponse]);
+      })
+      .catch((err) => console.error(err));
 
     ReadAPI({
       id: ID,
@@ -71,34 +83,29 @@ const BoardRead = () => {
         const response = res.data.response;
 
         console.log("BoardRead ReadAPI response : ", response);
-        setBoard(response);
+        setIsBoardStateBoard(response);
       })
       .catch((err) => console.error(err));
   }, []);
 
-  const [isCommentState, setIsCommentState] = useState<CommentType>({
-    id: "",
-    boardId: board.id,
+  const [writeComment, setWriteComment] = useState<CommentSubmitParams>({
+    boardId: params.get("id") as string,
     content: "",
     nickname: localStorage.getItem("nickname") as string,
-    replies: [],
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    deletedAt: null,
   });
   const commentHandleChange = (event: CollectionTypes) => {
     const { name, value } = event;
 
-    setIsCommentState({
-      ...isCommentState,
+    setWriteComment({
+      ...writeComment,
       [name]: value,
     });
   };
   const commentWrite = () => {
     const param: CommentSubmitParams = {
-      boardId: isCommentState.boardId,
-      content: isCommentState.content,
-      nickname: isCommentState.nickname,
+      boardId: writeComment.boardId,
+      content: writeComment.content,
+      nickname: writeComment.nickname,
     };
 
     CommentSubmitAPI(param)
@@ -106,7 +113,7 @@ const BoardRead = () => {
         const response = res.data.response;
         console.log("BoardRead CommentsSubmitAPI response : ", response);
 
-        setIsCommentState(response);
+        setIsCommentState([...isCommentState, ...response]);
         window.location.reload();
       })
       .catch((err) => console.error(err));
@@ -144,13 +151,13 @@ const BoardRead = () => {
             <>
               <BoardComment
                 id={co.id}
-                boardId={co.boardId}
+                board_id={co.board_id}
                 content={co.content}
                 nickname={co.nickname}
                 replies={co.replies}
-                createdAt={co.createdAt}
-                updatedAt={co.updatedAt}
-                deletedAt={co.deletedAt}
+                created_at={co.created_at}
+                updated_at={co.updated_at}
+                deleted_at={co.deleted_at}
               />
 
               <div style={{ marginLeft: "40px" }}>
@@ -170,12 +177,12 @@ const BoardRead = () => {
         <GlobalSideBar />
         <div>
           <Card
-            id={board.id}
-            category={board.category}
-            title={board.title}
-            nickname={board.nickname}
-            createdAt={board.created_at}
-            content={board.content}
+            id={isBoardState.id}
+            category={isBoardState.category}
+            title={isBoardState.title}
+            nickname={isBoardState.nickname}
+            createdAt={isBoardState.created_at}
+            content={isBoardState.content}
           />
           <div
             style={{
@@ -243,7 +250,7 @@ const BoardRead = () => {
               </button>
             </div>
           </div>
-          {board.comments?.length > 0 ? renderComments(board.comments) : []}
+          {isCommentState?.length > 0 ? renderComments(isCommentState) : []}
         </div>
       </div>
     </>

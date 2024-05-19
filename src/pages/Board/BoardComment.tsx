@@ -7,13 +7,13 @@ import { ReplySubmitAPI, ReplySubmitParams } from "../api/ReplyApi";
 
 export interface CommentType {
   readonly id: string;
-  readonly boardId: string;
+  readonly board_id: string;
   readonly content: string;
   readonly nickname: string;
   readonly replies: ReplyType[];
-  readonly createdAt: Date;
-  readonly updatedAt: Date;
-  readonly deletedAt: null | Date;
+  readonly created_at: Date;
+  readonly updated_at: Date;
+  readonly deleted_at: null | Date;
 }
 
 const BoardComment = (co: CommentType) => {
@@ -43,6 +43,8 @@ const BoardComment = (co: CommentType) => {
         userId: USER_ID,
         type,
       };
+
+      console.log("comment reaction param : ", param);
       ReactionAPI(param)
         .then((res) => {
           const status: number = res.status;

@@ -12,3 +12,14 @@ export const CommentSubmitAPI = async (params: CommentSubmitParams) => {
 
   return res;
 };
+
+export interface CommentListParams {
+  readonly boardId: string;
+}
+export const CommentListAPI = async ({ boardId }: CommentListParams) => {
+  const URL: string = `comments?boardId=${boardId}`;
+
+  const res = await client.get(URL);
+
+  return res;
+};
