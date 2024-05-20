@@ -114,22 +114,30 @@ const BoardComment = (co: BoardCommentProps) => {
   };
 
   useEffect(() => {
-    ReactionListAPI({ boardId: ID }).then((res) => {
-      const response = res.data.response;
+    ReactionListAPI({ boardId: ID })
+      .then((res): void => {
+        const response = res.data.response;
 
-      response.forEach((el: ReactionType) => {
-        if (USER_ID === el.user_id) {
-          setCommentIsReaction(el.type);
-        }
-      });
-    });
+        response.forEach((el: ReactionType): void => {
+          if (USER_ID === el.user_id) {
+            setCommentIsReaction(el.type);
+          }
+        });
+      })
+      .catch((err) =>
+        console.error("BoardComment ReactionListAPI err : ", err),
+      );
 
-    ReactionCountAPI({ boardId: ID }).then((res) => {
-      const resCount = res.data.response;
-      console.log("resCount : ", resCount);
+    ReactionCountAPI({ boardId: ID })
+      .then((res): void => {
+        const resCount = res.data.response;
+        console.log("resCount : ", resCount);
 
-      setIsCardCommentCount(resCount.count);
-    });
+        setIsCardCommentCount(resCount.count);
+      })
+      .catch((err) =>
+        console.error("BoardComment ReactionCountAPI err : ", err),
+      );
   }, [isCommentReaction]);
 
   return (
