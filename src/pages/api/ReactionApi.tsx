@@ -17,6 +17,7 @@ export interface ReactionParams {
   readonly type: "LIKE" | "DISLIKE";
   readonly boardId: string;
   readonly userId: string;
+  readonly reactionTarget: "BOARD" | "COMMENT" | "REPLY";
 }
 
 export const ReactionAPI = async (params: ReactionParams) => {
