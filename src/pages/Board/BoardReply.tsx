@@ -1,7 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ReactionStateTypes } from "../../_common/CollectionTypes";
-import { ReactionAPI, ReactionParams } from "../api/ReactionApi";
+import {
+  ReactionAPI,
+  ReactionCountAPI,
+  ReactionListAPI,
+  ReactionParams,
+} from "../api/ReactionApi";
 import logo from "../../assets/img/panda_logo.png";
+import { ReactionType } from "../../components/Card";
 
 export interface ReplyType {
   readonly id: string;
@@ -31,14 +37,19 @@ const BoardReply = (re: ReplyType) => {
 
   const [isReplyReplyButton, setIsReplyReplyButton] = useState<boolean>(false);
 
+  const ID: string = re.id;
+  const USER_ID: string = localStorage.getItem("id") as string;
+
   const reactionReplyButton = async (type: ReactionStateTypes) => {
     if (type !== null) {
       const param: ReactionParams = {
-        boardId: re.comment_id,
-        userId: localStorage.getItem("id") as string,
+        boardId: ID,
+        userId: USER_ID,
         type,
         reactionTarget: "REPLY",
       };
+
+      console.log("reply reaction param : ", param);
       ReactionAPI(param)
         .then((res) => {
           const status: number = res.status;
@@ -53,6 +64,28 @@ const BoardReply = (re: ReplyType) => {
         .catch((err) => console.error(err));
     }
   };
+
+  useEffect(() => {
+    ReactionListAPI({ boardId: ID })
+      .then((res): void => {
+        const response = res.data.response;
+
+        response.forEach((el: ReactionType): void => {
+          if (USER_ID === el.user_id) {
+            setReplyIsReaction(el.type);
+          }
+        });
+      })
+      .catch((err) => console.error("BoardReply ReactionListAPI err : ", err));
+
+    ReactionCountAPI({ boardId: ID })
+      .then((res): void => {
+        const resCount = res.data.response;
+
+        setIsCardReplyCount(resCount.count);
+      })
+      .catch((err) => console.error("BoardReply ReactionCountAPI err : ", err));
+  }, [isReplyReaction]);
 
   return (
     <>
@@ -148,32 +181,32 @@ const BoardReply = (re: ReplyType) => {
             싫어요
           </button>
         </div>
-        <div
-          style={{
-            marginRight: "10px",
-            borderRadius: "30px",
-            width: "75px",
-            height: "50px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <button
-            onMouseEnter={() => setIsCardReplyReplyHovered(true)}
-            onMouseLeave={() => setIsCardReplyReplyHovered(false)}
-            style={{
-              backgroundColor: isCardReplyReplyHovered ? "#c9c6c5" : "#f5f5f5",
-              border: "none",
-              width: "65px",
-              height: "30px",
-              borderRadius: "30px",
-            }}
-            onClick={() => setIsReplyReplyButton(!isReplyReplyButton)}
-          >
-            답글
-          </button>
-        </div>
+        {/*<div*/}
+        {/*  style={{*/}
+        {/*    marginRight: "10px",*/}
+        {/*    borderRadius: "30px",*/}
+        {/*    width: "75px",*/}
+        {/*    height: "50px",*/}
+        {/*    display: "flex",*/}
+        {/*    justifyContent: "center",*/}
+        {/*    alignItems: "center",*/}
+        {/*  }}*/}
+        {/*>*/}
+        {/*  <button*/}
+        {/*    onMouseEnter={() => setIsCardReplyReplyHovered(true)}*/}
+        {/*    onMouseLeave={() => setIsCardReplyReplyHovered(false)}*/}
+        {/*    style={{*/}
+        {/*      backgroundColor: isCardReplyReplyHovered ? "#c9c6c5" : "#f5f5f5",*/}
+        {/*      border: "none",*/}
+        {/*      width: "65px",*/}
+        {/*      height: "30px",*/}
+        {/*      borderRadius: "30px",*/}
+        {/*    }}*/}
+        {/*    onClick={() => setIsReplyReplyButton(!isReplyReplyButton)}*/}
+        {/*  >*/}
+        {/*    답글*/}
+        {/*  </button>*/}
+        {/*</div>*/}
         <div
           style={{
             marginRight: "10px",
