@@ -28,6 +28,7 @@ const GlobalBar = () => {
         style={{ width: "50px", cursor: "pointer" }}
         onClick={() => navigate("/")}
       />
+      <span>{"jaych.com"}</span>
 
       {/* Search Bar */}
       <div
