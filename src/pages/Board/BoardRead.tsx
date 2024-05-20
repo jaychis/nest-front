@@ -4,7 +4,10 @@ import GlobalSideBar from "../Global/GlobalSideBar";
 import Card from "../../components/Card";
 import { ReadAPI } from "../api/BoardApi";
 import { useSearchParams } from "react-router-dom";
-import { CollectionTypes, ReactionTypes } from "../../_common/CollectionTypes";
+import {
+  CollectionTypes,
+  ReactionStateTypes,
+} from "../../_common/CollectionTypes";
 import {
   CommentListAPI,
   CommentSubmitAPI,
@@ -26,7 +29,7 @@ interface CardType {
 
   readonly reactions: {
     id: string;
-    type: ReactionTypes;
+    type: ReactionStateTypes;
     user_id: string;
     board_id: string;
     created_at: Date;
@@ -102,21 +105,34 @@ const BoardRead = () => {
     });
   };
   const commentWrite = () => {
-    const param: CommentSubmitParams = {
-      boardId: writeComment.boardId,
-      content: writeComment.content,
-      nickname: writeComment.nickname,
-    };
+    if (!writeComment.content) {
+      alert("댓글을 내용을 입력해주세요");
+      return;
+    } else {
+      const param: CommentSubmitParams = {
+        boardId: writeComment.boardId,
+        content: writeComment.content,
+        nickname: writeComment.nickname,
+      };
 
-    CommentSubmitAPI(param)
-      .then((res) => {
-        const response = res.data.response;
-        console.log("BoardRead CommentsSubmitAPI response : ", response);
+      CommentSubmitAPI(param)
+        .then((res) => {
+          const response = res.data.response;
+          console.log("BoardRead CommentsSubmitAPI response : ", response);
 
-        setIsCommentState([...isCommentState, ...response]);
-        window.location.reload();
-      })
-      .catch((err) => console.error(err));
+          setIsCommentState([response, ...isCommentState]);
+
+          // setWriteComment({
+          //   ...writeComment,
+          //   content: "",
+          // });
+          setWriteComment((prev) => ({
+            ...prev,
+            content: "",
+          }));
+        })
+        .catch((err) => console.error(err));
+    }
   };
 
   // BoardReply
@@ -126,15 +142,17 @@ const BoardRead = () => {
         {replies.map((re) => {
           return (
             <>
-              <BoardReply
-                id={re.id}
-                commentId={re.commentId}
-                content={re.content}
-                nickname={re.nickname}
-                createdAt={re.createdAt}
-                updatedAt={re.updatedAt}
-                deletedAt={re.deletedAt}
-              />
+              <div key={re.id}>
+                <BoardReply
+                  id={re.id}
+                  comment_id={re.comment_id}
+                  content={re.content}
+                  nickname={re.nickname}
+                  created_at={re.created_at}
+                  updated_at={re.updated_at}
+                  deleted_at={re.deleted_at}
+                />
+              </div>
             </>
           );
         })}
@@ -149,25 +167,53 @@ const BoardRead = () => {
         {comments.map((co) => {
           return (
             <>
-              <BoardComment
-                id={co.id}
-                board_id={co.board_id}
-                content={co.content}
-                nickname={co.nickname}
-                replies={co.replies}
-                created_at={co.created_at}
-                updated_at={co.updated_at}
-                deleted_at={co.deleted_at}
-              />
+              <div key={co.id}>
+                <BoardComment
+                  id={co.id}
+                  board_id={co.board_id}
+                  content={co.content}
+                  nickname={co.nickname}
+                  replies={co.replies}
+                  created_at={co.created_at}
+                  updated_at={co.updated_at}
+                  deleted_at={co.deleted_at}
+                  onReplySubmit={handleReplySubmit}
+                />
 
-              <div style={{ marginLeft: "40px" }}>
-                {co.replies.length > 0 ? renderReplies(co.replies) : []}
+                <div style={{ marginLeft: "40px" }}>
+                  {co.replies?.length > 0 ? renderReplies(co.replies) : []}
+                </div>
               </div>
             </>
           );
         })}
       </div>
     );
+  };
+
+  const handleReplySubmit = (reply: ReplyType) => {
+    console.log("handleReplySubmit reply : ", reply);
+
+    setIsCommentState((prevState: CommentType[]) => {
+      const a = prevState.map((comment: CommentType) => {
+        console.log(
+          "comment.id === reply.commentId : ",
+          comment.id === reply.comment_id,
+        );
+        console.log("comment.id : ", comment.id);
+        console.log("reply.commentId : ", reply.comment_id);
+        console.log("comment :::: ", comment);
+
+        if (comment.id === reply.comment_id) {
+          return { ...comment, replies: [...comment.replies, reply] };
+        } else {
+          return comment;
+        }
+      });
+      console.log("a :: ", a);
+
+      return a;
+    });
   };
 
   return (
@@ -205,6 +251,7 @@ const BoardRead = () => {
                 outline: "none",
               }}
               name={"content"}
+              value={writeComment.content}
               onChange={(value) =>
                 commentHandleChange({
                   name: value.target.name,
