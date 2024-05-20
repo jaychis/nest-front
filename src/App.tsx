@@ -8,6 +8,7 @@ import BoardSubmit from "./pages/Board/BoardSubmit";
 import BoardRead from "./pages/Board/BoardRead";
 import Profile from "./pages/User/Profile";
 import UsersInquiry from "./pages/User/UsersInquiry";
+import ScrollToTop from "./components/ScrollToTop";
 
 const Layout = () => {
   return (
@@ -25,6 +26,7 @@ function App() {
   return (
     <>
       <Router>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Layout />} />
 
