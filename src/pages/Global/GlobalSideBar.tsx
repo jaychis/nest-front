@@ -63,7 +63,7 @@ const GlobalSideBar = () => {
           onClick={() => handleClick("HOME")}
           style={{ marginLeft: "8px", cursor: "pointer", fontSize: "24px" }}
         >
-          Home
+          홈
         </span>
       </div>
       <div
@@ -91,7 +91,7 @@ const GlobalSideBar = () => {
           onClick={() => handleClick("POPULAR")}
           style={{ marginLeft: "8px", cursor: "pointer", fontSize: "24px" }}
         >
-          Popular
+          실시간
         </span>
       </div>
       <div
@@ -119,7 +119,7 @@ const GlobalSideBar = () => {
           onClick={() => handleClick("ALL")}
           style={{ marginLeft: "8px", cursor: "pointer", fontSize: "24px" }}
         >
-          All
+          게시글
         </span>
       </div>
       <div style={{ borderBottom: "1px solid #ccc", margin: "20px 0" }}></div>
