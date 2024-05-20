@@ -1,9 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { CollectionTypes, ReactionTypes } from "../../_common/CollectionTypes";
-import { ReactionAPI, ReactionParams } from "../api/ReactionApi";
+import {
+  CollectionTypes,
+  ReactionStateTypes,
+} from "../../_common/CollectionTypes";
+import {
+  ReactionAPI,
+  ReactionCountAPI,
+  ReactionListAPI,
+  ReactionParams,
+} from "../api/ReactionApi";
 import logo from "../../assets/img/panda_logo.png";
 import { ReplyType } from "./BoardReply";
 import { ReplySubmitAPI, ReplySubmitParams } from "../api/ReplyApi";
+import { ReactionType } from "../../components/Card";
 
 export interface CommentType {
   readonly id: string;
@@ -16,7 +25,11 @@ export interface CommentType {
   readonly deleted_at: null | Date;
 }
 
-const BoardComment = (co: CommentType) => {
+interface BoardCommentProps extends CommentType {
+  onReplySubmit: (reply: ReplyType) => void;
+}
+
+const BoardComment = (co: BoardCommentProps) => {
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const [isCardCommentCount, setIsCardCommentCount] = useState<number>(0);
   const [isCardCommentUpHovered, setIsCardCommentUpHovered] =
@@ -30,18 +43,20 @@ const BoardComment = (co: CommentType) => {
   const [isCardCommentSendHovered, setIsCardCommentSendHovered] =
     useState<boolean>(false);
   const [isCommentReaction, setCommentIsReaction] =
-    useState<ReactionTypes>(null);
+    useState<ReactionStateTypes>(null);
   const [isCommentReplyButton, setIsCommentReplyButton] =
     useState<boolean>(false);
 
   const USER_ID: string = localStorage.getItem("id") as string;
+  const ID: string = co.id;
 
-  const reactionCommentButton = async (type: ReactionTypes) => {
+  const reactionCommentButton = async (type: ReactionStateTypes) => {
     if (type !== null) {
       const param: ReactionParams = {
-        boardId: co.id,
+        boardId: ID,
         userId: USER_ID,
         type,
+        reactionTarget: "COMMENT",
       };
 
       console.log("comment reaction param : ", param);
@@ -62,12 +77,12 @@ const BoardComment = (co: CommentType) => {
 
   const [isReplyState, setIsReplyState] = useState<ReplyType>({
     id: "",
-    commentId: co.id,
+    comment_id: co.id,
     content: "",
     nickname: localStorage.getItem("nickname") as string,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    deletedAt: null,
+    created_at: new Date(),
+    updated_at: new Date(),
+    deleted_at: null,
   });
   const replyHandleChange = (event: CollectionTypes) => {
     const { name, value } = event;
@@ -79,21 +94,43 @@ const BoardComment = (co: CommentType) => {
   };
   const replyWrite = () => {
     const param: ReplySubmitParams = {
-      commentId: isReplyState.commentId,
+      commentId: isReplyState.comment_id,
       content: isReplyState.content,
       nickname: isReplyState.nickname,
     };
 
     ReplySubmitAPI(param)
       .then((res) => {
-        const response = res.data.response;
+        const response: ReplyType = res.data.response;
         console.log("ReplySubmitAPI response : ", response);
 
-        setIsReplyState(response);
-        window.location.reload();
+        co.onReplySubmit(response);
+        setIsReplyState({
+          ...isReplyState,
+          content: "",
+        });
       })
       .catch((err) => console.error(err));
   };
+
+  useEffect(() => {
+    ReactionListAPI({ boardId: ID }).then((res) => {
+      const response = res.data.response;
+
+      response.forEach((el: ReactionType) => {
+        if (USER_ID === el.user_id) {
+          setCommentIsReaction(el.type);
+        }
+      });
+    });
+
+    ReactionCountAPI({ boardId: ID }).then((res) => {
+      const resCount = res.data.response;
+      console.log("resCount : ", resCount);
+
+      setIsCardCommentCount(resCount.count);
+    });
+  }, [isCommentReaction]);
 
   return (
     <>
@@ -291,6 +328,7 @@ const BoardComment = (co: CommentType) => {
               outline: "none",
             }}
             name={"content"}
+            value={isReplyState.content}
             onChange={(value) =>
               replyHandleChange({
                 name: value.target.name,
