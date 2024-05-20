@@ -4,7 +4,7 @@ import GlobalSideBar from "../Global/GlobalSideBar";
 import Card from "../../components/Card";
 import { useSearchParams } from "react-router-dom";
 import { UsersInquiryAPI } from "../api/UserApi";
-import { ReactionTypes } from "../../_common/CollectionTypes";
+import { ReactionStateTypes } from "../../_common/CollectionTypes";
 
 interface ContainerProps {
   children?: React.ReactNode;
@@ -58,7 +58,7 @@ interface CardType {
 
   readonly reactions: {
     id: string;
-    type: ReactionTypes;
+    type: ReactionStateTypes;
     user_id: string;
     board_id: string;
     created_at: Date;

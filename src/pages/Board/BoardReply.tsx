@@ -1,16 +1,16 @@
 import React, { useState } from "react";
-import { ReactionTypes } from "../../_common/CollectionTypes";
+import { ReactionStateTypes } from "../../_common/CollectionTypes";
 import { ReactionAPI, ReactionParams } from "../api/ReactionApi";
 import logo from "../../assets/img/panda_logo.png";
 
 export interface ReplyType {
   readonly id: string;
-  readonly commentId: string;
+  readonly comment_id: string;
   readonly content: string;
   readonly nickname: string;
-  readonly createdAt: Date;
-  readonly updatedAt: Date;
-  readonly deletedAt: null;
+  readonly created_at: Date;
+  readonly updated_at: Date;
+  readonly deleted_at: null;
 }
 
 const BoardReply = (re: ReplyType) => {
@@ -26,16 +26,18 @@ const BoardReply = (re: ReplyType) => {
     useState<boolean>(false);
   const [isCardReplySendHovered, setIsCardReplySendHovered] =
     useState<boolean>(false);
-  const [isReplyReaction, setReplyIsReaction] = useState<ReactionTypes>(null);
+  const [isReplyReaction, setReplyIsReaction] =
+    useState<ReactionStateTypes>(null);
 
   const [isReplyReplyButton, setIsReplyReplyButton] = useState<boolean>(false);
 
-  const reactionReplyButton = async (type: ReactionTypes) => {
+  const reactionReplyButton = async (type: ReactionStateTypes) => {
     if (type !== null) {
       const param: ReactionParams = {
-        boardId: re.commentId,
+        boardId: re.comment_id,
         userId: localStorage.getItem("id") as string,
         type,
+        reactionTarget: "REPLY",
       };
       ReactionAPI(param)
         .then((res) => {

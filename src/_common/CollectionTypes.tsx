@@ -5,4 +5,4 @@ export interface CollectionTypes {
 
 export type MainListTypes = "HOME" | "POPULAR" | "ALL";
 
-export type ReactionTypes = "LIKE" | "DISLIKE" | null;
+export type ReactionStateTypes = "LIKE" | "DISLIKE" | null;

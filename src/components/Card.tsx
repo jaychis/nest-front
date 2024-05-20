@@ -5,8 +5,9 @@ import {
   ReactionAPI,
   ReactionCountAPI,
   ReactionListAPI,
+  ReactionParams,
 } from "../pages/api/ReactionApi";
-import { ReactionTypes } from "../_common/CollectionTypes";
+import { ReactionStateTypes } from "../_common/CollectionTypes";
 
 interface Props {
   readonly id: string;
@@ -17,10 +18,10 @@ interface Props {
   readonly createdAt: Date;
 }
 
-interface ReactionType {
+export interface ReactionType {
   readonly id: string;
   readonly boardI_id: string;
-  readonly type: ReactionTypes;
+  readonly type: ReactionStateTypes;
   readonly user_id: string;
   readonly created_at: Date;
   readonly updated_at: Date;
@@ -37,15 +38,16 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
   const [isCardShareHovered, setIsCardShareHovered] = useState<boolean>(false);
   const [isCardSendHovered, setIsCardSendHovered] = useState<boolean>(false);
 
-  const [isReaction, setIsReaction] = useState<ReactionTypes>(null);
+  const [isReaction, setIsReaction] = useState<ReactionStateTypes>(null);
 
   const USER_ID: string = localStorage.getItem("id") as string;
-  const reactionButton = async (type: ReactionTypes) => {
+  const reactionButton = async (type: ReactionStateTypes) => {
     if (type !== null) {
-      const param = {
+      const param: ReactionParams = {
         boardId: id,
         userId: USER_ID,
         type,
+        reactionTarget: "BOARD",
       };
       ReactionAPI(param)
         .then((res) => {

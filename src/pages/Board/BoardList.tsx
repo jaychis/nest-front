@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { AllListAPI, ListAPI, PopularListAPI } from "../api/BoardApi";
 import Card from "../../components/Card";
-import { ReactionTypes } from "../../_common/CollectionTypes";
+import { ReactionStateTypes } from "../../_common/CollectionTypes";
 import { MainListTypeState } from "../../reducers/mainListTypeSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
@@ -58,7 +58,7 @@ interface ListType {
 
   readonly reactions: {
     id: string;
-    type: ReactionTypes;
+    type: ReactionStateTypes;
     user_id: string;
     board_id: string;
     created_at: Date;
