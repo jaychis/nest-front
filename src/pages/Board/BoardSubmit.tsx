@@ -6,15 +6,15 @@ import MarkdownIt from "markdown-it";
 import MdEditor from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
 import { getPresignedUrlAPI } from "../api/PresignedUrlApi";
-import MarkdownIt from 'markdown-it';
-import MdEditor from 'react-markdown-editor-lite';
-import 'react-markdown-editor-lite/lib/index.css';
+
 
 const mdParser = new MarkdownIt();
 
 const BoardSubmit = () => {
   const navigate = useNavigate();
   const [inputType, setInputType] = useState("TEXT"); // 기본값은 텍스트
+  const editorRef = useRef<HTMLDivElement>(null); // MdEditor의 ref
+  const [editorHeight, setEditorHeight] = useState(200); // 에디터 초기 높이
 
   const ID: string = localStorage.getItem("id") as string;
   const NICKNAME: string = localStorage.getItem("nickname") as string;
@@ -220,12 +220,25 @@ const BoardSubmit = () => {
             background: "#fff",
           }}
         >
-          <div style={{ marginBottom: "20px" }}>
-            <button onClick={() => setInputType("TEXT")}>텍스트</button>
-            <button onClick={() => setInputType("MEDIA")}>
+          <div style={{ marginBottom: "20px", display: "flex", justifyContent: "flex-start" }}>
+            <button
+              onClick={() => setInputType('TEXT')}
+              style={inputType === 'TEXT' ? activeButtonStyle : buttonStyle}
+            >
+              텍스트
+            </button>
+            <button
+              onClick={() => setInputType('MEDIA')}
+              style={inputType === 'MEDIA' ? activeButtonStyle : buttonStyle}
+            >
               이미지 & 비디오
             </button>
-            <button onClick={() => setInputType("LINK")}>링크</button>
+            <button
+              onClick={() => setInputType('LINK')}
+              style={inputType === 'LINK' ? activeButtonStyle : buttonStyle}
+            >
+              링크
+            </button>
           </div>
           <form onSubmit={handleSubmit}>
             {inputType === "TEXT" && (
@@ -238,7 +251,7 @@ const BoardSubmit = () => {
                   style={inputStyle}
                 />
                 <MdEditor
-                  style={{ height: "500px" }}
+                  style={{ height: "200px" }}
                   renderHTML={(text) => mdParser.render(text)}
                   onChange={handleEditorChange}
                   view={{ menu: true, md: true, html: false }}
