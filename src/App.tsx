@@ -9,11 +9,13 @@ import BoardRead from "./pages/Board/BoardRead";
 import Profile from "./pages/User/Profile";
 import UsersInquiry from "./pages/User/UsersInquiry";
 import ScrollToTop from "./components/ScrollToTop";
+import RightSideBar from "./pages/Global/RightSideBar";
 
 const Layout = () => {
   return (
     <>
       <GlobalBar />
+      <RightSideBar />
       <div style={{ display: "flex" }}>
         <GlobalSideBar />
         <BoardList />
