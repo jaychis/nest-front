@@ -1,4 +1,4 @@
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState, useRef } from "react";
 import BoardBar from "./BoardBar";
 import { SubmitAPI, SubmitParams } from "../api/BoardApi";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +6,9 @@ import MarkdownIt from "markdown-it";
 import MdEditor from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
 import { getPresignedUrlAPI } from "../api/PresignedUrlApi";
+import MarkdownIt from 'markdown-it';
+import MdEditor from 'react-markdown-editor-lite';
+import 'react-markdown-editor-lite/lib/index.css';
 
 const mdParser = new MarkdownIt();
 
@@ -112,7 +115,23 @@ const BoardSubmit = () => {
       ...prev,
       content: text,
     }));
+    adjustEditorHeight();
   };
+
+  const adjustEditorHeight = () => {
+    if (editorRef.current) {
+      const editorElement = editorRef.current.querySelector('.rc-md-editor'); // mdEditor root element
+      if (editorElement) {
+        const scrollHeight = editorElement.scrollHeight;
+        const newHeight = Math.min(scrollHeight, 700); // 최대 높이 700px
+        setEditorHeight(newHeight);
+      }
+    }
+  };
+
+  useEffect(() => {
+    adjustEditorHeight();
+  }, [board.content]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -127,7 +146,7 @@ const BoardSubmit = () => {
       .catch((err) => console.error(err));
   };
 
-  const inputStyle = {
+  const inputStyle= {
     width: "100%",
     height: "30px",
     marginBottom: "10px",
@@ -139,19 +158,40 @@ const BoardSubmit = () => {
 
   const textareaStyle = {
     ...inputStyle,
-    minHeight: "100px",
-    height: "400px",
+    minHeight: "50px", // 기본 높이를 작게 설정
+    maxHeight: "700px", // 최대 높이를 설정
+    overflowY: "auto" as 'auto', // 최대 높이를 넘으면 스크롤이 생기도록 설정
+    resize: "none" // 사용자가 높이를 조정할 수 없도록 설정
   };
 
   const submitButtonStyle = {
     padding: "10px 20px",
-    backgroundColor: "#ddd",
+    backgroundColor: "#0079D3",
     color: "white",
     border: "none",
     borderRadius: "4px",
     cursor: "pointer",
+    fontWeight: "bold",
+    marginTop: "20px"
   };
 
+  const buttonStyle = {
+    padding: "10px 20px",
+    margin: "0 0",
+    border: "1px solid #0079D3",
+    borderRadius: "4px",
+    cursor: "pointer",
+    backgroundColor: "white",
+    color: "#0079D3",
+    fontWeight: "bold",
+    transition: "background-color 0.3s, color 0.3s"
+  };
+
+  const activeButtonStyle = {
+    ...buttonStyle,
+    backgroundColor: "#007BFF",
+    color: "white"
+  };
   return (
     <>
       <div style={{ backgroundColor: "#4F657755", height: "100vh" }}>
@@ -201,6 +241,7 @@ const BoardSubmit = () => {
                   style={{ height: "500px" }}
                   renderHTML={(text) => mdParser.render(text)}
                   onChange={handleEditorChange}
+                  view={{ menu: true, md: true, html: false }}
                 />
               </>
             )}

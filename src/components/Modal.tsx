@@ -53,6 +53,7 @@ const Modal = ({ children, isOpen, onClose, buttonLabel }: Props) => {
                   marginLeft: "auto",
                   marginRight: "10px",
                 }}
+                
                 onClick={onClose}
               >
                 Close

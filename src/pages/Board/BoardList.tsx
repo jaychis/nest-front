@@ -38,6 +38,7 @@ const CardsContainer = ({ children }: ContainerProps) => {
         alignItems: "center",
         width: "100%",
         maxWidth: "1100px",
+
       }}
     >
       {children}

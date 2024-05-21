@@ -1,14 +1,21 @@
-import React, { useState } from "react";
-import { FaSistrix, FaUserAlt, FaPlus } from "react-icons/fa";
+import React, { useRef, useState } from "react";
+import { FaSistrix, FaUserAlt, FaPlus, FaBell } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import UserModalForm from "../User/UserModalForm";
 import logo from "../../assets/img/panda_logo.png";
+import ProfileModal from "../User/ProfileModal";
 
 const GlobalBar = () => {
   const navigate = useNavigate();
   const postSubmit = () => navigate("/boards/submit");
   const [postHover, setPostHover] = useState<boolean>(false);
   const [userHover, setUserHover] = useState<boolean>(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false);
+  const userButtonRef = useRef<HTMLDivElement>(null);
+
+  const toggleProfileModal = () => {
+    setIsProfileModalOpen(!isProfileModalOpen);
+  };
 
   return (
     <nav
@@ -60,27 +67,63 @@ const GlobalBar = () => {
       <div style={{ display: "flex", alignItems: "center" }}>
         {localStorage.getItem("access_token") ? (
           <>
-            <button
+            <div
+              ref={userButtonRef}
               style={{
-                background: userHover ? "#4F657755" : "white",
-                border: "none",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: "50%",
+                width: "40px",
+                height: "40px",
+                background: userHover ? "#007BFF" : "transparent",
+                cursor: "pointer",
               }}
               onMouseEnter={() => setUserHover(true)}
               onMouseLeave={() => setUserHover(false)}
+              onClick={toggleProfileModal}
             >
-              <FaUserAlt style={{ marginRight: "20px" }} /> {/* User Icon */}
-            </button>
+              <FaUserAlt style={{ color: userHover ? "white" : "black" }} />
+            </div>
+            <ProfileModal
+              isOpen={isProfileModalOpen}
+              onRequestClose={toggleProfileModal}
+              buttonRef={userButtonRef}
+
+            />
             <button
               onMouseEnter={() => setPostHover(true)}
               onMouseLeave={() => setPostHover(false)}
               style={{
                 background: postHover ? "#4F657755" : "white",
                 border: "none",
+                display: "flex",
+                alignItems: "center",
+                cursor: "pointer",
+              }}
+              onClick={postSubmit}
+            >
+              <FaPlus style={{ marginRight: "5px" }} />
+              <span>Create</span>
+            </button>
+            {/* Plus/Create Icon */}
+
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: "50%",
+                width: "40px",
+                height: "40px",
+                background: "transparent",
+                cursor: "pointer",
+                marginLeft: "10px",
               }}
             >
-              <FaPlus onClick={postSubmit} />
-              {/* Plus/Create Icon */}
-            </button>
+              <FaBell style={{ color: "black" }} />
+            </div>
+            {/* Notification Icon */}
           </>
         ) : (
           <>
@@ -91,4 +134,5 @@ const GlobalBar = () => {
     </nav>
   );
 };
+
 export default GlobalBar;

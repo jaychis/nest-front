@@ -13,7 +13,7 @@ const GlobalSideBar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  const [isSideHovered, setIsSideHovered] = useState<MainListTypes>("HOME");
+  const [isSideHovered, setIsSideHovered] = useState<MainListTypes | null>(null);
   const [selectedButton, setSelectedButton] = useState<MainListTypes>("HOME");
 
   const handleClick = (button: MainListTypes) => {
@@ -32,7 +32,7 @@ const GlobalSideBar = () => {
         display: "flex",
         flexDirection: "column",
         width: "40vh",
-        height: "100vh",
+        height: "200vh",
         background: "#fff",
         marginRight: "20px",
         border: "2px solid #D3D3D3",
@@ -51,8 +51,8 @@ const GlobalSideBar = () => {
           margin: "5px",
         }}
         onMouseEnter={() => setIsSideHovered("HOME")}
-        onMouseLeave={() => setIsSideHovered("HOME")}
-      >
+        onMouseLeave={() => setIsSideHovered(null)}
+        >
         <span
           onClick={() => handleClick("HOME")}
           style={{ fontSize: "24px", cursor: "pointer" }}
@@ -79,8 +79,8 @@ const GlobalSideBar = () => {
           margin: "5px",
         }}
         onMouseEnter={() => setIsSideHovered("POPULAR")}
-        onMouseLeave={() => setIsSideHovered("POPULAR")}
-      >
+        onMouseLeave={() => setIsSideHovered(null)}
+        >
         <span
           onClick={() => handleClick("POPULAR")}
           style={{ fontSize: "24px", cursor: "pointer" }}
@@ -107,8 +107,8 @@ const GlobalSideBar = () => {
           margin: "5px",
         }}
         onMouseEnter={() => setIsSideHovered("ALL")}
-        onMouseLeave={() => setIsSideHovered("ALL")}
-      >
+        onMouseLeave={() => setIsSideHovered(null)}
+        >
         <span
           onClick={() => handleClick("ALL")}
           style={{ fontSize: "24px", cursor: "pointer" }}
