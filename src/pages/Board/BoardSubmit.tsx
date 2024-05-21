@@ -1,17 +1,19 @@
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState, useRef } from "react";
 import BoardBar from "./BoardBar";
 import { SubmitAPI, SubmitParams } from "../api/BoardApi";
 import { useNavigate } from "react-router-dom";
 import MarkdownIt from 'markdown-it';
 import MdEditor from 'react-markdown-editor-lite';
 import 'react-markdown-editor-lite/lib/index.css';
-import TextareaAutosize from 'react-textarea-autosize';
 
 const mdParser = new MarkdownIt();
 
 const BoardSubmit = () => {
   const navigate = useNavigate();
+  const editorRef = useRef<HTMLDivElement>(null); // MdEditor의 ref
   const [inputType, setInputType] = useState('TEXT'); // 기본값은 텍스트
+  const [editorHeight, setEditorHeight] = useState(200); // 에디터 초기 높이
+  
   const [board, setBoard] = useState<SubmitParams>({
     title: "",
     content: "",
@@ -62,7 +64,23 @@ const BoardSubmit = () => {
       ...prev,
       content: text
     }));
+    adjustEditorHeight();
   };
+
+  const adjustEditorHeight = () => {
+    if (editorRef.current) {
+      const editorElement = editorRef.current.querySelector('.rc-md-editor'); // mdEditor root element
+      if (editorElement) {
+        const scrollHeight = editorElement.scrollHeight;
+        const newHeight = Math.min(scrollHeight, 700); // 최대 높이 700px
+        setEditorHeight(newHeight);
+      }
+    }
+  };
+
+  useEffect(() => {
+    adjustEditorHeight();
+  }, [board.content]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -168,7 +186,7 @@ const BoardSubmit = () => {
                   style={inputStyle}
                 />
                 <MdEditor
-                  style={{ height: "200px" }}
+                  style={{ height: `${editorHeight}px` }}
                   renderHTML={(text) => mdParser.render(text)}
                   onChange={handleEditorChange}
                   view={{ menu: true, md: true, html: false }}

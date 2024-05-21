@@ -83,31 +83,9 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
           }}
         >
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <button
-              style={{
-                padding: "10px 20px",
-                backgroundColor: isCloseHovered ? "#77C2E2" : "#84d7fb",
-                color: "white",
-                border: "none",
-                borderRadius: "35px",
-                cursor: "pointer",
-              }}
-              onMouseEnter={() => setIsCloseHovered(true)}
-              onMouseLeave={() => setIsCloseHovered(false)}
-              onClick={() => {
-                console.log("close click");
-                modalIsOpen(false);
-              }}
-            >
-              Close
-            </button>
-          </div>
-
           <div style={{ textAlign: "center", marginBottom: "20px" }}>
             <h2>로그인</h2>
           </div>
-
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
             <button
               style={styles.socialButton}
@@ -191,7 +169,7 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
           </form>
 
           <div style={{ width: "100%", padding: "10px 0", textAlign: "center" }}>
-            <button onClick={onSwitchView} style={{ fontSize: "14px", color: "#007BFF" }}>
+            <button onClick={onSwitchView} style={styles.signupButton}>
               회원가입
             </button>
           </div>
@@ -243,6 +221,15 @@ const styles: { [key: string]: React.CSSProperties } = {
     borderRadius: "25px",
     border: "none",
     backgroundColor: "#007BFF",
+    color: "white",
+    cursor: "pointer",
+  },
+  signupButton: {
+    padding: "10px 20px",
+    width: "200px",
+    borderRadius: "25px",
+    border: "none",
+    backgroundColor: "red",
     color: "white",
     cursor: "pointer",
   },

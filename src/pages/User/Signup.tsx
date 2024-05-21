@@ -424,6 +424,11 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
               회원가입
             </button>
           </div>
+          <div style={{ width: "100%", padding: "10px 0", textAlign: "center" }}>
+            <button onClick={onSwitchView} style={styles.switchButton}>
+              로그인으로 전환
+            </button>
+          </div>
         </div>
       </div>
     </>
@@ -462,6 +467,15 @@ const styles: { [key: string]: React.CSSProperties } = {
     borderRadius: "25px",
     border: "none",
     backgroundColor: "#007BFF",
+    color: "white",
+    cursor: "pointer",
+  },
+  switchButton: {
+    padding: "10px 20px",
+    width: "200px",
+    borderRadius: "25px",
+    border: "none",
+    backgroundColor: "#000",
     color: "white",
     cursor: "pointer",
   },
