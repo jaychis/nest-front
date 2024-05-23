@@ -5,8 +5,7 @@ import { useNavigate } from "react-router-dom";
 import MarkdownIt from "markdown-it";
 import MdEditor from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
-import { getPresignedUrlAPI } from "../api/PresignedUrlApi";
-
+import { AWSImageRegistAPI, getPresignedUrlAPI } from "../api/AWSApi";
 
 const mdParser = new MarkdownIt();
 
@@ -37,37 +36,37 @@ const BoardSubmit = () => {
       setFile(event.target.files[0]);
     }
   };
+  useEffect(() => console.log("file : ", file), [file]);
 
-  const uploadFile = async () => {
+  const uploadFile = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+
+    console.log("uploadFile start");
     if (!file) {
       alert("이미지를 선택해주세요.");
       return;
     }
 
-    const key: string = `uploads/${ID}-${file.name}`;
-    const expired: number = 600;
-    getPresignedUrlAPI({ key, expired })
-      .then((res): void => {
-        const presignedUrl = res.data;
-        console.log("presignedUrl : ", presignedUrl);
+    const key: string = `uploads/${file.name}`;
+    const expires: number = 60000;
+    const res = await getPresignedUrlAPI({ key, expires });
+    const presignedUrl = res.data.response.url;
+    console.log("presignedUrl : ", presignedUrl);
 
-        // const uploadResponse = await fetch(presignedUrl, {
-        //   method: 'PUT',
-        //   headers: {
-        //     'Content-Type': file.type,
-        //   },
-        //   body: file,
-        // });
-        //
-        // if (uploadResponse.ok) {
-        //   // 파일 업로드가 성공하면 미리보기
-        //   const imageUrl = presignedUrl.split('?')[0];  // 쿼리 파라미터를 제거하여 이미지 URL을 얻습니다
-        //   setPreviewUrl(imageUrl);
-        // } else {
-        //   alert('Failed to upload file.');
-        // }
-      })
-      .catch((err) => console.error(err));
+    const uploadResult = await fetch(presignedUrl, {
+      method: "PUT",
+      body: file,
+    });
+    console.log("uploadResult : ", uploadResult);
+
+    if (uploadResult.ok) {
+      const imageUrl = presignedUrl.split("?")[0]; // URL에서 쿼리 파라미터를 제거하여 실제 이미지 URL을 추출합니다
+
+      console.log("imageUrl : ", imageUrl);
+      return imageUrl;
+    } else {
+      throw new Error("Image upload failed");
+    }
   };
 
   useEffect(() => {
@@ -120,7 +119,7 @@ const BoardSubmit = () => {
 
   const adjustEditorHeight = () => {
     if (editorRef.current) {
-      const editorElement = editorRef.current.querySelector('.rc-md-editor'); // mdEditor root element
+      const editorElement = editorRef.current.querySelector(".rc-md-editor"); // mdEditor root element
       if (editorElement) {
         const scrollHeight = editorElement.scrollHeight;
         const newHeight = Math.min(scrollHeight, 700); // 최대 높이 700px
@@ -146,7 +145,7 @@ const BoardSubmit = () => {
       .catch((err) => console.error(err));
   };
 
-  const inputStyle= {
+  const inputStyle = {
     width: "100%",
     height: "30px",
     marginBottom: "10px",
@@ -160,8 +159,8 @@ const BoardSubmit = () => {
     ...inputStyle,
     minHeight: "50px", // 기본 높이를 작게 설정
     maxHeight: "700px", // 최대 높이를 설정
-    overflowY: "auto" as 'auto', // 최대 높이를 넘으면 스크롤이 생기도록 설정
-    resize: "none" // 사용자가 높이를 조정할 수 없도록 설정
+    overflowY: "auto" as "auto", // 최대 높이를 넘으면 스크롤이 생기도록 설정
+    resize: "none", // 사용자가 높이를 조정할 수 없도록 설정
   };
 
   const submitButtonStyle = {
@@ -172,7 +171,7 @@ const BoardSubmit = () => {
     borderRadius: "4px",
     cursor: "pointer",
     fontWeight: "bold",
-    marginTop: "20px"
+    marginTop: "20px",
   };
 
   const buttonStyle = {
@@ -184,29 +183,22 @@ const BoardSubmit = () => {
     backgroundColor: "white",
     color: "#0079D3",
     fontWeight: "bold",
-    transition: "background-color 0.3s, color 0.3s"
+    transition: "background-color 0.3s, color 0.3s",
   };
 
   const activeButtonStyle = {
     ...buttonStyle,
     backgroundColor: "#007BFF",
-    color: "white"
+    color: "white",
   };
+
+  useEffect(() => {
+    console.log("previewUrl : ", previewUrl);
+  }, []);
   return (
     <>
       <div style={{ backgroundColor: "#4F657755", height: "100vh" }}>
         <BoardBar />
-
-        {/*prevuewUrl 테스트용*/}
-        {previewUrl && (
-          <img
-            id={"preview"}
-            src={previewUrl}
-            alt={"Image Preview"}
-            style={{ display: "block" }}
-          />
-        )}
-        {/**/}
 
         <div
           style={{
@@ -220,22 +212,29 @@ const BoardSubmit = () => {
             background: "#fff",
           }}
         >
-          <div style={{ marginBottom: "20px", display: "flex", justifyContent: "flex-start" }}>
+          <div
+            style={{
+              marginBottom: "20px",
+              display: "flex",
+              justifyContent: "flex-start",
+            }}
+          >
             <button
-              onClick={() => setInputType('TEXT')}
-              style={inputType === 'TEXT' ? activeButtonStyle : buttonStyle}
+              onClick={() => setInputType("TEXT")}
+              style={inputType === "TEXT" ? activeButtonStyle : buttonStyle}
             >
               텍스트
             </button>
             <button
-              onClick={() => setInputType('MEDIA')}
-              style={inputType === 'MEDIA' ? activeButtonStyle : buttonStyle}
+              onClick={() => setInputType("MEDIA")}
+              // onChange={handleFileChange}
+              style={inputType === "MEDIA" ? activeButtonStyle : buttonStyle}
             >
               이미지 & 비디오
             </button>
             <button
-              onClick={() => setInputType('LINK')}
-              style={inputType === 'LINK' ? activeButtonStyle : buttonStyle}
+              onClick={() => setInputType("LINK")}
+              style={inputType === "LINK" ? activeButtonStyle : buttonStyle}
             >
               링크
             </button>
@@ -268,12 +267,30 @@ const BoardSubmit = () => {
                   style={inputStyle}
                 />
                 <input
-                  type="file"
-                  accept="image/*,video/*"
-                  onChange={handleMediaChange}
-                  multiple
+                  type={"file"}
+                  onChange={handleFileChange}
                   style={inputStyle}
                 />
+                {/*prevuewUrl 테스트용*/}
+                <div>
+                  <span>{"test"}</span>
+                  {previewUrl && (
+                    <img
+                      id={"preview"}
+                      src={previewUrl}
+                      alt={"Image Preview"}
+                      style={{ display: "block" }}
+                    />
+                  )}
+                </div>
+                {/**/}
+                {/*<input*/}
+                {/*  type="file"*/}
+                {/*  accept="image/*,video/*"*/}
+                {/*  onChange={handleMediaChange}*/}
+                {/*  multiple*/}
+                {/*  style={inputStyle}*/}
+                {/*/>*/}
               </>
             )}
             {inputType === "LINK" && (
@@ -293,7 +310,11 @@ const BoardSubmit = () => {
                 />
               </>
             )}
-            <button type="submit" style={submitButtonStyle}>
+            <button
+              type="submit"
+              style={submitButtonStyle}
+              onClick={uploadFile}
+            >
               보내기
             </button>
           </form>
