@@ -165,7 +165,7 @@ const BoardSubmit = () => {
 
   const submitButtonStyle = {
     padding: "10px 20px",
-    backgroundColor: "#0079D3",
+    backgroundColor: "#84d7fb",
     color: "white",
     border: "none",
     borderRadius: "4px",
@@ -177,7 +177,7 @@ const BoardSubmit = () => {
   const buttonStyle = {
     padding: "10px 20px",
     margin: "0 0",
-    border: "1px solid #0079D3",
+    border: "1px solid #000",
     borderRadius: "4px",
     cursor: "pointer",
     backgroundColor: "white",
@@ -188,8 +188,9 @@ const BoardSubmit = () => {
 
   const activeButtonStyle = {
     ...buttonStyle,
-    backgroundColor: "#007BFF",
+    backgroundColor: "#84d7fb",
     color: "white",
+    border: "#84d7fb"
   };
 
   useEffect(() => {
@@ -204,7 +205,7 @@ const BoardSubmit = () => {
           style={{
             marginTop: "20px",
             width: "1000px",
-            height: "70vh",
+            height: "auto",
             margin: "20px auto",
             padding: "30px",
             border: "1px solid #ccc",

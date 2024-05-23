@@ -97,7 +97,7 @@ const UsersInquiry = () => {
         }
       })
       .catch((err) => console.error(err));
-  }, []);
+  }, [params]);
 
   return (
     <>

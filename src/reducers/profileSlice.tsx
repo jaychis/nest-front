@@ -7,8 +7,8 @@ export interface ProfileState {
     email: string;
     nickname: string;
     phone: string;
-    created_at: Date;
-    updated_at: Date;
+    created_at: string; // Date -> string
+    updated_at: string; // Date -> string
     deleted_at?: Date | null;
   };
   status: "idle" | "loading" | "succeeded" | "failed";
@@ -21,8 +21,8 @@ const initialState: ProfileState = {
     email: "",
     nickname: "",
     phone: "",
-    created_at: new Date(),
-    updated_at: new Date(),
+    created_at: new Date().toISOString(), // Date -> ISO string
+    updated_at: new Date().toISOString(), // Date -> ISO string
     deleted_at: null,
   },
   status: "idle",
@@ -61,6 +61,6 @@ const profileSlice = createSlice({
       });
   },
 });
-
+export const { profile } = profileSlice.actions;
 const profileReducer = profileSlice.reducer;
 export default profileReducer;

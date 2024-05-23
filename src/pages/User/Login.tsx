@@ -220,7 +220,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     width: "200px",
     borderRadius: "25px",
     border: "none",
-    backgroundColor: "#007BFF",
+    backgroundColor: "#84d7fb",
     color: "white",
     cursor: "pointer",
   },
