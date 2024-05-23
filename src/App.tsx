@@ -11,14 +11,14 @@ import UsersInquiry from "./pages/User/UsersInquiry";
 import ScrollToTop from "./components/ScrollToTop";
 import RightSideBar from "./pages/Global/RightSideBar";
 
-const Layout = () => {
+const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <GlobalBar />
-      <RightSideBar />
       <div style={{ display: "flex" }}>
         <GlobalSideBar />
-        <BoardList />
+        <div style={{ flex: 1 }}>{children}</div>
+        <RightSideBar />
       </div>
     </>
   );
@@ -30,7 +30,7 @@ function App() {
       <Router>
         <ScrollToTop />
         <Routes>
-          <Route path="/" element={<Layout />} />
+        <Route path="/" element={<Layout><BoardList /></Layout>} />
 
           {/*게시판*/}
           <Route path="/boards/submit" element={<BoardSubmit />} />
@@ -38,7 +38,7 @@ function App() {
 
           {/*유저*/}
           <Route path="/users/profile" element={<Profile />} />
-          <Route path={"/users/inquiry"} element={<UsersInquiry />} />
+          <Route path="/users/inquiry" element={<UsersInquiry />} />
         </Routes>
       </Router>
     </>

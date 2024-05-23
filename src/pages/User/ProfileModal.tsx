@@ -62,7 +62,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onRequestClose, but
           width: '100%',
           padding: '10px',
           marginBottom: '10px',
-          backgroundColor: '#007BFF',
+          backgroundColor: '#84d7fb',
           color: 'white',
           border: 'none',
           borderRadius: '5px',
