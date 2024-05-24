@@ -29,49 +29,54 @@ const BoardSubmit = () => {
     youtubeLinks: [],
   });
 
-  const [file, setFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string>("");
+  const [files, setFiles] = useState<File[]>([]);
+  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      setFile(event.target.files[0]);
+    if (event.target.files) {
+      setFiles(Array.from(event.target.files));
     }
   };
-  useEffect(() => console.log("file : ", file), [file]);
 
   const uploadFile = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
-    console.log("uploadFile start");
-    if (!file) {
+    if (files.length === 0) {
       alert("이미지를 선택해주세요.");
       return;
     }
 
-    const key: string = `uploads/${file.name}`;
-    const expires: number = 60000;
-    const res = await getPresignedUrlAPI({ key, expires });
-    const presignedUrl = res.data.response.url;
-    console.log("presignedUrl : ", presignedUrl);
+    const uploadImageUrlList = files.map(async (file) => {
+      const key: string = `uploads/${ID}-${new Date().toISOString()}-${file.name}`;
+      const expires: number = 60000;
+      const res = await getPresignedUrlAPI({ key, expires });
+      const presignedUrl = res.data.response.url;
 
-    const uploadResult = await fetch(presignedUrl, {
-      method: "PUT",
-      body: file,
+      const uploadResult = await AWSImageRegistAPI({ url: presignedUrl, file });
+      console.log("uploadResult : ", uploadResult);
+
+      if (uploadResult.ok) {
+        console.log("File uploaded successfully");
+        const imageUrl = presignedUrl.split("?")[0]; // 쿼리 파라미터를 제거하여 이미지 URL을 얻습니다
+
+        console.log("imageUrl : ", imageUrl);
+        return imageUrl;
+      } else {
+        console.error("Failed to upload file", uploadResult.statusText);
+      }
     });
-    console.log("uploadResult : ", uploadResult);
 
-    if (uploadResult.ok) {
-      const imageUrl = presignedUrl.split("?")[0]; // URL에서 쿼리 파라미터를 제거하여 실제 이미지 URL을 추출합니다
-
-      console.log("imageUrl : ", imageUrl);
-      return imageUrl;
-    } else {
-      throw new Error("Image upload failed");
+    try {
+      const imageUrls = await Promise.all(uploadImageUrlList);
+      setPreviewUrls(imageUrls);
+    } catch (error) {
+      console.error("Error uploading files: ", error);
     }
   };
 
   useEffect(() => {
     console.log("board : ", board);
-  }, [board]);
+    console.log("previewUrl : ", previewUrls);
+  }, [board, previewUrls]);
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -192,9 +197,6 @@ const BoardSubmit = () => {
     color: "white",
   };
 
-  useEffect(() => {
-    console.log("previewUrl : ", previewUrl);
-  }, []);
   return (
     <>
       <div style={{ backgroundColor: "#4F657755", height: "100vh" }}>
@@ -266,31 +268,38 @@ const BoardSubmit = () => {
                   onChange={handleChange}
                   style={inputStyle}
                 />
-                <input
-                  type={"file"}
-                  onChange={handleFileChange}
-                  style={inputStyle}
-                />
-                {/*prevuewUrl 테스트용*/}
-                <div>
-                  <span>{"test"}</span>
-                  {previewUrl && (
-                    <img
-                      id={"preview"}
-                      src={previewUrl}
-                      alt={"Image Preview"}
-                      style={{ display: "block" }}
+
+                {previewUrls.length > 0 ? (
+                  <>
+                    <button onClick={(e) => alert("이미지 삭제")}>
+                      휴지통
+                    </button>
+                    <div>
+                      {previewUrls.map((url, index) => (
+                        <img
+                          id={"preview"}
+                          key={index}
+                          src={url}
+                          alt={`Image Preview ${index}`}
+                          style={{
+                            display: "block",
+                            height: "400px",
+                            width: "400px",
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <input
+                      type={"file"}
+                      multiple
+                      onChange={handleFileChange}
+                      style={inputStyle}
                     />
-                  )}
-                </div>
-                {/**/}
-                {/*<input*/}
-                {/*  type="file"*/}
-                {/*  accept="image/*,video/*"*/}
-                {/*  onChange={handleMediaChange}*/}
-                {/*  multiple*/}
-                {/*  style={inputStyle}*/}
-                {/*/>*/}
+                  </>
+                )}
               </>
             )}
             {inputType === "LINK" && (

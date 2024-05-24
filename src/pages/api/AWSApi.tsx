@@ -8,7 +8,7 @@ export interface GetPresignedUrlParams {
 export const getPresignedUrlAPI = async (params: GetPresignedUrlParams) => {
   const URL: string = "s3/presigned-url";
 
-  const res = await client.put(URL, params);
+  const res = await client.post(URL, params);
 
   return res;
 };
@@ -27,12 +27,14 @@ export const AWSImageRegistAPI = async ({
   console.log("file : ", file);
 
   try {
-    const res = await client.put(URL, file, {
+    const res = await fetch(url, {
+      method: "PUT",
       headers: {
         "Content-Type": file.type,
+        "x-amz-acl": "public-read",
       },
+      body: file,
     });
-    console.log("res : ", res);
 
     return res;
   } catch (e: any) {
