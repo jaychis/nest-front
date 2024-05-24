@@ -193,7 +193,7 @@ const BoardComment = (co: BoardCommentProps) => {
                 ? "white"
                 : isCommentReaction === "LIKE"
                   ? "red"
-                  : "blue",
+                  : "#84d7fb",
             padding: "10px",
             marginRight: "10px",
             borderRadius: "20px",
