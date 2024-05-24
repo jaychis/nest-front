@@ -33,49 +33,53 @@ const BoardSubmit = () => {
     youtubeLinks: [],
   });
 
-  const [files, setFiles] = useState<File[]>([]);
+  // const [files, setFiles] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     if (event.target.files) {
-      setFiles(Array.from(event.target.files));
-    }
-  };
+      const files: File[] = Array.from(event.target.files);
 
-  const uploadFile = async (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-
-    if (files.length === 0) {
-      alert("이미지를 선택해주세요.");
-      return;
-    }
-
-    const uploadImageUrlList = files.map(async (file) => {
-      const key: string = `uploads/${ID}-${new Date().toISOString()}-${file.name}`;
-      const expires: number = 60000;
-      const res = await getPresignedUrlAPI({ key, expires });
-      const presignedUrl = res.data.response.url;
-
-      const uploadResult = await AWSImageRegistAPI({ url: presignedUrl, file });
-      console.log("uploadResult : ", uploadResult);
-
-      if (uploadResult.ok) {
-        console.log("File uploaded successfully");
-        const imageUrl = presignedUrl.split("?")[0]; // 쿼리 파라미터를 제거하여 이미지 URL을 얻습니다
-
-        console.log("imageUrl : ", imageUrl);
-        return imageUrl;
-      } else {
-        console.error("Failed to upload file", uploadResult.statusText);
+      if (files.length === 0) {
+        alert("이미지를 선택해주세요.");
+        return;
       }
-    });
 
-    try {
-      const imageUrls = await Promise.all(uploadImageUrlList);
-      setPreviewUrls(imageUrls);
-    } catch (error) {
-      console.error("Error uploading files: ", error);
+      const uploadImageUrlList = files.map(async (file) => {
+        const key: string = `uploads/${ID}-${new Date().toISOString()}-${file.name}`;
+        const expires: number = 60;
+        const res = await getPresignedUrlAPI({ key, expires });
+        const presignedUrl = res.data.response.url;
+
+        const uploadResult = await AWSImageRegistAPI({
+          url: presignedUrl,
+          file,
+        });
+
+        if (uploadResult.ok) {
+          const imageUrl = presignedUrl.split("?")[0]; // 쿼리 파라미터를 제거하여 이미지 URL을 얻습니다
+
+          return imageUrl;
+        } else {
+          console.error("Failed to upload file", uploadResult.statusText);
+        }
+      });
+
+      try {
+        const imageUrls: string[] = await Promise.all(uploadImageUrlList);
+        setPreviewUrls(imageUrls);
+      } catch (error) {
+        console.error("Error uploading files: ", error);
+      }
     }
   };
+
+  // const uploadFile = async (event: React.MouseEvent<HTMLButtonElement>) => {
+  //   event.preventDefault();
+  //
+  //
+  // };
 
   const imageUrlListDelete = async () => {
     previewUrls.map(async (url, index) => {
@@ -208,7 +212,7 @@ const BoardSubmit = () => {
     ...buttonStyle,
     backgroundColor: "#84d7fb",
     color: "white",
-    border: "#84d7fb"
+    border: "#84d7fb",
   };
 
   return (
@@ -287,7 +291,7 @@ const BoardSubmit = () => {
                   <>
                     <button onClick={imageUrlListDelete}>휴지통</button>
                     <div>
-                      {previewUrls.map((url, index) => (
+                      {previewUrls.map((url: string, index: number) => (
                         <img
                           id={"preview"}
                           key={index}
@@ -334,7 +338,7 @@ const BoardSubmit = () => {
             <button
               type="submit"
               style={submitButtonStyle}
-              onClick={uploadFile}
+              // onClick={uploadFile}
             >
               보내기
             </button>
