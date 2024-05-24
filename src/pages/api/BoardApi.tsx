@@ -48,13 +48,13 @@ export const ReadAPI = ({ id, title }: ReadParams) => {
 export interface SubmitParams {
   readonly category: string;
   readonly title: string;
-  readonly content: string;
+  readonly content: string[];
   readonly identifierId: string;
   readonly nickname: string;
-  readonly images: File[]; // 이미지 파일 배열
-  readonly videos: File[]; // 비디오 파일 배열
-  readonly links: string[]; // URL 배열
-  readonly youtubeLinks: string[]; // YouTube 링크 배열
+  // readonly images: File[]; // 이미지 파일 배열
+  // readonly videos: File[]; // 비디오 파일 배열
+  // readonly links: string[]; // URL 배열
+  // readonly youtubeLinks: string[]; // YouTube 링크 배열
 }
 
 export const SubmitAPI = async (params: SubmitParams) => {

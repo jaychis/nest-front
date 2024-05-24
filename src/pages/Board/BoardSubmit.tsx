@@ -23,21 +23,21 @@ const BoardSubmit = () => {
   const NICKNAME: string = localStorage.getItem("nickname") as string;
   const [board, setBoard] = useState<SubmitParams>({
     title: "",
-    content: "",
+    content: [],
     category: "",
     identifierId: ID,
     nickname: NICKNAME,
-    images: [],
-    videos: [],
-    links: [],
-    youtubeLinks: [],
+    // images: [],
+    // videos: [],
+    // links: [],
+    // youtubeLinks: [],
   });
 
   // const [files, setFiles] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  ): Promise<void> => {
     if (event.target.files) {
       const files: File[] = Array.from(event.target.files);
 
@@ -46,19 +46,22 @@ const BoardSubmit = () => {
         return;
       }
 
-      const uploadImageUrlList = files.map(async (file) => {
+      const uploadImageUrlList = files.map(async (file: File) => {
         const key: string = `uploads/${ID}-${new Date().toISOString()}-${file.name}`;
         const expires: number = 60;
         const res = await getPresignedUrlAPI({ key, expires });
         const presignedUrl = res.data.response.url;
+        console.log("presignedUrl : ", presignedUrl);
 
         const uploadResult = await AWSImageRegistAPI({
           url: presignedUrl,
           file,
         });
+        console.log("uploadResult : ", uploadResult);
 
         if (uploadResult.ok) {
-          const imageUrl = presignedUrl.split("?")[0]; // 쿼리 파라미터를 제거하여 이미지 URL을 얻습니다
+          const imageUrl = presignedUrl.split("?")[0];
+          console.log("imageUrl : ", imageUrl);
 
           return imageUrl;
         } else {
@@ -82,17 +85,26 @@ const BoardSubmit = () => {
   // };
 
   const imageUrlListDelete = async () => {
-    previewUrls.map(async (url, index) => {
-      const urlResponse = await AWSImageDeleteAPI({ url });
-      console.log("urlResponse.data : ", urlResponse.data);
-      console.log("urlResponse : ", urlResponse);
-    });
+    console.log("imageUrlListDelete start");
+
+    if (previewUrls.length === 0) {
+      alert("삭제할 이미지가 없습니다.");
+      return;
+    }
+
+    const urlResponse = await AWSImageDeleteAPI({ urls: previewUrls });
+    console.log("urlResponse.data : ", urlResponse.data);
+    console.log("urlResponse : ", urlResponse);
+
+    if (urlResponse.status === 200) {
+      setPreviewUrls([]);
+    }
   };
 
-  useEffect(() => {
-    console.log("board : ", board);
-    console.log("previewUrl : ", previewUrls);
-  }, [board, previewUrls]);
+  // useEffect(() => {
+  //   console.log("board : ", board);
+  //   console.log("previewUrl : ", previewUrls);
+  // }, [board, previewUrls]);
   //
 
   const handleChange = (
@@ -105,39 +117,39 @@ const BoardSubmit = () => {
     });
   };
 
-  const handleMediaChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ): void => {
-    const files = event.target.files ? Array.from(event.target.files) : [];
-    setBoard((prev) => ({
-      ...prev,
-      images: [...prev.images, ...files], // Assuming handling for both images and videos
-      videos: [...prev.videos, ...files], // Same as above
-    }));
-  };
+  // const handleMediaChange = (
+  //   event: React.ChangeEvent<HTMLInputElement>,
+  // ): void => {
+  //   const files = event.target.files ? Array.from(event.target.files) : [];
+  //   setBoard((prev) => ({
+  //     ...prev,
+  //     images: [...prev.images, ...files], // Assuming handling for both images and videos
+  //     videos: [...prev.videos, ...files], // Same as above
+  //   }));
+  // };
 
-  const handleLinkChange = (
-    value: string,
-    type: "links" | "youtubeLinks",
-  ): void => {
-    setBoard((prev) => ({
-      ...prev,
-      [type]: [...prev[type], value],
-    }));
-  };
+  // const handleLinkChange = (
+  //   value: string,
+  //   type: "links" | "youtubeLinks",
+  // ): void => {
+  //   setBoard((prev) => ({
+  //     ...prev,
+  //     [type]: [...prev[type], value],
+  //   }));
+  // };
 
   interface EditorChange {
     html: string;
     text: string;
   }
 
-  const handleEditorChange = ({ html, text }: EditorChange) => {
-    setBoard((prev) => ({
-      ...prev,
-      content: text,
-    }));
-    adjustEditorHeight();
-  };
+  // const handleEditorChange = ({ html, text }: EditorChange) => {
+  //   setBoard((prev) => ({
+  //     ...prev,
+  //     content: text,
+  //   }));
+  //   adjustEditorHeight();
+  // };
 
   const adjustEditorHeight = () => {
     if (editorRef.current) {
@@ -150,9 +162,9 @@ const BoardSubmit = () => {
     }
   };
 
-  useEffect(() => {
-    adjustEditorHeight();
-  }, [board.content]);
+  // useEffect(() => {
+  //   adjustEditorHeight();
+  // }, [board.content]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -259,90 +271,90 @@ const BoardSubmit = () => {
               링크
             </button>
           </div>
-          <form onSubmit={handleSubmit}>
-            {inputType === "TEXT" && (
-              <>
-                <input
-                  name="title"
-                  type="text"
-                  placeholder="제목"
-                  onChange={handleChange}
-                  style={inputStyle}
-                />
-                <MdEditor
-                  style={{ height: "200px" }}
-                  renderHTML={(text) => mdParser.render(text)}
-                  onChange={handleEditorChange}
-                  view={{ menu: true, md: true, html: false }}
-                />
-              </>
-            )}
-            {inputType === "MEDIA" && (
-              <>
-                <input
-                  name="title"
-                  type="text"
-                  placeholder="제목"
-                  onChange={handleChange}
-                  style={inputStyle}
-                />
+          {/*<form onSubmit={handleSubmit}>*/}
+          {inputType === "TEXT" && (
+            <>
+              <input
+                name="title"
+                type="text"
+                placeholder="제목"
+                onChange={handleChange}
+                style={inputStyle}
+              />
+              <MdEditor
+                style={{ height: "200px" }}
+                renderHTML={(text) => mdParser.render(text)}
+                // onChange={handleEditorChange}
+                view={{ menu: true, md: true, html: false }}
+              />
+            </>
+          )}
+          {inputType === "MEDIA" && (
+            <>
+              <input
+                name="title"
+                type="text"
+                placeholder="제목"
+                onChange={handleChange}
+                style={inputStyle}
+              />
 
-                {previewUrls.length > 0 ? (
-                  <>
-                    <button onClick={imageUrlListDelete}>휴지통</button>
-                    <div>
-                      {previewUrls.map((url: string, index: number) => (
-                        <img
-                          id={"preview"}
-                          key={index}
-                          src={url}
-                          alt={`Image Preview ${index}`}
-                          style={{
-                            display: "block",
-                            height: "400px",
-                            width: "400px",
-                          }}
-                        />
-                      ))}
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <input
-                      type={"file"}
-                      multiple
-                      onChange={handleFileChange}
-                      style={inputStyle}
-                    />
-                  </>
-                )}
-              </>
-            )}
-            {inputType === "LINK" && (
-              <>
-                <input
-                  name="title"
-                  type="text"
-                  placeholder="제목"
-                  onChange={handleChange}
-                  style={inputStyle}
-                />
-                <input
-                  type="text"
-                  placeholder="링크 추가"
-                  onChange={(e) => handleLinkChange(e.target.value, "links")}
-                  style={inputStyle}
-                />
-              </>
-            )}
-            <button
-              type="submit"
-              style={submitButtonStyle}
-              // onClick={uploadFile}
-            >
-              보내기
-            </button>
-          </form>
+              {previewUrls.length > 0 ? (
+                <>
+                  <button onClick={imageUrlListDelete}>휴지통</button>
+                  <div>
+                    {previewUrls.map((url: string, index: number) => (
+                      <img
+                        id={"preview"}
+                        key={index}
+                        src={url}
+                        alt={`Image Preview ${index}`}
+                        style={{
+                          display: "block",
+                          height: "400px",
+                          width: "400px",
+                        }}
+                      />
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <input
+                    type={"file"}
+                    multiple
+                    onChange={handleFileChange}
+                    style={inputStyle}
+                  />
+                </>
+              )}
+            </>
+          )}
+          {inputType === "LINK" && (
+            <>
+              <input
+                name="title"
+                type="text"
+                placeholder="제목"
+                onChange={handleChange}
+                style={inputStyle}
+              />
+              <input
+                type="text"
+                placeholder="링크 추가"
+                // onChange={(e) => handleLinkChange(e.target.value, "links")}
+                style={inputStyle}
+              />
+            </>
+          )}
+          <button
+            type="submit"
+            style={submitButtonStyle}
+            // onClick={uploadFile}
+          >
+            보내기
+          </button>
+          {/*</form>*/}
         </div>
       </div>
     </>
