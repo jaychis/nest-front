@@ -13,6 +13,19 @@ export const getPresignedUrlAPI = async (params: GetPresignedUrlParams) => {
   return res;
 };
 
+export interface AWSImageDeleteParams {
+  readonly url: string;
+}
+
+export const AWSImageDeleteAPI = async ({ url }: AWSImageDeleteParams) => {
+  const URL: string = "s3/";
+  const key = url.split(".com/")[1]; // URL에서 파일 경로 추출
+
+  const res = await client.delete(URL, { data: key });
+
+  return res;
+};
+
 export interface AWSImageRegistParams {
   readonly url: string;
   readonly file: File;

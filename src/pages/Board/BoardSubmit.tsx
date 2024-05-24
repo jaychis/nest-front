@@ -5,7 +5,11 @@ import { useNavigate } from "react-router-dom";
 import MarkdownIt from "markdown-it";
 import MdEditor from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
-import { AWSImageRegistAPI, getPresignedUrlAPI } from "../api/AWSApi";
+import {
+  AWSImageDeleteAPI,
+  AWSImageRegistAPI,
+  getPresignedUrlAPI,
+} from "../api/AWSApi";
 
 const mdParser = new MarkdownIt();
 
@@ -73,10 +77,19 @@ const BoardSubmit = () => {
     }
   };
 
+  const imageUrlListDelete = async () => {
+    previewUrls.map(async (url, index) => {
+      const urlResponse = await AWSImageDeleteAPI({ url });
+      console.log("urlResponse.data : ", urlResponse.data);
+      console.log("urlResponse : ", urlResponse);
+    });
+  };
+
   useEffect(() => {
     console.log("board : ", board);
     console.log("previewUrl : ", previewUrls);
   }, [board, previewUrls]);
+  //
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -271,9 +284,7 @@ const BoardSubmit = () => {
 
                 {previewUrls.length > 0 ? (
                   <>
-                    <button onClick={(e) => alert("이미지 삭제")}>
-                      휴지통
-                    </button>
+                    <button onClick={imageUrlListDelete}>휴지통</button>
                     <div>
                       {previewUrls.map((url, index) => (
                         <img
