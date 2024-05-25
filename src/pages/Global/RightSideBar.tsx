@@ -18,7 +18,7 @@ const RightSideBar = () => {
   }, [topSearches, recentPosts]);
   
   return (
-    <div style={{ width: '300px', padding: '10px', background: '#fff', border: '1px solid #ccc', borderRadius: '8px' }}>
+    <div style={{ width: '350px', padding: '10px', background: '#fff', border: '1px solid #ccc', borderRadius: '8px' }}>
       <div>
         <h3>실시간 검색어 TOP 10</h3>
         <ol>

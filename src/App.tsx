@@ -37,8 +37,8 @@ function App() {
           <Route path="/boards/read" element={<BoardRead />} />
 
           {/*유저*/}
-          <Route path="/users/profile" element={<Profile />} />
-          <Route path="/users/inquiry" element={<UsersInquiry />} />
+          <Route path="/users/profile" element={<Layout><Profile /></Layout>} />
+          <Route path="/users/inquiry" element={<Layout><UsersInquiry /></Layout>} />
         </Routes>
       </Router>
     </>

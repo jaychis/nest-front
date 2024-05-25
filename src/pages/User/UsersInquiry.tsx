@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import GlobalBar from "../Global/GlobalBar";
-import GlobalSideBar from "../Global/GlobalSideBar";
 import Card from "../../components/Card";
 import { useSearchParams } from "react-router-dom";
 import { UsersInquiryAPI } from "../api/UserApi";
@@ -16,11 +14,11 @@ const MainContainer = ({ children }: ContainerProps) => {
       style={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "center", // This centers the cards horizontally
-        justifyContent: "flex-start", // This aligns the cards to the top
-        paddingTop: "20px", // Add space at the top
-        height: "100vh", // Use the full height of the viewport
-        width: "100vw", // Use the full width of the viewport
+        alignItems: "center",
+        justifyContent: "flex-start",
+        paddingTop: "20px",
+        height: "100vh",
+        width: "80vw",
       }}
     >
       {children}
@@ -28,16 +26,15 @@ const MainContainer = ({ children }: ContainerProps) => {
   );
 };
 
-// const CardsContainer: React.FC<ContainerProps> = ({ children }) => {
 const CardsContainer = ({ children }: ContainerProps) => {
   return (
     <div
       style={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "center", // This centers the cards horizontally
-        width: "100%", // Full width of its parent
-        maxWidth: "600px", // Maximum width of the cards container
+        alignItems: "center",
+        width: "100%",
+        maxWidth: "600px",
       }}
     >
       {children}
@@ -100,34 +97,26 @@ const UsersInquiry = () => {
   }, [params]);
 
   return (
-    <>
-      <GlobalBar />
-      <div style={{ display: "flex" }}>
-        <GlobalSideBar />
-        <MainContainer>
-          <CardsContainer>
-            {list.length > 0 ? (
-              list.map((el) => {
-                return (
-                  <>
-                    <Card
-                      id={el.id}
-                      category={el.category}
-                      title={el.title}
-                      nickname={el.nickname}
-                      createdAt={el.created_at}
-                      content={el.content}
-                    />
-                  </>
-                );
-              })
-            ) : (
-              <div>'텅'</div>
-            )}
-          </CardsContainer>
-        </MainContainer>
-      </div>
-    </>
+    <MainContainer>
+      <CardsContainer>
+        {list.length > 0 ? (
+          list.map((el) => (
+            <Card
+              key={el.id}
+              id={el.id}
+              category={el.category}
+              title={el.title}
+              nickname={el.nickname}
+              createdAt={el.created_at}
+              content={el.content}
+            />
+          ))
+        ) : (
+          <div>텅</div>
+        )}
+      </CardsContainer>
+    </MainContainer>
   );
 };
+
 export default UsersInquiry;

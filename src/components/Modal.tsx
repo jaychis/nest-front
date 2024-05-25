@@ -76,7 +76,7 @@ const Modal = ({ children, isOpen, onClose, buttonLabel }: Props) => {
                 alignItems: "center",
               }}
             >
-              <button
+              {/* <button
                 type="submit"
                 style={{
                   padding: "20px",
@@ -88,7 +88,7 @@ const Modal = ({ children, isOpen, onClose, buttonLabel }: Props) => {
                 // onClick={() => onSubmit()}
               >
                 {buttonLabel}
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
