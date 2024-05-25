@@ -19,8 +19,8 @@ const MainContainer = ({ children }: ContainerProps) => {
         alignItems: "center",
         justifyContent: "flex-start",
         paddingTop: "20px",
-        height: "100vh",
-        width: "100vw",
+        width: "100%",
+        boxSizing: "border-box",
       }}
     >
       {children}
@@ -29,6 +29,7 @@ const MainContainer = ({ children }: ContainerProps) => {
 };
 
 // const CardsContainer: React.FC<ContainerProps> = ({ children }) => {
+
 const CardsContainer = ({ children }: ContainerProps) => {
   return (
     <div
@@ -37,8 +38,9 @@ const CardsContainer = ({ children }: ContainerProps) => {
         flexDirection: "column",
         alignItems: "center",
         width: "100%",
-        maxWidth: "1100px",
-
+        maxWidth: "800px", // 적절한 최대 너비 설정
+        boxSizing: "border-box",
+        padding: "0 20px", // 좌우 패딩 추가
       }}
     >
       {children}
@@ -142,6 +144,7 @@ const BoardList = () => {
       };
     }
   }, [buttonType]);
+  
   const handleScroll = async () => {
     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
 

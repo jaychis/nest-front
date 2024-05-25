@@ -15,6 +15,7 @@ import {
 } from "../api/CommentApi";
 import BoardComment, { CommentType } from "./BoardComment";
 import BoardReply, { ReplyType } from "./BoardReply";
+import RightSideBar from "../Global/RightSideBar";
 
 interface CardType {
   readonly id: string;
@@ -122,10 +123,6 @@ const BoardRead = () => {
 
           setIsCommentState([response, ...isCommentState]);
 
-          // setWriteComment({
-          //   ...writeComment,
-          //   content: "",
-          // });
           setWriteComment((prev) => ({
             ...prev,
             content: "",
@@ -135,58 +132,47 @@ const BoardRead = () => {
     }
   };
 
-  // BoardReply
   const renderReplies = (replies: ReplyType[]) => {
     return (
       <div>
-        {replies.map((re) => {
-          return (
-            <>
-              <div key={re.id}>
-                <BoardReply
-                  id={re.id}
-                  comment_id={re.comment_id}
-                  content={re.content}
-                  nickname={re.nickname}
-                  created_at={re.created_at}
-                  updated_at={re.updated_at}
-                  deleted_at={re.deleted_at}
-                />
-              </div>
-            </>
-          );
-        })}
+        {replies.map((re) => (
+          <div key={re.id}>
+            <BoardReply
+              id={re.id}
+              comment_id={re.comment_id}
+              content={re.content}
+              nickname={re.nickname}
+              created_at={re.created_at}
+              updated_at={re.updated_at}
+              deleted_at={re.deleted_at}
+            />
+          </div>
+        ))}
       </div>
     );
   };
 
-  // Comments
   const renderComments = (comments: CommentType[]) => {
     return (
       <div>
-        {comments.map((co) => {
-          return (
-            <>
-              <div key={co.id}>
-                <BoardComment
-                  id={co.id}
-                  board_id={co.board_id}
-                  content={co.content}
-                  nickname={co.nickname}
-                  replies={co.replies}
-                  created_at={co.created_at}
-                  updated_at={co.updated_at}
-                  deleted_at={co.deleted_at}
-                  onReplySubmit={handleReplySubmit}
-                />
-
-                <div style={{ marginLeft: "40px" }}>
-                  {co.replies?.length > 0 ? renderReplies(co.replies) : []}
-                </div>
-              </div>
-            </>
-          );
-        })}
+        {comments.map((co) => (
+          <div key={co.id}>
+            <BoardComment
+              id={co.id}
+              board_id={co.board_id}
+              content={co.content}
+              nickname={co.nickname}
+              replies={co.replies}
+              created_at={co.created_at}
+              updated_at={co.updated_at}
+              deleted_at={co.deleted_at}
+              onReplySubmit={handleReplySubmit}
+            />
+            <div style={{ marginLeft: "40px" }}>
+              {co.replies?.length > 0 ? renderReplies(co.replies) : []}
+            </div>
+          </div>
+        ))}
       </div>
     );
   };
@@ -195,33 +181,24 @@ const BoardRead = () => {
     console.log("handleReplySubmit reply : ", reply);
 
     setIsCommentState((prevState: CommentType[]) => {
-      const a = prevState.map((comment: CommentType) => {
-        console.log(
-          "comment.id === reply.commentId : ",
-          comment.id === reply.comment_id,
-        );
-        console.log("comment.id : ", comment.id);
-        console.log("reply.commentId : ", reply.comment_id);
-        console.log("comment :::: ", comment);
-
+      const updatedComments = prevState.map((comment: CommentType) => {
         if (comment.id === reply.comment_id) {
           return { ...comment, replies: [...comment.replies, reply] };
         } else {
           return comment;
         }
       });
-      console.log("a :: ", a);
 
-      return a;
+      return updatedComments;
     });
   };
 
   return (
     <>
       <GlobalBar />
-      <div style={{ display: "flex" }}>
+      <div style={{ display: "flex", width: "100%" }}>
         <GlobalSideBar />
-        <div>
+        <div style={{ flex: 2 }}>
           <Card
             id={isBoardState.id}
             category={isBoardState.category}
@@ -234,7 +211,7 @@ const BoardRead = () => {
             style={{
               display: "flex",
               flexDirection: "column",
-              width: "100%",
+              width: "90%",
               margin: "10px",
               border: "3px solid #ccc",
               borderRadius: "30px",
@@ -288,7 +265,7 @@ const BoardRead = () => {
                   borderRadius: "4px",
                   cursor: "pointer",
                   fontSize: "14px",
-                  backgroundColor: "#007BFF",
+                  backgroundColor: "#84d7fb",
                   color: "white",
                 }}
                 onClick={commentWrite}
@@ -299,8 +276,10 @@ const BoardRead = () => {
           </div>
           {isCommentState?.length > 0 ? renderComments(isCommentState) : []}
         </div>
+        <RightSideBar />
       </div>
     </>
   );
 };
+
 export default BoardRead;

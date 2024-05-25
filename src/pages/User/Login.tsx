@@ -54,142 +54,105 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
   };
 
   return (
-    <>
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: "rgba(0, 0, 0, 0.1)",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <div
-          style={{
-            backgroundColor: "#fff",
-            borderRadius: "25px",
-            padding: "25px",
-            minWidth: "400px",
-            maxWidth: "600px",
-            width: "80%",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-          }}
-        >
-          <div style={{ textAlign: "center", marginBottom: "20px" }}>
-            <h2>로그인</h2>
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-            <button
-              style={styles.socialButton}
-              onClick={() => alert("Continue with Google")}
-            >
-              <FaGoogle style={styles.socialLogo} />
-              구글로 로그인
-            </button>
-            <button
-              style={styles.socialButton}
-              onClick={() => alert("Continue with Apple")}
-            >
-              <FaApple style={styles.socialLogo} />
-              애플로 로그인
-            </button>
-            <button
-              style={styles.socialButton}
-              onClick={() => alert("Continue with Naver")}
-            >
-              <SiNaver style={styles.socialLogo} />
-              네이버로 로그인
-            </button>
-            <button
-              style={styles.socialButton}
-              onClick={() => alert("Continue with Kakao")}
-            >
-              <FaComment style={styles.socialLogo} />
-              카카오로 로그인
-            </button>
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              textAlign: "center",
-              color: "#aaa",
-              margin: "20px 0",
-            }}
-          >
-            <div style={{ flex: 1, height: "1px", background: "#aaa" }}></div>
-            <div style={{ margin: "0 10px" }}>OR</div>
-            <div style={{ flex: 1, height: "1px", background: "#aaa" }}></div>
-          </div>
-
-       
-          <form>
-            <input
-              style={styles.input}
-              placeholder="이메일 *"
-              type="email"
-              id="email"
-              name="email"
-              onChange={(value) =>
-                handleChange({
-                  name: value.target.name,
-                  value: value.target.value,
-                })
-              }
-              required
-            />
-            <input
-              style={styles.input}
-              onChange={(value) =>
-                handleChange({
-                  name: value.target.name,
-                  value: value.target.value,
-                })
-              }
-              placeholder="비밀번호 *"
-              type="password"
-              id="password"
-              name="password"
-              required
-            />
-            <div style={{ width: "100%", padding: "10px 0", textAlign: "right" }}>
-              <a href="/forgot-password" style={{ fontSize: "14px", color: "#007BFF" }}>
-                비밀번호를 잊으셨나요?
-              </a>
-            </div>
-          </form>
-
-          <div style={{ width: "100%", padding: "10px 0", textAlign: "center" }}>
-            <button onClick={onSwitchView} style={styles.signupButton}>
-              회원가입
-            </button>
-          </div>
-
-          <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
-            <button
-              type="submit"
-              style={styles.submitButton}
-              onClick={handleSubmit}
-            >
-              로그인
-            </button>
-          </div>
-        </div>
+    <div style={styles.container}>
+      <div style={{ textAlign: "center", marginBottom: "20px" }}>
+        <h2>로그인</h2>
       </div>
-    </>
+      <div style={styles.socialButtonsContainer}>
+        <button style={styles.socialButton} onClick={() => alert("Continue with Google")}>
+          <FaGoogle style={styles.socialLogo} />
+          구글로 로그인
+        </button>
+        <button style={styles.socialButton} onClick={() => alert("Continue with Apple")}>
+          <FaApple style={styles.socialLogo} />
+          애플로 로그인
+        </button>
+        <button style={styles.socialButton} onClick={() => alert("Continue with Naver")}>
+          <SiNaver style={styles.socialLogo} />
+          네이버로 로그인
+        </button>
+        <button style={styles.socialButton} onClick={() => alert("Continue with Kakao")}>
+          <FaComment style={styles.socialLogo} />
+          카카오로 로그인
+        </button>
+      </div>
+      <div style={styles.orContainer}>
+        <div style={styles.orLine}></div>
+        <div style={styles.orText}>OR</div>
+        <div style={styles.orLine}></div>
+      </div>
+      <form>
+        <input
+          style={styles.input}
+          placeholder="이메일 *"
+          type="email"
+          id="email"
+          name="email"
+          onChange={(value) =>
+            handleChange({
+              name: value.target.name,
+              value: value.target.value,
+            })
+          }
+          required
+        />
+        <input
+          style={styles.input}
+          onChange={(value) =>
+            handleChange({
+              name: value.target.name,
+              value: value.target.value,
+            })
+          }
+          placeholder="비밀번호 *"
+          type="password"
+          id="password"
+          name="password"
+          required
+        />
+        <div style={styles.forgotPasswordContainer}>
+          <a href="/forgot-password" style={styles.forgotPasswordLink}>
+            비밀번호를 잊으셨나요?
+          </a>
+        </div>
+      </form>
+      <div style={{ display: "flex", justifyContent: "center", marginTop: "20px", marginBottom: "-25px" }}>
+        <button onClick={onSwitchView} style={styles.switchButton}>
+          회원가입
+        </button>
+      </div>
+      <div style={{ width: "100%", padding: "10px 0", textAlign: "center" }}>
+        <button type="submit" style={styles.submitButton} onClick={handleSubmit}>
+          로그인
+        </button>
+      </div>
+    </div>
   );
 };
 
 const styles: { [key: string]: React.CSSProperties } = {
+  container: {
+    backgroundColor: "#fff",
+    borderRadius: "25px",
+    padding: "20px",
+    minWidth: "400px",
+    maxWidth: "600px",
+    width: "80%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    height: "736px", // 높이를 회원가입과 맞춤
+  },
+  header: {
+    textAlign: "center",
+    marginBottom: "20px",
+  },
+  socialButtonsContainer: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px",
+  },
   socialButton: {
     display: "flex",
     alignItems: "center",
@@ -206,6 +169,21 @@ const styles: { [key: string]: React.CSSProperties } = {
     height: "20px",
     marginRight: "10px",
   },
+  orContainer: {
+    display: "flex",
+    alignItems: "center",
+    textAlign: "center",
+    color: "#aaa",
+    margin: "20px 0",
+  },
+  orLine: {
+    flex: 1,
+    height: "1px",
+    background: "#aaa",
+  },
+  orText: {
+    margin: "0 10px",
+  },
   input: {
     padding: "10px",
     border: "1px solid #ddd",
@@ -214,6 +192,20 @@ const styles: { [key: string]: React.CSSProperties } = {
     boxSizing: "border-box",
     width: "100%",
     height: "40px",
+  },
+  forgotPasswordContainer: {
+    width: "100%",
+    padding: "10px 0",
+    textAlign: "right",
+  },
+  forgotPasswordLink: {
+    fontSize: "14px",
+    color: "#007BFF",
+  },
+  submitContainer: {
+    display: "flex",
+    justifyContent: "center",
+    marginTop: "20px",
   },
   submitButton: {
     padding: "10px 20px",
@@ -224,7 +216,12 @@ const styles: { [key: string]: React.CSSProperties } = {
     color: "white",
     cursor: "pointer",
   },
-  signupButton: {
+  switchContainer: {
+    width: "100%",
+    padding: "10px 0",
+    textAlign: "center",
+  },
+  switchButton: {
     padding: "10px 20px",
     width: "200px",
     borderRadius: "25px",
@@ -232,6 +229,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     backgroundColor: "red",
     color: "white",
     cursor: "pointer",
+    // marginBottom: "20px", // 추가된 스타일, 버튼 간격 조정
   },
 };
 

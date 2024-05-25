@@ -15,7 +15,7 @@ import xLogo from "../../assets/img/x-check.png";
 
 interface Props {
   readonly onSwitchView: () => void;
-  readonly modalIsOpen: (state: boolean) => void;
+  readonly modalIsOpen?: (state: boolean) => void; // Optional prop, not required for independent usage
 }
 
 interface ValidSignupType {
@@ -123,7 +123,7 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
           const response = res.data.response;
 
           if (res.status === 201 && response) {
-            modalIsOpen(false);
+            if (modalIsOpen) modalIsOpen(false);
           }
         })
         .catch((err): void => console.error(err));
@@ -135,303 +135,266 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
   };
 
   return (
-    <>
+    <div
+      style={{
+        backgroundColor: "#fff",
+        borderRadius: "25px",
+        padding: "25px",
+        minWidth: "400px",
+        maxWidth: "600px",
+        width: "80%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+      }}
+    >
+      <div style={{ textAlign: "center", marginBottom: "20px" }}>
+        <h2>회원가입</h2>
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+        <button
+          style={styles.socialButton}
+          onClick={() => alert("Continue with Google")}
+        >
+          <FaGoogle style={styles.socialLogo} />
+          구글로 가입
+        </button>
+        <button
+          style={styles.socialButton}
+          onClick={() => alert("Continue with Apple")}
+        >
+          <FaApple style={styles.socialLogo} />
+          애플로 가입
+        </button>
+        <button
+          style={styles.socialButton}
+          onClick={() => alert("Continue with Naver")}
+        >
+          <SiNaver style={styles.socialLogo} />
+          네이버로 가입
+        </button>
+        <button
+          style={styles.socialButton}
+          onClick={() => alert("Continue with Kakao")}
+        >
+          <FaComment style={styles.socialLogo} />
+          카카오로 가입
+        </button>
+      </div>
+
       <div
         style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: "rgba(0, 0, 0, 0.1)",
           display: "flex",
-          flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
+          textAlign: "center",
+          color: "#aaa",
+          margin: "20px 0",
         }}
       >
+        <div style={{ flex: 1, height: "1px", background: "#aaa" }}></div>
+        <div style={{ margin: "0 10px" }}>OR</div>
+        <div style={{ flex: 1, height: "1px", background: "#aaa" }}></div>
+      </div>
+
+      <form>
         <div
           style={{
-            backgroundColor: "#fff",
-            borderRadius: "25px",
-            padding: "25px",
-            minWidth: "400px",
-            maxWidth: "600px",
-            width: "80%",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+            position: "relative",
+            width: "100%",
+            marginBottom: "10px",
           }}
         >
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <button
+          <input
+            style={styles.input}
+            placeholder="이메일 *"
+            type="email"
+            id="email"
+            name="email"
+            onChange={(value) =>
+              handleChange({
+                name: value.target.name,
+                value: value.target.value,
+              })
+            }
+            required
+          />
+          {validSignup.email === null ? null : validSignup.email === true ? (
+            <img
+              src={vLogo}
+              alt={"v logo"}
               style={{
-                padding: "10px 20px",
-                backgroundColor: isCloseHovered ? "#77C2E2" : "#84d7fb",
-                color: "white",
-                border: "none",
-                borderRadius: "35px",
-                cursor: "pointer",
+                width: "20px",
+                height: "20px",
+                position: "absolute",
+                right: "10px",
+                top: "50%",
+                transform: "translateY(-50%)",
               }}
-              onMouseEnter={() => setIsCloseHovered(true)}
-              onMouseLeave={() => setIsCloseHovered(false)}
-              onClick={() => {
-                modalIsOpen(false);
-              }}
-            >
-              Close
-            </button>
-          </div>
-
-          <div style={{ textAlign: "center", marginBottom: "20px" }}>
-            <h2>회원가입</h2>
-          </div>
-
-          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-            <button
-              style={styles.socialButton}
-              onClick={() => alert("Continue with Google")}
-            >
-              <FaGoogle style={styles.socialLogo} />
-              구글로 가입
-            </button>
-            <button
-              style={styles.socialButton}
-              onClick={() => alert("Continue with Apple")}
-            >
-              <FaApple style={styles.socialLogo} />
-              애플로 가입
-            </button>
-            <button
-              style={styles.socialButton}
-              onClick={() => alert("Continue with Naver")}
-            >
-              <SiNaver style={styles.socialLogo} />
-              네이버로 가입
-            </button>
-            <button
-              style={styles.socialButton}
-              onClick={() => alert("Continue with Kakao")}
-            >
-              <FaComment style={styles.socialLogo} />
-              카카오로 가입
-            </button>
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              textAlign: "center",
-              color: "#aaa",
-              margin: "20px 0",
-            }}
-          >
-            <div style={{ flex: 1, height: "1px", background: "#aaa" }}></div>
-            <div style={{ margin: "0 10px" }}>OR</div>
-            <div style={{ flex: 1, height: "1px", background: "#aaa" }}></div>
-          </div>
-
-          <form>
-            <div
-              style={{
-                position: "relative",
-                width: "100%",
-                marginBottom: "10px",
-              }}
-            >
-              <input
-                style={styles.input}
-                placeholder="이메일 *"
-                type="email"
-                id="email"
-                name="email"
-                onChange={(value) =>
-                  handleChange({
-                    name: value.target.name,
-                    value: value.target.value,
-                  })
-                }
-                required
-              />
-              {validSignup.email === null ? null : validSignup.email === true ? (
-                <img
-                  src={vLogo}
-                  alt={"v logo"}
-                  style={{
-                    width: "20px",
-                    height: "20px",
-                    position: "absolute",
-                    right: "10px",
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                  }}
-                />
-              ) : (
-                <img
-                  src={xLogo}
-                  alt={"x logo"}
-                  style={{
-                    width: "20px",
-                    height: "20px",
-                    position: "absolute",
-                    right: "10px",
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                  }}
-                />
-              )}
-            </div>
-
-            <div
-              style={{
-                position: "relative",
-                width: "100%",
-                marginBottom: "10px",
-              }}
-            >
-              <input
-                style={styles.input}
-                placeholder="닉네임 *"
-                type="text"
-                id="nickname"
-                name="nickname"
-                onChange={(value) =>
-                  handleChange({
-                    name: value.target.name,
-                    value: value.target.value,
-                  })
-                }
-                required
-              />
-              {validSignup.nickname === null ? null : validSignup.nickname === true ? (
-                <img
-                  src={vLogo}
-                  alt={"v logo"}
-                  style={{
-                    width: "20px",
-                    height: "20px",
-                    position: "absolute",
-                    right: "10px",
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                  }}
-                />
-              ) : (
-                <img
-                  src={xLogo}
-                  alt={"x logo"}
-                  style={{
-                    width: "20px",
-                    height: "20px",
-                    position: "absolute",
-                    right: "10px",
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                  }}
-                />
-              )}
-            </div>
-
-            <input
-              style={styles.input}
-              placeholder="비밀번호 *"
-              type="password"
-              id="password"
-              name="password"
-              onChange={(value) =>
-                handleChange({
-                  name: value.target.name,
-                  value: value.target.value,
-                })
-              }
-              required
             />
-
-            <input
-              style={styles.input}
-              placeholder="비밀번호 확인 *"
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              onChange={(value) =>
-                handleChange({
-                  name: value.target.name,
-                  value: value.target.value,
-                })
-              }
-              required
-            />
-
-            <div
+          ) : (
+            <img
+              src={xLogo}
+              alt={"x logo"}
               style={{
-                position: "relative",
-                width: "100%",
-                marginBottom: "10px",
+                width: "20px",
+                height: "20px",
+                position: "absolute",
+                right: "10px",
+                top: "50%",
+                transform: "translateY(-50%)",
               }}
-            >
-              <input
-                style={styles.input}
-                placeholder="전화번호 *"
-                type="text"
-                id="phone"
-                name="phone"
-                onChange={(value) =>
-                  handleChange({
-                    name: value.target.name,
-                    value: value.target.value,
-                  })
-                }
-                required
-              />
-              {validSignup.phone === null ? null : validSignup.phone === true ? (
-                <img
-                  src={vLogo}
-                  alt={"v logo"}
-                  style={{
-                    width: "20px",
-                    height: "20px",
-                    position: "absolute",
-                    right: "10px",
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                  }}
-                />
-              ) : (
-                <img
-                  src={xLogo}
-                  alt={"x logo"}
-                  style={{
-                    width: "20px",
-                    height: "20px",
-                    position: "absolute",
-                    right: "10px",
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                  }}
-                />
-              )}
-            </div>
-          </form>
-
-          <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
-            <button
-              type="submit"
-              style={styles.submitButton}
-              onClick={handleSubmit}
-            >
-              회원가입
-            </button>
-          </div>
-          <div style={{ width: "100%", padding: "10px 0", textAlign: "center" }}>
-            <button onClick={onSwitchView} style={styles.switchButton}>
-              로그인으로 전환
-            </button>
-          </div>
+            />
+          )}
         </div>
+
+        <div
+          style={{
+            position: "relative",
+            width: "100%",
+            marginBottom: "10px",
+          }}
+        >
+          <input
+            style={styles.input}
+            placeholder="닉네임 *"
+            type="text"
+            id="nickname"
+            name="nickname"
+            onChange={(value) =>
+              handleChange({
+                name: value.target.name,
+                value: value.target.value,
+              })
+            }
+            required
+          />
+          {validSignup.nickname === null ? null : validSignup.nickname === true ? (
+            <img
+              src={vLogo}
+              alt={"v logo"}
+              style={{
+                width: "20px",
+                height: "20px",
+                position: "absolute",
+                right: "10px",
+                top: "50%",
+                transform: "translateY(-50%)",
+              }}
+            />
+          ) : (
+            <img
+              src={xLogo}
+              alt={"x logo"}
+              style={{
+                width: "20px",
+                height: "20px",
+                position: "absolute",
+                right: "10px",
+                top: "50%",
+                transform: "translateY(-50%)",
+              }}
+            />
+          )}
+        </div>
+
+        <input
+          style={styles.input}
+          placeholder="비밀번호 *"
+          type="password"
+          id="password"
+          name="password"
+          onChange={(value) =>
+            handleChange({
+              name: value.target.name,
+              value: value.target.value,
+            })
+          }
+          required
+        />
+
+        <input
+          style={styles.input}
+          placeholder="비밀번호 확인 *"
+          type="password"
+          id="confirmPassword"
+          name="confirmPassword"
+          onChange={(value) =>
+            handleChange({
+              name: value.target.name,
+              value: value.target.value,
+            })
+          }
+          required
+        />
+
+        <div
+          style={{
+            position: "relative",
+            width: "100%",
+            marginBottom: "10px",
+          }}
+        >
+          <input
+            style={styles.input}
+            placeholder="전화번호 *"
+            type="text"
+            id="phone"
+            name="phone"
+            onChange={(value) =>
+              handleChange({
+                name: value.target.name,
+                value: value.target.value,
+              })
+            }
+            required
+          />
+          {validSignup.phone === null ? null : validSignup.phone === true ? (
+            <img
+              src={vLogo}
+              alt={"v logo"}
+              style={{
+                width: "20px",
+                height: "20px",
+                position: "absolute",
+                right: "10px",
+                top: "50%",
+                transform: "translateY(-50%)",
+              }}
+            />
+          ) : (
+            <img
+              src={xLogo}
+              alt={"x logo"}
+              style={{
+                width: "20px",
+                height: "20px",
+                position: "absolute",
+                right: "10px",
+                top: "50%",
+                transform: "translateY(-50%)",
+              }}
+            />
+          )}
+        </div>
+      </form>
+
+      <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+        <button
+          type="submit"
+          style={styles.submitButton}
+          onClick={handleSubmit}
+        >
+          회원가입
+        </button>
       </div>
-    </>
+      <div style={{ width: "100%", padding: "10px 0", textAlign: "center" }}>
+        <button onClick={onSwitchView} style={styles.switchButton}>
+          로그인으로 전환
+        </button>
+      </div>
+    </div>
   );
 };
 
@@ -466,9 +429,10 @@ const styles: { [key: string]: React.CSSProperties } = {
     width: "200px",
     borderRadius: "25px",
     border: "none",
-    backgroundColor: "#007BFF",
+    backgroundColor: "#84d7fb",
     color: "white",
     cursor: "pointer",
+
   },
   switchButton: {
     padding: "10px 20px",
@@ -478,6 +442,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     backgroundColor: "#000",
     color: "white",
     cursor: "pointer",
+    
   },
 };
 
