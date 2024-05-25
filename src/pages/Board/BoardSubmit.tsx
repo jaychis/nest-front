@@ -10,12 +10,20 @@ import {
   AWSImageRegistAPI,
   getPresignedUrlAPI,
 } from "../api/AWSApi";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const mdParser = new MarkdownIt();
+type InputType = "TEXT" | "LINK" | "MEDIA" | "YOUTUBE";
+interface EditorChange {
+  html: string;
+  text: string;
+}
 
 const BoardSubmit = () => {
   const navigate = useNavigate();
-  const [inputType, setInputType] = useState("TEXT"); // 기본값은 텍스트
+  const [inputType, setInputType] = useState<InputType>("TEXT"); // 기본값은 텍스트
   const editorRef = useRef<HTMLDivElement>(null); // MdEditor의 ref
   const [editorHeight, setEditorHeight] = useState(200); // 에디터 초기 높이
 
@@ -33,49 +41,128 @@ const BoardSubmit = () => {
     // youtubeLinks: [],
   });
 
-  // const [files, setFiles] = useState<File[]>([]);
+  // const [boardTitle, setBoardTitle] = useState<string>("");
+  // const handleTitleChange = async (
+  //   event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  // ): Promise<void> => {
+  //   const { name, value } = event;
+  //
+  //   setBoardTitle({
+  //     ...boardTitle,
+  //     [name]: value,
+  //   });
+  // };
+  const handleChange = async (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ): Promise<void> => {
+    const { name, value } = event.target;
+    setBoard({
+      ...board,
+      [name]: value,
+    });
+  };
+
+  // 텍스트
+  const [text, setText] = useState<string>("");
+  const handleEditorChange = ({ html, text }: EditorChange) => {
+    setText(html);
+    console.log("html: ", html);
+    console.log("text: ", text);
+    adjustEditorHeight();
+  };
+
+  const adjustEditorHeight = () => {
+    if (editorRef.current) {
+      const editorElement = editorRef.current.querySelector(".rc-md-editor"); // mdEditor root element
+      if (editorElement) {
+        const scrollHeight = editorElement.scrollHeight;
+        const newHeight = Math.min(scrollHeight, 700); // 최대 높이 700px
+        setEditorHeight(newHeight);
+      }
+    }
+  };
+
+  useEffect(() => {
+    adjustEditorHeight();
+  }, [board.content]);
+
+  // 이미지 & 비디오
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+  const [fileList, setFileList] = useState<File[]>([]);
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ): Promise<void> => {
     if (event.target.files) {
       const files: File[] = Array.from(event.target.files);
+      console.log("files : ", files);
 
       if (files.length === 0) {
         alert("이미지를 선택해주세요.");
         return;
       }
 
-      const uploadImageUrlList = files.map(async (file: File) => {
-        const key: string = `uploads/${ID}-${new Date().toISOString()}-${file.name}`;
-        const expires: number = 60;
-        const res = await getPresignedUrlAPI({ key, expires });
-        const presignedUrl = res.data.response.url;
-        console.log("presignedUrl : ", presignedUrl);
-
-        const uploadResult = await AWSImageRegistAPI({
-          url: presignedUrl,
-          file,
-        });
-        console.log("uploadResult : ", uploadResult);
-
-        if (uploadResult.ok) {
-          const imageUrl = presignedUrl.split("?")[0];
-          console.log("imageUrl : ", imageUrl);
-
-          return imageUrl;
-        } else {
-          console.error("Failed to upload file", uploadResult.statusText);
-        }
-      });
-
-      try {
-        const imageUrls: string[] = await Promise.all(uploadImageUrlList);
-        setPreviewUrls(imageUrls);
-      } catch (error) {
-        console.error("Error uploading files: ", error);
-      }
+      const previewUrls: string[] = files.map((file) =>
+        URL.createObjectURL(file),
+      );
+      setPreviewUrls(previewUrls);
+      setFileList(fileList);
     }
+  };
+  // const handleFileChange = async (
+  //   event: React.ChangeEvent<HTMLInputElement>,
+  // ): Promise<void> => {
+  //   if (event.target.files) {
+  //     const files: File[] = Array.from(event.target.files);
+  //
+  //     if (files.length === 0) {
+  //       alert("이미지를 선택해주세요.");
+  //       return;
+  //     }
+  //
+  //     const uploadImageUrlList = files.map(async (file: File) => {
+  //       const key: string = `uploads/${file.name}`;
+  //       const expires: number = 60;
+  //       const res = await getPresignedUrlAPI({ key, expires });
+  //       const presignedUrl = res.data.response.url;
+  //
+  //       const uploadResult = await AWSImageRegistAPI({
+  //         url: presignedUrl,
+  //         file,
+  //       });
+  //
+  //       if (uploadResult.ok) {
+  //         const imageUrl = presignedUrl.split("?")[0];
+  //
+  //         return imageUrl;
+  //       } else {
+  //         console.error("Failed to upload file", uploadResult.statusText);
+  //       }
+  //     });
+  //
+  //     try {
+  //       const imageUrls: string[] = await Promise.all(uploadImageUrlList);
+  //       setPreviewUrls(imageUrls);
+  //       setBoard({
+  //         ...board,
+  //         content: imageUrls,
+  //       });
+  //     } catch (error) {
+  //       console.error("Error uploading files: ", error);
+  //     }
+  //   }
+  // };
+
+  const imageUrlListDelete = async () => {
+    if (previewUrls.length === 0) {
+      alert("삭제할 이미지가 없습니다.");
+      return;
+    }
+
+    // const urlResponse = await AWSImageDeleteAPI({ urls: previewUrls });
+
+    // if (urlResponse.status === 200) {
+    setPreviewUrls([]);
+    // }
   };
 
   // const uploadFile = async (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -83,39 +170,6 @@ const BoardSubmit = () => {
   //
   //
   // };
-
-  const imageUrlListDelete = async () => {
-    console.log("imageUrlListDelete start");
-
-    if (previewUrls.length === 0) {
-      alert("삭제할 이미지가 없습니다.");
-      return;
-    }
-
-    const urlResponse = await AWSImageDeleteAPI({ urls: previewUrls });
-    console.log("urlResponse.data : ", urlResponse.data);
-    console.log("urlResponse : ", urlResponse);
-
-    if (urlResponse.status === 200) {
-      setPreviewUrls([]);
-    }
-  };
-
-  // useEffect(() => {
-  //   console.log("board : ", board);
-  //   console.log("previewUrl : ", previewUrls);
-  // }, [board, previewUrls]);
-  //
-
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ): void => {
-    const { name, value } = event.target;
-    setBoard({
-      ...board,
-      [name]: value,
-    });
-  };
 
   // const handleMediaChange = (
   //   event: React.ChangeEvent<HTMLInputElement>,
@@ -138,37 +192,69 @@ const BoardSubmit = () => {
   //   }));
   // };
 
-  interface EditorChange {
-    html: string;
-    text: string;
-  }
+  useEffect(() => {
+    console.log("board : ", board);
+  }, [board]);
 
-  // const handleEditorChange = ({ html, text }: EditorChange) => {
-  //   setBoard((prev) => ({
-  //     ...prev,
-  //     content: text,
-  //   }));
-  //   adjustEditorHeight();
-  // };
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-  const adjustEditorHeight = () => {
-    if (editorRef.current) {
-      const editorElement = editorRef.current.querySelector(".rc-md-editor"); // mdEditor root element
-      if (editorElement) {
-        const scrollHeight = editorElement.scrollHeight;
-        const newHeight = Math.min(scrollHeight, 700); // 최대 높이 700px
-        setEditorHeight(newHeight);
+    if (inputType === "TEXT") {
+      setBoard({
+        ...board,
+        content: [text],
+      });
+    }
+
+    if (inputType === "MEDIA") {
+      const files: File[] = Array.from(fileList);
+
+      if (files.length === 0) {
+        alert("이미지를 선택해주세요.");
+        return;
+      }
+
+      const uploadImageUrlList = files.map(async (file: File) => {
+        const key: string = `uploads/${file.name}`;
+        const expires: number = 60;
+        const res = await getPresignedUrlAPI({ key, expires });
+        const presignedUrl = res.data.response.url;
+
+        const uploadResult = await AWSImageRegistAPI({
+          url: presignedUrl,
+          file,
+        });
+
+        if (uploadResult.ok) {
+          const imageUrl = presignedUrl.split("?")[0];
+
+          return imageUrl;
+        } else {
+          console.error("Failed to upload file", uploadResult.statusText);
+        }
+      });
+
+      try {
+        const imageUrls: string[] = await Promise.all(uploadImageUrlList);
+        setBoard({
+          ...board,
+          content: imageUrls,
+        });
+      } catch (error) {
+        console.error("Error uploading files: ", error);
       }
     }
-  };
 
-  // useEffect(() => {
-  //   adjustEditorHeight();
-  // }, [board.content]);
+    if (inputType === "LINK") {
+      //
+    }
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+    if (inputType === "YOUTUBE") {
+      //
+    }
+
     console.log("handleSubmit board : ", board);
+
     SubmitAPI(board)
       .then((res) => {
         const response = res.data.response;
@@ -227,6 +313,14 @@ const BoardSubmit = () => {
     border: "#84d7fb",
   };
 
+  const sliderSetting = {
+    dots: true,
+    infinite: previewUrls.length > 1,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: true,
+  };
   return (
     <>
       <div style={{ backgroundColor: "#4F657755", height: "100vh" }}>
@@ -284,7 +378,7 @@ const BoardSubmit = () => {
               <MdEditor
                 style={{ height: "200px" }}
                 renderHTML={(text) => mdParser.render(text)}
-                // onChange={handleEditorChange}
+                onChange={handleEditorChange}
                 view={{ menu: true, md: true, html: false }}
               />
             </>
@@ -302,21 +396,32 @@ const BoardSubmit = () => {
               {previewUrls.length > 0 ? (
                 <>
                   <button onClick={imageUrlListDelete}>휴지통</button>
-                  <div>
-                    {previewUrls.map((url: string, index: number) => (
-                      <img
-                        id={"preview"}
-                        key={index}
-                        src={url}
-                        alt={`Image Preview ${index}`}
-                        style={{
-                          display: "block",
-                          height: "400px",
-                          width: "400px",
-                        }}
-                      />
+                  <Slider {...sliderSetting}>
+                    {previewUrls.map((image, index) => (
+                      <div key={index}>
+                        <img
+                          src={image}
+                          alt={`Preview image ${index}`}
+                          style={{ height: "400px", width: "400px" }}
+                        />
+                      </div>
                     ))}
-                  </div>
+                  </Slider>
+                  {/*<div>*/}
+                  {/*  {previewUrls.map((url: string, index: number) => (*/}
+                  {/*    <img*/}
+                  {/*      id={"preview"}*/}
+                  {/*      key={index}*/}
+                  {/*      src={url}*/}
+                  {/*      alt={`Image Preview ${index}`}*/}
+                  {/*      style={{*/}
+                  {/*        display: "block",*/}
+                  {/*        height: "400px",*/}
+                  {/*        width: "400px",*/}
+                  {/*      }}*/}
+                  {/*    />*/}
+                  {/*  ))}*/}
+                  {/*</div>*/}
                 </>
               ) : (
                 <>
