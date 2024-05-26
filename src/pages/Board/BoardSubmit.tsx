@@ -41,35 +41,60 @@ const BoardSubmit = () => {
     // youtubeLinks: [],
   });
 
-  // const [boardTitle, setBoardTitle] = useState<string>("");
-  // const handleTitleChange = async (
+  // textTitle
+  const [textTitle, setTextTitle] = useState<string>("");
+  const handleTextTitleChange = async (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ): Promise<void> => {
+    const { value } = event.target;
+
+    setTextTitle(value);
+  };
+  useEffect(() => console.log("textTitle : ", textTitle), [textTitle]);
+
+  // mediaTitle
+  const [mediaTitle, setMediaTitle] = useState<string>("");
+  const handleMediaTitleChange = async (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ): Promise<void> => {
+    const { value } = event.target;
+
+    setMediaTitle(value);
+  };
+  useEffect(() => console.log("mediaTitle : ", mediaTitle), [mediaTitle]);
+
+  // linkTitle
+  const [linkTitle, setLinkTitle] = useState<string>("");
+  const handleLinkTitleChange = async (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ): Promise<void> => {
+    const { value } = event.target;
+
+    setLinkTitle(value);
+  };
+  useEffect(() => console.log("linkTitle : ", linkTitle), [linkTitle]);
+
+  // youtubeTitle
+
+  // const handleChange = async (
   //   event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   // ): Promise<void> => {
-  //   const { name, value } = event;
-  //
-  //   setBoardTitle({
-  //     ...boardTitle,
+  //   const { name, value } = event.target;
+  //   setBoard({
+  //     ...board,
   //     [name]: value,
   //   });
   // };
-  const handleChange = async (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ): Promise<void> => {
-    const { name, value } = event.target;
-    setBoard({
-      ...board,
-      [name]: value,
-    });
-  };
 
   // 텍스트
-  const [text, setText] = useState<string>("");
-  const handleEditorChange = ({ html, text }: EditorChange) => {
-    setText(html);
+  const [textContent, setTextContent] = useState<string>("");
+  const handleEditorChange = async ({ html, text }: EditorChange) => {
+    setTextContent(html);
     console.log("html: ", html);
     console.log("text: ", text);
     adjustEditorHeight();
   };
+  useEffect(() => console.log("textContent : ", textContent), [textContent]);
 
   const adjustEditorHeight = () => {
     if (editorRef.current) {
@@ -108,49 +133,6 @@ const BoardSubmit = () => {
       setFileList(fileList);
     }
   };
-  // const handleFileChange = async (
-  //   event: React.ChangeEvent<HTMLInputElement>,
-  // ): Promise<void> => {
-  //   if (event.target.files) {
-  //     const files: File[] = Array.from(event.target.files);
-  //
-  //     if (files.length === 0) {
-  //       alert("이미지를 선택해주세요.");
-  //       return;
-  //     }
-  //
-  //     const uploadImageUrlList = files.map(async (file: File) => {
-  //       const key: string = `uploads/${file.name}`;
-  //       const expires: number = 60;
-  //       const res = await getPresignedUrlAPI({ key, expires });
-  //       const presignedUrl = res.data.response.url;
-  //
-  //       const uploadResult = await AWSImageRegistAPI({
-  //         url: presignedUrl,
-  //         file,
-  //       });
-  //
-  //       if (uploadResult.ok) {
-  //         const imageUrl = presignedUrl.split("?")[0];
-  //
-  //         return imageUrl;
-  //       } else {
-  //         console.error("Failed to upload file", uploadResult.statusText);
-  //       }
-  //     });
-  //
-  //     try {
-  //       const imageUrls: string[] = await Promise.all(uploadImageUrlList);
-  //       setPreviewUrls(imageUrls);
-  //       setBoard({
-  //         ...board,
-  //         content: imageUrls,
-  //       });
-  //     } catch (error) {
-  //       console.error("Error uploading files: ", error);
-  //     }
-  //   }
-  // };
 
   const imageUrlListDelete = async () => {
     if (previewUrls.length === 0) {
@@ -158,55 +140,43 @@ const BoardSubmit = () => {
       return;
     }
 
-    // const urlResponse = await AWSImageDeleteAPI({ urls: previewUrls });
-
-    // if (urlResponse.status === 200) {
     setPreviewUrls([]);
-    // }
   };
 
-  // const uploadFile = async (event: React.MouseEvent<HTMLButtonElement>) => {
-  //   event.preventDefault();
-  //
-  //
-  // };
+  // link
+  const [linkContent, setLinkContent] = useState<string>("");
+  const handleLinkContentChange = async (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ): Promise<void> => {
+    const { value } = event.target;
 
-  // const handleMediaChange = (
-  //   event: React.ChangeEvent<HTMLInputElement>,
-  // ): void => {
-  //   const files = event.target.files ? Array.from(event.target.files) : [];
-  //   setBoard((prev) => ({
-  //     ...prev,
-  //     images: [...prev.images, ...files], // Assuming handling for both images and videos
-  //     videos: [...prev.videos, ...files], // Same as above
-  //   }));
-  // };
-
-  // const handleLinkChange = (
-  //   value: string,
-  //   type: "links" | "youtubeLinks",
-  // ): void => {
-  //   setBoard((prev) => ({
-  //     ...prev,
-  //     [type]: [...prev[type], value],
-  //   }));
-  // };
+    setLinkContent(value);
+  };
+  useEffect(() => console.log("linkContent : ", linkContent), [linkContent]);
 
   useEffect(() => {
     console.log("board : ", board);
   }, [board]);
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (
+    event: FormEvent<HTMLFormElement | HTMLButtonElement>,
+  ) => {
     event.preventDefault();
 
     if (inputType === "TEXT") {
       setBoard({
         ...board,
-        content: [text],
+        title: textTitle,
+        content: [textContent],
       });
     }
 
     if (inputType === "MEDIA") {
+      setBoard({
+        ...board,
+        title: mediaTitle,
+      });
+
       const files: File[] = Array.from(fileList);
 
       if (files.length === 0) {
@@ -246,7 +216,11 @@ const BoardSubmit = () => {
     }
 
     if (inputType === "LINK") {
-      //
+      setBoard({
+        ...board,
+        title: linkTitle,
+        content: [linkContent],
+      });
     }
 
     if (inputType === "YOUTUBE") {
@@ -372,7 +346,7 @@ const BoardSubmit = () => {
                 name="title"
                 type="text"
                 placeholder="제목"
-                onChange={handleChange}
+                onChange={handleTextTitleChange}
                 style={inputStyle}
               />
               <MdEditor
@@ -389,7 +363,7 @@ const BoardSubmit = () => {
                 name="title"
                 type="text"
                 placeholder="제목"
-                onChange={handleChange}
+                onChange={handleMediaTitleChange}
                 style={inputStyle}
               />
 
@@ -407,21 +381,6 @@ const BoardSubmit = () => {
                       </div>
                     ))}
                   </Slider>
-                  {/*<div>*/}
-                  {/*  {previewUrls.map((url: string, index: number) => (*/}
-                  {/*    <img*/}
-                  {/*      id={"preview"}*/}
-                  {/*      key={index}*/}
-                  {/*      src={url}*/}
-                  {/*      alt={`Image Preview ${index}`}*/}
-                  {/*      style={{*/}
-                  {/*        display: "block",*/}
-                  {/*        height: "400px",*/}
-                  {/*        width: "400px",*/}
-                  {/*      }}*/}
-                  {/*    />*/}
-                  {/*  ))}*/}
-                  {/*</div>*/}
                 </>
               ) : (
                 <>
@@ -441,13 +400,13 @@ const BoardSubmit = () => {
                 name="title"
                 type="text"
                 placeholder="제목"
-                onChange={handleChange}
+                onChange={handleLinkTitleChange}
                 style={inputStyle}
               />
               <input
                 type="text"
                 placeholder="링크 추가"
-                // onChange={(e) => handleLinkChange(e.target.value, "links")}
+                onChange={(e) => handleLinkContentChange(e)}
                 style={inputStyle}
               />
             </>
@@ -455,7 +414,7 @@ const BoardSubmit = () => {
           <button
             type="submit"
             style={submitButtonStyle}
-            // onClick={uploadFile}
+            onClick={(e) => handleSubmit(e)}
           >
             보내기
           </button>
