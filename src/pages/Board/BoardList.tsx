@@ -5,6 +5,7 @@ import { CardType, ReactionStateTypes } from "../../_common/CollectionTypes";
 import { MainListTypeState } from "../../reducers/mainListTypeSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
+import SliderCard from "../../components/SliderCard";
 
 interface ContainerProps {
   children?: React.ReactNode;
@@ -142,9 +143,21 @@ const BoardList = () => {
       <MainContainer>
         <CardsContainer>
           {list.length > 0 ? (
-            list.map((el) => {
+            list.map((el: CardType) => {
               console.log("el : ", el);
-              return (
+
+              return el.type === "MEDIA" ? (
+                <>
+                  <SliderCard
+                    id={el.id}
+                    category={el.category}
+                    title={el.title}
+                    nickname={el.nickname}
+                    createdAt={el.created_at}
+                    content={el.content}
+                  />
+                </>
+              ) : (
                 <>
                   <Card
                     id={el.id}
