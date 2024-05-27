@@ -105,7 +105,7 @@ const Card = ({
           flexDirection: "column",
           justifyContent: "flex-start",
           alignItems: "flex-start",
-          width: "1100px",
+          width: "800px",
           minHeight: "200px",
           margin: "10px",
           borderRadius: "10px",
@@ -214,7 +214,7 @@ const Card = ({
           display: "flex",
           justifyContent: "flex-start",
           alignItems: "flex-start",
-          width: "1100px",
+          width: "800px",
         }}
       >
         <div
