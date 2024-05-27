@@ -35,7 +35,9 @@ const GlobalBar = () => {
         style={{ width: "50px", cursor: "pointer" }}
         onClick={() => navigate("/")}
       />
-      <span>{"jaych.com"}</span>
+      <span onClick={() => navigate("/")} style={{ cursor: "pointer" }}>
+        {"jaych.com"}
+      </span>
 
       {/* Search Bar */}
       <div
@@ -89,7 +91,6 @@ const GlobalBar = () => {
               isOpen={isProfileModalOpen}
               onRequestClose={toggleProfileModal}
               buttonRef={userButtonRef}
-
             />
             <button
               onMouseEnter={() => setPostHover(true)}
