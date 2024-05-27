@@ -193,6 +193,7 @@ const BoardRead = () => {
             nickname={isBoardState.nickname}
             createdAt={isBoardState.created_at}
             content={isBoardState.content}
+            type={isBoardState.type}
           />
           <div
             style={{

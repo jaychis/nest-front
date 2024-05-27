@@ -38,4 +38,5 @@ export interface BoardProps {
   readonly nickname: string;
   readonly title: string;
   readonly createdAt: Date;
+  readonly type: BoardType;
 }
