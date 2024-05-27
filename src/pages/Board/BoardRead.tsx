@@ -25,7 +25,7 @@ const BoardRead = () => {
     created_at: new Date(),
     updated_at: new Date(),
     deleted_at: null,
-    reactions: [],
+    type: "TEXT",
   });
   const [isCommentState, setIsCommentState] = useState<CommentType[]>([]);
 

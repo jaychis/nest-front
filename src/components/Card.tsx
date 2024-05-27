@@ -7,27 +7,20 @@ import {
   ReactionListAPI,
   ReactionParams,
 } from "../pages/api/ReactionApi";
-import { ReactionStateTypes } from "../_common/CollectionTypes";
+import {
+  BoardProps,
+  ReactionStateTypes,
+  ReactionType,
+} from "../_common/CollectionTypes";
 
-interface Props {
-  readonly id: string;
-  readonly category: string;
-  readonly content: string[];
-  readonly nickname: string;
-  readonly title: string;
-  readonly createdAt: Date;
-}
-
-export interface ReactionType {
-  readonly id: string;
-  readonly boardI_id: string;
-  readonly type: ReactionStateTypes;
-  readonly user_id: string;
-  readonly created_at: Date;
-  readonly updated_at: Date;
-}
-
-const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
+const Card = ({
+  id,
+  category,
+  content,
+  createdAt,
+  nickname,
+  title,
+}: BoardProps) => {
   const navigate = useNavigate();
   const [isCardCount, setIsCardCount] = useState<number>(0);
   const [isCardHovered, setIsCardHovered] = useState<boolean>(false);

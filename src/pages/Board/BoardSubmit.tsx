@@ -5,11 +5,7 @@ import { useNavigate } from "react-router-dom";
 import MarkdownIt from "markdown-it";
 import MdEditor from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
-import {
-  AWSImageDeleteAPI,
-  AWSImageRegistAPI,
-  getPresignedUrlAPI,
-} from "../api/AWSApi";
+import { AWSImageRegistAPI, getPresignedUrlAPI } from "../api/AWSApi";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -230,7 +226,7 @@ const BoardSubmit = () => {
       //
     }
 
-    console.log("handleSubmit board : ", board);
+    console.log("handleSubmit paramObj : ", paramObj);
 
     SubmitAPI(paramObj)
       .then((res) => {

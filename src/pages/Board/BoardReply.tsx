@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { ReactionStateTypes } from "../../_common/CollectionTypes";
+import {
+  ReactionStateTypes,
+  ReactionType,
+} from "../../_common/CollectionTypes";
 import {
   ReactionAPI,
   ReactionCountAPI,
@@ -7,7 +10,6 @@ import {
   ReactionParams,
 } from "../api/ReactionApi";
 import logo from "../../assets/img/panda_logo.png";
-import { ReactionType } from "../../components/Card";
 
 export interface ReplyType {
   readonly id: string;
