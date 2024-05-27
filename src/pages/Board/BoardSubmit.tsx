@@ -13,9 +13,9 @@ import {
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { BoardType } from "../../_common/CollectionTypes";
 
 const mdParser = new MarkdownIt();
-type InputType = "TEXT" | "LINK" | "MEDIA" | "YOUTUBE";
 interface EditorChange {
   html: string;
   text: string;
@@ -23,7 +23,7 @@ interface EditorChange {
 
 const BoardSubmit = () => {
   const navigate = useNavigate();
-  const [inputType, setInputType] = useState<InputType>("TEXT"); // 기본값은 텍스트
+  const [inputType, setInputType] = useState<BoardType>("TEXT"); // 기본값은 텍스트
   const editorRef = useRef<HTMLDivElement>(null); // MdEditor의 ref
   const [editorHeight, setEditorHeight] = useState(200); // 에디터 초기 높이
 
@@ -35,10 +35,7 @@ const BoardSubmit = () => {
     category: "",
     identifierId: ID,
     nickname: NICKNAME,
-    // images: [],
-    // videos: [],
-    // links: [],
-    // youtubeLinks: [],
+    type: "TEXT",
   });
 
   // textTitle
@@ -130,7 +127,7 @@ const BoardSubmit = () => {
         URL.createObjectURL(file),
       );
       setPreviewUrls(previewUrls);
-      setFileList(fileList);
+      setFileList(files);
     }
   };
 
@@ -162,27 +159,32 @@ const BoardSubmit = () => {
     event: FormEvent<HTMLFormElement | HTMLButtonElement>,
   ) => {
     event.preventDefault();
+    console.log("1");
+    const paramObj: {
+      category: string;
+      title: string;
+      content: string[];
+      identifierId: string;
+      nickname: string;
+      type: BoardType;
+    } = {
+      identifierId: ID,
+      content: [],
+      title: "",
+      category: "경제",
+      nickname: NICKNAME,
+      type: "TEXT",
+    };
 
     if (inputType === "TEXT") {
-      setBoard({
-        ...board,
-        title: textTitle,
-        content: [textContent],
-      });
+      paramObj.title = textTitle;
+      paramObj.content = [textContent];
     }
 
     if (inputType === "MEDIA") {
-      setBoard({
-        ...board,
-        title: mediaTitle,
-      });
-
       const files: File[] = Array.from(fileList);
-
-      if (files.length === 0) {
-        alert("이미지를 선택해주세요.");
-        return;
-      }
+      console.log("handleSubmit files : ", files);
+      console.log("2");
 
       const uploadImageUrlList = files.map(async (file: File) => {
         const key: string = `uploads/${file.name}`;
@@ -194,8 +196,10 @@ const BoardSubmit = () => {
           url: presignedUrl,
           file,
         });
+        console.log("uploadResult : ", uploadResult);
 
         if (uploadResult.ok) {
+          console.log("3");
           const imageUrl = presignedUrl.split("?")[0];
 
           return imageUrl;
@@ -205,22 +209,21 @@ const BoardSubmit = () => {
       });
 
       try {
+        console.log("4");
         const imageUrls: string[] = await Promise.all(uploadImageUrlList);
-        setBoard({
-          ...board,
-          content: imageUrls,
-        });
+
+        paramObj.title = mediaTitle;
+        paramObj.content = imageUrls;
+        paramObj.type = "MEDIA";
       } catch (error) {
         console.error("Error uploading files: ", error);
       }
     }
 
     if (inputType === "LINK") {
-      setBoard({
-        ...board,
-        title: linkTitle,
-        content: [linkContent],
-      });
+      paramObj.title = linkTitle;
+      paramObj.content = [linkContent];
+      paramObj.title = "LINk";
     }
 
     if (inputType === "YOUTUBE") {
@@ -229,9 +232,11 @@ const BoardSubmit = () => {
 
     console.log("handleSubmit board : ", board);
 
-    SubmitAPI(board)
+    SubmitAPI(paramObj)
       .then((res) => {
         const response = res.data.response;
+        console.log("response : ", response);
+
         if (res.status === 201) {
           navigate(`/boards/read?id=${response.id}&title=${response.title}`);
         }

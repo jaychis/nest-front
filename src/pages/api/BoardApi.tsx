@@ -1,4 +1,5 @@
 import { client } from "./Client";
+import { BoardType } from "../../_common/CollectionTypes";
 
 interface ListParams {
   readonly take: number;
@@ -51,6 +52,7 @@ export interface SubmitParams {
   readonly content: string[];
   readonly identifierId: string;
   readonly nickname: string;
+  readonly type: BoardType;
   // readonly images: File[]; // 이미지 파일 배열
   // readonly videos: File[]; // 비디오 파일 배열
   // readonly links: string[]; // URL 배열
