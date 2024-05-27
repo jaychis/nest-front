@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { AllListAPI, ListAPI, PopularListAPI } from "../api/BoardApi";
 import Card from "../../components/Card";
-import { CardType, ReactionStateTypes } from "../../_common/CollectionTypes";
+import { CardType } from "../../_common/CollectionTypes";
 import { MainListTypeState } from "../../reducers/mainListTypeSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
-import SliderCard from "../../components/SliderCard";
 
 interface ContainerProps {
   children?: React.ReactNode;
@@ -146,18 +145,7 @@ const BoardList = () => {
             list.map((el: CardType) => {
               console.log("el : ", el);
 
-              return el.type === "MEDIA" ? (
-                <>
-                  <SliderCard
-                    id={el.id}
-                    category={el.category}
-                    title={el.title}
-                    nickname={el.nickname}
-                    createdAt={el.created_at}
-                    content={el.content}
-                  />
-                </>
-              ) : (
+              return (
                 <>
                   <Card
                     id={el.id}
@@ -166,6 +154,7 @@ const BoardList = () => {
                     nickname={el.nickname}
                     createdAt={el.created_at}
                     content={el.content}
+                    type={el.type}
                   />
                 </>
               );

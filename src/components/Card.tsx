@@ -12,6 +12,20 @@ import {
   ReactionStateTypes,
   ReactionType,
 } from "../_common/CollectionTypes";
+import Slider from "react-slick";
+import YouTube from "react-youtube";
+
+const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
+  try {
+    const urlObj: URL = new URL(url);
+
+    console.log("urlObj : ", urlObj);
+    return urlObj.searchParams.get("v") || "";
+  } catch (e) {
+    console.error("Invalid URL", e);
+    return "";
+  }
+};
 
 const Card = ({
   id,
@@ -20,6 +34,7 @@ const Card = ({
   createdAt,
   nickname,
   title,
+  type,
 }: BoardProps) => {
   const navigate = useNavigate();
   const [isCardCount, setIsCardCount] = useState<number>(0);
@@ -148,17 +163,50 @@ const Card = ({
             {title}
           </h3>
 
-          <p
-            style={{
-              textAlign: "left",
-              whiteSpace: "normal",
-              wordBreak: "break-word",
-              width: "100%",
-              fontSize: "20px",
-            }}
-          >
-            {content.map((co, index) => co)}
-          </p>
+          {type === "TEXT" ? (
+            <p
+              style={{
+                textAlign: "left",
+                whiteSpace: "normal",
+                wordBreak: "break-word",
+                width: "100%",
+                fontSize: "20px",
+              }}
+            >
+              {content.map((co, index) => co)}
+            </p>
+          ) : type === "MEDIA" ? (
+            <Slider
+              {...{
+                dots: true,
+                infinite: content.length > 1,
+                speed: 500,
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                arrows: true,
+              }}
+            >
+              {content.map((image, index) => (
+                <div key={index}>
+                  <img
+                    src={image}
+                    alt={`Preview image ${index}`}
+                    style={{ height: "400px", width: "400px" }}
+                  />
+                </div>
+              ))}
+            </Slider>
+          ) : (
+            <>
+              {content.map((video: string) => (
+                <div key={id}>
+                  {video && (
+                    <YouTube videoId={getYouTubeVideoId({ url: video })} />
+                  )}
+                </div>
+              ))}
+            </>
+          )}
         </div>
       </div>
       <div
