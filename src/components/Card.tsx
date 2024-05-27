@@ -12,7 +12,7 @@ import { ReactionStateTypes } from "../_common/CollectionTypes";
 interface Props {
   readonly id: string;
   readonly category: string;
-  readonly content: string;
+  readonly content: string[];
   readonly nickname: string;
   readonly title: string;
   readonly createdAt: Date;
@@ -164,7 +164,7 @@ const Card = ({ id, category, content, createdAt, nickname, title }: Props) => {
               fontSize: "20px",
             }}
           >
-            {content}
+            {content.map((co, index) => co)}
           </p>
         </div>
       </div>

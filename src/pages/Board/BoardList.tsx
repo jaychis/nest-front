@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { AllListAPI, ListAPI, PopularListAPI } from "../api/BoardApi";
 import Card from "../../components/Card";
-import { ReactionStateTypes } from "../../_common/CollectionTypes";
+import { CardType, ReactionStateTypes } from "../../_common/CollectionTypes";
 import { MainListTypeState } from "../../reducers/mainListTypeSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
@@ -38,7 +38,6 @@ const CardsContainer = ({ children }: ContainerProps) => {
         alignItems: "center",
         width: "100%",
         maxWidth: "1100px",
-
       }}
     >
       {children}
@@ -46,41 +45,8 @@ const CardsContainer = ({ children }: ContainerProps) => {
   );
 };
 
-interface ListType {
-  readonly id: string;
-  readonly identifier_id: string;
-  readonly category: string;
-  readonly content: string;
-  readonly title: string;
-  readonly nickname: string;
-  readonly created_at: Date;
-  readonly updated_at: Date;
-  readonly deleted_at?: Date | null;
-
-  readonly reactions: {
-    id: string;
-    type: ReactionStateTypes;
-    user_id: string;
-    board_id: string;
-    created_at: Date;
-    updated_at: Date;
-    board: null | {
-      id: string;
-      identifier_id: string;
-      title: string;
-      content: string;
-      category: string;
-      nickname: string;
-      board_score: number;
-      created_at: Date;
-      updated_at: Date;
-      deleted_at: null | Date;
-    };
-  }[];
-}
-
 const BoardList = () => {
-  const [list, setList] = useState<ListType[]>([]);
+  const [list, setList] = useState<CardType[]>([]);
   const TAKE: number = 6;
   const { buttonType }: MainListTypeState = useSelector(
     (state: RootState) => state.sideBarButton,
@@ -92,7 +58,7 @@ const BoardList = () => {
       console.log("HOME : ", buttonType);
       ListAPI({ take: TAKE, lastId: null, category: null })
         .then((res) => {
-          const response: ListType[] = res.data.response.current_list;
+          const response: CardType[] = res.data.response.current_list;
           console.log("list response : ", response);
 
           // setList([...response, ...mockingList]);
@@ -110,7 +76,7 @@ const BoardList = () => {
       console.log("POPULAR : ", buttonType);
       PopularListAPI({ take: TAKE, lastId: null, category: null })
         .then((res) => {
-          const response: ListType[] = res.data.response.current_list;
+          const response: CardType[] = res.data.response.current_list;
           console.log("list response : ", response);
 
           // setList([...response, ...mockingList]);
@@ -128,7 +94,7 @@ const BoardList = () => {
       console.log("ALL : ", buttonType);
       AllListAPI({ take: TAKE, lastId: null, category: null })
         .then((res) => {
-          const response: ListType[] = res.data.response.current_list;
+          const response: CardType[] = res.data.response.current_list;
           console.log("list response : ", response);
 
           // setList([...response, ...mockingList]);
@@ -162,8 +128,8 @@ const BoardList = () => {
     const ID = list[list.length - 1].id;
     ListAPI({ take: TAKE, lastId: ID, category: null })
       .then((res) => {
-        const response: ListType[] = res.data.response.current_list;
-        const totalList: ListType[] = [...list, ...response];
+        const response: CardType[] = res.data.response.current_list;
+        const totalList: CardType[] = [...list, ...response];
 
         setList(totalList);
       })
