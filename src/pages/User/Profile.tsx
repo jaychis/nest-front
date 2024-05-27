@@ -1,50 +1,185 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import { ReduxProfileAPI } from "../api/UserApi";
 import { ProfileState } from "../../reducers/profileSlice";
+import GlobalSideBar from "../Global/GlobalSideBar";
+import RightSideBar from "../Global/RightSideBar";
+import GlobalBar from "../Global/GlobalBar";
+import { MyPostsAPI, MyCommentsAPI } from "../api/UserApi";
+import { CardType } from "../../_common/CollectionTypes";
+import Card from "../../components/Card";
+import BoardComment, { CommentType } from "../Board/BoardComment";
 
 const Profile = () => {
   const user: ProfileState = useSelector((state: RootState) => state.profile);
   const dispatch = useDispatch<AppDispatch>();
+  const [myPosts, setMyPosts] = useState<CardType[]>([]);
+  const [myComments, setMyComments] = useState<CommentType[]>([]);
+  const [activeSection, setActiveSection] = useState<string>("posts");
 
   useEffect(() => {
     console.log("user ::: ", user);
   }, [user]);
 
   useEffect(() => {
-    dispatch(ReduxProfileAPI({ id: "54870c90-ab34-4555-ad44-338c0478670b" }));
+    dispatch(ReduxProfileAPI({ id: "54870c90-ab34-4555-ad44-338c0478670b" })).then((res) => {
+      console.log("Profile API response:", res);
+    });
   }, [dispatch]);
+  
+  useEffect(() => {
+    if (user.data.id) {
+      // Fetch my posts
+      MyPostsAPI(user.data.id).then((res) => {
+        setMyPosts(Array.isArray(res) ? res : []);
+      });
+
+      // Fetch my comments
+      MyCommentsAPI(user.data.id).then((res) => {
+        setMyComments(Array.isArray(res) ? res : []);
+      });
+    }
+  }, [user]);
+
+  const handleReplySubmit = (reply: any) => {
+    // Implement reply submit logic here
+  };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h1 style={styles.title}>프로필</h1>
-        <div style={styles.info}>
-          <label style={styles.label}>닉네임:</label>
-          <span style={styles.value}>{user.data.nickname || "닉네임을 입력하세요"}</span>
+    <>
+      <GlobalBar />
+      <div style={{ display: "flex", width: "100%" }}>
+        <GlobalSideBar />
+        <div style={{ flex: 2, padding: "20px" }}>
+          <div style={styles.buttonContainer}>
+            <button
+              style={activeSection === "posts" ? styles.activeButton : styles.button}
+              onClick={() => setActiveSection("posts")}
+            >
+              내가 등록한 포스트
+            </button>
+            <button
+              style={activeSection === "comments" ? styles.activeButton : styles.button}
+              onClick={() => setActiveSection("comments")}
+            >
+              내가 단 댓글
+            </button>
+            <button
+              style={activeSection === "profile" ? styles.activeButton : styles.button}
+              onClick={() => setActiveSection("profile")}
+            >
+              기본 정보 변경
+            </button>
+          </div>
+
+          {activeSection === "posts" && (
+            <div style={styles.section}>
+              <h2 style={styles.sectionTitle}>내가 등록한 포스트</h2>
+              {myPosts.length > 0 ? (
+                myPosts.map((post) => (
+                  <Card key={post.id} {...post} createdAt={post.created_at} />
+                ))
+              ) : (
+                <p>등록된 포스트가 없습니다.</p>
+              )}
+            </div>
+          )}
+
+          {activeSection === "comments" && (
+            <div style={styles.section}>
+              <h2 style={styles.sectionTitle}>내가 단 댓글</h2>
+              {myComments.length > 0 ? (
+                myComments.map((comment) => (
+                  <BoardComment
+                    key={comment.id}
+                    {...comment}
+                    onReplySubmit={handleReplySubmit}
+                  />
+                ))
+              ) : (
+                <p>작성된 댓글이 없습니다.</p>
+              )}
+            </div>
+          )}
+
+          {activeSection === "profile" && (
+            <div style={styles.section}>
+              <h2 style={styles.sectionTitle}>기본 정보 변경</h2>
+              <div style={styles.card}>
+                <h1 style={styles.title}>프로필</h1>
+                <div style={styles.info}>
+                  <label style={styles.label}>닉네임:</label>
+                  <span style={styles.value}>
+                    {user.data.nickname || "닉네임을 입력하세요"}
+                  </span>
+                </div>
+                <div style={styles.info}>
+                  <label style={styles.label}>이메일:</label>
+                  <span style={styles.value}>
+                    {user.data.email
+                      ? user.data.email
+                      : "이메일을 입력하세요"}
+                  </span>
+                </div>
+                <div style={styles.info}>
+                  <label style={styles.label}>전화번호:</label>
+                  <span style={styles.value}>
+                    {user.data.phone
+                      ? user.data.phone
+                      : "전화번호를 입력하세요"}
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
-        <div style={styles.info}>
-          <label style={styles.label}>이메일:</label>
-          <span style={styles.value}>{user.data.email ? user.data.email : "이메일을 입력하세요"}</span>
-        </div>
-        <div style={styles.info}>
-          <label style={styles.label}>전화번호:</label>
-          <span style={styles.value}>{user.data.phone ? user.data.phone : "전화번호를 입력하세요"}</span>
-        </div>
+        <RightSideBar />
       </div>
-    </div>
+    </>
   );
 };
 
 const styles: { [key: string]: React.CSSProperties } = {
-  container: {
+  buttonContainer: {
     display: "flex",
     justifyContent: "center",
-    alignItems: "center",
-    minHeight: "100vh",
-    backgroundColor: "#f5f5f5",
+    marginBottom: "20px",
+  },
+  button: {
+    padding: "10px 20px",
+    margin: "0 10px",
+    border: "1px solid #007BFF",
+    borderRadius: "4px",
+    cursor: "pointer",
+    backgroundColor: "white",
+    color: "#007BFF",
+    fontWeight: "bold",
+    transition: "background-color 0.3s, color 0.3s",
+  },
+  activeButton: {
+    padding: "10px 20px",
+    margin: "0 10px",
+    border: "1px solid #007BFF",
+    borderRadius: "4px",
+    cursor: "pointer",
+    backgroundColor: "#007BFF",
+    color: "white",
+    fontWeight: "bold",
+    transition: "background-color 0.3s, color 0.3s",
+  },
+  section: {
+    marginBottom: "20px",
+    backgroundColor: "#fff",
     padding: "20px",
+    borderRadius: "10px",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+  },
+  sectionTitle: {
+    fontSize: "24px",
+    marginBottom: "10px",
+    borderBottom: "2px solid #007BFF",
+    paddingBottom: "5px",
   },
   card: {
     backgroundColor: "white",
@@ -55,7 +190,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     width: "100%",
   },
   title: {
-    fontSize: "24px",
+    fontSize: "30px",
     marginBottom: "20px",
     borderBottom: "2px solid #007BFF",
     paddingBottom: "10px",
@@ -70,11 +205,13 @@ const styles: { [key: string]: React.CSSProperties } = {
     fontWeight: "bold",
     marginRight: "10px",
     color: "#333",
+    fontSize: "18px",
   },
   value: {
     flexGrow: 1,
     textAlign: "right",
     color: "#555",
+    fontSize: "18px",
   },
 };
 

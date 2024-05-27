@@ -17,9 +17,17 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onRequestClose, but
   useEffect(() => {
     if (buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
+      const modalWidth = 200; // 모달의 너비
+      const leftPosition = rect.left + window.scrollX - (modalWidth - rect.width) / 2;
+
       setModalStyle({
         top: `${rect.top + rect.height + window.scrollY}px`,
-        left: `${rect.left + window.scrollX}px`,
+        left: `${leftPosition}px`,
+        transform: 'none',
+        width: `${modalWidth}px`,
+        padding: '10px',
+        borderRadius: '10px',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
       });
     }
   }, [isOpen, buttonRef]);

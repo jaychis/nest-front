@@ -3,19 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { MainListTypes } from "../../_common/CollectionTypes";
 import { AppDispatch } from "../../store/store";
-import {
-  allButton,
-  homeButton,
-  popularButton,
-} from "../../reducers/mainListTypeSlice";
+import { allButton, homeButton, popularButton } from "../../reducers/mainListTypeSlice";
 
 const GlobalSideBar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
   const [isSideHovered, setIsSideHovered] = useState<MainListTypes | "CREATE_COMMUNITY" | null>(null);
-  // const [isSideHovered, setIsSideHovered] = useState<MainListTypes | null>(null);
-  // CREATE_COMMUNITY 만들고 나중에 다시 변경
   const [selectedButton, setSelectedButton] = useState<MainListTypes>("HOME");
 
   const handleClick = (button: MainListTypes) => {
@@ -33,8 +27,8 @@ const GlobalSideBar = () => {
       style={{
         display: "flex",
         flexDirection: "column",
-        width: "40vh",
-        height: "200vh",
+        width: "25vh", // 너비를 25vh로 조정
+        height: "100vh", // 전체 화면 높이로 변경
         background: "#fff",
         marginRight: "20px",
         border: "2px solid #D3D3D3",
@@ -125,45 +119,32 @@ const GlobalSideBar = () => {
           게시글
         </span>
       </div>
-      {/* <div style={{ borderBottom: "1px solid #ccc", margin: "20px 0" }}></div> */}
       <div style={{ fontWeight: "bold", paddingLeft: "10px" }}>RECENT</div>
       <div style={{ padding: "10px 0 20px 10px" }}>
-        <div
-          style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}
-        >
+        <div style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}>
           <span style={{ fontSize: "24px" }}>🇰🇷</span>
           <span style={{ marginLeft: "8px" }}>r/korea</span>
         </div>
       </div>
       <div style={{ fontWeight: "bold", paddingLeft: "10px" }}>COMMUNITIES</div>
       <div style={{ padding: "10px 0 20px 10px" }}>
-        <div
-          style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}
-        >
+        <div style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}>
           <span style={{ fontSize: "24px" }}>📢</span>
           <span style={{ marginLeft: "8px" }}>r/announcements</span>
         </div>
-        <div
-          style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}
-        >
+        <div style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}>
           <span style={{ fontSize: "24px" }}>🎮</span>
           <span style={{ marginLeft: "8px" }}>r/gaming</span>
         </div>
-        <div
-          style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}
-        >
+        <div style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}>
           <span style={{ fontSize: "24px" }}>🎥</span>
           <span style={{ marginLeft: "8px" }}>r/movies</span>
         </div>
-        <div
-          style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}
-        >
+        <div style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}>
           <span style={{ fontSize: "24px" }}>📚</span>
           <span style={{ marginLeft: "8px" }}>r/books</span>
         </div>
-        <div
-          style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}
-        >
+        <div style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}>
           <span style={{ fontSize: "24px" }}>🎨</span>
           <span style={{ marginLeft: "8px" }}>r/art</span>
         </div>
@@ -173,9 +154,7 @@ const GlobalSideBar = () => {
           display: "flex",
           justifyContent: "center",
           padding: "10px 0",
-          backgroundColor: isSideHovered === "CREATE_COMMUNITY"
-              ? "#f0f0f0"
-              : "white",
+          backgroundColor: isSideHovered === "CREATE_COMMUNITY" ? "#f0f0f0" : "white",
           borderRadius: "5px",
           margin: "5px",
         }}

@@ -15,7 +15,7 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
     email: "",
     password: "",
   });
-  const [isCloseHovered, setIsCloseHovered] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const handleChange = (event: CollectionTypes): void => {
     const { name, value } = event;
@@ -30,6 +30,12 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
     event.preventDefault();
 
     const isPasswordValid: boolean = isValidPasswordFormat(login.password);
+    const isEmailValid: boolean = /\S+@\S+\.\S+/.test(login.email);
+    if (!isEmailValid) {
+      setErrorMessage("유효한 이메일 주소를 입력하세요.");
+      return;
+    }
+
     if (isPasswordValid) {
       LoginAPI(login)
         .then((res): void => {
@@ -45,10 +51,13 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
             window.location.reload();
           }
         })
-        .catch((err): void => console.error(err));
+        .catch((err): void => {
+          setErrorMessage("로그인 실패. 이메일과 비밀번호를 확인하세요.");
+          console.error(err);
+        });
     } else {
-      alert(
-        "비밀번호는 최소 8자, 하나 이상의 문자, 하나의 숫자 및 하나의 특수문자입니다.",
+      setErrorMessage(
+        "비밀번호는 최소 8자, 하나 이상의 문자, 하나의 숫자 및 하나의 특수문자입니다."
       );
     }
   };
@@ -110,6 +119,7 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
           name="password"
           required
         />
+        {errorMessage && <div style={styles.errorText}>{errorMessage}</div>}
         <div style={styles.forgotPasswordContainer}>
           <a href="/forgot-password" style={styles.forgotPasswordLink}>
             비밀번호를 잊으셨나요?
@@ -230,6 +240,12 @@ const styles: { [key: string]: React.CSSProperties } = {
     color: "white",
     cursor: "pointer",
     // marginBottom: "20px", // 추가된 스타일, 버튼 간격 조정
+  },
+  errorText: {
+    color: "red",
+    textAlign: "center",
+    marginTop: "10px",
+    marginBottom: "10px",
   },
 };
 

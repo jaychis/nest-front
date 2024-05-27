@@ -82,7 +82,7 @@ const BoardBar = () => {
               onClick={postSubmit}
             >
               <FaPlus style={{ marginRight: "5px" }} />
-              <span>Create</span>
+              <span>글쓰기</span>
             </button>
           </>
         ) : (
