@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   CollectionTypes,
   ReactionStateTypes,
+  ReactionType,
 } from "../../_common/CollectionTypes";
 import {
   ReactionAPI,
@@ -12,7 +13,6 @@ import {
 import logo from "../../assets/img/panda_logo.png";
 import { ReplyType } from "./BoardReply";
 import { ReplySubmitAPI, ReplySubmitParams } from "../api/ReplyApi";
-import { ReactionType } from "../../components/Card";
 
 export interface CommentType {
   readonly id: string;

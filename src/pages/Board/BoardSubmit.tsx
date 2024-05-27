@@ -5,17 +5,21 @@ import { useNavigate } from "react-router-dom";
 import MarkdownIt from "markdown-it";
 import MdEditor from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
-import {
-  AWSImageDeleteAPI,
-  AWSImageRegistAPI,
-  getPresignedUrlAPI,
-} from "../api/AWSApi";
+import { AWSImageRegistAPI, getPresignedUrlAPI } from "../api/AWSApi";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { BoardType } from "../../_common/CollectionTypes";
 
 const mdParser = new MarkdownIt();
+interface EditorChange {
+  html: string;
+  text: string;
+}
 
 const BoardSubmit = () => {
   const navigate = useNavigate();
-  const [inputType, setInputType] = useState("TEXT"); // 기본값은 텍스트
+  const [inputType, setInputType] = useState<BoardType>("TEXT"); // 기본값은 텍스트
   const editorRef = useRef<HTMLDivElement>(null); // MdEditor의 ref
   const [editorHeight, setEditorHeight] = useState(200); // 에디터 초기 높이
 
@@ -23,117 +27,67 @@ const BoardSubmit = () => {
   const NICKNAME: string = localStorage.getItem("nickname") as string;
   const [board, setBoard] = useState<SubmitParams>({
     title: "",
-    content: "",
+    content: [],
     category: "",
     identifierId: ID,
     nickname: NICKNAME,
-    images: [],
-    videos: [],
-    links: [],
-    youtubeLinks: [],
+    type: "TEXT",
   });
 
-  const [files, setFiles] = useState<File[]>([]);
-  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      setFiles(Array.from(event.target.files));
-    }
-  };
-
-  const uploadFile = async (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-
-    if (files.length === 0) {
-      alert("이미지를 선택해주세요.");
-      return;
-    }
-
-    const uploadImageUrlList = files.map(async (file) => {
-      const key: string = `uploads/${ID}-${new Date().toISOString()}-${file.name}`;
-      const expires: number = 60000;
-      const res = await getPresignedUrlAPI({ key, expires });
-      const presignedUrl = res.data.response.url;
-
-      const uploadResult = await AWSImageRegistAPI({ url: presignedUrl, file });
-      console.log("uploadResult : ", uploadResult);
-
-      if (uploadResult.ok) {
-        console.log("File uploaded successfully");
-        const imageUrl = presignedUrl.split("?")[0]; // 쿼리 파라미터를 제거하여 이미지 URL을 얻습니다
-
-        console.log("imageUrl : ", imageUrl);
-        return imageUrl;
-      } else {
-        console.error("Failed to upload file", uploadResult.statusText);
-      }
-    });
-
-    try {
-      const imageUrls = await Promise.all(uploadImageUrlList);
-      setPreviewUrls(imageUrls);
-    } catch (error) {
-      console.error("Error uploading files: ", error);
-    }
-  };
-
-  const imageUrlListDelete = async () => {
-    previewUrls.map(async (url, index) => {
-      const urlResponse = await AWSImageDeleteAPI({ url });
-      console.log("urlResponse.data : ", urlResponse.data);
-      console.log("urlResponse : ", urlResponse);
-    });
-  };
-
-  useEffect(() => {
-    console.log("board : ", board);
-    console.log("previewUrl : ", previewUrls);
-  }, [board, previewUrls]);
-  //
-
-  const handleChange = (
+  // textTitle
+  const [textTitle, setTextTitle] = useState<string>("");
+  const handleTextTitleChange = async (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ): void => {
-    const { name, value } = event.target;
-    setBoard({
-      ...board,
-      [name]: value,
-    });
+  ): Promise<void> => {
+    const { value } = event.target;
+
+    setTextTitle(value);
   };
+  useEffect(() => console.log("textTitle : ", textTitle), [textTitle]);
 
-  const handleMediaChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ): void => {
-    const files = event.target.files ? Array.from(event.target.files) : [];
-    setBoard((prev) => ({
-      ...prev,
-      images: [...prev.images, ...files], // Assuming handling for both images and videos
-      videos: [...prev.videos, ...files], // Same as above
-    }));
+  // mediaTitle
+  const [mediaTitle, setMediaTitle] = useState<string>("");
+  const handleMediaTitleChange = async (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ): Promise<void> => {
+    const { value } = event.target;
+
+    setMediaTitle(value);
   };
+  useEffect(() => console.log("mediaTitle : ", mediaTitle), [mediaTitle]);
 
-  const handleLinkChange = (
-    value: string,
-    type: "links" | "youtubeLinks",
-  ): void => {
-    setBoard((prev) => ({
-      ...prev,
-      [type]: [...prev[type], value],
-    }));
+  // linkTitle
+  const [linkTitle, setLinkTitle] = useState<string>("");
+  const handleLinkTitleChange = async (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ): Promise<void> => {
+    const { value } = event.target;
+
+    setLinkTitle(value);
   };
+  useEffect(() => console.log("linkTitle : ", linkTitle), [linkTitle]);
 
-  interface EditorChange {
-    html: string;
-    text: string;
-  }
+  // youtubeTitle
 
-  const handleEditorChange = ({ html, text }: EditorChange) => {
-    setBoard((prev) => ({
-      ...prev,
-      content: text,
-    }));
+  // const handleChange = async (
+  //   event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  // ): Promise<void> => {
+  //   const { name, value } = event.target;
+  //   setBoard({
+  //     ...board,
+  //     [name]: value,
+  //   });
+  // };
+
+  // 텍스트
+  const [textContent, setTextContent] = useState<string>("");
+  const handleEditorChange = async ({ html, text }: EditorChange) => {
+    setTextContent(html);
+    console.log("html: ", html);
+    console.log("text: ", text);
     adjustEditorHeight();
   };
+  useEffect(() => console.log("textContent : ", textContent), [textContent]);
 
   const adjustEditorHeight = () => {
     if (editorRef.current) {
@@ -150,12 +104,135 @@ const BoardSubmit = () => {
     adjustEditorHeight();
   }, [board.content]);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  // 이미지 & 비디오
+  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+  const [fileList, setFileList] = useState<File[]>([]);
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ): Promise<void> => {
+    if (event.target.files) {
+      const files: File[] = Array.from(event.target.files);
+      console.log("files : ", files);
+
+      if (files.length === 0) {
+        alert("이미지를 선택해주세요.");
+        return;
+      }
+
+      const previewUrls: string[] = files.map((file) =>
+        URL.createObjectURL(file),
+      );
+      setPreviewUrls(previewUrls);
+      setFileList(files);
+    }
+  };
+
+  const imageUrlListDelete = async () => {
+    if (previewUrls.length === 0) {
+      alert("삭제할 이미지가 없습니다.");
+      return;
+    }
+
+    setPreviewUrls([]);
+  };
+
+  // link
+  const [linkContent, setLinkContent] = useState<string>("");
+  const handleLinkContentChange = async (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ): Promise<void> => {
+    const { value } = event.target;
+
+    setLinkContent(value);
+  };
+  useEffect(() => console.log("linkContent : ", linkContent), [linkContent]);
+
+  useEffect(() => {
+    console.log("board : ", board);
+  }, [board]);
+
+  const handleSubmit = async (
+    event: FormEvent<HTMLFormElement | HTMLButtonElement>,
+  ) => {
     event.preventDefault();
-    console.log("handleSubmit board : ", board);
-    SubmitAPI(board)
+    console.log("1");
+    const paramObj: {
+      category: string;
+      title: string;
+      content: string[];
+      identifierId: string;
+      nickname: string;
+      type: BoardType;
+    } = {
+      identifierId: ID,
+      content: [],
+      title: "",
+      category: "경제",
+      nickname: NICKNAME,
+      type: "TEXT",
+    };
+
+    if (inputType === "TEXT") {
+      paramObj.title = textTitle;
+      paramObj.content = [textContent];
+    }
+
+    if (inputType === "MEDIA") {
+      const files: File[] = Array.from(fileList);
+      console.log("handleSubmit files : ", files);
+      console.log("2");
+
+      const uploadImageUrlList = files.map(async (file: File) => {
+        const key: string = `uploads/${file.name}`;
+        const expires: number = 60;
+        const res = await getPresignedUrlAPI({ key, expires });
+        const presignedUrl = res.data.response.url;
+
+        const uploadResult = await AWSImageRegistAPI({
+          url: presignedUrl,
+          file,
+        });
+        console.log("uploadResult : ", uploadResult);
+
+        if (uploadResult.ok) {
+          console.log("3");
+          const imageUrl = presignedUrl.split("?")[0];
+
+          return imageUrl;
+        } else {
+          console.error("Failed to upload file", uploadResult.statusText);
+        }
+      });
+
+      try {
+        console.log("4");
+        const imageUrls: string[] = await Promise.all(uploadImageUrlList);
+
+        paramObj.title = mediaTitle;
+        paramObj.content = imageUrls;
+        paramObj.type = "MEDIA";
+      } catch (error) {
+        console.error("Error uploading files: ", error);
+      }
+    }
+
+    if (inputType === "LINK") {
+      paramObj.title = linkTitle;
+      paramObj.content = [linkContent];
+      paramObj.title = "LINk";
+    }
+
+    if (inputType === "YOUTUBE") {
+      //
+    }
+
+    console.log("handleSubmit paramObj : ", paramObj);
+
+    SubmitAPI(paramObj)
       .then((res) => {
         const response = res.data.response;
+        console.log("response : ", response);
+
         if (res.status === 201) {
           navigate(`/boards/read?id=${response.id}&title=${response.title}`);
         }
@@ -208,9 +285,17 @@ const BoardSubmit = () => {
     ...buttonStyle,
     backgroundColor: "#84d7fb",
     color: "white",
-    border: "#84d7fb"
+    border: "#84d7fb",
   };
 
+  const sliderSetting = {
+    dots: true,
+    infinite: previewUrls.length > 1,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: true,
+  };
   return (
     <>
       <div style={{ backgroundColor: "#4F657755", height: "100vh" }}>
@@ -255,90 +340,86 @@ const BoardSubmit = () => {
               링크
             </button>
           </div>
-          <form onSubmit={handleSubmit}>
-            {inputType === "TEXT" && (
-              <>
-                <input
-                  name="title"
-                  type="text"
-                  placeholder="제목"
-                  onChange={handleChange}
-                  style={inputStyle}
-                />
-                <MdEditor
-                  style={{ height: "200px" }}
-                  renderHTML={(text) => mdParser.render(text)}
-                  onChange={handleEditorChange}
-                  view={{ menu: true, md: true, html: false }}
-                />
-              </>
-            )}
-            {inputType === "MEDIA" && (
-              <>
-                <input
-                  name="title"
-                  type="text"
-                  placeholder="제목"
-                  onChange={handleChange}
-                  style={inputStyle}
-                />
+          {/*<form onSubmit={handleSubmit}>*/}
+          {inputType === "TEXT" && (
+            <>
+              <input
+                name="title"
+                type="text"
+                placeholder="제목"
+                onChange={handleTextTitleChange}
+                style={inputStyle}
+              />
+              <MdEditor
+                style={{ height: "200px" }}
+                renderHTML={(text) => mdParser.render(text)}
+                onChange={handleEditorChange}
+                view={{ menu: true, md: true, html: false }}
+              />
+            </>
+          )}
+          {inputType === "MEDIA" && (
+            <>
+              <input
+                name="title"
+                type="text"
+                placeholder="제목"
+                onChange={handleMediaTitleChange}
+                style={inputStyle}
+              />
 
-                {previewUrls.length > 0 ? (
-                  <>
-                    <button onClick={imageUrlListDelete}>휴지통</button>
-                    <div>
-                      {previewUrls.map((url, index) => (
+              {previewUrls.length > 0 ? (
+                <>
+                  <button onClick={imageUrlListDelete}>휴지통</button>
+                  <Slider {...sliderSetting}>
+                    {previewUrls.map((image, index) => (
+                      <div key={index}>
                         <img
-                          id={"preview"}
-                          key={index}
-                          src={url}
-                          alt={`Image Preview ${index}`}
-                          style={{
-                            display: "block",
-                            height: "400px",
-                            width: "400px",
-                          }}
+                          src={image}
+                          alt={`Preview image ${index}`}
+                          style={{ height: "400px", width: "400px" }}
                         />
-                      ))}
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <input
-                      type={"file"}
-                      multiple
-                      onChange={handleFileChange}
-                      style={inputStyle}
-                    />
-                  </>
-                )}
-              </>
-            )}
-            {inputType === "LINK" && (
-              <>
-                <input
-                  name="title"
-                  type="text"
-                  placeholder="제목"
-                  onChange={handleChange}
-                  style={inputStyle}
-                />
-                <input
-                  type="text"
-                  placeholder="링크 추가"
-                  onChange={(e) => handleLinkChange(e.target.value, "links")}
-                  style={inputStyle}
-                />
-              </>
-            )}
-            <button
-              type="submit"
-              style={submitButtonStyle}
-              onClick={uploadFile}
-            >
-              보내기
-            </button>
-          </form>
+                      </div>
+                    ))}
+                  </Slider>
+                </>
+              ) : (
+                <>
+                  <input
+                    type={"file"}
+                    multiple
+                    onChange={handleFileChange}
+                    style={inputStyle}
+                  />
+                </>
+              )}
+            </>
+          )}
+          {inputType === "LINK" && (
+            <>
+              <input
+                name="title"
+                type="text"
+                placeholder="제목"
+                onChange={handleLinkTitleChange}
+                style={inputStyle}
+              />
+              <input
+                type="text"
+                placeholder="링크 추가"
+                onChange={(e) => handleLinkContentChange(e)}
+                style={inputStyle}
+              />
+            </>
+          )}
+          <button
+            type="submit"
+            style={submitButtonStyle}
+            onClick={(e) => handleSubmit(e)}
+          >
+            보내기
+          </button>
+          {/*</form>*/}
         </div>
       </div>
     </>

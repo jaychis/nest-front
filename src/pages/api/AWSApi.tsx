@@ -14,16 +14,28 @@ export const getPresignedUrlAPI = async (params: GetPresignedUrlParams) => {
 };
 
 export interface AWSImageDeleteParams {
-  readonly url: string;
+  readonly urls: string[];
 }
 
-export const AWSImageDeleteAPI = async ({ url }: AWSImageDeleteParams) => {
+export const AWSImageDeleteAPI = async ({ urls }: AWSImageDeleteParams) => {
   const URL: string = "s3/";
-  const key = url.split(".com/")[1]; // URL에서 파일 경로 추출
+  console.log("URL : ", URL);
+  console.log("urls : ", urls);
+  const keys: string[] = urls.map((url: string) => url.split(".com/")[1]); // URL에서 파일 경로 추출
+  console.log("keys : ", keys);
 
-  const res = await client.delete(URL, { data: key });
+  const param: { keys: string[] } = {
+    keys,
+  };
 
-  return res;
+  try {
+    const res = await client.delete(URL, { data: param });
+
+    return res;
+  } catch (e: any) {
+    console.log("AWSImageDeleteAPI err : ", e);
+    throw e;
+  }
 };
 
 export interface AWSImageRegistParams {
@@ -36,11 +48,9 @@ export const AWSImageRegistAPI = async ({
   file,
 }: AWSImageRegistParams) => {
   const URL: string = url;
-  console.log("URL : ", URL);
-  console.log("file : ", file);
 
   try {
-    const res = await fetch(url, {
+    const res = await fetch(URL, {
       method: "PUT",
       headers: {
         "Content-Type": file.type,

@@ -4,10 +4,7 @@ import GlobalSideBar from "../Global/GlobalSideBar";
 import Card from "../../components/Card";
 import { ReadAPI } from "../api/BoardApi";
 import { useSearchParams } from "react-router-dom";
-import {
-  CollectionTypes,
-  ReactionStateTypes,
-} from "../../_common/CollectionTypes";
+import { CardType, CollectionTypes } from "../../_common/CollectionTypes";
 import {
   CommentListAPI,
   CommentSubmitAPI,
@@ -17,52 +14,19 @@ import BoardComment, { CommentType } from "./BoardComment";
 import BoardReply, { ReplyType } from "./BoardReply";
 import RightSideBar from "../Global/RightSideBar";
 
-interface CardType {
-  readonly id: string;
-  readonly identifier_id: string;
-  readonly category: string;
-  readonly content: string;
-  readonly title: string;
-  readonly nickname: string;
-  readonly created_at: Date;
-  readonly updated_at: Date;
-  readonly deleted_at?: Date | null;
-
-  readonly reactions: {
-    id: string;
-    type: ReactionStateTypes;
-    user_id: string;
-    board_id: string;
-    created_at: Date;
-    updated_at: Date;
-    board: null | {
-      id: string;
-      identifier_id: string;
-      title: string;
-      content: string;
-      category: string;
-      nickname: string;
-      board_score: number;
-      created_at: Date;
-      updated_at: Date;
-      deleted_at: null | Date;
-    };
-  }[];
-}
-
 const BoardRead = () => {
   const [params, setParams] = useSearchParams();
   const [isBoardState, setIsBoardStateBoard] = useState<CardType>({
     id: params.get("id") as string,
     identifier_id: "",
     category: "",
-    content: params.get("content") as string,
+    content: [],
     title: params.get("title") as string,
     nickname: "",
     created_at: new Date(),
     updated_at: new Date(),
     deleted_at: null,
-    reactions: [],
+    type: "TEXT",
   });
   const [isCommentState, setIsCommentState] = useState<CommentType[]>([]);
 
@@ -206,6 +170,7 @@ const BoardRead = () => {
             nickname={isBoardState.nickname}
             createdAt={isBoardState.created_at}
             content={isBoardState.content}
+            type={isBoardState.type}
           />
           <div
             style={{

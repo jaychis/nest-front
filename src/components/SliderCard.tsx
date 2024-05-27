@@ -1,40 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/img/panda_logo.png";
+import {
+  BoardProps,
+  ReactionStateTypes,
+  ReactionType,
+} from "../_common/CollectionTypes";
 import {
   ReactionAPI,
   ReactionCountAPI,
   ReactionListAPI,
   ReactionParams,
 } from "../pages/api/ReactionApi";
-import {
-  BoardProps,
-  ReactionStateTypes,
-  ReactionType,
-} from "../_common/CollectionTypes";
+import logo from "../assets/img/panda_logo.png";
 import Slider from "react-slick";
-import YouTube from "react-youtube";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
-const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
-  try {
-    const urlObj: URL = new URL(url);
-
-    console.log("urlObj : ", urlObj);
-    return urlObj.searchParams.get("v") || "";
-  } catch (e) {
-    console.error("Invalid URL", e);
-    return "";
-  }
-};
-
-const Card = ({
+const SliderCard = ({
   id,
   category,
   content,
   createdAt,
   nickname,
   title,
-  type,
 }: BoardProps) => {
   const navigate = useNavigate();
   const [isCardCount, setIsCardCount] = useState<number>(0);
@@ -163,50 +151,37 @@ const Card = ({
             {title}
           </h3>
 
-          {type === "TEXT" ? (
-            <p
-              style={{
-                textAlign: "left",
-                whiteSpace: "normal",
-                wordBreak: "break-word",
-                width: "100%",
-                fontSize: "20px",
-              }}
-            >
-              {content.map((co, index) => co)}
-            </p>
-          ) : type === "MEDIA" ? (
-            <Slider
-              {...{
-                dots: true,
-                infinite: content.length > 1,
-                speed: 500,
-                slidesToShow: 1,
-                slidesToScroll: 1,
-                arrows: true,
-              }}
-            >
-              {content.map((image, index) => (
-                <div key={index}>
-                  <img
-                    src={image}
-                    alt={`Preview image ${index}`}
-                    style={{ height: "400px", width: "400px" }}
-                  />
-                </div>
-              ))}
-            </Slider>
-          ) : (
-            <>
-              {content.map((video: string) => (
-                <div key={id}>
-                  {video && (
-                    <YouTube videoId={getYouTubeVideoId({ url: video })} />
-                  )}
-                </div>
-              ))}
-            </>
-          )}
+          {/*<p*/}
+          {/*  style={{*/}
+          {/*    textAlign: "left",*/}
+          {/*    whiteSpace: "normal",*/}
+          {/*    wordBreak: "break-word",*/}
+          {/*    width: "100%",*/}
+          {/*    fontSize: "20px",*/}
+          {/*  }}*/}
+          {/*>*/}
+          {/*  {content.map((co, index) => co)}*/}
+          {/*</p>*/}
+          <Slider
+            {...{
+              dots: true,
+              infinite: content.length > 1,
+              speed: 500,
+              slidesToShow: 1,
+              slidesToScroll: 1,
+              arrows: true,
+            }}
+          >
+            {content.map((image, index) => (
+              <div key={index}>
+                <img
+                  src={image}
+                  alt={`Preview image ${index}`}
+                  style={{ height: "400px", width: "400px" }}
+                />
+              </div>
+            ))}
+          </Slider>
         </div>
       </div>
       <div
@@ -353,5 +328,4 @@ const Card = ({
     </>
   );
 };
-
-export default Card;
+export default SliderCard;

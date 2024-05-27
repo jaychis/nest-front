@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
+import {
+  BoardProps,
+  ReactionStateTypes,
+  ReactionType,
+} from "../_common/CollectionTypes";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/img/panda_logo.png";
 import {
   ReactionAPI,
   ReactionCountAPI,
   ReactionListAPI,
   ReactionParams,
 } from "../pages/api/ReactionApi";
-import {
-  BoardProps,
-  ReactionStateTypes,
-  ReactionType,
-} from "../_common/CollectionTypes";
-import Slider from "react-slick";
+import logo from "../assets/img/panda_logo.png";
 import YouTube from "react-youtube";
 
 const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
@@ -27,14 +26,13 @@ const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
   }
 };
 
-const Card = ({
+const LinkCard = ({
   id,
   category,
   content,
   createdAt,
   nickname,
   title,
-  type,
 }: BoardProps) => {
   const navigate = useNavigate();
   const [isCardCount, setIsCardCount] = useState<number>(0);
@@ -163,50 +161,21 @@ const Card = ({
             {title}
           </h3>
 
-          {type === "TEXT" ? (
-            <p
-              style={{
-                textAlign: "left",
-                whiteSpace: "normal",
-                wordBreak: "break-word",
-                width: "100%",
-                fontSize: "20px",
-              }}
-            >
-              {content.map((co, index) => co)}
-            </p>
-          ) : type === "MEDIA" ? (
-            <Slider
-              {...{
-                dots: true,
-                infinite: content.length > 1,
-                speed: 500,
-                slidesToShow: 1,
-                slidesToScroll: 1,
-                arrows: true,
-              }}
-            >
-              {content.map((image, index) => (
-                <div key={index}>
-                  <img
-                    src={image}
-                    alt={`Preview image ${index}`}
-                    style={{ height: "400px", width: "400px" }}
-                  />
-                </div>
-              ))}
-            </Slider>
-          ) : (
-            <>
-              {content.map((video: string) => (
-                <div key={id}>
-                  {video && (
-                    <YouTube videoId={getYouTubeVideoId({ url: video })} />
-                  )}
-                </div>
-              ))}
-            </>
-          )}
+          {/*<p*/}
+          {/*  style={{*/}
+          {/*    textAlign: "left",*/}
+          {/*    whiteSpace: "normal",*/}
+          {/*    wordBreak: "break-word",*/}
+          {/*    width: "100%",*/}
+          {/*    fontSize: "20px",*/}
+          {/*  }}*/}
+          {/*>*/}
+          {/*</p>*/}
+          {content.map((video: string) => (
+            <div key={id}>
+              {video && <YouTube videoId={getYouTubeVideoId({ url: video })} />}
+            </div>
+          ))}
         </div>
       </div>
       <div
@@ -354,4 +323,4 @@ const Card = ({
   );
 };
 
-export default Card;
+export default LinkCard;
