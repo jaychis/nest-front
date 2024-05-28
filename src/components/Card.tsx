@@ -19,7 +19,6 @@ const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
   try {
     const urlObj: URL = new URL(url);
 
-    console.log("urlObj : ", urlObj);
     return urlObj.searchParams.get("v") || "";
   } catch (e) {
     console.error("Invalid URL", e);
@@ -347,7 +346,7 @@ const Card = ({
           height: "2px",
           backgroundColor: "#f0f0f0",
           margin: "16px 0",
-          width: "1100px",
+          width: "800px",
         }}
       />
     </>

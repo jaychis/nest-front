@@ -49,7 +49,7 @@ const CardsContainer = ({ children }: ContainerProps) => {
 
 const BoardList = () => {
   const [list, setList] = useState<CardType[]>([]);
-  const TAKE: number = 6;
+  const TAKE: number = 5;
   const { buttonType }: MainListTypeState = useSelector(
     (state: RootState) => state.sideBarButton,
   );
@@ -121,32 +121,72 @@ const BoardList = () => {
       };
     }
   }, [buttonType]);
-  const handleScroll = async () => {
+  const handleScroll = () => {
     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
 
     // 페이지 하단에 도달햇는지 확인
     if (scrollTop + clientHeight >= scrollHeight - 15) {
       // 데이타 불러오는 함수 호출
-      await fetchData();
+      fetchData();
     }
   };
 
   window.addEventListener("scroll", handleScroll);
 
   const [loading, setLoading] = useState<boolean>(false);
-  const fetchData = async () => {
+  const fetchData = () => {
     if (loading || list.length === 0) return;
     setLoading(true);
 
     const ID = list[list.length - 1].id;
-    ListAPI({ take: TAKE, lastId: ID, category: null })
-      .then((res) => {
-        const response: CardType[] = res.data.response.current_list;
-        const totalList: CardType[] = [...list, ...response];
 
-        setList(totalList);
-      })
-      .catch((err) => console.error(err));
+    //
+    if (buttonType === "HOME") {
+      console.log("fetchData HOME : ", buttonType);
+      ListAPI({ take: TAKE, lastId: ID, category: null })
+        .then((res) => {
+          const response: CardType[] = res.data.response.current_list;
+          const totalList: CardType[] = [...list, ...response];
+
+          setList(totalList);
+        })
+        .catch((err) => console.error("fetchData ListAPI error : ", err));
+    } else if (buttonType === "POPULAR") {
+      console.log("fetchData POPULAR : ", buttonType);
+      PopularListAPI({ take: TAKE, lastId: ID, category: null })
+        .then((res) => {
+          const response: CardType[] = res.data.response.current_list;
+          console.log("list response : ", response);
+
+          // setList([...response, ...mockingList]);
+          setList([...response]);
+        })
+        .catch((err) => console.error("fetchData PopularListAPI : ", err));
+    } else if (buttonType === "ALL") {
+      console.log("fetchData ALL : ", buttonType);
+      AllListAPI({ take: TAKE, lastId: ID, category: null })
+        .then((res) => {
+          const response: CardType[] = res.data.response.current_list;
+          console.log("list response : ", response);
+
+          // setList([...response, ...mockingList]);
+          setList([...response]);
+        })
+        .catch((err) => console.error(err));
+    } else {
+      console.log("fetchData List : ", buttonType);
+      AllListAPI({ take: TAKE, lastId: ID, category: buttonType })
+        .then((res) => {
+          const response: CardType[] = res.data.response.current_list;
+          console.log("list response : ", response);
+
+          // setList([...response, ...mockingList]);
+          setList([...response]);
+        })
+        .catch((err) => console.error(err));
+    }
+
+    //
     setLoading(false);
   };
 
@@ -156,7 +196,7 @@ const BoardList = () => {
         <CardsContainer>
           {list.length > 0 ? (
             list.map((el: CardType) => {
-              console.log("el : ", el);
+              // console.log("el : ", el);
 
               return (
                 <>
