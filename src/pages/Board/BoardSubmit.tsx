@@ -155,7 +155,7 @@ const BoardSubmit = () => {
     event: FormEvent<HTMLFormElement | HTMLButtonElement>,
   ) => {
     event.preventDefault();
-    console.log("1");
+
     const paramObj: {
       category: string;
       title: string;
@@ -172,72 +172,79 @@ const BoardSubmit = () => {
       type: "TEXT",
     };
 
-    if (inputType === "TEXT") {
-      paramObj.title = textTitle;
-      paramObj.content = [textContent];
-    }
-
-    if (inputType === "MEDIA") {
-      const files: File[] = Array.from(fileList);
-      console.log("handleSubmit files : ", files);
-      console.log("2");
-
-      const uploadImageUrlList = files.map(async (file: File) => {
-        const key: string = `uploads/${file.name}`;
-        const expires: number = 60;
-        const res = await getPresignedUrlAPI({ key, expires });
-        const presignedUrl = res.data.response.url;
-
-        const uploadResult = await AWSImageRegistAPI({
-          url: presignedUrl,
-          file,
-        });
-        console.log("uploadResult : ", uploadResult);
-
-        if (uploadResult.ok) {
-          console.log("3");
-          const imageUrl = presignedUrl.split("?")[0];
-
-          return imageUrl;
-        } else {
-          console.error("Failed to upload file", uploadResult.statusText);
-        }
-      });
-
-      try {
-        console.log("4");
-        const imageUrls: string[] = await Promise.all(uploadImageUrlList);
-
-        paramObj.title = mediaTitle;
-        paramObj.content = imageUrls;
-        paramObj.type = "MEDIA";
-      } catch (error) {
-        console.error("Error uploading files: ", error);
+    try {
+      if (inputType === "TEXT") {
+        paramObj.title = textTitle;
+        paramObj.content = [textContent];
       }
+
+      if (inputType === "MEDIA") {
+        const files: File[] = Array.from(fileList);
+
+        console.log("MEDIA files : ", files);
+
+        const uploadImageUrlList = files.map(async (file: File) => {
+          const key: string = `uploads/${file.name}`;
+          const expires: number = 60;
+          const res = await getPresignedUrlAPI({ key, expires });
+          const presignedUrl = res.data.response.url;
+          console.log("presignedUrl : ", presignedUrl);
+
+          const uploadResult = await AWSImageRegistAPI({
+            url: presignedUrl,
+            file,
+          });
+          console.log("uploadResult : ", uploadResult);
+
+          if (uploadResult.ok) {
+            const imageUrl = presignedUrl.split("?")[0];
+            console.log("imageUrl : ", imageUrl);
+
+            return imageUrl;
+          } else {
+            console.error("Failed to upload file", uploadResult.statusText);
+          }
+        });
+        console.log("uploadImageUrlList : ", uploadImageUrlList);
+
+        // try {
+        const imageUrls: string[] = await Promise.all(uploadImageUrlList);
+        console.log("imageUrls : ", imageUrls);
+
+        paramObj.content = imageUrls;
+        paramObj.title = mediaTitle;
+        paramObj.type = "MEDIA";
+        console.log("paramObj : ", paramObj);
+        // } catch (error) {
+        //   console.error("Error uploading files: ", error);
+        // }
+      }
+
+      if (inputType === "LINK") {
+        paramObj.title = linkTitle;
+        paramObj.content = [linkContent];
+        paramObj.type = "LINK";
+      }
+
+      if (inputType === "YOUTUBE") {
+        //
+      }
+
+      console.log("handleSubmit paramObj : ", paramObj);
+
+      SubmitAPI(paramObj)
+        .then((res) => {
+          const response = res.data.response;
+          console.log("response : ", response);
+
+          if (res.status === 201) {
+            navigate(`/boards/read?id=${response.id}&title=${response.title}`);
+          }
+        })
+        .catch((err) => console.error(err));
+    } catch (error) {
+      console.error("Error : ", error);
     }
-
-    if (inputType === "LINK") {
-      paramObj.title = linkTitle;
-      paramObj.content = [linkContent];
-      paramObj.title = "LINk";
-    }
-
-    if (inputType === "YOUTUBE") {
-      //
-    }
-
-    console.log("handleSubmit paramObj : ", paramObj);
-
-    SubmitAPI(paramObj)
-      .then((res) => {
-        const response = res.data.response;
-        console.log("response : ", response);
-
-        if (res.status === 201) {
-          navigate(`/boards/read?id=${response.id}&title=${response.title}`);
-        }
-      })
-      .catch((err) => console.error(err));
   };
 
   const inputStyle = {
@@ -296,6 +303,10 @@ const BoardSubmit = () => {
     slidesToScroll: 1,
     arrows: true,
   };
+
+  useEffect(() => {
+    console.log("inputType : ", inputType);
+  }, [inputType]);
   return (
     <>
       <div style={{ backgroundColor: "#4F657755", height: "100vh" }}>
