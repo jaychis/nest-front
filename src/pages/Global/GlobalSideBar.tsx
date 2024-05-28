@@ -4,16 +4,20 @@ import { useDispatch } from "react-redux";
 import { MainListTypes } from "../../_common/CollectionTypes";
 import { AppDispatch } from "../../store/store";
 import {
-  allButton,
-  homeButton,
-  popularButton,
+  sideButtonSlice,
+  // allButton,
+  // homeButton,
+  // popularButton,
+  sideButtonSliceActions,
 } from "../../reducers/mainListTypeSlice";
 
 const GlobalSideBar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  const [isSideHovered, setIsSideHovered] = useState<MainListTypes | "CREATE_COMMUNITY" | null>(null);
+  const [isSideHovered, setIsSideHovered] = useState<
+    MainListTypes | "CREATE_COMMUNITY" | null
+  >(null);
   // const [isSideHovered, setIsSideHovered] = useState<MainListTypes | null>(null);
   // CREATE_COMMUNITY 만들고 나중에 다시 변경
   const [selectedButton, setSelectedButton] = useState<MainListTypes>("HOME");
@@ -21,9 +25,15 @@ const GlobalSideBar = () => {
   const handleClick = (button: MainListTypes) => {
     setSelectedButton(button);
 
-    if (button === "HOME") dispatch(homeButton());
-    if (button === "POPULAR") dispatch(popularButton());
-    if (button === "ALL") dispatch(allButton());
+    if (button === "HOME") dispatch(sideButtonSliceActions.homeButton());
+    if (button === "POPULAR") dispatch(sideButtonSliceActions.popularButton());
+    if (button === "ALL") dispatch(sideButtonSliceActions.allButton());
+    if (button === "경제") dispatch(sideButtonSliceActions.economicsButton());
+    if (button === "프로그래밍")
+      dispatch(sideButtonSliceActions.programmingButton());
+    if (button === "예술") dispatch(sideButtonSliceActions.artButton());
+    if (button === "수학") dispatch(sideButtonSliceActions.mathematicsButton());
+    if (button === "독서") dispatch(sideButtonSliceActions.readingButton());
 
     navigate("/");
   };
@@ -38,7 +48,7 @@ const GlobalSideBar = () => {
         background: "#fff",
         marginRight: "20px",
         border: "2px solid #D3D3D3",
-        borderTop: "none" // 홈 위에 상단 보더라인 삭제
+        borderTop: "none", // 홈 위에 상단 보더라인 삭제
       }}
     >
       <div
@@ -135,37 +145,87 @@ const GlobalSideBar = () => {
           <span style={{ marginLeft: "8px" }}>r/korea</span>
         </div>
       </div>
-      <div style={{ fontWeight: "bold", paddingLeft: "10px" }}>COMMUNITIES</div>
+      <div style={{ fontWeight: "bold", paddingLeft: "10px" }}>커뮤니티</div>
       <div style={{ padding: "10px 0 20px 10px" }}>
         <div
           style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}
         >
-          <span style={{ fontSize: "24px" }}>📢</span>
-          <span style={{ marginLeft: "8px" }}>r/announcements</span>
+          <span
+            style={{ fontSize: "24px", cursor: "pointer" }}
+            onClick={() => handleClick("경제")}
+          >
+            📢
+          </span>
+          <span
+            style={{ marginLeft: "8px", cursor: "pointer" }}
+            onClick={() => handleClick("경제")}
+          >
+            j/경제
+          </span>
         </div>
         <div
           style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}
         >
-          <span style={{ fontSize: "24px" }}>🎮</span>
-          <span style={{ marginLeft: "8px" }}>r/gaming</span>
+          <span
+            style={{ fontSize: "24px", cursor: "pointer" }}
+            onClick={() => handleClick("프로그래밍")}
+          >
+            🎮
+          </span>
+          <span
+            style={{ marginLeft: "8px", cursor: "pointer" }}
+            onClick={() => handleClick("프로그래밍")}
+          >
+            j/프로그래밍
+          </span>
         </div>
         <div
           style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}
         >
-          <span style={{ fontSize: "24px" }}>🎥</span>
-          <span style={{ marginLeft: "8px" }}>r/movies</span>
+          <span
+            style={{ fontSize: "24px", cursor: "pointer" }}
+            onClick={() => handleClick("예술")}
+          >
+            🎥
+          </span>
+          <span
+            style={{ marginLeft: "8px", cursor: "pointer" }}
+            onClick={() => handleClick("예술")}
+          >
+            j/예술
+          </span>
         </div>
         <div
           style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}
         >
-          <span style={{ fontSize: "24px" }}>📚</span>
-          <span style={{ marginLeft: "8px" }}>r/books</span>
+          <span
+            style={{ fontSize: "24px", cursor: "pointer" }}
+            onClick={() => handleClick("수학")}
+          >
+            📚
+          </span>
+          <span
+            style={{ marginLeft: "8px", cursor: "pointer" }}
+            onClick={() => handleClick("수학")}
+          >
+            j/수학
+          </span>
         </div>
         <div
           style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}
         >
-          <span style={{ fontSize: "24px" }}>🎨</span>
-          <span style={{ marginLeft: "8px" }}>r/art</span>
+          <span
+            style={{ fontSize: "24px, cursor: 'pointer'" }}
+            onClick={() => handleClick("독서")}
+          >
+            🎨
+          </span>
+          <span
+            style={{ marginLeft: "8px", cursor: "pointer" }}
+            onClick={() => handleClick("독서")}
+          >
+            j/독서
+          </span>
         </div>
       </div>
       <div
@@ -173,9 +233,8 @@ const GlobalSideBar = () => {
           display: "flex",
           justifyContent: "center",
           padding: "10px 0",
-          backgroundColor: isSideHovered === "CREATE_COMMUNITY"
-              ? "#f0f0f0"
-              : "white",
+          backgroundColor:
+            isSideHovered === "CREATE_COMMUNITY" ? "#f0f0f0" : "white",
           borderRadius: "5px",
           margin: "5px",
         }}
@@ -184,7 +243,9 @@ const GlobalSideBar = () => {
         onClick={() => alert("Create a community")}
       >
         <span style={{ fontSize: "24px", marginRight: "8px" }}>➕</span>
-        <span style={{ fontSize: "17px", cursor: "pointer" }}>커뮤니티 만들기</span>
+        <span style={{ fontSize: "17px", cursor: "pointer" }}>
+          커뮤니티 만들기
+        </span>
       </div>
     </div>
   );

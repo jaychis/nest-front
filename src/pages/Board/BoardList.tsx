@@ -72,9 +72,7 @@ const BoardList = () => {
       return () => {
         window.removeEventListener("scroll", handleScroll);
       };
-    }
-
-    if (buttonType === "POPULAR") {
+    } else if (buttonType === "POPULAR") {
       console.log("POPULAR : ", buttonType);
       PopularListAPI({ take: TAKE, lastId: null, category: null })
         .then((res) => {
@@ -90,11 +88,24 @@ const BoardList = () => {
       return () => {
         window.removeEventListener("scroll", handleScroll);
       };
-    }
-
-    if (buttonType === "ALL") {
+    } else if (buttonType === "ALL") {
       console.log("ALL : ", buttonType);
       AllListAPI({ take: TAKE, lastId: null, category: null })
+        .then((res) => {
+          const response: CardType[] = res.data.response.current_list;
+          console.log("list response : ", response);
+
+          // setList([...response, ...mockingList]);
+          setList([...response]);
+        })
+        .catch((err) => console.error(err));
+
+      window.addEventListener("scroll", handleScroll);
+      return () => {
+        window.removeEventListener("scroll", handleScroll);
+      };
+    } else {
+      AllListAPI({ take: TAKE, lastId: null, category: buttonType })
         .then((res) => {
           const response: CardType[] = res.data.response.current_list;
           console.log("list response : ", response);
