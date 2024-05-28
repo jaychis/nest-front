@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { FaSistrix, FaUserAlt, FaPlus, FaBell } from "react-icons/fa";
+import { FaSistrix, FaPlus, FaBell } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import UserModalForm from "../User/UserModalForm";
 import logo from "../../assets/img/panda_logo.png";
@@ -12,6 +12,7 @@ const GlobalBar = () => {
   const [userHover, setUserHover] = useState<boolean>(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false);
   const userButtonRef = useRef<HTMLDivElement>(null);
+  const [bellHover, setBellHover] = useState<boolean>(false);
 
   const toggleProfileModal = () => {
     setIsProfileModalOpen(!isProfileModalOpen);
@@ -78,15 +79,19 @@ const GlobalBar = () => {
                 borderRadius: "50%",
                 width: "40px",
                 height: "40px",
-                background: userHover ? "#007BFF" : "transparent",
+                background: userHover ? "#D3D3D3" : "transparent",
                 cursor: "pointer",
               }}
               onMouseEnter={() => setUserHover(true)}
               onMouseLeave={() => setUserHover(false)}
               onClick={toggleProfileModal}
             >
-              <FaUserAlt style={{ color: userHover ? "white" : "black" }} />
-            </div>
+                <img
+                  src={logo}
+                  alt="Profile"
+                  style={{ width: "40px", height: "40px", borderRadius: "50%" }}
+                />          
+              </div>
             <ProfileModal
               isOpen={isProfileModalOpen}
               onRequestClose={toggleProfileModal}
@@ -101,11 +106,15 @@ const GlobalBar = () => {
                 display: "flex",
                 alignItems: "center",
                 cursor: "pointer",
+                padding: "10px 20px",
+                fontSize: "16px",
+                marginRight: "10px",
               }}
               onClick={postSubmit}
             >
+
               <FaPlus style={{ marginRight: "5px" }} />
-              <span>Create</span>
+              <span>글쓰기</span>
             </button>
             {/* Plus/Create Icon */}
 
@@ -115,14 +124,16 @@ const GlobalBar = () => {
                 alignItems: "center",
                 justifyContent: "center",
                 borderRadius: "50%",
-                width: "40px",
-                height: "40px",
-                background: "transparent",
+                width: "50px",
+                height: "50px",
+                background: bellHover ? "#D3D3D3" : "transparent",
                 cursor: "pointer",
-                marginLeft: "10px",
+                marginRight: "10px",
               }}
+              onMouseEnter={() => setBellHover(true)}
+              onMouseLeave={() => setBellHover(false)}
             >
-              <FaBell style={{ color: "black" }} />
+              <FaBell style={{ color: bellHover ? "white" : "black", width: "20px", height: "20px" }} />
             </div>
             {/* Notification Icon */}
           </>
