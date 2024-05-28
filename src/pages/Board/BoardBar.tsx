@@ -1,14 +1,24 @@
-import React, { useState } from "react";
-import { FaPlus, FaSistrix, FaUserAlt } from "react-icons/fa";
+import React, { useRef, useState } from "react";
+import { FaBell, FaPlus, FaSistrix } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/img/logo.png";
 import UserModalForm from "../User/UserModalForm";
+import ProfileModal from "../User/ProfileModal";
 
 const BoardBar = () => {
   const navigate = useNavigate();
   const postSubmit = () => navigate("/boards/submit");
   const [postHover, setPostHover] = useState<boolean>(false);
   const [userHover, setUserHover] = useState<boolean>(false);
+  const [bellHover, setBellHover] = useState<boolean>(false);
+  const userButtonRef = useRef<HTMLDivElement>(null);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false);
+
+
+  const toggleProfileModal = () => {
+    setIsProfileModalOpen(!isProfileModalOpen);
+  };
+
 
   return (
     <nav
@@ -55,20 +65,37 @@ const BoardBar = () => {
         {/* Search Icon */}
       </div>
 
-      {/* Navigation Icons */}
-      <div style={{ display: "flex", alignItems: "center" }}>
+   {/* Navigation Icons */}
+   <div style={{ display: "flex", alignItems: "center" }}>
         {localStorage.getItem("access_token") ? (
           <>
-            <button
+            <div
+              ref={userButtonRef}
               style={{
-                background: userHover ? "#4F657755" : "white",
-                border: "none",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: "50%",
+                width: "40px",
+                height: "40px",
+                background: userHover ? "#D3D3D3" : "transparent",
+                cursor: "pointer",
               }}
               onMouseEnter={() => setUserHover(true)}
               onMouseLeave={() => setUserHover(false)}
+              onClick={toggleProfileModal}
             >
-              <FaUserAlt style={{ marginRight: "20px" }} /> {/* User Icon */}
-            </button>
+              <img
+                src={logo}
+                alt="Profile"
+                style={{ width: "40px", height: "40px", borderRadius: "50%" }}
+              />
+            </div>
+            <ProfileModal
+              isOpen={isProfileModalOpen}
+              onRequestClose={toggleProfileModal}
+              buttonRef={userButtonRef}
+            />
             <button
               onMouseEnter={() => setPostHover(true)}
               onMouseLeave={() => setPostHover(false)}
@@ -78,12 +105,34 @@ const BoardBar = () => {
                 display: "flex",
                 alignItems: "center",
                 cursor: "pointer",
+                padding: "10px 20px",
+                fontSize: "16px",
+                marginRight: "10px",
               }}
               onClick={postSubmit}
             >
               <FaPlus style={{ marginRight: "5px" }} />
               <span>글쓰기</span>
             </button>
+            {/* Plus/Create Icon */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: "50%",
+                width: "50px",
+                height: "50px",
+                background: bellHover ? "#D3D3D3" : "transparent",
+                cursor: "pointer",
+                marginRight: "10px",
+              }}
+              onMouseEnter={() => setBellHover(true)}
+              onMouseLeave={() => setBellHover(false)}
+            >
+              <FaBell style={{ color: bellHover ? "white" : "black", width: "20px", height: "20px" }} />
+            </div>
+            {/* Notification Icon */}
           </>
         ) : (
           <>

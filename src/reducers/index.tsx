@@ -14,5 +14,5 @@ const rootReducer = combineReducers({
   search: searchReducer, // 새로 추가
   recentPosts: recentPostsReducer, // 새로 추가
 });
-
+export type RootState = ReturnType<typeof rootReducer>;
 export default rootReducer;

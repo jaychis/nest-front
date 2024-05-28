@@ -1,21 +1,42 @@
 import React, { useRef, useState } from "react";
 import { FaSistrix, FaPlus, FaBell } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import UserModalForm from "../User/UserModalForm";
 import logo from "../../assets/img/panda_logo.png";
 import ProfileModal from "../User/ProfileModal";
+import NotificationModal from "../User/NotificationModal";
+import { searchQuery } from "../../reducers/searchSlice";
+import { RootState, AppDispatch } from "../../store/store";
 
 const GlobalBar = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const searchResults = useSelector((state: RootState) => state.search.searchResults);
   const postSubmit = () => navigate("/boards/submit");
   const [postHover, setPostHover] = useState<boolean>(false);
   const [userHover, setUserHover] = useState<boolean>(false);
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false);
-  const userButtonRef = useRef<HTMLDivElement>(null);
   const [bellHover, setBellHover] = useState<boolean>(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false);
+  const [isNotificationModalOpen, setIsNotificationModalOpen] = useState<boolean>(false);
+  const userButtonRef = useRef<HTMLDivElement>(null);
+  const bellButtonRef = useRef<HTMLDivElement>(null);
 
   const toggleProfileModal = () => {
     setIsProfileModalOpen(!isProfileModalOpen);
+  };
+
+  const toggleNotificationModal = () => {
+    setIsNotificationModalOpen(!isNotificationModalOpen);
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    if (value.length > 2) {
+      dispatch(searchQuery(value));
+    }
   };
 
   return (
@@ -53,6 +74,8 @@ const GlobalBar = () => {
         <input
           type="search"
           placeholder="Search"
+          value={searchTerm}
+          onChange={handleSearchChange}
           style={{ width: "35%", padding: "10px", borderRadius: "20px" }}
         />
         <FaSistrix
@@ -64,6 +87,15 @@ const GlobalBar = () => {
           }}
         />
         {/* Search Icon */}
+        {searchTerm.length > 2 && (
+          <div style={styles.searchResults}>
+            {searchResults.map((result, index) => (
+              <div key={index} style={styles.searchResultItem}>
+                {result}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Navigation Icons */}
@@ -86,12 +118,12 @@ const GlobalBar = () => {
               onMouseLeave={() => setUserHover(false)}
               onClick={toggleProfileModal}
             >
-                <img
-                  src={logo}
-                  alt="Profile"
-                  style={{ width: "40px", height: "40px", borderRadius: "50%" }}
-                />          
-              </div>
+              <img
+                src={logo}
+                alt="Profile"
+                style={{ width: "40px", height: "40px", borderRadius: "50%" }}
+              />
+            </div>
             <ProfileModal
               isOpen={isProfileModalOpen}
               onRequestClose={toggleProfileModal}
@@ -112,12 +144,10 @@ const GlobalBar = () => {
               }}
               onClick={postSubmit}
             >
-
               <FaPlus style={{ marginRight: "5px" }} />
               <span>글쓰기</span>
             </button>
             {/* Plus/Create Icon */}
-
             <div
               style={{
                 display: "flex",
@@ -132,9 +162,15 @@ const GlobalBar = () => {
               }}
               onMouseEnter={() => setBellHover(true)}
               onMouseLeave={() => setBellHover(false)}
+              onClick={toggleNotificationModal}
             >
               <FaBell style={{ color: bellHover ? "white" : "black", width: "20px", height: "20px" }} />
             </div>
+            <NotificationModal
+              isOpen={isNotificationModalOpen}
+              onRequestClose={toggleNotificationModal}
+              buttonRef={bellButtonRef}
+            />
             {/* Notification Icon */}
           </>
         ) : (
@@ -145,6 +181,25 @@ const GlobalBar = () => {
       </div>
     </nav>
   );
+};
+
+const styles: { [key: string]: React.CSSProperties } = {
+  searchResults: {
+    position: "absolute",
+    top: "60px",
+    backgroundColor: "#fff",
+    border: "1px solid #ccc",
+    borderRadius: "8px",
+    width: "35%",
+    maxHeight: "200px",
+    overflowY: "auto",
+    zIndex: 1000,
+  },
+  searchResultItem: {
+    padding: "10px",
+    cursor: "pointer",
+    borderBottom: "1px solid #ccc",
+  },
 };
 
 export default GlobalBar;
