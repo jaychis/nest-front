@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import UserModalForm from "../User/UserModalForm";
 import logo from "../../assets/img/panda_logo.png";
 import ProfileModal from "../User/ProfileModal";
+import { AddSearchAPI } from "../api/SearchApi.tex";
 
 const GlobalBar = () => {
   const navigate = useNavigate();
@@ -16,6 +17,14 @@ const GlobalBar = () => {
 
   const toggleProfileModal = () => {
     setIsProfileModalOpen(!isProfileModalOpen);
+  };
+
+  const [query, setQuery] = useState<string>("");
+  const handleSearchChange = async (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ): Promise<void> => setQuery(event.target.value);
+  const addSearch = async () => {
+    await AddSearchAPI({ query });
   };
 
   return (
@@ -54,6 +63,8 @@ const GlobalBar = () => {
           type="search"
           placeholder="Search"
           style={{ width: "35%", padding: "10px", borderRadius: "20px" }}
+          name={"search"}
+          onChange={(e) => handleSearchChange(e)}
         />
         <FaSistrix
           style={{
@@ -62,6 +73,7 @@ const GlobalBar = () => {
             height: "30px",
             marginTop: "5px",
           }}
+          onClick={addSearch}
         />
         {/* Search Icon */}
       </div>
@@ -86,12 +98,12 @@ const GlobalBar = () => {
               onMouseLeave={() => setUserHover(false)}
               onClick={toggleProfileModal}
             >
-                <img
-                  src={logo}
-                  alt="Profile"
-                  style={{ width: "40px", height: "40px", borderRadius: "50%" }}
-                />          
-              </div>
+              <img
+                src={logo}
+                alt="Profile"
+                style={{ width: "40px", height: "40px", borderRadius: "50%" }}
+              />
+            </div>
             <ProfileModal
               isOpen={isProfileModalOpen}
               onRequestClose={toggleProfileModal}
@@ -112,7 +124,6 @@ const GlobalBar = () => {
               }}
               onClick={postSubmit}
             >
-
               <FaPlus style={{ marginRight: "5px" }} />
               <span>글쓰기</span>
             </button>
@@ -133,7 +144,13 @@ const GlobalBar = () => {
               onMouseEnter={() => setBellHover(true)}
               onMouseLeave={() => setBellHover(false)}
             >
-              <FaBell style={{ color: bellHover ? "white" : "black", width: "20px", height: "20px" }} />
+              <FaBell
+                style={{
+                  color: bellHover ? "white" : "black",
+                  width: "20px",
+                  height: "20px",
+                }}
+              />
             </div>
             {/* Notification Icon */}
           </>
