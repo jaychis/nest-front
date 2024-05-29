@@ -44,7 +44,7 @@ const GlobalSideBar = () => {
         display: "flex",
         flexDirection: "column",
         width: "25vh", // 너비를 25vh로 조정
-        height: "100vh", // 전체 화면 높이로 변경
+        // height: "100vh", // 전체 화면 높이로 변경
         background: "#fff",
         marginRight: "20px",
         border: "2px solid #D3D3D3",

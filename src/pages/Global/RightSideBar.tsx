@@ -53,20 +53,108 @@ const RightSideBar = () => {
           )}
         </ol>
       </div>
-      <div style={{ marginTop: "20px" }}>
-        <h3>최근 본 게시물</h3>
-        <ul>
-          {[].map((post: { id: string; title: string }, index: number) => (
-            <li key={index}>
-              <a href={`/boards/read?id=${post.id}&title=${post.title}`}>
-                {post.title}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {/*  <div style={{ marginTop: "20px" }}>*/}
+      {/*    <h3>최근 본 게시물</h3>*/}
+      {/*    <ul>*/}
+      {/*      {[].map((post: { id: string; title: string }, index: number) => (*/}
+      {/*        <li key={index}>*/}
+      {/*          <a href={`/boards/read?id=${post.id}&title=${post.title}`}>*/}
+      {/*            {post.title}*/}
+      {/*          </a>*/}
+      {/*  /!*<div style={styles.recentPostsContainer}>*!/*/}
+      {/*  /!*  <h3 style={styles.title}>최근 본 게시물</h3>*!/*/}
+      {/*  /!*  <ul style={styles.list}>*!/*/}
+      {/*  /!*    {recentPosts.map((post: { id: string; title: string }, index: number) => (*!/*/}
+      {/*  /!*      <li key={index} style={styles.listItem}>*!/*/}
+      {/*  /!*        <a href={`/boards/read?id=${post.id}&title=${post.title}`} style={styles.link}>{post.title}</a>*!/*/}
+      {/*  /!*      </li>*!/*/}
+      {/*  /!*    ))}*!/*/}
+      {/*  /!*  </ul>*!/*/}
+      {/*  /!*</div>*!/*/}
     </div>
   );
 };
+
+{
+  /*const styles: { [key: string]: React.CSSProperties } = {*/
+}
+{
+  /*  container: {*/
+}
+{
+  /*    width: '350px',*/
+}
+{
+  /*    padding: '10px',*/
+}
+{
+  /*    background: '#fff',*/
+}
+{
+  /*    border: '1px solid #ccc',*/
+}
+{
+  /*    borderRadius: '8px',*/
+}
+{
+  /*  },*/
+}
+{
+  /*  title: {*/
+}
+{
+  /*    fontSize: '18px',*/
+}
+{
+  /*    margin: '10px 0',*/
+}
+{
+  /*  },*/
+}
+{
+  /*  list: {*/
+}
+{
+  /*    paddingLeft: '20px',*/
+}
+{
+  /*  },*/
+}
+{
+  /*  listItem: {*/
+}
+{
+  /*    fontSize: '16px',*/
+}
+{
+  /*    margin: '8px 0',*/
+}
+{
+  /*  },*/
+}
+{
+  /*  recentPostsContainer: {*/
+}
+{
+  /*    marginTop: '20px',*/
+}
+{
+  /*  },*/
+}
+{
+  /*  link: {*/
+}
+{
+  /*    textDecoration: 'none',*/
+}
+{
+  /*    color: 'inherit',*/
+}
+{
+  /*  }*/
+}
+{
+  /*};*/
+}
 
 export default RightSideBar;

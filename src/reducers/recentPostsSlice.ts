@@ -1,35 +1,15 @@
-// src/reducers/recentPostsSlice.ts
-
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
-interface Post {
-  id: string;
-  title: string;
-}
-
-interface RecentPostsState {
-  posts: Post[];
-}
-
-const initialState: RecentPostsState = {
-  posts: [],
-};
+import { createSlice } from '@reduxjs/toolkit';
 
 const recentPostsSlice = createSlice({
   name: 'recentPosts',
-  initialState,
-  reducers: {
-    addRecentPost: (state, action: PayloadAction<Post>) => {
-      const post = action.payload;
-      if (!state.posts.find((p) => p.id === post.id)) {
-        state.posts.push(post);
-        if (state.posts.length > 10) {
-          state.posts.shift();
-        }
-      }
-    },
+  initialState: {
+    posts: [
+      { id: '1', title: '게시물1' },
+      { id: '2', title: '게시물2' },
+      { id: '3', title: '게시물3' },
+    ],
   },
+  reducers: {},
 });
 
-export const { addRecentPost } = recentPostsSlice.actions;
 export default recentPostsSlice.reducer;
