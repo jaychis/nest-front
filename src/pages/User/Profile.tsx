@@ -140,7 +140,7 @@ const Profile = () => {
   );
 };
 
-const styles: { [key: string]: React.CSSProperties } = {
+const styles = {
   buttonContainer: {
     display: "flex",
     justifyContent: "center",
@@ -212,7 +212,7 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
   value: {
     flexGrow: 1,
-    textAlign: "right",
+    textAlign: "right" as "right",
     color: "#555",
     fontSize: "18px",
   },

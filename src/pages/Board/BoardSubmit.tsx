@@ -10,6 +10,9 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { BoardType } from "../../_common/CollectionTypes";
+import RightSideBar from "../Global/RightSideBar";
+import GlobalBar from "../Global/GlobalBar";
+import GlobalSideBar from "../Global/GlobalSideBar";
 
 const mdParser = new MarkdownIt();
 interface EditorChange {
@@ -40,7 +43,6 @@ const BoardSubmit = () => {
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ): Promise<void> => {
     const { value } = event.target;
-
     setTextTitle(value);
   };
   useEffect(() => console.log("textTitle : ", textTitle), [textTitle]);
@@ -51,7 +53,6 @@ const BoardSubmit = () => {
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ): Promise<void> => {
     const { value } = event.target;
-
     setMediaTitle(value);
   };
   useEffect(() => console.log("mediaTitle : ", mediaTitle), [mediaTitle]);
@@ -62,22 +63,9 @@ const BoardSubmit = () => {
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ): Promise<void> => {
     const { value } = event.target;
-
     setLinkTitle(value);
   };
   useEffect(() => console.log("linkTitle : ", linkTitle), [linkTitle]);
-
-  // youtubeTitle
-
-  // const handleChange = async (
-  //   event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  // ): Promise<void> => {
-  //   const { name, value } = event.target;
-  //   setBoard({
-  //     ...board,
-  //     [name]: value,
-  //   });
-  // };
 
   // 텍스트
   const [textContent, setTextContent] = useState<string>("");
@@ -142,7 +130,6 @@ const BoardSubmit = () => {
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ): Promise<void> => {
     const { value } = event.target;
-
     setLinkContent(value);
   };
   useEffect(() => console.log("linkContent : ", linkContent), [linkContent]);
@@ -207,7 +194,6 @@ const BoardSubmit = () => {
         });
         console.log("uploadImageUrlList : ", uploadImageUrlList);
 
-        // try {
         const imageUrls: string[] = await Promise.all(uploadImageUrlList);
         console.log("imageUrls : ", imageUrls);
 
@@ -215,9 +201,6 @@ const BoardSubmit = () => {
         paramObj.title = mediaTitle;
         paramObj.type = "MEDIA";
         console.log("paramObj : ", paramObj);
-        // } catch (error) {
-        //   console.error("Error uploading files: ", error);
-        // }
       }
 
       if (inputType === "LINK") {
@@ -309,128 +292,140 @@ const BoardSubmit = () => {
   }, [inputType]);
   return (
     <>
-      <div style={{ backgroundColor: "#4F657755", height: "100vh" }}>
-        <BoardBar />
+      <div style={{ display: "flex", width: "100%" }}>
+        <div style={{ flex: 2 }}>
+          <div style={{ backgroundColor: "#4F657755", minHeight: "100vh" }}>
+            <BoardBar />
+            <div style={{ display: "flex", width: "100%" }}>
+              <GlobalSideBar />
+              <div style={{ flex: 2 }}>
+                <div
+                  style={{
+                    marginTop: "20px",
+                    width: "1000px",
+                    height: "auto",
+                    margin: "20px auto",
+                    padding: "30px",
+                    border: "1px solid #ccc",
+                    borderRadius: "8px",
+                    background: "#fff",
+                  }}
+                >
+                  <div
+                    style={{
+                      marginBottom: "20px",
+                      display: "flex",
+                      justifyContent: "flex-start",
+                    }}
+                  >
+                    <button
+                      onClick={() => setInputType("TEXT")}
+                      style={
+                        inputType === "TEXT" ? activeButtonStyle : buttonStyle
+                      }
+                    >
+                      텍스트
+                    </button>
+                    <button
+                      onClick={() => setInputType("MEDIA")}
+                      style={
+                        inputType === "MEDIA" ? activeButtonStyle : buttonStyle
+                      }
+                    >
+                      이미지 & 비디오
+                    </button>
+                    <button
+                      onClick={() => setInputType("LINK")}
+                      style={
+                        inputType === "LINK" ? activeButtonStyle : buttonStyle
+                      }
+                    >
+                      링크
+                    </button>
+                  </div>
+                  {inputType === "TEXT" && (
+                    <>
+                      <input
+                        name="title"
+                        type="text"
+                        placeholder="제목"
+                        onChange={handleTextTitleChange}
+                        style={inputStyle}
+                      />
+                      <MdEditor
+                        style={{ height: "200px" }}
+                        renderHTML={(text) => mdParser.render(text)}
+                        onChange={handleEditorChange}
+                        view={{ menu: true, md: true, html: false }}
+                      />
+                    </>
+                  )}
+                  {inputType === "MEDIA" && (
+                    <>
+                      <input
+                        name="title"
+                        type="text"
+                        placeholder="제목"
+                        onChange={handleMediaTitleChange}
+                        style={inputStyle}
+                      />
 
-        <div
-          style={{
-            marginTop: "20px",
-            width: "1000px",
-            height: "auto",
-            margin: "20px auto",
-            padding: "30px",
-            border: "1px solid #ccc",
-            borderRadius: "8px",
-            background: "#fff",
-          }}
-        >
-          <div
-            style={{
-              marginBottom: "20px",
-              display: "flex",
-              justifyContent: "flex-start",
-            }}
-          >
-            <button
-              onClick={() => setInputType("TEXT")}
-              style={inputType === "TEXT" ? activeButtonStyle : buttonStyle}
-            >
-              텍스트
-            </button>
-            <button
-              onClick={() => setInputType("MEDIA")}
-              // onChange={handleFileChange}
-              style={inputType === "MEDIA" ? activeButtonStyle : buttonStyle}
-            >
-              이미지 & 비디오
-            </button>
-            <button
-              onClick={() => setInputType("LINK")}
-              style={inputType === "LINK" ? activeButtonStyle : buttonStyle}
-            >
-              링크
-            </button>
+                      {previewUrls.length > 0 ? (
+                        <>
+                          <button onClick={imageUrlListDelete}>휴지통</button>
+                          <Slider {...sliderSetting}>
+                            {previewUrls.map((image, index) => (
+                              <div key={index}>
+                                <img
+                                  src={image}
+                                  alt={`Preview image ${index}`}
+                                  style={{ height: "400px", width: "400px" }}
+                                />
+                              </div>
+                            ))}
+                          </Slider>
+                        </>
+                      ) : (
+                        <>
+                          <input
+                            type={"file"}
+                            multiple
+                            onChange={handleFileChange}
+                            style={inputStyle}
+                          />
+                        </>
+                      )}
+                    </>
+                  )}
+                  {inputType === "LINK" && (
+                    <>
+                      <input
+                        name="title"
+                        type="text"
+                        placeholder="제목"
+                        onChange={handleLinkTitleChange}
+                        style={inputStyle}
+                      />
+                      <input
+                        type="text"
+                        placeholder="링크 추가"
+                        onChange={(e) => handleLinkContentChange(e)}
+                        style={inputStyle}
+                      />
+                    </>
+                  )}
+                  <button
+                    type="submit"
+                    style={submitButtonStyle}
+                    onClick={(e) => handleSubmit(e)}
+                  >
+                    보내기
+                  </button>
+                </div>
+              </div>
+              <RightSideBar />
+            </div>
           </div>
-          {/*<form onSubmit={handleSubmit}>*/}
-          {inputType === "TEXT" && (
-            <>
-              <input
-                name="title"
-                type="text"
-                placeholder="제목"
-                onChange={handleTextTitleChange}
-                style={inputStyle}
-              />
-              <MdEditor
-                style={{ height: "200px" }}
-                renderHTML={(text) => mdParser.render(text)}
-                onChange={handleEditorChange}
-                view={{ menu: true, md: true, html: false }}
-              />
-            </>
-          )}
-          {inputType === "MEDIA" && (
-            <>
-              <input
-                name="title"
-                type="text"
-                placeholder="제목"
-                onChange={handleMediaTitleChange}
-                style={inputStyle}
-              />
-
-              {previewUrls.length > 0 ? (
-                <>
-                  <button onClick={imageUrlListDelete}>휴지통</button>
-                  <Slider {...sliderSetting}>
-                    {previewUrls.map((image, index) => (
-                      <div key={index}>
-                        <img
-                          src={image}
-                          alt={`Preview image ${index}`}
-                          style={{ height: "400px", width: "400px" }}
-                        />
-                      </div>
-                    ))}
-                  </Slider>
-                </>
-              ) : (
-                <>
-                  <input
-                    type={"file"}
-                    multiple
-                    onChange={handleFileChange}
-                    style={inputStyle}
-                  />
-                </>
-              )}
-            </>
-          )}
-          {inputType === "LINK" && (
-            <>
-              <input
-                name="title"
-                type="text"
-                placeholder="제목"
-                onChange={handleLinkTitleChange}
-                style={inputStyle}
-              />
-              <input
-                type="text"
-                placeholder="링크 추가"
-                onChange={(e) => handleLinkContentChange(e)}
-                style={inputStyle}
-              />
-            </>
-          )}
-          <button
-            type="submit"
-            style={submitButtonStyle}
-            onClick={(e) => handleSubmit(e)}
-          >
-            보내기
-          </button>
-          {/*</form>*/}
         </div>
       </div>
     </>

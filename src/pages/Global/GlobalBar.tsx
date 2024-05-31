@@ -21,6 +21,7 @@ const GlobalBar = () => {
   const [postHover, setPostHover] = useState<boolean>(false);
   const [userHover, setUserHover] = useState<boolean>(false);
   const [bellHover, setBellHover] = useState<boolean>(false);
+  const [logoHover, setLogoHover] = useState<boolean>(false); // 추가
   const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false);
   const [isNotificationModalOpen, setIsNotificationModalOpen] =
     useState<boolean>(false);
@@ -51,14 +52,6 @@ const GlobalBar = () => {
     setIsNotificationModalOpen(!isNotificationModalOpen);
   };
 
-  // const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const value = e.target.value;
-  //   setSearchTerm(value);
-  // if (value.length > 2) {
-  //   dispatch(searchQuery(value));
-  // }
-  // };
-
   return (
     <nav
       style={{
@@ -70,16 +63,29 @@ const GlobalBar = () => {
         border: "2px solid #D3D3D3",
       }}
     >
-      {/* Logo */}
-      <img
-        src={logo}
-        alt="Logo"
-        style={{ width: "50px", cursor: "pointer" }}
+      {/* Logo and Site Name */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          background: logoHover ? "#D3D3D3" : "transparent",
+          borderRadius: "25px", // 추가
+          padding: "10px",
+          cursor: "pointer",
+        }}
+        onMouseEnter={() => setLogoHover(true)}
+        onMouseLeave={() => setLogoHover(false)}
         onClick={() => navigate("/")}
-      />
-      <span onClick={() => navigate("/")} style={{ cursor: "pointer" }}>
-        {"jaych.com"}
-      </span>
+      >
+        <img
+          src={logo}
+          alt="Logo"
+          style={{ width: "50px" }}
+        />
+        <span style={{ marginLeft: "10px" }}>
+          {"jaych.com"}
+        </span>
+      </div>
 
       {/* Search Bar */}
       <div
@@ -110,9 +116,9 @@ const GlobalBar = () => {
         />
         {/* Search Icon */}
         {searchTerm.length > 2 && (
-          <div style={styles.searchResults}>
+          <div style={styles.searchResults as React.CSSProperties}>
             {searchResults.map((result, index) => (
-              <div key={index} style={styles.searchResultItem}>
+              <div key={index} style={styles.searchResultItem as React.CSSProperties}>
                 {result}
               </div>
             ))}
@@ -135,15 +141,28 @@ const GlobalBar = () => {
                 height: "40px",
                 background: userHover ? "#D3D3D3" : "transparent",
                 cursor: "pointer",
+                position: "relative", // 추가
               }}
               onMouseEnter={() => setUserHover(true)}
               onMouseLeave={() => setUserHover(false)}
               onClick={toggleProfileModal}
             >
+              <div
+                style={{
+                  position: "absolute", // 추가
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "50%",
+                  backgroundColor: userHover ? "#D3D3D3" : "transparent",
+                  zIndex: 1,
+                }}
+              ></div>
               <img
                 src={logo}
                 alt="Profile"
-                style={{ width: "40px", height: "40px", borderRadius: "50%" }}
+                style={{ width: "40px", height: "40px", borderRadius: "50%", zIndex: 2 }}
               />
             </div>
             <ProfileModal
@@ -155,7 +174,7 @@ const GlobalBar = () => {
               onMouseEnter={() => setPostHover(true)}
               onMouseLeave={() => setPostHover(false)}
               style={{
-                background: postHover ? "#4F657755" : "white",
+                background: postHover ? "#f0f0f0" : "white",
                 border: "none",
                 display: "flex",
                 alignItems: "center",
@@ -163,6 +182,7 @@ const GlobalBar = () => {
                 padding: "10px 20px",
                 fontSize: "16px",
                 marginRight: "10px",
+                borderRadius: "25px",
               }}
               onClick={postSubmit}
             >
@@ -212,16 +232,16 @@ const GlobalBar = () => {
   );
 };
 
-const styles: { [key: string]: React.CSSProperties } = {
+const styles = {
   searchResults: {
-    position: "absolute",
+    position: "absolute" as "absolute",
     top: "60px",
     backgroundColor: "#fff",
     border: "1px solid #ccc",
     borderRadius: "8px",
     width: "35%",
     maxHeight: "200px",
-    overflowY: "auto",
+    overflowY: "auto" as "auto",
     zIndex: 1000,
   },
   searchResultItem: {

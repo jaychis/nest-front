@@ -140,7 +140,7 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
   );
 };
 
-const styles: { [key: string]: React.CSSProperties } = {
+const styles = {
   container: {
     backgroundColor: "#fff",
     borderRadius: "25px",
@@ -149,24 +149,24 @@ const styles: { [key: string]: React.CSSProperties } = {
     maxWidth: "600px",
     width: "80%",
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "column" as "column",
     justifyContent: "space-between",
     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
     height: "736px", // 높이를 회원가입과 맞춤
   },
   header: {
-    textAlign: "center",
+    textAlign: "center" as "center",
     marginBottom: "20px",
   },
   socialButtonsContainer: {
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "column" as "column",
     gap: "10px",
   },
   socialButton: {
     display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: "center" as "center",
+    justifyContent: "center" as "center",
     padding: "10px",
     border: "1px solid #ccc",
     backgroundColor: "white",
@@ -181,8 +181,8 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
   orContainer: {
     display: "flex",
-    alignItems: "center",
-    textAlign: "center",
+    alignItems: "center" as "center",
+    textAlign: "center" as "center",
     color: "#aaa",
     margin: "20px 0",
   },
@@ -199,14 +199,14 @@ const styles: { [key: string]: React.CSSProperties } = {
     border: "1px solid #ddd",
     borderRadius: "4px",
     marginBottom: "10px",
-    boxSizing: "border-box",
+    boxSizing: "border-box" as "border-box",
     width: "100%",
     height: "40px",
   },
   forgotPasswordContainer: {
     width: "100%",
     padding: "10px 0",
-    textAlign: "right",
+    textAlign: "right" as "right",
   },
   forgotPasswordLink: {
     fontSize: "14px",
@@ -214,7 +214,7 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
   submitContainer: {
     display: "flex",
-    justifyContent: "center",
+    justifyContent: "center" as "center",
     marginTop: "20px",
   },
   submitButton: {
@@ -229,7 +229,7 @@ const styles: { [key: string]: React.CSSProperties } = {
   switchContainer: {
     width: "100%",
     padding: "10px 0",
-    textAlign: "center",
+    textAlign: "center" as "center",
   },
   switchButton: {
     padding: "10px 20px",
@@ -239,11 +239,10 @@ const styles: { [key: string]: React.CSSProperties } = {
     backgroundColor: "red",
     color: "white",
     cursor: "pointer",
-    // marginBottom: "20px", // 추가된 스타일, 버튼 간격 조정
   },
   errorText: {
     color: "red",
-    textAlign: "center",
+    textAlign: "center" as "center",
     marginTop: "10px",
     marginBottom: "10px",
   },
