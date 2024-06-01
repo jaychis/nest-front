@@ -172,7 +172,14 @@ const Card = ({
                 fontSize: "20px",
               }}
             >
-              {content.map((co, index) => co)}
+              <div>
+                {content.map((co, index) => (
+                  <>
+                    {/*<div dangerouslySetInnerHTML={}>{co}</div>*/}
+                    <div dangerouslySetInnerHTML={{ __html: co }} />
+                  </>
+                ))}
+              </div>
             </p>
           ) : type === "MEDIA" ? (
             <Slider

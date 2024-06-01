@@ -69,20 +69,12 @@ const BoardSubmit = () => {
 
   // youtubeTitle
 
-  // const handleChange = async (
-  //   event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  // ): Promise<void> => {
-  //   const { name, value } = event.target;
-  //   setBoard({
-  //     ...board,
-  //     [name]: value,
-  //   });
-  // };
-
   // 텍스트
   const [textContent, setTextContent] = useState<string>("");
+
   const handleEditorChange = async ({ html, text }: EditorChange) => {
     setTextContent(html);
+
     console.log("html: ", html);
     console.log("text: ", text);
     adjustEditorHeight();
