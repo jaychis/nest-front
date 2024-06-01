@@ -6,41 +6,56 @@ import { ProfileState } from "../../reducers/profileSlice";
 import GlobalSideBar from "../Global/GlobalSideBar";
 import RightSideBar from "../Global/RightSideBar";
 import GlobalBar from "../Global/GlobalBar";
-import { MyPostsAPI, MyCommentsAPI } from "../api/UserApi";
 import { CardType } from "../../_common/CollectionTypes";
 import Card from "../../components/Card";
 import BoardComment, { CommentType } from "../Board/BoardComment";
+import { BoardInquiryAPI } from "../api/BoardApi";
 
+type ACTIVE_SECTION_TYPES = "POSTS" | "COMMENTS" | "PROFILE";
 const Profile = () => {
   const user: ProfileState = useSelector((state: RootState) => state.profile);
   const dispatch = useDispatch<AppDispatch>();
   const [myPosts, setMyPosts] = useState<CardType[]>([]);
   const [myComments, setMyComments] = useState<CommentType[]>([]);
-  const [activeSection, setActiveSection] = useState<string>("posts");
+  const [activeSection, setActiveSection] =
+    useState<ACTIVE_SECTION_TYPES>("POSTS");
+  const ID: string = (localStorage.getItem("id") as string) || "";
 
   useEffect(() => {
     console.log("user ::: ", user);
   }, [user]);
 
-  useEffect(() => {
-    dispatch(ReduxProfileAPI({ id: "54870c90-ab34-4555-ad44-338c0478670b" })).then((res) => {
-      console.log("Profile API response:", res);
-    });
-  }, [dispatch]);
-  
-  useEffect(() => {
-    if (user.data.id) {
-      // Fetch my posts
-      MyPostsAPI(user.data.id).then((res) => {
-        setMyPosts(Array.isArray(res) ? res : []);
-      });
+  // useEffect(() => {
+  //   dispatch(ReduxProfileAPI({ id: ID })).then((res) => {
+  //     console.log("Profile API response:", res);
+  //   });
+  // }, [dispatch]);
 
-      // Fetch my comments
-      MyCommentsAPI(user.data.id).then((res) => {
-        setMyComments(Array.isArray(res) ? res : []);
-      });
+  useEffect(() => {
+    // if (user.data.id) {
+    // Fetch my posts
+    // MyPostsAPI(user.data.id).then((res) => {
+    //   setMyPosts(Array.isArray(res) ? res : []);
+    // });
+    if (activeSection === "POSTS") {
+      BoardInquiryAPI({ id: ID })
+        .then((res) => {
+          const response = res.data.response;
+          console.log("profile board inquiry api response : ", response);
+
+          setMyPosts(response);
+        })
+        .catch((err) => console.error("PROFILE BOARD INQUIRY ERROR : ", err));
     }
-  }, [user]);
+
+    // Fetch my comments
+    if (activeSection === "COMMENTS") {
+      // MyCommentsAPI(user.data.id).then((res) => {
+      //   setMyComments(Array.isArray(res) ? res : []);
+      // });
+    }
+    // }
+  }, [activeSection]);
 
   const handleReplySubmit = (reply: any) => {
     // Implement reply submit logic here
@@ -54,28 +69,38 @@ const Profile = () => {
         <div style={{ flex: 2, padding: "20px" }}>
           <div style={styles.buttonContainer}>
             <button
-              style={activeSection === "posts" ? styles.activeButton : styles.button}
-              onClick={() => setActiveSection("posts")}
+              style={
+                activeSection === "POSTS" ? styles.activeButton : styles.button
+              }
+              onClick={() => setActiveSection("POSTS")}
             >
-              내가 등록한 포스트
+              내가 등록한 게시글
             </button>
             <button
-              style={activeSection === "comments" ? styles.activeButton : styles.button}
-              onClick={() => setActiveSection("comments")}
+              style={
+                activeSection === "COMMENTS"
+                  ? styles.activeButton
+                  : styles.button
+              }
+              onClick={() => setActiveSection("COMMENTS")}
             >
               내가 단 댓글
             </button>
             <button
-              style={activeSection === "profile" ? styles.activeButton : styles.button}
-              onClick={() => setActiveSection("profile")}
+              style={
+                activeSection === "PROFILE"
+                  ? styles.activeButton
+                  : styles.button
+              }
+              onClick={() => setActiveSection("PROFILE")}
             >
               기본 정보 변경
             </button>
           </div>
 
-          {activeSection === "posts" && (
+          {activeSection === "POSTS" && (
             <div style={styles.section}>
-              <h2 style={styles.sectionTitle}>내가 등록한 포스트</h2>
+              <h2 style={styles.sectionTitle}>내가 등록한 게시글</h2>
               {myPosts.length > 0 ? (
                 myPosts.map((post) => (
                   <Card key={post.id} {...post} createdAt={post.created_at} />
@@ -86,7 +111,7 @@ const Profile = () => {
             </div>
           )}
 
-          {activeSection === "comments" && (
+          {activeSection === "COMMENTS" && (
             <div style={styles.section}>
               <h2 style={styles.sectionTitle}>내가 단 댓글</h2>
               {myComments.length > 0 ? (
@@ -103,7 +128,7 @@ const Profile = () => {
             </div>
           )}
 
-          {activeSection === "profile" && (
+          {activeSection === "PROFILE" && (
             <div style={styles.section}>
               <h2 style={styles.sectionTitle}>기본 정보 변경</h2>
               <div style={styles.card}>
@@ -117,9 +142,7 @@ const Profile = () => {
                 <div style={styles.info}>
                   <label style={styles.label}>이메일:</label>
                   <span style={styles.value}>
-                    {user.data.email
-                      ? user.data.email
-                      : "이메일을 입력하세요"}
+                    {user.data.email ? user.data.email : "이메일을 입력하세요"}
                   </span>
                 </div>
                 <div style={styles.info}>
@@ -149,7 +172,7 @@ const styles: { [key: string]: React.CSSProperties } = {
   button: {
     padding: "10px 20px",
     margin: "0 10px",
-    border:"none",
+    border: "none",
     borderRadius: "4px",
     cursor: "pointer",
     backgroundColor: "white",
@@ -162,8 +185,8 @@ const styles: { [key: string]: React.CSSProperties } = {
     margin: "0 10px",
     borderBottom: "2px solid #007BFF",
     borderTop: "none",
-    borderRight:"none",
-    borderLeft:"none",    
+    borderRight: "none",
+    borderLeft: "none",
     borderRadius: "4px",
     cursor: "pointer",
     // backgroundColor: "#007BFF",

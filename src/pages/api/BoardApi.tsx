@@ -65,3 +65,15 @@ export const SubmitAPI = async (params: SubmitParams) => {
   const res = await client.post(URL, params);
   return res;
 };
+
+export interface BoardInquiryParam {
+  readonly id: string;
+}
+
+export const BoardInquiryAPI = async (param: BoardInquiryParam) => {
+  const URL: string = `boards/${param.id}`;
+
+  const res = await client.get(URL);
+
+  return res;
+};
