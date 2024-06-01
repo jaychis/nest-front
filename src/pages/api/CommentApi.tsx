@@ -1,8 +1,8 @@
 import { client } from "./Client";
-import { isRejectedWithValue } from "@reduxjs/toolkit";
 
 export interface CommentSubmitParams {
   readonly boardId: string;
+  readonly userId: string;
   readonly content: string;
   readonly nickname: string;
 }
@@ -14,10 +14,10 @@ export const CommentSubmitAPI = async (params: CommentSubmitParams) => {
   return res;
 };
 
-export interface CommentListParams {
+export interface CommentListParam {
   readonly boardId: string;
 }
-export const CommentListAPI = async ({ boardId }: CommentListParams) => {
+export const CommentListAPI = async ({ boardId }: CommentListParam) => {
   const URL: string = `comments?boardId=${boardId}`;
 
   const res = await client.get(URL);
@@ -25,15 +25,14 @@ export const CommentListAPI = async ({ boardId }: CommentListParams) => {
   return res;
 };
 
-// export const MyCommentsAPI = async (userId: string) => {
-//   try {
-//     const URL: string = `users/comments/${userId}`;
-//     const res = await client.get(URL);
-//     return res.data.response;
-//   } catch (e: any) {
-//     if (!e.response) {
-//       throw error;
-//     }
-//     return isRejectedWithValue(e.response.data);
-//   }
-// };
+export interface CommentInquiryParam {
+  readonly userId: string;
+}
+
+export const CommentInquiryAPI = async ({ userId }: CommentInquiryParam) => {
+  const URL: string = `comments/${userId}`;
+
+  const res = await client.get(URL);
+
+  return res;
+};

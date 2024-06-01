@@ -10,6 +10,7 @@ import { CardType } from "../../_common/CollectionTypes";
 import Card from "../../components/Card";
 import BoardComment, { CommentType } from "../Board/BoardComment";
 import { BoardInquiryAPI } from "../api/BoardApi";
+import { CommentInquiryAPI } from "../api/CommentApi";
 
 type ACTIVE_SECTION_TYPES = "POSTS" | "COMMENTS" | "PROFILE";
 const Profile = () => {
@@ -22,21 +23,6 @@ const Profile = () => {
   const ID: string = (localStorage.getItem("id") as string) || "";
 
   useEffect(() => {
-    console.log("user ::: ", user);
-  }, [user]);
-
-  // useEffect(() => {
-  //   dispatch(ReduxProfileAPI({ id: ID })).then((res) => {
-  //     console.log("Profile API response:", res);
-  //   });
-  // }, [dispatch]);
-
-  useEffect(() => {
-    // if (user.data.id) {
-    // Fetch my posts
-    // MyPostsAPI(user.data.id).then((res) => {
-    //   setMyPosts(Array.isArray(res) ? res : []);
-    // });
     if (activeSection === "POSTS") {
       BoardInquiryAPI({ id: ID })
         .then((res) => {
@@ -48,13 +34,23 @@ const Profile = () => {
         .catch((err) => console.error("PROFILE BOARD INQUIRY ERROR : ", err));
     }
 
-    // Fetch my comments
     if (activeSection === "COMMENTS") {
-      // MyCommentsAPI(user.data.id).then((res) => {
-      //   setMyComments(Array.isArray(res) ? res : []);
-      // });
+      CommentInquiryAPI({ userId: ID })
+        .then((res) => {
+          const response = res.data.response;
+          console.log("profile comment inquiry api response : ", response);
+
+          setMyComments(response);
+        })
+        .catch((err) => console.error("PROFILE COMMENT INQUIRY ERROR : ", err));
     }
     // }
+
+    if (activeSection === "PROFILE") {
+      dispatch(ReduxProfileAPI({ id: ID })).then((res) => {
+        console.log("Profile API response:", res);
+      });
+    }
   }, [activeSection]);
 
   const handleReplySubmit = (reply: any) => {
@@ -84,7 +80,7 @@ const Profile = () => {
               }
               onClick={() => setActiveSection("COMMENTS")}
             >
-              내가 단 댓글
+              내가 등록한 댓글
             </button>
             <button
               style={
@@ -94,7 +90,7 @@ const Profile = () => {
               }
               onClick={() => setActiveSection("PROFILE")}
             >
-              기본 정보 변경
+              나의 정보
             </button>
           </div>
 
@@ -113,7 +109,7 @@ const Profile = () => {
 
           {activeSection === "COMMENTS" && (
             <div style={styles.section}>
-              <h2 style={styles.sectionTitle}>내가 단 댓글</h2>
+              <h2 style={styles.sectionTitle}>내가 등록한 댓글</h2>
               {myComments.length > 0 ? (
                 myComments.map((comment) => (
                   <BoardComment

@@ -17,6 +17,7 @@ import { ReplySubmitAPI, ReplySubmitParams } from "../api/ReplyApi";
 export interface CommentType {
   readonly id: string;
   readonly board_id: string;
+  readonly user_id: string;
   readonly content: string;
   readonly nickname: string;
   readonly replies: ReplyType[];
@@ -78,6 +79,7 @@ const BoardComment = (co: BoardCommentProps) => {
   const [isReplyState, setIsReplyState] = useState<ReplyType>({
     id: "",
     comment_id: co.id,
+    user_id: co.user_id,
     content: "",
     nickname: localStorage.getItem("nickname") as string,
     created_at: new Date(),

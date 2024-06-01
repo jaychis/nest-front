@@ -14,6 +14,7 @@ import logo from "../../assets/img/panda_logo.png";
 export interface ReplyType {
   readonly id: string;
   readonly comment_id: string;
+  readonly user_id: string;
   readonly content: string;
   readonly nickname: string;
   readonly created_at: Date;

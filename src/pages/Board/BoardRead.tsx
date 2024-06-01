@@ -59,7 +59,8 @@ const BoardRead = () => {
   const [writeComment, setWriteComment] = useState<CommentSubmitParams>({
     boardId: params.get("id") as string,
     content: "",
-    nickname: localStorage.getItem("nickname") as string,
+    nickname: (localStorage.getItem("nickname") as string) || "",
+    userId: (localStorage.getItem("id") as string) || "",
   });
   const commentHandleChange = (event: CollectionTypes) => {
     const { name, value } = event;
@@ -76,6 +77,7 @@ const BoardRead = () => {
     } else {
       const param: CommentSubmitParams = {
         boardId: writeComment.boardId,
+        userId: writeComment.userId,
         content: writeComment.content,
         nickname: writeComment.nickname,
       };
@@ -104,6 +106,7 @@ const BoardRead = () => {
             <BoardReply
               id={re.id}
               comment_id={re.comment_id}
+              user_id={re.user_id}
               content={re.content}
               nickname={re.nickname}
               created_at={re.created_at}
@@ -124,6 +127,7 @@ const BoardRead = () => {
             <BoardComment
               id={co.id}
               board_id={co.board_id}
+              user_id={co.user_id}
               content={co.content}
               nickname={co.nickname}
               replies={co.replies}
