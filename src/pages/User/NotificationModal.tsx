@@ -66,8 +66,8 @@ const NotificationModal: React.FC<NotificationModalProps> = ({
             background: "transparent",
             border: "none",
             cursor: "pointer",
-            fontSize: "34px", // 폰트 크기를 24px로 증가
-            padding: "0 10px", // 버튼의 크기를 키우기 위해 패딩을 추가
+            fontSize: "34px",
+            padding: "0 10px",
           }}
         >
           &times;
@@ -114,7 +114,7 @@ const NotificationModal: React.FC<NotificationModalProps> = ({
   );
 };
 
-const styles: { [key: string]: React.CSSProperties } = {
+const styles = {
   buttonContainer: {
     display: "flex",
     justifyContent: "center",
@@ -148,7 +148,7 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
   section: {
     maxHeight: "400px",
-    overflowY: "auto",
+    overflowY: "auto" as "auto",
     backgroundColor: "#fff",
     padding: "20px",
     borderRadius: "10px",
