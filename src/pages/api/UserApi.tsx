@@ -108,30 +108,3 @@ export const SignupAPI = async (params: SignupParams) => {
   const res = await client.post(URL, params);
   return res;
 };
-
-// 새로운 API 함수들 추가
-export const MyPostsAPI = async (userId: string) => {
-  try {
-    const URL: string = `users/posts/${userId}`;
-    const res = await client.get(URL);
-    return res.data.response;
-  } catch (e: any) {
-    if (!e.response) {
-      throw error;
-    }
-    return isRejectedWithValue(e.response.data);
-  }
-};
-
-export const MyCommentsAPI = async (userId: string) => {
-  try {
-    const URL: string = `users/comments/${userId}`;
-    const res = await client.get(URL);
-    return res.data.response;
-  } catch (e: any) {
-    if (!e.response) {
-      throw error;
-    }
-    return isRejectedWithValue(e.response.data);
-  }
-};
