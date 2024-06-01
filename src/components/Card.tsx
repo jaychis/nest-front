@@ -14,6 +14,7 @@ import {
 } from "../_common/CollectionTypes";
 import Slider from "react-slick";
 import YouTube from "react-youtube";
+import sanitizeHtml from "sanitize-html";
 
 const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
   try {
@@ -176,7 +177,9 @@ const Card = ({
                 {content.map((co, index) => (
                   <>
                     {/*<div dangerouslySetInnerHTML={}>{co}</div>*/}
-                    <div dangerouslySetInnerHTML={{ __html: co }} />
+                    <div
+                      dangerouslySetInnerHTML={{ __html: sanitizeHtml(co) }}
+                    />
                   </>
                 ))}
               </div>
