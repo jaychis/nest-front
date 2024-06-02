@@ -1,5 +1,5 @@
 import React, { FormEvent, useEffect, useState, useRef } from "react";
-import BoardBar from "./BoardBar";
+
 import { SubmitAPI, SubmitParams } from "../api/BoardApi";
 import { useNavigate } from "react-router-dom";
 import MarkdownIt from "markdown-it";
@@ -297,7 +297,7 @@ const BoardSubmit = () => {
       <div style={{ display: "flex", width: "100%" }}>
         <div style={{ flex: 2 }}>
           <div style={{ backgroundColor: "#4F657755", minHeight: "100vh" }}>
-            <BoardBar />
+            <GlobalBar />
             <div style={{ display: "flex", width: "100%" }}>
               <GlobalSideBar />
               <div style={{ flex: 2 }}>

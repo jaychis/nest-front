@@ -172,14 +172,14 @@ const styles = {
     borderRadius: "4px",
     cursor: "pointer",
     backgroundColor: "white",
-    color: "#007BFF",
+    color: "#333",
     fontWeight: "bold",
     transition: "background-color 0.3s, color 0.3s",
   },
   activeButton: {
     padding: "10px 20px",
     margin: "0 10px",
-    borderBottom: "2px solid #007BFF",
+    borderBottom: "2px solid #333",
     borderTop: "none",
     borderRight: "none",
     borderLeft: "none",
@@ -200,7 +200,7 @@ const styles = {
   sectionTitle: {
     fontSize: "24px",
     marginBottom: "10px",
-    borderBottom: "2px solid #007BFF",
+    borderBottom: "2px solid #333",
     paddingBottom: "5px",
   },
   card: {
