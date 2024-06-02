@@ -30,15 +30,36 @@ function App() {
       <Router>
         <ScrollToTop />
         <Routes>
-        <Route path="/" element={<Layout><BoardList /></Layout>} />
+          <Route
+            path="/"
+            element={
+              <Layout>
+                <BoardList />
+              </Layout>
+            }
+          />
 
           {/*게시판*/}
           <Route path="/boards/submit" element={<BoardSubmit />} />
           <Route path="/boards/read" element={<BoardRead />} />
 
           {/*유저*/}
-          <Route path="/users/profile" element={<><Profile /></>} />
-          <Route path="/users/inquiry" element={<Layout><UsersInquiry /></Layout>} />
+          <Route
+            path="/users/profile"
+            element={
+              <>
+                <Profile />
+              </>
+            }
+          />
+          <Route
+            path="/users/inquiry"
+            element={
+              <>
+                <UsersInquiry />
+              </>
+            }
+          />
         </Routes>
       </Router>
     </>

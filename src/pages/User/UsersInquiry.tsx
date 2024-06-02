@@ -55,7 +55,7 @@ const UsersInquiry = () => {
       take: 10,
     })
       .then((res) => {
-        const status = res.data.status;
+        const status = res.status;
 
         if (status === 200) {
           const response = res.data.response?.current_list;
@@ -63,7 +63,7 @@ const UsersInquiry = () => {
           setList(response);
         }
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error("UsersInquiryAPI err : ", err));
   }, [params]);
 
   return (
