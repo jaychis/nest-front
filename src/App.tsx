@@ -10,6 +10,7 @@ import Profile from "./pages/User/Profile";
 import UsersInquiry from "./pages/User/UsersInquiry";
 import ScrollToTop from "./components/ScrollToTop";
 import RightSideBar from "./pages/Global/RightSideBar";
+import CommunityCreate from "./pages/User/CommunityCreate";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -44,6 +45,12 @@ function App() {
           <Route path="/boards/read" element={<BoardRead />} />
 
           {/*유저*/}
+          <Route path="/users/profile" element={<><Profile /></>} />
+          <Route path="/users/inquiry" element={<Layout><UsersInquiry /></Layout>} />
+
+          {/* 커뮤니티 */}
+          <Route path="/community/create" element={<Layout><CommunityCreate /></Layout>} /> {/* 새 라우트 추가 */}
+
           <Route
             path="/users/profile"
             element={

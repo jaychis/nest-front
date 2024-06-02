@@ -24,7 +24,7 @@ const Modal = ({ children, isOpen, onClose, buttonLabel }: Props) => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          // zIndex: 1000,
+          zIndex: 1000,
         }}
       >
         <div>
@@ -38,6 +38,9 @@ const Modal = ({ children, isOpen, onClose, buttonLabel }: Props) => {
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
+              maxWidth: "90%",
+              maxHeight: "90%",
+              overflow: "auto",
             }}
           >
             <div style={{ display: "flex", height: "20%" }}>
@@ -59,13 +62,14 @@ const Modal = ({ children, isOpen, onClose, buttonLabel }: Props) => {
                 Close
               </button>
             </div>
-            <div
-              style={{
-                display: "flex",
-                height: "53vh",
-                justifyContent: "center",
-              }}
-            >
+            <div 
+              style={{ 
+                flex: 1, 
+                display: "flex", 
+                justifyContent: "center", 
+                alignItems: "center" 
+              }}>
+
               {children}
             </div>
             <div

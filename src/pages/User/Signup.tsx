@@ -32,7 +32,6 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
     confirmPassword: "",
     phone: "",
   });
-  const [isCloseHovered, setIsCloseHovered] = useState<boolean>(false);
 
   const [validSignup, setValidSignup] = useState<ValidSignupType>({
     email: null,
@@ -398,7 +397,7 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
   );
 };
 
-const styles: { [key: string]: React.CSSProperties } = {
+const styles = {
   socialButton: {
     display: "flex",
     alignItems: "center",
@@ -420,7 +419,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     border: "1px solid #ddd",
     borderRadius: "4px",
     marginBottom: "10px",
-    boxSizing: "border-box",
+    boxSizing: "border-box" as "border-box",
     width: "100%",
     height: "40px",
   },
@@ -432,7 +431,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     backgroundColor: "#84d7fb",
     color: "white",
     cursor: "pointer",
-
   },
   switchButton: {
     padding: "10px 20px",
@@ -442,7 +440,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     backgroundColor: "#000",
     color: "white",
     cursor: "pointer",
-    
   },
 };
 
