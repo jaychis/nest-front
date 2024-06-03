@@ -243,7 +243,7 @@ const BoardSubmit = () => {
   const buttonStyle = {
     padding: "10px 20px",
     margin: "0 0",
-    border: "1px solid #000",
+    border: "1px solid #fff",
     borderRadius: "4px",
     cursor: "pointer",
     backgroundColor: "white",

@@ -13,6 +13,10 @@ const CommunityCreate: React.FC = () => {
     navigate("/");
   };
 
+  const handleCancel = () => {
+    navigate("/");
+  };
+
   return (
     <div style={styles.container}>
       <h2 style={styles.heading}>커뮤니티 만들기</h2>
@@ -38,9 +42,14 @@ const CommunityCreate: React.FC = () => {
             style={styles.textarea}
           />
         </div>
-        <button type="submit" style={styles.button}>
-          커뮤니티 만들기
-        </button>
+        <div style={styles.buttonGroup}>
+          <button type="button" onClick={handleCancel} style={styles.cancelButton}>
+            취소
+          </button>
+          <button type="submit" style={styles.nextButton}>
+            다음
+          </button>
+        </div>
       </form>
     </div>
   );
@@ -52,7 +61,7 @@ const styles = {
     padding: "20px",
     maxWidth: "600px",
     margin: "50px auto",
-    boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.15)", // 그림자 효과를 더 부드럽게 변경
     borderRadius: "8px",
     border: "1px solid #EDEDED",
   },
@@ -67,39 +76,57 @@ const styles = {
     flexDirection: "column" as "column",
   },
   formGroup: {
-    marginBottom: "15px",
+    marginBottom: "20px", // 여백을 좀 더 추가하여 폼의 요소를 분리
   },
   label: {
-    marginBottom: "5px",
+    marginBottom: "8px", // 여백을 좀 더 추가하여 레이블과 입력 필드를 분리
     fontSize: "14px",
     color: "#555",
+    fontWeight: "bold" as "bold",
   },
   input: {
     width: "100%",
     padding: "10px",
-    borderRadius: "5px",
+    borderRadius: "12px", // 경계선 둥글기를 좀 더 둥글게 변경
     border: "1px solid #CCC",
     fontSize: "14px",
+    backgroundColor: "#F7F7F7", // 레딧 스타일의 입력 필드 배경색
   },
   textarea: {
     width: "100%",
     padding: "10px",
-    borderRadius: "5px",
+    borderRadius: "12px",
     border: "1px solid #CCC",
     fontSize: "14px",
-    minHeight: "100px",
+    minHeight: "120px", // 텍스트 영역의 최소 높이를 조금 더 늘림
+    backgroundColor: "#F7F7F7",
   },
-  button: {
-    padding: "10px 20px",
-    borderRadius: "5px",
+  buttonGroup: {
+    display: "flex",
+    justifyContent: "space-between",
+    marginTop: "20px",
+  },
+  cancelButton: {
+    padding: "12px 20px",
+    borderRadius: "20px",
+    border: "none",
+    backgroundColor: "#CCC",
+    color: "white",
+    cursor: "pointer",
+    fontSize: "16px",
+    fontWeight: "bold" as "bold",
+    transition: "background-color 0.3s ease", // 버튼 배경색 변경 시 애니메이션 추가
+  },
+  nextButton: {
+    padding: "12px 20px",
+    borderRadius: "20px",
     border: "none",
     backgroundColor: "#0079D3",
     color: "white",
     cursor: "pointer",
     fontSize: "16px",
     fontWeight: "bold" as "bold",
-    alignSelf: "center" as "center",
-    marginTop: "10px",
+    transition: "background-color 0.3s ease", // 버튼 배경색 변경 시 애니메이션 추가
   },
 };
 
