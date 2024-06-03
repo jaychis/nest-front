@@ -23,15 +23,12 @@ const Profile = () => {
   const ID: string = (localStorage.getItem("id") as string) || "";
 
   useEffect(() => {
-    if (activeSection === "POSTS") {
-      BoardInquiryAPI({ id: ID })
-        .then((res) => {
-          const response = res.data.response;
-          console.log("profile board inquiry api response : ", response);
+    ExecuteBoardInquiryAPI({ id: ID }).then((res) => setMyPosts(res));
+  }, []);
 
-          setMyPosts(response);
-        })
-        .catch((err) => console.error("PROFILE BOARD INQUIRY ERROR : ", err));
+  useEffect(() => {
+    if (activeSection === "POSTS") {
+      ExecuteBoardInquiryAPI({ id: ID }).then((res) => setMyPosts(res));
     }
 
     if (activeSection === "COMMENTS") {
@@ -44,7 +41,6 @@ const Profile = () => {
         })
         .catch((err) => console.error("PROFILE COMMENT INQUIRY ERROR : ", err));
     }
-    // }
 
     if (activeSection === "PROFILE") {
       dispatch(ReduxProfileAPI({ id: ID })).then((res) => {
@@ -236,5 +232,17 @@ const styles = {
     fontSize: "18px",
   },
 };
+
+async function ExecuteBoardInquiryAPI({ id }: { readonly id: string }) {
+  try {
+    const res = await BoardInquiryAPI({ id });
+    const response = res.data.response;
+    console.log("profile board inquiry api response : ", response);
+
+    return response;
+  } catch (e: any) {
+    console.error("PROFILE BOARD INQUIRY ERROR : ", e);
+  }
+}
 
 export default Profile;
