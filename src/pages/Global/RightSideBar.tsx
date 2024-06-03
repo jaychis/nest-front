@@ -1,27 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getTopSearches } from "../../reducers/searchSlice";
-import { RootState, AppDispatch } from "../../store/store";
-import { GetTopTenSearches } from "../api/SearchApi";
+import { GetTopTenSearches, AddSearchAPI } from "../api/SearchApi";
+import { useNavigate } from "react-router-dom";
 
 const RightSideBar = () => {
-  // const dispatch = useDispatch<AppDispatch>();
-  // const topSearches = useSelector(
-  //   (state: RootState) => state.search.topSearches,
-  // );
-  // const recentPosts = useSelector(
-  //   (state: RootState) => state.recentPosts.posts,
-  // );
-
   const [isTopTenList, setIsTopTenList] = useState([]);
   const [selectedTab, setSelectedTab] = useState<"topSearches" | "recentPosts">("topSearches");
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [hoveredRecentPostIndex, setHoveredRecentPostIndex] = useState<number | null>(null);
+  const navigate = useNavigate(); // Initialize useNavigate
 
-    // 데모 데이터
-    const demoRecentPosts = [
-      { id: "1", title: "최근 본 게시물 1" },
-      { id: "2", title: "최근 본 게시물 2" },
-      { id: "3", title: "최근 본 게시물 3" },
-    ];
+
+  const demoRecentPosts = [
+    { id: "1", title: "최근 본 게시물 1" },
+    { id: "2", title: "최근 본 게시물 2" },
+    { id: "3", title: "최근 본 게시물 3" },
+  ];
 
   useEffect(() => {
     const fetchTopTenList = async (): Promise<void> => {
@@ -34,10 +27,11 @@ const RightSideBar = () => {
     fetchTopTenList();
   }, []);
 
-  // useEffect(() => {
-  //   console.log("Top Searches:", topSearches);
-  //   console.log("Recent Posts:", recentPosts);
-  // }, [topSearches, recentPosts]);
+  const handleSearchClick = async (query: string) => {
+    await AddSearchAPI({ query });
+    navigate(`/search/list?query=${query}`);
+  };
+
   return (
     <div style={styles.container}>
       <div style={styles.tabs}>
@@ -61,9 +55,21 @@ const RightSideBar = () => {
             {isTopTenList.length > 0 ? (
               isTopTenList.map(
                 (search: { readonly query: string; readonly count: number }, index: number) => (
-                  <li key={index} style={styles.listItem}>
-                    <span style={styles.rank}>{index + 1}</span>
-                    <span style={styles.query}>{search.query}</span>
+                  <li
+                    key={index}
+                    style={hoveredIndex === index ? styles.hoveredListItem : styles.listItem}
+                    onMouseEnter={() => setHoveredIndex(index)}
+                    onMouseLeave={() => setHoveredIndex(null)}
+                    onClick={() => handleSearchClick(search.query)} // Add onClick event
+                  >
+                    <div>
+                      <span style={styles.rank}>{index + 1}</span>
+                      <span style={styles.query}>{search.query}</span>
+                    </div>
+                    <div style={styles.details}>
+                      <span style={styles.count}>{search.count}</span>
+                      {/* <span style={styles.source}>{search.source}</span> */}
+                    </div>
                   </li>
                 ),
               )
@@ -74,20 +80,27 @@ const RightSideBar = () => {
         </div>
       ) : (
         <div>
-          <h3 style={styles.header}>최근 본 게시물</h3>
-          <ul style={styles.list}>
-            {demoRecentPosts.map((post) => (
-              <li key={post.id} style={styles.listItem}>
-                <a href={`/boards/read?id=${post.id}&title=${post.title}`} style={styles.link}>
-                  {post.title}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </div>
-  );
+        <h3 style={styles.header}>최근 본 게시물</h3>
+        <ul style={styles.list}>
+          {demoRecentPosts.map((post, index) => (
+            <li
+              key={post.id}
+              style={
+                hoveredRecentPostIndex === index ? styles.hoveredListItem : styles.listItem
+              }
+              onMouseEnter={() => setHoveredRecentPostIndex(index)}
+              onMouseLeave={() => setHoveredRecentPostIndex(null)}
+            >
+              <a href={`/boards/read?id=${post.id}&title=${post.title}`} style={styles.link}>
+                {post.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+  </div>
+);
 };
 
 const styles = {
@@ -136,21 +149,48 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: "10px 0",
+    padding: "12px 0",
     borderBottom: "1px solid #f0f0f0",
+    background: "white",
+    color: "black",
+  },
+  hoveredListItem: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "12px 0",
+    borderBottom: "1px solid #f0f0f0",
+    background: "#f0f0f0",
+    color: "black",
   },
   rank: {
     fontSize: "18px",
     fontWeight: "bold" as "bold",
     color: "#333",
+    marginRight: "15px", // Add margin to create space between rank and query
+
   },
   query: {
     fontSize: "16px",
-    color: "#0079D3",
+    color: "#333",
+  },
+  details: {
+    display: "flex",
+    justifyContent: "space-between",
+    marginTop: "5px",
+    fontSize: "14px",
+    color: "#666",
+  },
+  count: {
+    marginRight: "10px",
+    fontWeight: "bold" as "bold",
+  },
+  source: {
+    fontStyle: "italic",
   },
   link: {
     fontSize: "16px",
-    color: "#0079D3",
+    color: "#333", // Match the text color with query
     textDecoration: "none" as "none",
   },
 };

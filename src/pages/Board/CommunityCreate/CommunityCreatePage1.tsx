@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useCommunity } from "../../../contexts/CommunityContext";
 
-const CommunityCreate: React.FC = () => {
+const CommunityCreatePage1: React.FC = () => {
   const navigate = useNavigate();
-  const [communityName, setCommunityName] = useState("");
-  const [description, setDescription] = useState("");
+  const { communityName, setCommunityName, description, setDescription } = useCommunity();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // 커뮤니티 추가 API 호출 로직을 여기에 작성합니다.
-    // 성공적으로 커뮤니티를 추가한 후 메인 페이지로 이동합니다.
-    navigate("/");
+
+  const handleNext = () => {
+    // 페이지 1의 데이터를 페이지 2로 전달 (예: 상태 저장, 컨텍스트 API, 또는 로컬 스토리지 사용)
+    navigate("/community/create2", {
+      state: { communityName, description },
+    });
   };
 
   const handleCancel = () => {
@@ -20,9 +21,11 @@ const CommunityCreate: React.FC = () => {
   return (
     <div style={styles.container}>
       <h2 style={styles.heading}>커뮤니티 만들기</h2>
-      <form onSubmit={handleSubmit} style={styles.form}>
+      <form onSubmit={(e) => e.preventDefault()} style={styles.form}>
         <div style={styles.formGroup}>
-          <label htmlFor="communityName" style={styles.label}>커뮤니티 이름</label>
+          <label htmlFor="communityName" style={styles.label}>
+            커뮤니티 이름
+          </label>
           <input
             type="text"
             id="communityName"
@@ -33,7 +36,9 @@ const CommunityCreate: React.FC = () => {
           />
         </div>
         <div style={styles.formGroup}>
-          <label htmlFor="description" style={styles.label}>설명</label>
+          <label htmlFor="description" style={styles.label}>
+            설명
+          </label>
           <textarea
             id="description"
             value={description}
@@ -46,7 +51,7 @@ const CommunityCreate: React.FC = () => {
           <button type="button" onClick={handleCancel} style={styles.cancelButton}>
             취소
           </button>
-          <button type="submit" style={styles.nextButton}>
+          <button type="button" onClick={handleNext} style={styles.nextButton}>
             다음
           </button>
         </div>
@@ -60,6 +65,7 @@ const styles = {
     backgroundColor: "#FFFFFF",
     padding: "20px",
     maxWidth: "600px",
+    height:"400px",
     margin: "50px auto",
     boxShadow: "0 4px 12px rgba(0,0,0,0.15)", // 그림자 효과를 더 부드럽게 변경
     borderRadius: "8px",
@@ -91,6 +97,7 @@ const styles = {
     border: "1px solid #CCC",
     fontSize: "14px",
     backgroundColor: "#F7F7F7", // 레딧 스타일의 입력 필드 배경색
+    boxSizing: "border-box" as "border-box", // box-sizing 추가
   },
   textarea: {
     width: "100%",
@@ -100,6 +107,8 @@ const styles = {
     fontSize: "14px",
     minHeight: "120px", // 텍스트 영역의 최소 높이를 조금 더 늘림
     backgroundColor: "#F7F7F7",
+    boxSizing: "border-box" as "border-box", // box-sizing 추가
+
   },
   buttonGroup: {
     display: "flex",
@@ -130,4 +139,4 @@ const styles = {
   },
 };
 
-export default CommunityCreate;
+export default CommunityCreatePage1;
