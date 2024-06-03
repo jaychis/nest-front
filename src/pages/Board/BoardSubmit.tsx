@@ -45,7 +45,6 @@ const BoardSubmit = () => {
     const { value } = event.target;
     setTextTitle(value);
   };
-  useEffect(() => console.log("textTitle : ", textTitle), [textTitle]);
 
   // mediaTitle
   const [mediaTitle, setMediaTitle] = useState<string>("");
@@ -55,7 +54,6 @@ const BoardSubmit = () => {
     const { value } = event.target;
     setMediaTitle(value);
   };
-  useEffect(() => console.log("mediaTitle : ", mediaTitle), [mediaTitle]);
 
   // linkTitle
   const [linkTitle, setLinkTitle] = useState<string>("");
@@ -65,7 +63,6 @@ const BoardSubmit = () => {
     const { value } = event.target;
     setLinkTitle(value);
   };
-  useEffect(() => console.log("linkTitle : ", linkTitle), [linkTitle]);
 
   // 텍스트
   const [textContent, setTextContent] = useState<string>("");
@@ -73,8 +70,6 @@ const BoardSubmit = () => {
   const handleEditorChange = async ({ html, text }: EditorChange) => {
     setTextContent(html);
 
-    console.log("html: ", html);
-    console.log("text: ", text);
     adjustEditorHeight();
   };
   useEffect(() => console.log("textContent : ", textContent), [textContent]);
@@ -102,7 +97,6 @@ const BoardSubmit = () => {
   ): Promise<void> => {
     if (event.target.files) {
       const files: File[] = Array.from(event.target.files);
-      console.log("files : ", files);
 
       if (files.length === 0) {
         alert("이미지를 선택해주세요.");
@@ -134,11 +128,6 @@ const BoardSubmit = () => {
     const { value } = event.target;
     setLinkContent(value);
   };
-  useEffect(() => console.log("linkContent : ", linkContent), [linkContent]);
-
-  useEffect(() => {
-    console.log("board : ", board);
-  }, [board]);
 
   const handleSubmit = async (
     event: FormEvent<HTMLFormElement | HTMLButtonElement>,
@@ -170,24 +159,19 @@ const BoardSubmit = () => {
       if (inputType === "MEDIA") {
         const files: File[] = Array.from(fileList);
 
-        console.log("MEDIA files : ", files);
-
         const uploadImageUrlList = files.map(async (file: File) => {
           const key: string = `uploads/${file.name}`;
           const expires: number = 60;
           const res = await getPresignedUrlAPI({ key, expires });
           const presignedUrl = res.data.response.url;
-          console.log("presignedUrl : ", presignedUrl);
 
           const uploadResult = await AWSImageRegistAPI({
             url: presignedUrl,
             file,
           });
-          console.log("uploadResult : ", uploadResult);
 
           if (uploadResult.ok) {
             const imageUrl = presignedUrl.split("?")[0];
-            console.log("imageUrl : ", imageUrl);
 
             return imageUrl;
           } else {
@@ -197,12 +181,10 @@ const BoardSubmit = () => {
         console.log("uploadImageUrlList : ", uploadImageUrlList);
 
         const imageUrls: string[] = await Promise.all(uploadImageUrlList);
-        console.log("imageUrls : ", imageUrls);
 
         paramObj.content = imageUrls;
         paramObj.title = mediaTitle;
         paramObj.type = "MEDIA";
-        console.log("paramObj : ", paramObj);
       }
 
       if (inputType === "LINK") {
@@ -215,12 +197,9 @@ const BoardSubmit = () => {
         //
       }
 
-      console.log("handleSubmit paramObj : ", paramObj);
-
       SubmitAPI(paramObj)
         .then((res) => {
           const response = res.data.response;
-          console.log("response : ", response);
 
           if (res.status === 201) {
             navigate(`/boards/read?id=${response.id}&title=${response.title}`);

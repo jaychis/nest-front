@@ -50,7 +50,6 @@ const BoardRead = () => {
       .then((res) => {
         const response = res.data.response;
 
-        console.log("BoardRead ReadAPI response : ", response);
         setIsBoardStateBoard(response);
       })
       .catch((err) => console.error(err));
@@ -85,7 +84,6 @@ const BoardRead = () => {
       CommentSubmitAPI(param)
         .then((res) => {
           const response = res.data.response;
-          console.log("BoardRead CommentsSubmitAPI response : ", response);
 
           setIsCommentState([response, ...isCommentState]);
 
@@ -101,7 +99,7 @@ const BoardRead = () => {
   const renderReplies = (replies: ReplyType[]) => {
     return (
       <div>
-        {replies.map((re) => (
+        {replies.map((re: ReplyType) => (
           <div key={re.id}>
             <BoardReply
               id={re.id}
@@ -146,8 +144,6 @@ const BoardRead = () => {
   };
 
   const handleReplySubmit = (reply: ReplyType) => {
-    console.log("handleReplySubmit reply : ", reply);
-
     setIsCommentState((prevState: CommentType[]) => {
       const updatedComments = prevState.map((comment: CommentType) => {
         if (comment.id === reply.comment_id) {

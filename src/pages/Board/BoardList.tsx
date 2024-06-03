@@ -53,17 +53,13 @@ const BoardList = () => {
   const { buttonType }: MainListTypeState = useSelector(
     (state: RootState) => state.sideBarButton,
   );
-  console.log("buttonType : ", buttonType);
 
   useEffect(() => {
     if (buttonType === "HOME") {
-      console.log("HOME : ", buttonType);
       ListAPI({ take: TAKE, lastId: null, category: null })
         .then((res) => {
           const response: CardType[] = res.data.response.current_list;
-          console.log("list response : ", response);
 
-          // setList([...response, ...mockingList]);
           setList([...response]);
         })
         .catch((err) => console.error(err));
@@ -77,9 +73,7 @@ const BoardList = () => {
       PopularListAPI({ take: TAKE, lastId: null, category: null })
         .then((res) => {
           const response: CardType[] = res.data.response.current_list;
-          console.log("list response : ", response);
 
-          // setList([...response, ...mockingList]);
           setList([...response]);
         })
         .catch((err) => console.error(err));
@@ -89,13 +83,11 @@ const BoardList = () => {
         window.removeEventListener("scroll", handleScroll);
       };
     } else if (buttonType === "ALL") {
-      console.log("ALL : ", buttonType);
       AllListAPI({ take: TAKE, lastId: null, category: null })
         .then((res) => {
           const response: CardType[] = res.data.response.current_list;
           console.log("list response : ", response);
 
-          // setList([...response, ...mockingList]);
           setList([...response]);
         })
         .catch((err) => console.error(err));
@@ -110,7 +102,6 @@ const BoardList = () => {
           const response: CardType[] = res.data.response.current_list;
           console.log("list response : ", response);
 
-          // setList([...response, ...mockingList]);
           setList([...response]);
         })
         .catch((err) => console.error(err));
@@ -142,7 +133,6 @@ const BoardList = () => {
 
     //
     if (buttonType === "HOME") {
-      console.log("fetchData HOME : ", buttonType);
       ListAPI({ take: TAKE, lastId: ID, category: null })
         .then((res) => {
           const response: CardType[] = res.data.response.current_list;
@@ -152,35 +142,26 @@ const BoardList = () => {
         })
         .catch((err) => console.error("fetchData ListAPI error : ", err));
     } else if (buttonType === "POPULAR") {
-      console.log("fetchData POPULAR : ", buttonType);
       PopularListAPI({ take: TAKE, lastId: ID, category: null })
         .then((res) => {
           const response: CardType[] = res.data.response.current_list;
-          console.log("list response : ", response);
 
-          // setList([...response, ...mockingList]);
           setList([...response]);
         })
         .catch((err) => console.error("fetchData PopularListAPI : ", err));
     } else if (buttonType === "ALL") {
-      console.log("fetchData ALL : ", buttonType);
       AllListAPI({ take: TAKE, lastId: ID, category: null })
         .then((res) => {
           const response: CardType[] = res.data.response.current_list;
-          console.log("list response : ", response);
 
-          // setList([...response, ...mockingList]);
           setList([...response]);
         })
         .catch((err) => console.error(err));
     } else {
-      console.log("fetchData List : ", buttonType);
       AllListAPI({ take: TAKE, lastId: ID, category: buttonType })
         .then((res) => {
           const response: CardType[] = res.data.response.current_list;
-          console.log("list response : ", response);
 
-          // setList([...response, ...mockingList]);
           setList([...response]);
         })
         .catch((err) => console.error(err));
