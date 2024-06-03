@@ -174,7 +174,7 @@ const Card = ({
               }}
             >
               <div>
-                {content.map((co, index) => (
+                {content?.map((co, index) => (
                   <>
                     {/*<div dangerouslySetInnerHTML={}>{co}</div>*/}
                     <div
