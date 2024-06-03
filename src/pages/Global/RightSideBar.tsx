@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getTopSearches } from "../../reducers/searchSlice";
 import { RootState, AppDispatch } from "../../store/store";
-import { GetTopTenSearches } from "../api/SearchApi.tex";
+import { GetTopTenSearches } from "../api/SearchApi";
 
 const RightSideBar = () => {
   // const dispatch = useDispatch<AppDispatch>();

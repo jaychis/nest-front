@@ -11,6 +11,7 @@ import UsersInquiry from "./pages/User/UsersInquiry";
 import ScrollToTop from "./components/ScrollToTop";
 import RightSideBar from "./pages/Global/RightSideBar";
 import CommunityCreate from "./pages/User/CommunityCreate";
+import SearchList from "./pages/Search/SearchList";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -39,17 +40,25 @@ function App() {
               </Layout>
             }
           />
-
           {/*게시판*/}
           <Route path="/boards/submit" element={<BoardSubmit />} />
-          <Route path="/boards/read" element={<BoardRead />} />
-
+          <Route
+            path="/boards/read"
+            element={
+              <>
+                <BoardRead />
+              </>
+            }
+          />
           {/*유저*/}
-          <Route path="/users/profile" element={<><Profile /></>} />
-          <Route path="/users/inquiry" element={<Layout><UsersInquiry /></Layout>} />
-
-          {/* 커뮤니티 */}
-          <Route path="/community/create" element={<Layout><CommunityCreate /></Layout>} /> {/* 새 라우트 추가 */}
+          <Route
+            path="/users/profile"
+            element={
+              <>
+                <Profile />
+              </>
+            }
+          />
 
           <Route
             path="/users/profile"
@@ -67,6 +76,25 @@ function App() {
               </>
             }
           />
+          {/* 커뮤니티 */}
+          <Route
+            path="/community/create"
+            element={
+              <Layout>
+                <CommunityCreate />
+              </Layout>
+            }
+          />
+          {/*서치*/}
+          <Route
+            path={"/search/list"}
+            element={
+              <Layout>
+                <SearchList />
+              </Layout>
+            }
+          />
+          {/* 새 라우트 추가 */}
         </Routes>
       </Router>
     </>
