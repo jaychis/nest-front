@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import UserModalForm from "../User/UserModalForm";
 import logo from "../../assets/img/panda_logo.png";
 import ProfileModal from "../User/ProfileModal";
-import { AddSearchAPI } from "../api/SearchApi.tex";
+import { AddSearchAPI } from "../api/SearchApi";
 import NotificationModal from "../User/NotificationModal";
 import { searchQuery } from "../../reducers/searchSlice";
 import { RootState, AppDispatch } from "../../store/store";
@@ -44,8 +44,15 @@ const GlobalBar = () => {
       dispatch(searchQuery(value));
     }
   };
-  const addSearch = async () => {
+  const clickSearch = async () => {
+    if (!query) {
+      // 나중에는 alert 제거하기
+      alert("내용을 입력해주세요");
+      return;
+    }
+
     await AddSearchAPI({ query });
+    navigate(`/search/list?query=${query}`);
   };
 
   const toggleNotificationModal = () => {
@@ -77,14 +84,8 @@ const GlobalBar = () => {
         onMouseLeave={() => setLogoHover(false)}
         onClick={() => navigate("/")}
       >
-        <img
-          src={logo}
-          alt="Logo"
-          style={{ width: "50px" }}
-        />
-        <span style={{ marginLeft: "10px" }}>
-          {"jaych.com"}
-        </span>
+        <img src={logo} alt="Logo" style={{ width: "50px" }} />
+        <span style={{ marginLeft: "10px" }}>{"jaych.com"}</span>
       </div>
 
       {/* Search Bar */}
@@ -112,13 +113,16 @@ const GlobalBar = () => {
             height: "30px",
             marginTop: "5px",
           }}
-          onClick={addSearch}
+          onClick={clickSearch}
         />
         {/* Search Icon */}
         {searchTerm.length > 2 && (
           <div style={styles.searchResults as React.CSSProperties}>
             {searchResults.map((result, index) => (
-              <div key={index} style={styles.searchResultItem as React.CSSProperties}>
+              <div
+                key={index}
+                style={styles.searchResultItem as React.CSSProperties}
+              >
                 {result}
               </div>
             ))}
@@ -162,7 +166,12 @@ const GlobalBar = () => {
               <img
                 src={logo}
                 alt="Profile"
-                style={{ width: "40px", height: "40px", borderRadius: "50%", zIndex: 2 }}
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  borderRadius: "50%",
+                  zIndex: 2,
+                }}
               />
             </div>
             <ProfileModal
