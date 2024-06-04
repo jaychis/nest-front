@@ -112,13 +112,14 @@ const BoardList = () => {
       };
     }
   }, [buttonType]);
+  
   const handleScroll = () => {
     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-
-    // 페이지 하단에 도달햇는지 확인
+  
     if (scrollTop + clientHeight >= scrollHeight - 15) {
-      // 데이타 불러오는 함수 호출
-      fetchData();
+      if (!loading) { // 로딩 상태를 확인하여 중복 요청 방지
+        fetchData();
+      }
     }
   };
 
@@ -180,8 +181,9 @@ const BoardList = () => {
               // console.log("el : ", el);
 
               return (
-                <>
+                <React.Fragment key={el.id}>
                   <Card
+                    key={el.id} // 고유한 키 추가
                     id={el.id}
                     category={el.category}
                     title={el.title}
@@ -190,7 +192,7 @@ const BoardList = () => {
                     content={el.content}
                     type={el.type}
                   />
-                </>
+                </React.Fragment>
               );
             })
           ) : (

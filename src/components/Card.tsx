@@ -45,6 +45,8 @@ const Card = ({
     useState<boolean>(false);
   const [isCardShareHovered, setIsCardShareHovered] = useState<boolean>(false);
   const [isCardSendHovered, setIsCardSendHovered] = useState<boolean>(false);
+  const [viewCount, setViewCount] = useState<number>(0); // 조회수 상태 추가
+
 
   const [isReaction, setIsReaction] = useState<ReactionStateTypes>(null);
 
@@ -105,7 +107,8 @@ const Card = ({
           flexDirection: "column",
           justifyContent: "flex-start",
           alignItems: "flex-start",
-          width: "800px",
+          width: "100%", // 수정된 부분
+          maxWidth: "800px", // 수정된 부분
           minHeight: "200px",
           margin: "10px",
           borderRadius: "10px",
@@ -164,7 +167,7 @@ const Card = ({
           </h3>
 
           {type === "TEXT" ? (
-            <p
+            <div
               style={{
                 textAlign: "left",
                 whiteSpace: "normal",
@@ -174,16 +177,11 @@ const Card = ({
               }}
             >
               <div>
-                {content?.map((co, index) => (
-                  <>
-                    {/*<div dangerouslySetInnerHTML={}>{co}</div>*/}
-                    <div
-                      dangerouslySetInnerHTML={{ __html: sanitizeHtml(co) }}
-                    />
-                  </>
-                ))}
+              {content?.map((co, index) => (
+                <div key={index} dangerouslySetInnerHTML={{ __html: sanitizeHtml(co) }} />
+              ))}
               </div>
-            </p>
+            </div>
           ) : type === "MEDIA" ? (
             <Slider
               {...{
@@ -200,17 +198,28 @@ const Card = ({
                   <img
                     src={image}
                     alt={`Preview image ${index}`}
-                    style={{ height: "400px", width: "400px" }}
+                    style={{ height: "400px", width: "100%" }} // 수정된 부분
                   />
                 </div>
               ))}
             </Slider>
           ) : (
             <>
-              {content.map((video: string) => (
-                <div key={id}>
+             {content.map((video: string, index: number) => (
+                <div
+                key={index}
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  borderRadius: "20px", // 추가된 부분
+                  overflow: "hidden", // 추가된 부분
+                }}
+              >
                   {video && (
-                    <YouTube videoId={getYouTubeVideoId({ url: video })} />
+                    <YouTube
+                      videoId={getYouTubeVideoId({ url: video })}
+                      opts={{ width: "760px", height: "400px" }} // 수정된 부분
+                    />
                   )}
                 </div>
               ))}
@@ -223,7 +232,8 @@ const Card = ({
           display: "flex",
           justifyContent: "flex-start",
           alignItems: "flex-start",
-          width: "800px",
+          width: "100%", // 수정된 부분
+          maxWidth: "800px", // 수정된 부분
         }}
       >
         <div
@@ -348,6 +358,27 @@ const Card = ({
           >
             보내기
           </button>
+        </div>
+        <div
+          style={{
+            marginLeft: "auto", // 자동 여백을 사용하여 오른쪽 정렬
+            borderRadius: "30px",
+            width: "auto", // 너비 자동 조정
+            height: "50px",
+            display: "flex",
+            justifyContent: "right",
+            alignItems: "center",
+          }}
+        >
+          <span
+            style={{
+              fontSize: "14px",
+              color: "#000",
+            }}
+          >
+            {/* 조회수  */}
+            {viewCount}회
+          </span>
         </div>
       </div>
       <hr
