@@ -240,7 +240,7 @@ const GlobalSideBar = () => {
         }}
         onMouseEnter={() => setIsSideHovered("CREATE_COMMUNITY")}
         onMouseLeave={() => setIsSideHovered(null)}
-        onClick={() => navigate("/community/create")} // 페이지로 이동하도록 수정
+        onClick={() => navigate("/community/create1")} // 페이지로 이동하도록 수정
       >
         <span style={{ fontSize: "24px", marginRight: "8px" }}>➕</span>
         <span style={{ fontSize: "17px", cursor: "pointer" }}>

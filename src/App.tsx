@@ -10,8 +10,12 @@ import Profile from "./pages/User/Profile";
 import UsersInquiry from "./pages/User/UsersInquiry";
 import ScrollToTop from "./components/ScrollToTop";
 import RightSideBar from "./pages/Global/RightSideBar";
-import CommunityCreate from "./pages/User/CommunityCreate";
 import SearchList from "./pages/Search/SearchList";
+import CommunityCreatePage1 from "./pages/Board/CommunityCreate/CommunityCreatePage1";
+import CommunityCreatePage2 from "./pages/Board/CommunityCreate/CommunityCreatePage2";
+import CommunityCreatePage3 from "./pages/Board/CommunityCreate/CommunityCreatePage3";
+import CommunityCreatePage4 from "./pages/Board/CommunityCreate/CommunityCreatePage4";
+import { CommunityProvider } from "./contexts/CommunityContext";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -31,6 +35,7 @@ function App() {
     <>
       <Router>
         <ScrollToTop />
+        <CommunityProvider>
         <Routes>
           <Route
             path="/"
@@ -76,12 +81,36 @@ function App() {
               </>
             }
           />
-          {/* 커뮤니티 */}
+          {/* 커뮤니티 만들기*/}
           <Route
-            path="/community/create"
+            path="/community/create1"
             element={
               <Layout>
-                <CommunityCreate />
+                <CommunityCreatePage1 />
+              </Layout>
+            }
+          />
+          <Route
+            path="/community/create2"
+            element={
+              <Layout>
+                <CommunityCreatePage2 />
+              </Layout>
+            }
+          />
+          <Route
+            path="/community/create3"
+            element={
+              <Layout>
+                <CommunityCreatePage3 />
+              </Layout>
+            }
+          />
+          <Route
+            path="/community/create4"
+            element={
+              <Layout>
+                <CommunityCreatePage4 />
               </Layout>
             }
           />
@@ -96,6 +125,7 @@ function App() {
           />
           {/* 새 라우트 추가 */}
         </Routes>
+        </CommunityProvider>
       </Router>
     </>
   );
