@@ -36,95 +36,87 @@ function App() {
       <Router>
         <ScrollToTop />
         <CommunityProvider>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <Layout>
-                <BoardList />
-              </Layout>
-            }
-          />
-          {/*게시판*/}
-          <Route path="/boards/submit" element={<BoardSubmit />} />
-          <Route
-            path="/boards/read"
-            element={
-              <>
-                <BoardRead />
-              </>
-            }
-          />
-          {/*유저*/}
-          <Route
-            path="/users/profile"
-            element={
-              <>
-                <Profile />
-              </>
-            }
-          />
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <Layout>
+                  <BoardList />
+                </Layout>
+              }
+            />
+            {/*게시판*/}
+            <Route path="/boards/submit" element={<BoardSubmit />} />
+            <Route
+              path="/boards/read"
+              element={
+                <Layout>
+                  <BoardRead />
+                </Layout>
+              }
+            />
+            {/*유저*/}
+            <Route
+              path="/users/profile"
+              element={
+                <>
+                  <Profile />
+                </>
+              }
+            />
 
-          <Route
-            path="/users/profile"
-            element={
-              <>
-                <Profile />
-              </>
-            }
-          />
-          <Route
-            path="/users/inquiry"
-            element={
-              <>
-                <UsersInquiry />
-              </>
-            }
-          />
-          {/* 커뮤니티 만들기*/}
-          <Route
-            path="/community/create1"
-            element={
-              <Layout>
-                <CommunityCreatePage1 />
-              </Layout>
-            }
-          />
-          <Route
-            path="/community/create2"
-            element={
-              <Layout>
-                <CommunityCreatePage2 />
-              </Layout>
-            }
-          />
-          <Route
-            path="/community/create3"
-            element={
-              <Layout>
-                <CommunityCreatePage3 />
-              </Layout>
-            }
-          />
-          <Route
-            path="/community/create4"
-            element={
-              <Layout>
-                <CommunityCreatePage4 />
-              </Layout>
-            }
-          />
-          {/*서치*/}
-          <Route
-            path={"/search/list"}
-            element={
-              <Layout>
-                <SearchList />
-              </Layout>
-            }
-          />
-          {/* 새 라우트 추가 */}
-        </Routes>
+            <Route
+              path="/users/inquiry"
+              element={
+                <>
+                  <UsersInquiry />
+                </>
+              }
+            />
+            {/* 커뮤니티 만들기*/}
+            <Route
+              path="/community/create1"
+              element={
+                <Layout>
+                  <CommunityCreatePage1 />
+                </Layout>
+              }
+            />
+            <Route
+              path="/community/create2"
+              element={
+                <Layout>
+                  <CommunityCreatePage2 />
+                </Layout>
+              }
+            />
+            <Route
+              path="/community/create3"
+              element={
+                <Layout>
+                  <CommunityCreatePage3 />
+                </Layout>
+              }
+            />
+            <Route
+              path="/community/create4"
+              element={
+                <Layout>
+                  <CommunityCreatePage4 />
+                </Layout>
+              }
+            />
+            {/*서치*/}
+            <Route
+              path={"/search/list"}
+              element={
+                <Layout>
+                  <SearchList />
+                </Layout>
+              }
+            />
+            {/* 새 라우트 추가 */}
+          </Routes>
         </CommunityProvider>
       </Router>
     </>

@@ -159,9 +159,9 @@ const BoardRead = () => {
 
   return (
     <>
-      <GlobalBar />
+      {/*<GlobalBar />*/}
       <div style={{ display: "flex", width: "100%" }}>
-        <GlobalSideBar />
+        {/*<GlobalSideBar />*/}
         <div style={{ flex: 2 }}>
           <Card
             id={isBoardState.id}
@@ -241,7 +241,7 @@ const BoardRead = () => {
           </div>
           {isCommentState?.length > 0 ? renderComments(isCommentState) : []}
         </div>
-        <RightSideBar />
+        {/*<RightSideBar />*/}
       </div>
     </>
   );
