@@ -157,21 +157,27 @@ const BoardSubmit = () => {
       }
 
       if (inputType === "MEDIA") {
+        console.log("check MEDIA");
         const files: File[] = Array.from(fileList);
 
         const uploadImageUrlList = files.map(async (file: File) => {
-          const key: string = `uploads/${file.name}`;
+          const key: string = `uploads/${new Date().toISOString()}_${file.name}`;
+          console.log("key : ", key);
           const expires: number = 60;
           const res = await getPresignedUrlAPI({ key, expires });
+          console.log("res : ", res);
           const presignedUrl = res.data.response.url;
+          console.log("presignedUrl: ", presignedUrl);
 
           const uploadResult = await AWSImageRegistAPI({
             url: presignedUrl,
             file,
           });
+          console.log("uploadResult : ", uploadResult);
 
           if (uploadResult.ok) {
             const imageUrl = presignedUrl.split("?")[0];
+            console.log("imageUrl : ", imageUrl);
 
             return imageUrl;
           } else {

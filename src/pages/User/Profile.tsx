@@ -94,7 +94,7 @@ const Profile = () => {
             <div style={styles.section}>
               <h2 style={styles.sectionTitle}>내가 등록한 게시글</h2>
               {myPosts.length > 0 ? (
-                myPosts.map((post) => (
+                myPosts.map((post: CardType) => (
                   <Card key={post.id} {...post} createdAt={post.created_at} />
                 ))
               ) : (
@@ -107,7 +107,7 @@ const Profile = () => {
             <div style={styles.section}>
               <h2 style={styles.sectionTitle}>내가 등록한 댓글</h2>
               {myComments.length > 0 ? (
-                myComments.map((comment) => (
+                myComments.map((comment: CommentType) => (
                   <BoardComment
                     key={comment.id}
                     {...comment}

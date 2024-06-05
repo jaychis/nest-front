@@ -6,11 +6,18 @@ export interface GetPresignedUrlParams {
 }
 
 export const getPresignedUrlAPI = async (params: GetPresignedUrlParams) => {
-  const URL: string = "s3/presigned-url";
+  try {
+    const URL: string = "s3/presigned-url";
+    console.log("URL : ", URL);
 
-  const res = await client.post(URL, params);
+    const res = await client.post(URL, params);
+    console.log("getPresignedUrlAPI res : ", res);
 
-  return res;
+    return res;
+  } catch (e: any) {
+    console.error("getPresignedUrlAPI error : ", e);
+    throw new Error(`${e}`);
+  }
 };
 
 export interface AWSImageDeleteParams {
