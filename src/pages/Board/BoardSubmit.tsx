@@ -161,7 +161,7 @@ const BoardSubmit = () => {
         const files: File[] = Array.from(fileList);
 
         const uploadImageUrlList = files.map(async (file: File) => {
-          const key: string = `uploads/${new Date().toISOString()}_${file.name}`;
+          const key: string = `uploads/${new Date().toISOString()}/${file.name}`;
           console.log("key : ", key);
           const expires: number = 60;
           const res = await getPresignedUrlAPI({ key, expires });
@@ -187,10 +187,18 @@ const BoardSubmit = () => {
         console.log("uploadImageUrlList : ", uploadImageUrlList);
 
         const imageUrls: string[] = await Promise.all(uploadImageUrlList);
+        console.log("imageUrls : ", imageUrls);
+
+        for (let i: number = 0; i < imageUrls.length; ++i)
+          if (!imageUrls[i]) {
+            console.log("imageUrls 값이 없음");
+            return;
+          }
 
         paramObj.content = imageUrls;
         paramObj.title = mediaTitle;
         paramObj.type = "MEDIA";
+        console.log("midia paramObj : ", paramObj);
       }
 
       if (inputType === "LINK") {

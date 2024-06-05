@@ -55,6 +55,8 @@ export const AWSImageRegistAPI = async ({
   file,
 }: AWSImageRegistParams) => {
   const URL: string = url;
+  console.log("URL : ", URL);
+  console.log("file : ", file);
 
   try {
     const res = await fetch(URL, {
@@ -65,6 +67,7 @@ export const AWSImageRegistAPI = async ({
       },
       body: file,
     });
+    console.log("res : ", res);
 
     return res;
   } catch (e: any) {
