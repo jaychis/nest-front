@@ -57,7 +57,7 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
         });
     } else {
       setErrorMessage(
-        "비밀번호는 최소 8자, 하나 이상의 문자, 하나의 숫자 및 하나의 특수문자입니다."
+        "비밀번호는 최소 8자, 하나 이상의 문자, 하나의 숫자 및 하나의 특수문자입니다.",
       );
     }
   };
@@ -68,19 +68,31 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
         <h2>로그인</h2>
       </div>
       <div style={styles.socialButtonsContainer}>
-        <button style={styles.socialButton} onClick={() => alert("Continue with Google")}>
+        <button
+          style={styles.socialButton}
+          onClick={() => alert("Continue with Google")}
+        >
           <FaGoogle style={styles.socialLogo} />
           구글로 로그인
         </button>
-        <button style={styles.socialButton} onClick={() => alert("Continue with Apple")}>
+        <button
+          style={styles.socialButton}
+          onClick={() => alert("Continue with Apple")}
+        >
           <FaApple style={styles.socialLogo} />
           애플로 로그인
         </button>
-        <button style={styles.socialButton} onClick={() => alert("Continue with Naver")}>
+        <button
+          style={styles.socialButton}
+          onClick={() => alert("Continue with Naver")}
+        >
           <SiNaver style={styles.socialLogo} />
           네이버로 로그인
         </button>
-        <button style={styles.socialButton} onClick={() => alert("Continue with Kakao")}>
+        <button
+          style={styles.socialButton}
+          onClick={() => alert("Continue with Kakao")}
+        >
           <FaComment style={styles.socialLogo} />
           카카오로 로그인
         </button>
@@ -126,14 +138,26 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
           </a>
         </div>
       </form>
-      <div style={{ display: "flex", justifyContent: "center", marginTop: "20px", marginBottom: "-25px" }}>
-        <button onClick={onSwitchView} style={styles.switchButton}>
-          회원가입
+
+      <div style={{ width: "100%", padding: "10px 0", textAlign: "center" }}>
+        <button
+          type="submit"
+          style={styles.submitButton}
+          onClick={handleSubmit}
+        >
+          로그인
         </button>
       </div>
-      <div style={{ width: "100%", padding: "10px 0", textAlign: "center" }}>
-        <button type="submit" style={styles.submitButton} onClick={handleSubmit}>
-          로그인
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "20px",
+          marginBottom: "-25px",
+        }}
+      >
+        <button onClick={onSwitchView} style={styles.switchButton}>
+          회원가입
         </button>
       </div>
     </div>
