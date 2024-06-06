@@ -161,44 +161,64 @@ const BoardSubmit = () => {
         const files: File[] = Array.from(fileList);
 
         const uploadImageUrlList = files.map(async (file: File) => {
-          const key: string = `uploads/${new Date().toISOString()}/${file.name}`;
-          console.log("key : ", key);
-          const expires: number = 60;
-          const res = await getPresignedUrlAPI({ key, expires });
-          console.log("res : ", res);
-          const presignedUrl = res.data.response.url;
-          console.log("presignedUrl: ", presignedUrl);
+          try {
+            const sanitizedFileName = encodeURIComponent(file.name);
+            const key = `uploads/${sanitizedFileName}`;
+            console.log("key : ", key);
+            const expires = 60000;
+            console.log("expires : ", expires);
 
-          const uploadResult = await AWSImageRegistAPI({
-            url: presignedUrl,
-            file,
-          });
-          console.log("uploadResult : ", uploadResult);
+            const res = await getPresignedUrlAPI({ key, expires });
+            console.log("Presigned URL API Response : ", res);
 
-          if (uploadResult.ok) {
-            const imageUrl = presignedUrl.split("?")[0];
-            console.log("imageUrl : ", imageUrl);
+            if (res.data && res.data.response && res.data.response.url) {
+              const presignedUrl = res.data.response.url;
+              console.log("presignedUrl: ", presignedUrl);
 
-            return imageUrl;
-          } else {
-            console.error("Failed to upload file", uploadResult.statusText);
+              const uploadResult = await AWSImageRegistAPI({
+                url: presignedUrl,
+                file,
+              });
+              console.log("uploadResult : ", uploadResult);
+
+              if (uploadResult.ok) {
+                const imageUrl = presignedUrl.split("?")[0];
+                console.log("imageUrl : ", imageUrl);
+                return imageUrl;
+              } else {
+                const errorText = await uploadResult.clone().text();
+                console.error(
+                  "Failed to upload file: ",
+                  uploadResult.status,
+                  uploadResult.statusText,
+                  errorText,
+                );
+              }
+            } else {
+              console.error("Failed to get presigned URL");
+            }
+          } catch (error) {
+            console.error("Error during file upload: ", error);
           }
         });
         console.log("uploadImageUrlList : ", uploadImageUrlList);
 
-        const imageUrls: string[] = await Promise.all(uploadImageUrlList);
-        console.log("imageUrls : ", imageUrls);
+        try {
+          const imageUrls: string[] = await Promise.all(uploadImageUrlList);
+          console.log("imageUrls : ", imageUrls);
 
-        for (let i: number = 0; i < imageUrls.length; ++i)
-          if (!imageUrls[i]) {
-            console.log("imageUrls 값이 없음");
-            return;
-          }
-
-        paramObj.content = imageUrls;
-        paramObj.title = mediaTitle;
-        paramObj.type = "MEDIA";
-        console.log("midia paramObj : ", paramObj);
+          for (let i: number = 0; i < imageUrls.length; ++i)
+            if (!imageUrls[i]) {
+              console.log("imageUrls 값이 없음");
+              return;
+            }
+          paramObj.content = imageUrls;
+          paramObj.title = mediaTitle;
+          paramObj.type = "MEDIA";
+          console.log("midia paramObj : ", paramObj);
+        } catch (e: any) {
+          console.log("Error during uploading all files : ", e);
+        }
       }
 
       if (inputType === "LINK") {

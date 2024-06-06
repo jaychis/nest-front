@@ -69,6 +69,16 @@ export const AWSImageRegistAPI = async ({
     });
     console.log("res : ", res);
 
+    if (!res.ok) {
+      const errorText = await res.clone().text(); // 응답 본문을 복제하여 읽기
+      console.error(
+        "HTTP error response: ",
+        res.status,
+        res.statusText,
+        errorText,
+      );
+    }
+
     return res;
   } catch (e: any) {
     console.log("AWSImageRegistAPI err : ", e);
