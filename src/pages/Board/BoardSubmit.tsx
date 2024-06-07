@@ -157,16 +157,13 @@ const BoardSubmit = () => {
       }
 
       if (inputType === "MEDIA") {
-        console.log("check MEDIA");
         const files: File[] = Array.from(fileList);
 
         const uploadImageUrlList = files.map(async (file: File) => {
           try {
-            const sanitizedFileName = encodeURIComponent(file.name);
-            const key = `uploads/${sanitizedFileName}`;
-            console.log("key : ", key);
-            const expires = 60000;
-            console.log("expires : ", expires);
+            const sanitizedFileName: string = encodeURIComponent(file.name);
+            const key = `uploads/${new Date().toISOString()}_${sanitizedFileName}`;
+            const expires = 60;
 
             const res = await getPresignedUrlAPI({ key, expires });
             console.log("Presigned URL API Response : ", res);
@@ -205,7 +202,6 @@ const BoardSubmit = () => {
 
         try {
           const imageUrls: string[] = await Promise.all(uploadImageUrlList);
-          console.log("imageUrls : ", imageUrls);
 
           for (let i: number = 0; i < imageUrls.length; ++i)
             if (!imageUrls[i]) {

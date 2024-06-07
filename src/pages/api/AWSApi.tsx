@@ -55,8 +55,6 @@ export const AWSImageRegistAPI = async ({
   file,
 }: AWSImageRegistParams) => {
   const URL: string = url;
-  console.log("URL : ", URL);
-  console.log("file : ", file);
 
   try {
     const res = await fetch(URL, {
@@ -67,11 +65,10 @@ export const AWSImageRegistAPI = async ({
       },
       body: file,
     });
-    console.log("res : ", res);
 
     if (!res.ok) {
       const errorText = await res.clone().text(); // 응답 본문을 복제하여 읽기
-      console.error(
+      console.log(
         "HTTP error response: ",
         res.status,
         res.statusText,
