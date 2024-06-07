@@ -112,6 +112,9 @@ const styles = {
     borderTop: "none",
     borderRadius: "8px",
     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    height: "100vh",
+    overflowY: "auto" as "auto",
+
   },
   tabs: {
     display: "flex",
@@ -162,6 +165,7 @@ const styles = {
     borderBottom: "1px solid #f0f0f0",
     background: "#f0f0f0",
     color: "black",
+    borderRadius: "15px"
   },
   rank: {
     fontSize: "18px",

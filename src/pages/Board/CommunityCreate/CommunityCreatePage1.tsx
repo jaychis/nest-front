@@ -1,14 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCommunity } from "../../../contexts/CommunityContext";
 
 const CommunityCreatePage1: React.FC = () => {
   const navigate = useNavigate();
   const { communityName, setCommunityName, description, setDescription } = useCommunity();
+  const [textareaHeight, setTextareaHeight] = useState("120px");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  useEffect(() => {
+    if (textareaRef.current) {
+      setTextareaHeight(`${textareaRef.current.scrollHeight}px`);
+    }
+  }, [description]);
 
   const handleNext = () => {
-    // 페이지 1의 데이터를 페이지 2로 전달 (예: 상태 저장, 컨텍스트 API, 또는 로컬 스토리지 사용)
     navigate("/community/create2", {
       state: { communityName, description },
     });
@@ -19,7 +25,7 @@ const CommunityCreatePage1: React.FC = () => {
   };
 
   return (
-    <div style={styles.container}>
+    <div style={{ ...styles.container, height: `calc(400px + ${textareaHeight} - 120px)` }}>
       <h2 style={styles.heading}>커뮤니티 만들기</h2>
       <form onSubmit={(e) => e.preventDefault()} style={styles.form}>
         <div style={styles.formGroup}>
@@ -44,7 +50,8 @@ const CommunityCreatePage1: React.FC = () => {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             required
-            style={styles.textarea}
+            style={{ ...styles.textarea, height: textareaHeight }}
+            ref={textareaRef}
           />
         </div>
         <div style={styles.buttonGroup}>
@@ -65,7 +72,6 @@ const styles = {
     backgroundColor: "#FFFFFF",
     padding: "20px",
     maxWidth: "600px",
-    height:"400px",
     margin: "50px auto",
     boxShadow: "0 4px 12px rgba(0,0,0,0.15)", // 그림자 효과를 더 부드럽게 변경
     borderRadius: "8px",
@@ -106,9 +112,10 @@ const styles = {
     border: "1px solid #CCC",
     fontSize: "14px",
     minHeight: "120px", // 텍스트 영역의 최소 높이를 조금 더 늘림
+    resize: "none" as "none", // 사용자가 높이를 조정할 수 없도록 설정
     backgroundColor: "#F7F7F7",
     boxSizing: "border-box" as "border-box", // box-sizing 추가
-
+    overflow: "hidden", // 스크롤 숨김
   },
   buttonGroup: {
     display: "flex",

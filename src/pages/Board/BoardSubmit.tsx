@@ -306,9 +306,9 @@ const BoardSubmit = () => {
       <div style={{ display: "flex", width: "100%" }}>
         <div style={{ flex: 2 }}>
           <div style={{ backgroundColor: "#4F657755", minHeight: "100vh" }}>
-            <GlobalBar />
+            {/* <GlobalBar /> */}
             <div style={{ display: "flex", width: "100%" }}>
-              <GlobalSideBar />
+              {/* <GlobalSideBar /> */}
               <div style={{ flex: 2 }}>
                 <div
                   style={{
@@ -434,7 +434,7 @@ const BoardSubmit = () => {
                   </button>
                 </div>
               </div>
-              <RightSideBar />
+              {/* <RightSideBar /> */}
             </div>
           </div>
         </div>

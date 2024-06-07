@@ -198,7 +198,7 @@ const Card = ({
                   <img
                     src={image}
                     alt={`Preview image ${index}`}
-                    style={{ height: "400px", width: "100%" }} // 수정된 부분
+                    style={{ height: "400px", width: "100%", borderRadius: "20px" }} // 수정된 부분
                   />
                 </div>
               ))}

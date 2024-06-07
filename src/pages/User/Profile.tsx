@@ -55,9 +55,9 @@ const Profile = () => {
 
   return (
     <>
-      <GlobalBar />
-      <div style={{ display: "flex", width: "100%" }}>
-        <GlobalSideBar />
+      {/* <GlobalBar /> */}
+      <div style={{ display: "flex", width: "100%", height: "100vh" }}>
+        {/* <GlobalSideBar /> */}
         <div style={{ flex: 2, padding: "20px" }}>
           <div style={styles.buttonContainer}>
             <button
@@ -149,7 +149,7 @@ const Profile = () => {
             </div>
           )}
         </div>
-        <RightSideBar />
+        {/* <RightSideBar /> */}
       </div>
     </>
   );
