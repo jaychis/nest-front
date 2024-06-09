@@ -12,6 +12,7 @@ import { FaGoogle, FaApple, FaComment } from "react-icons/fa";
 import { SiNaver } from "react-icons/si";
 import vLogo from "../../assets/img/v-check.png";
 import xLogo from "../../assets/img/x-check.png";
+import Alert from "../../components/Alert";
 
 interface Props {
   readonly onSwitchView: () => void;
@@ -38,6 +39,8 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
     phone: null,
     nickname: null,
   });
+
+  const [showAlert, setShowAlert] = useState<boolean>(false);
 
   useEffect(() => {
     if (signup.email.length >= 12) {
@@ -122,6 +125,7 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
           const response = res.data.response;
 
           if (res.status === 201 && response) {
+            setShowAlert(true); // 알람 표시
             if (modalIsOpen) modalIsOpen(false);
           }
         })
@@ -148,6 +152,9 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
       }}
     >
+       {showAlert && (
+        <Alert message="회원가입이 완료되었습니다." onClose={() => setShowAlert(false)} type="success" />
+      )}
       <div style={{ textAlign: "center", marginBottom: "20px" }}>
         <h2>회원가입</h2>
       </div>

@@ -1,9 +1,10 @@
-import React, { MouseEventHandler, useState } from "react";
+import React, { MouseEventHandler, useEffect, useState } from "react";
 import { LoginAPI, LoginParams } from "../api/UserApi";
 import { CollectionTypes } from "../../_common/CollectionTypes";
 import { isValidPasswordFormat } from "../../_common/PasswordRegex";
 import { FaGoogle, FaApple, FaComment } from "react-icons/fa";
 import { SiNaver } from "react-icons/si";
+import Alert from "../../components/Alert";
 
 interface Props {
   readonly onSwitchView: () => void;
@@ -16,6 +17,7 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
     password: "",
   });
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [showAlert, setShowAlert] = useState<boolean>(false);
 
   const handleChange = (event: CollectionTypes): void => {
     const { name, value } = event;
@@ -28,7 +30,10 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
 
   const handleSubmit: MouseEventHandler<HTMLButtonElement> = (event) => {
     event.preventDefault();
+    processLogin();
+  };
 
+  const processLogin = () => {
     const isPasswordValid: boolean = isValidPasswordFormat(login.password);
     const isEmailValid: boolean = /\S+@\S+\.\S+/.test(login.email);
     if (!isEmailValid) {
@@ -48,6 +53,8 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
             localStorage.setItem("refresh_token", response.refresh_token);
             localStorage.setItem("id", response.id);
             localStorage.setItem("nickname", response.nickname);
+            setShowAlert(true); // 알람 표시
+            setShowAlert(false); // 알람 숨기기
             window.location.reload();
           }
         })
@@ -62,8 +69,18 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
     }
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      event.preventDefault(); // 기본 동작 방지
+      processLogin();
+    }
+  };
+
   return (
     <div style={styles.container}>
+      {showAlert && (
+        <Alert message="로그인이 완료되었습니다." onClose={() => setShowAlert(false)} type="success" />
+      )}
       <div style={{ textAlign: "center", marginBottom: "20px" }}>
         <h2>로그인</h2>
       </div>
@@ -115,6 +132,7 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
               value: value.target.value,
             })
           }
+          onKeyDown={handleKeyDown}
           required
         />
         <input
@@ -129,6 +147,7 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
           type="password"
           id="password"
           name="password"
+          onKeyDown={handleKeyDown}
           required
         />
         {errorMessage && <div style={styles.errorText}>{errorMessage}</div>}
@@ -153,7 +172,6 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
           display: "flex",
           justifyContent: "center",
           marginTop: "-50px",
-          // marginBottom: "-25px",
         }}
       >
         <button onClick={onSwitchView} style={styles.switchButton}>

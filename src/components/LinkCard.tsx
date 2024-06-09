@@ -171,9 +171,27 @@ const LinkCard = ({
           {/*  }}*/}
           {/*>*/}
           {/*</p>*/}
-          {content.map((video: string) => (
-            <div key={id}>
-              {video && <YouTube videoId={getYouTubeVideoId({ url: video })} />}
+          {content.map((video: string, index: number) => (
+            <div
+              key={index}
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                borderRadius: "20px", // 추가된 부분
+                overflow: "hidden", // 추가된 부분
+              }}
+            >
+              {video && (
+                <YouTube
+                  videoId={getYouTubeVideoId({ url: video })}
+                  opts={{
+                    width: "760px",
+                    height: "400px",
+                    playerVars: { modestbranding: 1 },
+                  }}
+                  style={{ borderRadius: "20px" }} // 추가된 부분
+                />
+              )}
             </div>
           ))}
         </div>
