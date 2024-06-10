@@ -3,9 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import { ReduxProfileAPI } from "../api/UserApi";
 import { ProfileState } from "../../reducers/profileSlice";
-import GlobalSideBar from "../Global/GlobalSideBar";
-import RightSideBar from "../Global/RightSideBar";
-import GlobalBar from "../Global/GlobalBar";
 import { CardType } from "../../_common/CollectionTypes";
 import Card from "../../components/Card";
 import BoardComment, { CommentType } from "../Board/BoardComment";
@@ -55,9 +52,7 @@ const Profile = () => {
 
   return (
     <>
-      {/* <GlobalBar /> */}
       <div style={{ display: "flex", width: "100%", height: "100vh" }}>
-        {/* <GlobalSideBar /> */}
         <div style={{ flex: 2, padding: "20px" }}>
           <div style={styles.buttonContainer}>
             <button
@@ -122,9 +117,7 @@ const Profile = () => {
 
           {activeSection === "PROFILE" && (
             <div style={styles.section}>
-              <h2 style={styles.sectionTitle}>기본 정보 변경</h2>
-              <div style={styles.card}>
-                <h1 style={styles.title}>프로필</h1>
+              <h2 style={styles.sectionTitle}>프로필</h2>
                 <div style={styles.info}>
                   <label style={styles.label}>닉네임:</label>
                   <span style={styles.value}>
@@ -146,10 +139,8 @@ const Profile = () => {
                   </span>
                 </div>
               </div>
-            </div>
           )}
         </div>
-        {/* <RightSideBar /> */}
       </div>
     </>
   );
@@ -181,7 +172,6 @@ const styles = {
     borderLeft: "none",
     borderRadius: "4px",
     cursor: "pointer",
-    // backgroundColor: "#007BFF",
     color: "#007BFF",
     fontWeight: "bold",
     transition: "background-color 0.3s, color 0.3s",
@@ -206,12 +196,6 @@ const styles = {
     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
     maxWidth: "500px",
     width: "100%",
-  },
-  title: {
-    fontSize: "30px",
-    marginBottom: "20px",
-    borderBottom: "2px solid #007BFF",
-    paddingBottom: "10px",
   },
   info: {
     display: "flex",
