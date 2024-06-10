@@ -61,27 +61,6 @@ const GlobalSideBar = () => {
     dispatch(sideButtonSliceActions.setButtonType(button));
   };
 
-  const [isCommunity, setIsCommunity] = useState<CommunitySubmitParams>({
-    name: "",
-    description: "",
-    banner: "",
-    icon: "",
-  });
-  const communitySubmit = async () => {
-    const res = await CommunitySubmitAPI({
-      name: isCommunity.name,
-      description: isCommunity.description,
-      banner: isCommunity.banner,
-      icon: isCommunity.icon,
-    });
-
-    if (!res) return null;
-    const response = res.data.response;
-    console.log("community Submit response : ", response);
-
-    setIsCommunity(response);
-  };
-
   return (
     <div
       style={{
@@ -191,86 +170,6 @@ const GlobalSideBar = () => {
       </div>
       <div style={{ fontWeight: "bold", paddingLeft: "10px" }}>커뮤니티</div>
       <div style={{ padding: "10px 0 20px 10px" }}>
-        {/*<div*/}
-        {/*  style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}*/}
-        {/*>*/}
-        {/*  <span*/}
-        {/*    style={{ fontSize: "24px", cursor: "pointer" }}*/}
-        {/*    onClick={() => handleClick("경제")}*/}
-        {/*  >*/}
-        {/*    📢*/}
-        {/*  </span>*/}
-        {/*  <span*/}
-        {/*    style={{ marginLeft: "8px", cursor: "pointer" }}*/}
-        {/*    onClick={() => handleClick("경제")}*/}
-        {/*  >*/}
-        {/*    j/경제*/}
-        {/*  </span>*/}
-        {/*</div>*/}
-        {/*<div*/}
-        {/*  style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}*/}
-        {/*>*/}
-        {/*  <span*/}
-        {/*    style={{ fontSize: "24px", cursor: "pointer" }}*/}
-        {/*    onClick={() => handleClick("프로그래밍")}*/}
-        {/*  >*/}
-        {/*    🎮*/}
-        {/*  </span>*/}
-        {/*  <span*/}
-        {/*    style={{ marginLeft: "8px", cursor: "pointer" }}*/}
-        {/*    onClick={() => handleClick("프로그래밍")}*/}
-        {/*  >*/}
-        {/*    j/프로그래밍*/}
-        {/*  </span>*/}
-        {/*</div>*/}
-        {/*<div*/}
-        {/*  style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}*/}
-        {/*>*/}
-        {/*  <span*/}
-        {/*    style={{ fontSize: "24px", cursor: "pointer" }}*/}
-        {/*    onClick={() => handleClick("예술")}*/}
-        {/*  >*/}
-        {/*    🎥*/}
-        {/*  </span>*/}
-        {/*  <span*/}
-        {/*    style={{ marginLeft: "8px", cursor: "pointer" }}*/}
-        {/*    onClick={() => handleClick("예술")}*/}
-        {/*  >*/}
-        {/*    j/예술*/}
-        {/*  </span>*/}
-        {/*</div>*/}
-        {/*<div*/}
-        {/*  style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}*/}
-        {/*>*/}
-        {/*  <span*/}
-        {/*    style={{ fontSize: "24px", cursor: "pointer" }}*/}
-        {/*    onClick={() => handleClick("수학")}*/}
-        {/*  >*/}
-        {/*    📚*/}
-        {/*  </span>*/}
-        {/*  <span*/}
-        {/*    style={{ marginLeft: "8px", cursor: "pointer" }}*/}
-        {/*    onClick={() => handleClick("수학")}*/}
-        {/*  >*/}
-        {/*    j/수학*/}
-        {/*  </span>*/}
-        {/*</div>*/}
-        {/*<div*/}
-        {/*  style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}*/}
-        {/*>*/}
-        {/*  <span*/}
-        {/*    style={{ fontSize: "24px, cursor: 'pointer'" }}*/}
-        {/*    onClick={() => handleClick("독서")}*/}
-        {/*  >*/}
-        {/*    🎨*/}
-        {/*  </span>*/}
-        {/*  <span*/}
-        {/*    style={{ marginLeft: "8px", cursor: "pointer" }}*/}
-        {/*    onClick={() => handleClick("독서")}*/}
-        {/*  >*/}
-        {/*    j/독서*/}
-        {/*  </span>*/}
-        {/*</div>*/}
         {communityList.length > 0
           ? communityList.map((community: CommunityType) => {
               return (
@@ -311,14 +210,18 @@ const GlobalSideBar = () => {
           padding: "10px 0",
           backgroundColor:
             isSideHovered === "CREATE_COMMUNITY" ? "#f0f0f0" : "white",
-          borderRadius: "5px",
+          borderRadius: "10px",
           margin: "5px",
         }}
         onMouseEnter={() => setIsSideHovered("CREATE_COMMUNITY")}
         onMouseLeave={() => setIsSideHovered(null)}
         onClick={() => navigate("/community/create1")} // 페이지로 이동하도록 수정
       >
-        <span style={{ fontSize: "24px", marginRight: "8px" }}>➕</span>
+        <span
+          style={{ fontSize: "24px", marginRight: "8px", cursor: "pointer" }}
+        >
+          ➕
+        </span>
         <span style={{ fontSize: "17px", cursor: "pointer" }}>
           커뮤니티 만들기
         </span>

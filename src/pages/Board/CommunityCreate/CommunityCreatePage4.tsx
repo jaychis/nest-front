@@ -1,13 +1,38 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useCommunity } from "../../../contexts/CommunityContext";
-
+import {
+  CommunitySubmitAPI,
+  CommunitySubmitParams,
+} from "../../api/CommunityApi";
 
 const CommunityCreatePage4: React.FC = () => {
   const navigate = useNavigate();
   const { communityName, description, banner, icon, topics } = useCommunity();
-  const [visibility, setVisibility] = useState<"public" | "restricted" | "private">("public");
-  
+  const [visibility, setVisibility] = useState<
+    "public" | "restricted" | "private"
+  >("public");
+
+  const [isCommunity, setIsCommunity] = useState<CommunitySubmitParams>({
+    name: "",
+    description: "",
+    banner: "",
+    icon: "",
+  });
+  const communitySubmit = async (): Promise<void> => {
+    const res = await CommunitySubmitAPI({
+      name: isCommunity.name,
+      description: isCommunity.description,
+      banner: isCommunity.banner,
+      icon: isCommunity.icon,
+    });
+
+    if (!res) return;
+    const response = res.data.response;
+    console.log("community Submit response : ", response);
+
+    setIsCommunity(response);
+  };
   const handleSubmit = () => {
     // 데이터 확인을 위해 콘솔 출력
     console.log("Community Data:", {
@@ -23,7 +48,6 @@ const CommunityCreatePage4: React.FC = () => {
     // API 호출이 성공적으로 완료된 후, 메인 페이지로 이동합니다.
     navigate("/");
   };
-
 
   const handleBack = () => {
     navigate("/community/create3");
@@ -73,10 +97,18 @@ const CommunityCreatePage4: React.FC = () => {
           </label>
         </div>
         <div style={styles.buttonGroup}>
-          <button type="button" onClick={handleBack} style={styles.cancelButton}>
+          <button
+            type="button"
+            onClick={handleBack}
+            style={styles.cancelButton}
+          >
             이전
           </button>
-          <button type="button" onClick={handleSubmit} style={styles.nextButton}>
+          <button
+            type="button"
+            onClick={handleSubmit}
+            style={styles.nextButton}
+          >
             완료
           </button>
         </div>
@@ -90,7 +122,7 @@ const styles = {
     backgroundColor: "#FFFFFF",
     padding: "20px",
     maxWidth: "600px",
-    height:"400px",
+    height: "400px",
     margin: "50px auto",
     boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
     borderRadius: "8px",
