@@ -3,15 +3,7 @@ export interface CollectionTypes {
   readonly value: string;
 }
 
-export type MainListTypes =
-  | "HOME"
-  | "POPULAR"
-  | "ALL"
-  | "경제"
-  | "프로그래밍"
-  | "예술"
-  | "수학"
-  | "독서";
+export type MainListTypes = "HOME" | "POPULAR" | "ALL" | string;
 
 export type ReactionStateTypes = "LIKE" | "DISLIKE" | null;
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { MainListTypes } from "../../_common/CollectionTypes";
@@ -10,6 +10,12 @@ import {
   // popularButton,
   sideButtonSliceActions,
 } from "../../reducers/mainListTypeSlice";
+import {
+  CommunityListAPI,
+  CommunitySubmitAPI,
+  CommunitySubmitParams,
+} from "../api/CommunityApi";
+import logo from "../../assets/img/panda_logo.png";
 
 const GlobalSideBar = () => {
   const navigate = useNavigate();
@@ -22,20 +28,57 @@ const GlobalSideBar = () => {
   // CREATE_COMMUNITY 만들고 나중에 다시 변경
   const [selectedButton, setSelectedButton] = useState<MainListTypes>("HOME");
 
+  type CommunityType = {
+    readonly name: string;
+    readonly description: string;
+    readonly banner: string | null;
+    readonly icon: string | null;
+  };
+  const [communityList, setCommunityList] = useState<CommunityType[]>([]);
+  useEffect(() => {
+    console.log("CommunityListAPI start");
+    CommunityListAPI({ take: 10, page: 1 })
+      .then((res) => {
+        if (!res) return null;
+        const response = res.data.response.current_list;
+
+        console.log("response : ", response);
+        setCommunityList(response);
+      })
+      .catch((err) => console.log("CommunityListAPI error : ", err));
+  }, []);
   const handleClick = (button: MainListTypes) => {
     setSelectedButton(button);
 
-    if (button === "HOME") dispatch(sideButtonSliceActions.homeButton());
-    if (button === "POPULAR") dispatch(sideButtonSliceActions.popularButton());
-    if (button === "ALL") dispatch(sideButtonSliceActions.allButton());
-    if (button === "경제") dispatch(sideButtonSliceActions.economicsButton());
-    if (button === "프로그래밍")
-      dispatch(sideButtonSliceActions.programmingButton());
-    if (button === "예술") dispatch(sideButtonSliceActions.artButton());
-    if (button === "수학") dispatch(sideButtonSliceActions.mathematicsButton());
-    if (button === "독서") dispatch(sideButtonSliceActions.readingButton());
+    if (button === "HOME")
+      dispatch(sideButtonSliceActions.setButtonType("HOME"));
+    if (button === "POPULAR")
+      dispatch(sideButtonSliceActions.setButtonType("POPULAR"));
+    if (button === "ALL") dispatch(sideButtonSliceActions.setButtonType("ALL"));
+  };
+  const handleCommunityClick = (button: string) => {
+    dispatch(sideButtonSliceActions.setButtonType(button));
+  };
 
-    navigate("/");
+  const [isCommunity, setIsCommunity] = useState<CommunitySubmitParams>({
+    name: "",
+    description: "",
+    banner: "",
+    icon: "",
+  });
+  const communitySubmit = async () => {
+    const res = await CommunitySubmitAPI({
+      name: isCommunity.name,
+      description: isCommunity.description,
+      banner: isCommunity.banner,
+      icon: isCommunity.icon,
+    });
+
+    if (!res) return null;
+    const response = res.data.response;
+    console.log("community Submit response : ", response);
+
+    setIsCommunity(response);
   };
 
   return (
@@ -147,86 +190,118 @@ const GlobalSideBar = () => {
       </div>
       <div style={{ fontWeight: "bold", paddingLeft: "10px" }}>커뮤니티</div>
       <div style={{ padding: "10px 0 20px 10px" }}>
-        <div
-          style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}
-        >
-          <span
-            style={{ fontSize: "24px", cursor: "pointer" }}
-            onClick={() => handleClick("경제")}
-          >
-            📢
-          </span>
-          <span
-            style={{ marginLeft: "8px", cursor: "pointer" }}
-            onClick={() => handleClick("경제")}
-          >
-            j/경제
-          </span>
-        </div>
-        <div
-          style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}
-        >
-          <span
-            style={{ fontSize: "24px", cursor: "pointer" }}
-            onClick={() => handleClick("프로그래밍")}
-          >
-            🎮
-          </span>
-          <span
-            style={{ marginLeft: "8px", cursor: "pointer" }}
-            onClick={() => handleClick("프로그래밍")}
-          >
-            j/프로그래밍
-          </span>
-        </div>
-        <div
-          style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}
-        >
-          <span
-            style={{ fontSize: "24px", cursor: "pointer" }}
-            onClick={() => handleClick("예술")}
-          >
-            🎥
-          </span>
-          <span
-            style={{ marginLeft: "8px", cursor: "pointer" }}
-            onClick={() => handleClick("예술")}
-          >
-            j/예술
-          </span>
-        </div>
-        <div
-          style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}
-        >
-          <span
-            style={{ fontSize: "24px", cursor: "pointer" }}
-            onClick={() => handleClick("수학")}
-          >
-            📚
-          </span>
-          <span
-            style={{ marginLeft: "8px", cursor: "pointer" }}
-            onClick={() => handleClick("수학")}
-          >
-            j/수학
-          </span>
-        </div>
-        <div
-          style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}
-        >
-          <span
-            style={{ fontSize: "24px, cursor: 'pointer'" }}
-            onClick={() => handleClick("독서")}
-          >
-            🎨
-          </span>
-          <span
-            style={{ marginLeft: "8px", cursor: "pointer" }}
-            onClick={() => handleClick("독서")}
-          >
-            j/독서
-          </span>
-        </div>
+        {/*<div*/}
+        {/*  style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}*/}
+        {/*>*/}
+        {/*  <span*/}
+        {/*    style={{ fontSize: "24px", cursor: "pointer" }}*/}
+        {/*    onClick={() => handleClick("경제")}*/}
+        {/*  >*/}
+        {/*    📢*/}
+        {/*  </span>*/}
+        {/*  <span*/}
+        {/*    style={{ marginLeft: "8px", cursor: "pointer" }}*/}
+        {/*    onClick={() => handleClick("경제")}*/}
+        {/*  >*/}
+        {/*    j/경제*/}
+        {/*  </span>*/}
+        {/*</div>*/}
+        {/*<div*/}
+        {/*  style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}*/}
+        {/*>*/}
+        {/*  <span*/}
+        {/*    style={{ fontSize: "24px", cursor: "pointer" }}*/}
+        {/*    onClick={() => handleClick("프로그래밍")}*/}
+        {/*  >*/}
+        {/*    🎮*/}
+        {/*  </span>*/}
+        {/*  <span*/}
+        {/*    style={{ marginLeft: "8px", cursor: "pointer" }}*/}
+        {/*    onClick={() => handleClick("프로그래밍")}*/}
+        {/*  >*/}
+        {/*    j/프로그래밍*/}
+        {/*  </span>*/}
+        {/*</div>*/}
+        {/*<div*/}
+        {/*  style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}*/}
+        {/*>*/}
+        {/*  <span*/}
+        {/*    style={{ fontSize: "24px", cursor: "pointer" }}*/}
+        {/*    onClick={() => handleClick("예술")}*/}
+        {/*  >*/}
+        {/*    🎥*/}
+        {/*  </span>*/}
+        {/*  <span*/}
+        {/*    style={{ marginLeft: "8px", cursor: "pointer" }}*/}
+        {/*    onClick={() => handleClick("예술")}*/}
+        {/*  >*/}
+        {/*    j/예술*/}
+        {/*  </span>*/}
+        {/*</div>*/}
+        {/*<div*/}
+        {/*  style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}*/}
+        {/*>*/}
+        {/*  <span*/}
+        {/*    style={{ fontSize: "24px", cursor: "pointer" }}*/}
+        {/*    onClick={() => handleClick("수학")}*/}
+        {/*  >*/}
+        {/*    📚*/}
+        {/*  </span>*/}
+        {/*  <span*/}
+        {/*    style={{ marginLeft: "8px", cursor: "pointer" }}*/}
+        {/*    onClick={() => handleClick("수학")}*/}
+        {/*  >*/}
+        {/*    j/수학*/}
+        {/*  </span>*/}
+        {/*</div>*/}
+        {/*<div*/}
+        {/*  style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}*/}
+        {/*>*/}
+        {/*  <span*/}
+        {/*    style={{ fontSize: "24px, cursor: 'pointer'" }}*/}
+        {/*    onClick={() => handleClick("독서")}*/}
+        {/*  >*/}
+        {/*    🎨*/}
+        {/*  </span>*/}
+        {/*  <span*/}
+        {/*    style={{ marginLeft: "8px", cursor: "pointer" }}*/}
+        {/*    onClick={() => handleClick("독서")}*/}
+        {/*  >*/}
+        {/*    j/독서*/}
+        {/*  </span>*/}
+        {/*</div>*/}
+        {communityList.length > 0
+          ? communityList.map((community: CommunityType) => {
+              return (
+                <>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    <img
+                      src={logo}
+                      alt={"community icon"}
+                      style={{
+                        width: "25px",
+                        height: "25px",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => handleCommunityClick(community.name)}
+                    />
+                    <span
+                      style={{ marginLeft: "8px", cursor: "pointer" }}
+                      onClick={() => handleCommunityClick(community.name)}
+                    >
+                      j/{community.name}
+                    </span>
+                  </div>
+                </>
+              );
+            })
+          : []}
       </div>
       <div
         style={{
