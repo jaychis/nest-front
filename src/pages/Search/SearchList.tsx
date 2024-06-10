@@ -23,6 +23,7 @@ const SearchList = () => {
   const [params, setParams] = useSearchParams();
   const [searchType, setSearchType] = useState<SearchListTypes>("BOARDS");
   const QUERY: string = params.get("query") as string;
+
   useEffect(() => {
     if (searchType === "BOARDS") {
       GetSearchBoardsAPI({ query: QUERY })
@@ -89,7 +90,8 @@ const SearchList = () => {
           console.error("SearchList GetSearchPeopleAPI error : ", err),
         );
     }
-  }, [searchType]);
+  }, [searchType, QUERY]); // QUERY를 의존성 배열에 추가하여 쿼리 변경 시 재실행
+  
   useEffect(() => console.log("searchType : ", searchType), [searchType]);
 
   const NavBarStateChange = async ({

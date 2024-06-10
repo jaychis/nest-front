@@ -1,63 +1,93 @@
-import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // useNavigate를 import합니다.
 import { useCommunity } from "../../../contexts/CommunityContext";
 
 const CommunityCreatePage3: React.FC = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // useNavigate를 사용하여 navigate 함수를 정의합니다.
   const { communityName, description, banner, icon, topics, setTopics } = useCommunity();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [suggestions, setSuggestions] = useState<string[]>([]);
 
-
-  const handleAddTopic = () => {
-    if (topics.length < 3) {
-      setTopics([...topics, ""]);
+  const handleAddTopic = (topic: string) => {
+    if (topics.length < 3 && !topics.includes(topic)) {
+      setTopics([...topics, topic]);
+      setSearchTerm("");
     }
   };
 
-  const handleChangeTopic = (index: number, value: string) => {
-    const newTopics = [...topics];
-    newTopics[index] = value;
+  const handleRemoveTopic = (index: number) => {
+    const newTopics = topics.filter((_, i) => i !== index);
     setTopics(newTopics);
   };
 
-  const handleNext = () => {
-    navigate("/community/create4", {
-      state: { communityName, description, banner, icon, topics },
-    });
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
   };
 
-  const handleBack = () => {
-    navigate("/community/create2");
-  };
+  useEffect(() => {
+    if (searchTerm) {
+      // 실제 검색 API 호출 또는 추천 토픽 데이터를 사용합니다.
+      const allTopics = [
+        "축구", "롤", "주식", "부동산", "음악", "영화", "독서", "요리", "여행", "헬스",
+        "개발", "디자인", "패션", "사진", "게임", "경제", "정치", "역사", "과학", "교육"
+      ];
+      const filteredTopics = allTopics.filter(topic =>
+        topic.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setSuggestions(filteredTopics);
+    } else {
+      setSuggestions([]);
+    }
+  }, [searchTerm]);
 
   return (
     <div style={styles.container}>
       <h2 style={styles.heading}>토픽 추가</h2>
       <form onSubmit={(e) => e.preventDefault()} style={styles.form}>
-        {topics.map((topic, index) => (
-          <div key={index} style={styles.formGroup}>
-            <label htmlFor={`topic-${index}`} style={styles.label}>
-              토픽 {index + 1}
-            </label>
-            <input
-              type="text"
-              id={`topic-${index}`}
-              value={topic}
-              onChange={(e) => handleChangeTopic(index, e.target.value)}
-              required
-              style={styles.input}
-            />
-          </div>
-        ))}
-        {topics.length < 3 && (
-          <button type="button" onClick={handleAddTopic} style={styles.addButton}>
-            토픽 추가
-          </button>
-        )}
+        <div style={styles.formGroup}>
+          <label htmlFor="topicSearch" style={styles.label}>
+            토픽 검색
+          </label>
+          <input
+            type="text"
+            id="topicSearch"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            style={styles.input}
+          />
+          {suggestions.length > 0 && (
+            <ul style={styles.suggestionsList}>
+              {suggestions.map((suggestion, index) => (
+                <li
+                  key={index}
+                  onClick={() => handleAddTopic(suggestion)}
+                  style={styles.suggestionItem}
+                >
+                  {suggestion}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+        <div style={styles.selectedTopics}>
+          {topics.map((topic, index) => (
+            <div key={index} style={styles.topicItem}>
+              <span style={styles.topicText}>{topic}</span>
+              <button
+                type="button"
+                onClick={() => handleRemoveTopic(index)}
+                style={styles.removeButton}
+              >
+                &times;
+              </button>
+            </div>
+          ))}
+        </div>
         <div style={styles.buttonGroup}>
-          <button type="button" onClick={handleBack} style={styles.cancelButton}>
+          <button type="button" onClick={() => navigate("/community/create2")} style={styles.cancelButton}>
             이전
           </button>
-          <button type="button" onClick={handleNext} style={styles.nextButton}>
+          <button type="button" onClick={() => navigate("/community/create4")} style={styles.nextButton}>
             다음
           </button>
         </div>
@@ -71,7 +101,7 @@ const styles = {
     backgroundColor: "#FFFFFF",
     padding: "20px",
     maxWidth: "600px",
-    height:"400px",
+    height: "auto",
     margin: "50px auto",
     boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
     borderRadius: "8px",
@@ -103,25 +133,46 @@ const styles = {
     border: "1px solid #CCC",
     fontSize: "14px",
     backgroundColor: "#F7F7F7",
-    boxSizing: "border-box" as "border-box", // box-sizing 추가
-
+    boxSizing: "border-box" as "border-box",
   },
-  addButton: {
-    margin: "10px 0",
-    padding: "12px 20px",
-    borderRadius: "20px",
-    border: "none",
-    backgroundColor: "#0079D3",
-    color: "white",
+  suggestionsList: {
+    listStyleType: "none" as "none",
+    padding: 0,
+    marginTop: "10px",
+    border: "1px solid #CCC",
+    borderRadius: "8px",
+    backgroundColor: "#FFF",
+  },
+  suggestionItem: {
+    padding: "10px",
     cursor: "pointer",
-    fontSize: "16px",
-    fontWeight: "bold" as "bold",
-    transition: "background-color 0.3s ease",
+  },
+  selectedTopics: {
+    display: "flex",
+    flexWrap: "wrap" as "wrap",
+    gap: "10px",
+    marginBottom: "20px",
+  },
+  topicItem: {
+    display: "flex",
+    alignItems: "center",
+    backgroundColor: "#EDEDED",
+    borderRadius: "20px",
+    padding: "10px 15px",
+  },
+  topicText: {
+    marginRight: "10px",
+    fontSize: "14px",
+  },
+  removeButton: {
+    background: "none",
+    border: "none",
+    fontSize: "14px",
+    cursor: "pointer",
   },
   buttonGroup: {
     display: "flex",
     justifyContent: "space-between",
-    marginTop: "20px",
   },
   cancelButton: {
     padding: "12px 20px",
