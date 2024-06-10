@@ -10,12 +10,13 @@ import {
   // popularButton,
   sideButtonSliceActions,
 } from "../../reducers/mainListTypeSlice";
+
+import logo from "../../assets/img/panda_logo.png";
 import {
   CommunityListAPI,
   CommunitySubmitAPI,
   CommunitySubmitParams,
 } from "../api/CommunityApi";
-import logo from "../../assets/img/panda_logo.png";
 
 const GlobalSideBar = () => {
   const navigate = useNavigate();
