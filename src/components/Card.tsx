@@ -198,7 +198,7 @@ const Card = ({
                   <img
                     src={image}
                     alt={`Preview image ${index}`}
-                    style={{ height: "400px", width: "100%" }} // 수정된 부분
+                    style={{ height: "400px", width: "100%", borderRadius: "20px" }} // 수정된 부분
                   />
                 </div>
               ))}
@@ -215,14 +215,19 @@ const Card = ({
                   overflow: "hidden", // 추가된 부분
                 }}
               >
-                  {video && (
-                    <YouTube
-                      videoId={getYouTubeVideoId({ url: video })}
-                      opts={{ width: "760px", height: "400px" }} // 수정된 부분
-                    />
-                  )}
-                </div>
-              ))}
+              {video && (
+                <YouTube
+                  videoId={getYouTubeVideoId({ url: video })}
+                  opts={{
+                    width: "760px",
+                    height: "400px",
+                    playerVars: { modestbranding: 1 },
+                  }}
+                  style={{ borderRadius: "20px" }} // 추가된 부분
+                />
+              )}
+              </div>
+            ))}
             </>
           )}
         </div>
@@ -234,6 +239,7 @@ const Card = ({
           alignItems: "flex-start",
           width: "100%", // 수정된 부분
           maxWidth: "800px", // 수정된 부분
+          
         }}
       >
         <div

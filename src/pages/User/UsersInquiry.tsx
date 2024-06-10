@@ -68,9 +68,7 @@ const UsersInquiry = () => {
 
   return (
     <>
-      <GlobalBar />
       <div style={{ display: "flex" }}>
-        <GlobalSideBar />
         <MainContainer>
           <CardsContainer>
             {list.length > 0 ? (

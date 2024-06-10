@@ -46,7 +46,14 @@ function App() {
               }
             />
             {/*게시판*/}
-            <Route path="/boards/submit" element={<BoardSubmit />} />
+            <Route 
+              path="/boards/submit" 
+              element={
+              <Layout>
+                <BoardSubmit />
+              </Layout>
+              } 
+            />
             <Route
               path="/boards/read"
               element={
@@ -59,18 +66,18 @@ function App() {
             <Route
               path="/users/profile"
               element={
-                <>
+                <Layout>
                   <Profile />
-                </>
+                </Layout>
               }
             />
 
             <Route
               path="/users/inquiry"
               element={
-                <>
+                <Layout>
                   <UsersInquiry />
-                </>
+                </Layout>
               }
             />
             {/* 커뮤니티 만들기*/}
