@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // useNavigate를 import합니다.
 import { useCommunity } from "../../../contexts/CommunityContext";
+import { TagListAPI } from "../../api/TagApi";
 
 const CommunityCreatePage3: React.FC = () => {
   const navigate = useNavigate(); // useNavigate를 사용하여 navigate 함수를 정의합니다.
@@ -33,32 +34,26 @@ const CommunityCreatePage3: React.FC = () => {
   useEffect(() => {
     if (searchTerm) {
       // 실제 검색 API 호출 또는 추천 토픽 데이터를 사용합니다.
-      const allTopics = [
-        "#축구",
-        "#롤",
-        "#주식",
-        "#부동산",
-        "#음악",
-        "#영화",
-        "#독서",
-        "#요리",
-        "#여행",
-        "#헬스",
-        "#개발",
-        "#디자인",
-        "#패션",
-        "#사진",
-        "#게임",
-        "#경제",
-        "#정치",
-        "#역사",
-        "#과학",
-        "#교육",
-      ];
-      const filteredTopics = allTopics.filter((topic) =>
-        topic.toLowerCase().includes(searchTerm.toLowerCase()),
-      );
-      setSuggestions(filteredTopics);
+      TagListAPI()
+        .then((res) => {
+          if (!res) return;
+          interface tagListReturnType {
+            readonly id: string;
+            readonly name: string;
+          }
+          const response: tagListReturnType[] = res.data.response;
+
+          const tagNameList: string[] = response.map(
+            (el: tagListReturnType) => el.name,
+          );
+          console.log("tagNameList : ", tagNameList);
+
+          const filteredTopics = tagNameList.filter((topic: string) =>
+            topic.toLowerCase().includes(searchTerm.toLowerCase()),
+          );
+          setSuggestions(filteredTopics);
+        })
+        .catch((err) => console.log("TagListAPI error : ", err));
     } else {
       setSuggestions([]);
     }
