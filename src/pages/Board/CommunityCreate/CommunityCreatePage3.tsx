@@ -4,16 +4,22 @@ import { useCommunity } from "../../../contexts/CommunityContext";
 
 const CommunityCreatePage3: React.FC = () => {
   const navigate = useNavigate(); // useNavigate를 사용하여 navigate 함수를 정의합니다.
-  const { communityName, description, banner, icon, topics, setTopics } = useCommunity();
+  const { communityName, description, banner, icon, topics, setTopics } =
+    useCommunity();
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
   const handleAddTopic = (topic: string) => {
+    console.log("topic : ", topic);
     if (topics.length < 3 && !topics.includes(topic)) {
       setTopics([...topics, topic]);
       setSearchTerm("");
     }
   };
+  useEffect(() => {
+    console.log("topics : ", topics);
+    console.log("searchTerm : ", searchTerm);
+  }, [topics, searchTerm]);
 
   const handleRemoveTopic = (index: number) => {
     const newTopics = topics.filter((_, i) => i !== index);
@@ -28,11 +34,29 @@ const CommunityCreatePage3: React.FC = () => {
     if (searchTerm) {
       // 실제 검색 API 호출 또는 추천 토픽 데이터를 사용합니다.
       const allTopics = [
-        "축구", "롤", "주식", "부동산", "음악", "영화", "독서", "요리", "여행", "헬스",
-        "개발", "디자인", "패션", "사진", "게임", "경제", "정치", "역사", "과학", "교육"
+        "#축구",
+        "#롤",
+        "#주식",
+        "#부동산",
+        "#음악",
+        "#영화",
+        "#독서",
+        "#요리",
+        "#여행",
+        "#헬스",
+        "#개발",
+        "#디자인",
+        "#패션",
+        "#사진",
+        "#게임",
+        "#경제",
+        "#정치",
+        "#역사",
+        "#과학",
+        "#교육",
       ];
-      const filteredTopics = allTopics.filter(topic =>
-        topic.toLowerCase().includes(searchTerm.toLowerCase())
+      const filteredTopics = allTopics.filter((topic) =>
+        topic.toLowerCase().includes(searchTerm.toLowerCase()),
       );
       setSuggestions(filteredTopics);
     } else {
@@ -84,10 +108,18 @@ const CommunityCreatePage3: React.FC = () => {
           ))}
         </div>
         <div style={styles.buttonGroup}>
-          <button type="button" onClick={() => navigate("/community/create2")} style={styles.cancelButton}>
+          <button
+            type="button"
+            onClick={() => navigate("/community/create2")}
+            style={styles.cancelButton}
+          >
             이전
           </button>
-          <button type="button" onClick={() => navigate("/community/create4")} style={styles.nextButton}>
+          <button
+            type="button"
+            onClick={() => navigate("/community/create4")}
+            style={styles.nextButton}
+          >
             다음
           </button>
         </div>

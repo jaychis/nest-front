@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCommunity } from "../../../contexts/CommunityContext";
 import { CommunitySubmitAPI } from "../../api/CommunityApi";
@@ -10,6 +10,9 @@ const CommunityCreatePage4: React.FC = () => {
   const { communityName, description, banner, icon, topics } = useCommunity();
   const [visibility, setVisibility] =
     useState<CommunityVisibilityType>("PUBLIC");
+  useEffect(() => {
+    console.log("topics : ", topics);
+  }, [topics]);
 
   const [isCommunity, setIsCommunity] = useState<{
     readonly name: string;
@@ -40,7 +43,7 @@ const CommunityCreatePage4: React.FC = () => {
     console.log("community Submit coResponse : ", coResponse);
 
     const tagResponse = [];
-    if (topics.length > 1) {
+    if (topics.length > 0) {
       const tagRes = await BoardTagsSubmitAPI({
         tags: topics,
         boardId: coResponse.id,
@@ -50,12 +53,12 @@ const CommunityCreatePage4: React.FC = () => {
       tagResponse.push(tagRes.data.response);
     }
     console.log("tagResponse : ", tagResponse);
-    setIsCommunity({
-      ...coResponse,
-      topic: tagResponse,
-    });
-
-    navigate("/");
+    // setIsCommunity({
+    //   ...coResponse,
+    //   topic: tagResponse,
+    // });
+    //
+    // navigate("/");
   };
 
   const handleBack = () => {
