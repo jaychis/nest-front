@@ -10,9 +10,14 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { BoardType } from "../../_common/CollectionTypes";
-import RightSideBar from "../Global/RightSideBar";
-import GlobalBar from "../Global/GlobalBar";
-import GlobalSideBar from "../Global/GlobalSideBar";
+import {
+  AwsImageUploadFunctionality,
+  AwsImageUploadFunctionalityReturnType,
+  ImageLocalPreviewUrls,
+  ImageLocalPreviewUrlsDelete,
+  ImageLocalPreviewUrlsDeleteType,
+  ImageLocalPreviewUrlsReturnType,
+} from "../../_common/ImageUploadFuntionality";
 
 const mdParser = new MarkdownIt();
 interface EditorChange {
@@ -95,29 +100,20 @@ const BoardSubmit = () => {
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ): Promise<void> => {
-    if (event.target.files) {
-      const files: File[] = Array.from(event.target.files);
-
-      if (files.length === 0) {
-        alert("이미지를 선택해주세요.");
-        return;
-      }
-
-      const previewUrls: string[] = files.map((file) =>
-        URL.createObjectURL(file),
-      );
-      setPreviewUrls(previewUrls);
-      setFileList(files);
-    }
+    const urls: ImageLocalPreviewUrlsReturnType = await ImageLocalPreviewUrls({
+      event,
+    });
+    if (!urls) return;
+    setPreviewUrls(urls.previewUrls);
+    setFileList(urls.fileList);
   };
 
   const imageUrlListDelete = async () => {
-    if (previewUrls.length === 0) {
-      alert("삭제할 이미지가 없습니다.");
-      return;
-    }
+    const res: ImageLocalPreviewUrlsDeleteType =
+      await ImageLocalPreviewUrlsDelete({ urls: previewUrls });
+    if (!res) return;
 
-    setPreviewUrls([]);
+    setPreviewUrls(res);
   };
 
   // link
@@ -157,64 +153,14 @@ const BoardSubmit = () => {
       }
 
       if (inputType === "MEDIA") {
-        const files: File[] = Array.from(fileList);
+        const res: AwsImageUploadFunctionalityReturnType =
+          await AwsImageUploadFunctionality({ fileList });
+        if (!res) return;
 
-        const uploadImageUrlList = files.map(async (file: File) => {
-          try {
-            const sanitizedFileName: string = encodeURIComponent(file.name);
-            const key = `uploads/${new Date().toISOString()}_${sanitizedFileName}`;
-            const expires = 60;
-
-            const res = await getPresignedUrlAPI({ key, expires });
-            console.log("Presigned URL API Response : ", res);
-
-            if (res.data && res.data.response && res.data.response.url) {
-              const presignedUrl = res.data.response.url;
-              console.log("presignedUrl: ", presignedUrl);
-
-              const uploadResult = await AWSImageRegistAPI({
-                url: presignedUrl,
-                file,
-              });
-              console.log("uploadResult : ", uploadResult);
-
-              if (uploadResult.ok) {
-                const imageUrl = presignedUrl.split("?")[0];
-                console.log("imageUrl : ", imageUrl);
-                return imageUrl;
-              } else {
-                const errorText = await uploadResult.clone().text();
-                console.error(
-                  "Failed to upload file: ",
-                  uploadResult.status,
-                  uploadResult.statusText,
-                  errorText,
-                );
-              }
-            } else {
-              console.error("Failed to get presigned URL");
-            }
-          } catch (error) {
-            console.error("Error during file upload: ", error);
-          }
-        });
-        console.log("uploadImageUrlList : ", uploadImageUrlList);
-
-        try {
-          const imageUrls: string[] = await Promise.all(uploadImageUrlList);
-
-          for (let i: number = 0; i < imageUrls.length; ++i)
-            if (!imageUrls[i]) {
-              console.log("imageUrls 값이 없음");
-              return;
-            }
-          paramObj.content = imageUrls;
-          paramObj.title = mediaTitle;
-          paramObj.type = "MEDIA";
-          console.log("midia paramObj : ", paramObj);
-        } catch (e: any) {
-          console.log("Error during uploading all files : ", e);
-        }
+        paramObj.content = res.imageUrls;
+        paramObj.title = mediaTitle;
+        paramObj.type = "MEDIA";
+        console.log("midia paramObj : ", paramObj);
       }
 
       if (inputType === "LINK") {
