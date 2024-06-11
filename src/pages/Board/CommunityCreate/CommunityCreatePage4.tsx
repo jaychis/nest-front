@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useCommunity } from "../../../contexts/CommunityContext";
 import { CommunitySubmitAPI } from "../../api/CommunityApi";
 import { CommunityVisibilityType } from "../../../_common/CollectionTypes";
-import { BoardTagsSubmitAPI } from "../../api/BoardTagsAPI";
+import { CommunityTagsSubmitAPI } from "../../api/CommunityTagsAPI";
 
 const CommunityCreatePage4: React.FC = () => {
   const navigate = useNavigate();
@@ -44,21 +44,21 @@ const CommunityCreatePage4: React.FC = () => {
 
     const tagResponse = [];
     if (topics.length > 0) {
-      const tagRes = await BoardTagsSubmitAPI({
+      const tagRes = await CommunityTagsSubmitAPI({
         tags: topics,
-        boardId: coResponse.id,
+        communityId: coResponse.id,
       });
       if (!tagRes) return;
       console.log("tagRes : ", tagRes);
       tagResponse.push(tagRes.data.response);
     }
     console.log("tagResponse : ", tagResponse);
-    // setIsCommunity({
-    //   ...coResponse,
-    //   topic: tagResponse,
-    // });
-    //
-    // navigate("/");
+    setIsCommunity({
+      ...coResponse,
+      topic: tagResponse,
+    });
+
+    navigate("/");
   };
 
   const handleBack = () => {
