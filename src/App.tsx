@@ -21,13 +21,26 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <GlobalBar />
-      <div style={{ display: "flex" }}>
+      <div style={styles.layoutContainer}>
         <GlobalSideBar />
-        <div style={{ flex: 1 }}>{children}</div>
+        <div style={styles.mainContent}>{children}</div>
         <RightSideBar />
       </div>
     </>
   );
+};
+
+const styles = {
+  layoutContainer: {
+    display: "flex",
+    width: "100%",
+    height: "100vh",
+  },
+  mainContent: {
+    flex: 1,
+    overflowY: "auto" as "auto",
+    padding: "20px",
+  },
 };
 
 function App() {
