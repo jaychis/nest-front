@@ -40,3 +40,5 @@ export interface BoardProps {
   readonly createdAt: Date;
   readonly type: BoardType;
 }
+
+export type CommunityVisibilityType = "PUBLIC" | "RESTRICTED" | "PRIVATE";

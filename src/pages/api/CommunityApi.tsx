@@ -1,12 +1,15 @@
 import { client } from "./Client";
 import { ErrorHandling } from "../../_common/ErrorHandling";
+import { CommunityVisibilityType } from "../../_common/CollectionTypes";
 
 const COMMUNITY_URL: string = "communities";
+
 export interface CommunitySubmitParams {
   readonly name: string;
   readonly description: string;
-  readonly banner?: string;
-  readonly icon?: string;
+  readonly visibility: CommunityVisibilityType;
+  readonly banner?: string | null;
+  readonly icon?: string | null;
 }
 
 export const CommunitySubmitAPI = async (params: CommunitySubmitParams) => {

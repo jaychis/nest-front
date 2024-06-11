@@ -1,51 +1,60 @@
 import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useCommunity } from "../../../contexts/CommunityContext";
-import {
-  CommunitySubmitAPI,
-  CommunitySubmitParams,
-} from "../../api/CommunityApi";
+import { CommunitySubmitAPI } from "../../api/CommunityApi";
+import { CommunityVisibilityType } from "../../../_common/CollectionTypes";
+import { BoardTagsSubmitAPI } from "../../api/BoardTagsAPI";
 
 const CommunityCreatePage4: React.FC = () => {
   const navigate = useNavigate();
   const { communityName, description, banner, icon, topics } = useCommunity();
-  const [visibility, setVisibility] = useState<
-    "public" | "restricted" | "private"
-  >("public");
+  const [visibility, setVisibility] =
+    useState<CommunityVisibilityType>("PUBLIC");
 
-  const [isCommunity, setIsCommunity] = useState<CommunitySubmitParams>({
-    name: "",
-    description: "",
-    banner: "",
-    icon: "",
+  const [isCommunity, setIsCommunity] = useState<{
+    readonly name: string;
+    readonly description: string;
+    readonly banner?: string | null;
+    readonly icon?: string | null;
+    readonly visibility: CommunityVisibilityType;
+    readonly topics: string[];
+  }>({
+    name: communityName,
+    description: description,
+    banner: banner,
+    icon: icon,
+    visibility: "PUBLIC",
+    topics: [],
   });
-  const communitySubmit = async (): Promise<void> => {
-    const res = await CommunitySubmitAPI({
+  const handleSubmit = async (): Promise<void> => {
+    const coRes = await CommunitySubmitAPI({
       name: isCommunity.name,
       description: isCommunity.description,
       banner: isCommunity.banner,
       icon: isCommunity.icon,
+      visibility: isCommunity.visibility,
     });
 
-    if (!res) return;
-    const response = res.data.response;
-    console.log("community Submit response : ", response);
+    if (!coRes) return;
+    const coResponse = await coRes.data.response;
+    console.log("community Submit coResponse : ", coResponse);
 
-    setIsCommunity(response);
-  };
-  const handleSubmit = () => {
-    // 데이터 확인을 위해 콘솔 출력
-    console.log("Community Data:", {
-      communityName,
-      description,
-      banner,
-      icon,
-      topics,
-      visibility,
+    const tagResponse = [];
+    if (topics.length > 1) {
+      const tagRes = await BoardTagsSubmitAPI({
+        tags: topics,
+        boardId: coResponse.id,
+      });
+      if (!tagRes) return;
+      console.log("tagRes : ", tagRes);
+      tagResponse.push(tagRes.data.response);
+    }
+    console.log("tagResponse : ", tagResponse);
+    setIsCommunity({
+      ...coResponse,
+      topic: tagResponse,
     });
 
-    // 여기에서 모든 데이터를 서버로 전송하는 API 호출을 수행합니다.
-    // API 호출이 성공적으로 완료된 후, 메인 페이지로 이동합니다.
     navigate("/");
   };
 
@@ -63,8 +72,8 @@ const CommunityCreatePage4: React.FC = () => {
               type="radio"
               name="visibility"
               value="public"
-              checked={visibility === "public"}
-              onChange={() => setVisibility("public")}
+              checked={visibility === "PUBLIC"}
+              onChange={() => setVisibility("PUBLIC")}
               style={styles.radio}
             />
             공개
@@ -76,8 +85,8 @@ const CommunityCreatePage4: React.FC = () => {
               type="radio"
               name="visibility"
               value="restricted"
-              checked={visibility === "restricted"}
-              onChange={() => setVisibility("restricted")}
+              checked={visibility === "RESTRICTED"}
+              onChange={() => setVisibility("RESTRICTED")}
               style={styles.radio}
             />
             제한
@@ -89,8 +98,8 @@ const CommunityCreatePage4: React.FC = () => {
               type="radio"
               name="visibility"
               value="private"
-              checked={visibility === "private"}
-              onChange={() => setVisibility("private")}
+              checked={visibility === "PRIVATE"}
+              onChange={() => setVisibility("PRIVATE")}
               style={styles.radio}
             />
             비공개
