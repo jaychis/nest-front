@@ -14,17 +14,14 @@ const GlobalBar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const searchResults = useSelector(
-    (state: RootState) => state.search.searchResults,
-  );
+  const searchResults = useSelector((state: RootState) => state.search.searchResults);
   const postSubmit = () => navigate("/boards/submit");
   const [postHover, setPostHover] = useState<boolean>(false);
   const [userHover, setUserHover] = useState<boolean>(false);
   const [bellHover, setBellHover] = useState<boolean>(false);
   const [logoHover, setLogoHover] = useState<boolean>(false); // 추가
   const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false);
-  const [isNotificationModalOpen, setIsNotificationModalOpen] =
-    useState<boolean>(false);
+  const [isNotificationModalOpen, setIsNotificationModalOpen] = useState<boolean>(false);
   const userButtonRef = useRef<HTMLDivElement>(null);
   const bellButtonRef = useRef<HTMLDivElement>(null);
 
@@ -32,31 +29,40 @@ const GlobalBar = () => {
     setIsProfileModalOpen(!isProfileModalOpen);
   };
 
-  const [query, setQuery] = useState<string>("");
   const handleSearchChange = async (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ): Promise<void> => {
     const value = event.target.value;
-
-    setQuery(value);
     setSearchTerm(value);
     if (value.length > 2) {
       dispatch(searchQuery(value));
     }
   };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      clickSearch();
+    }
+  };
+
   const clickSearch = async () => {
-    if (!query) {
+    if (!searchTerm) {
       // 나중에는 alert 제거하기
       alert("내용을 입력해주세요");
       return;
     }
 
-    await AddSearchAPI({ query });
-    navigate(`/search/list?query=${query}`);
+    await AddSearchAPI({ query: searchTerm });
+    navigate(`/search/list?query=${searchTerm}`);
   };
 
   const toggleNotificationModal = () => {
     setIsNotificationModalOpen(!isNotificationModalOpen);
+  };
+
+  const handleAddTopic = (topic: string) => {
+    setSearchTerm(topic);
+    navigate(`/search/list?query=${topic}`);
   };
 
   return (
@@ -96,6 +102,7 @@ const GlobalBar = () => {
           marginRight: "20px",
           display: "flex",
           justifyContent: "center",
+          position: "relative", // 검색 결과를 절대 위치로 표시하기 위해 필요
         }}
       >
         <input
@@ -105,6 +112,7 @@ const GlobalBar = () => {
           style={{ width: "35%", padding: "10px", borderRadius: "20px" }}
           name={"search"}
           onChange={(e) => handleSearchChange(e)}
+          onKeyDown={handleKeyDown} // 엔터 키 이벤트 추가
         />
         <FaSistrix
           style={{
@@ -112,16 +120,18 @@ const GlobalBar = () => {
             width: "30px",
             height: "30px",
             marginTop: "5px",
+            cursor: "pointer",
           }}
           onClick={clickSearch}
         />
         {/* Search Icon */}
-        {searchTerm.length > 2 && (
+        {searchTerm.length > 0 && searchResults.length > 0 && (
           <div style={styles.searchResults as React.CSSProperties}>
             {searchResults.map((result, index) => (
               <div
                 key={index}
                 style={styles.searchResultItem as React.CSSProperties}
+                onClick={() => handleAddTopic(result)}
               >
                 {result}
               </div>
@@ -129,7 +139,7 @@ const GlobalBar = () => {
           </div>
         )}
       </div>
-
+      
       {/* Navigation Icons */}
       <div style={{ display: "flex", alignItems: "center" }}>
         {localStorage.getItem("access_token") ? (
