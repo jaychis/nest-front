@@ -28,6 +28,7 @@ const SearchList = () => {
     if (searchType === "BOARDS") {
       GetSearchBoardsAPI({ query: QUERY })
         .then((res): void => {
+          if (!res) return;
           const response = res.data.response;
           console.log("BOARDS response : ", response);
 
@@ -55,6 +56,8 @@ const SearchList = () => {
     if (searchType === "COMMENTS") {
       GetSearchCommentsAPI({ query: QUERY })
         .then((res): void => {
+          if (!res) return;
+
           const response = res.data.response;
           console.log("COMMENTS response : ", response);
 
@@ -68,6 +71,8 @@ const SearchList = () => {
     if (searchType === "IMAGE&VIDEO") {
       GetSearchMediaAPI({ query: QUERY })
         .then((res): void => {
+          if (!res) return;
+
           const response = res.data.response;
           console.log("IMAGE&VIDEO response : ", response);
 
@@ -81,6 +86,8 @@ const SearchList = () => {
     if (searchType === "PEOPLE") {
       GetSearchPeopleAPI({ query: QUERY })
         .then((res): void => {
+          if (!res) return;
+
           const response = res.data.response;
           console.log("PEOPLE response : ", response);
 
@@ -91,7 +98,7 @@ const SearchList = () => {
         );
     }
   }, [searchType, QUERY]); // QUERY를 의존성 배열에 추가하여 쿼리 변경 시 재실행
-  
+
   useEffect(() => console.log("searchType : ", searchType), [searchType]);
 
   const NavBarStateChange = async ({
