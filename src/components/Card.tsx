@@ -15,6 +15,7 @@ import {
 import Slider from "react-slick";
 import YouTube from "react-youtube";
 import sanitizeHtml from "sanitize-html";
+import { LogViewedBoardAPI } from "../pages/api/ViewedBoardsApi";
 
 const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
   try {
@@ -46,7 +47,6 @@ const Card = ({
   const [isCardShareHovered, setIsCardShareHovered] = useState<boolean>(false);
   const [isCardSendHovered, setIsCardSendHovered] = useState<boolean>(false);
   const [viewCount, setViewCount] = useState<number>(0); // 조회수 상태 추가
-
 
   const [isReaction, setIsReaction] = useState<ReactionStateTypes>(null);
 
@@ -99,6 +99,16 @@ const Card = ({
     });
   }, [isReaction]);
 
+  const boardClickTracking = async () => {
+    const boardTracking = await LogViewedBoardAPI({
+      boardId: id,
+      userId: localStorage.getItem("id") as string,
+    });
+
+    if (!boardTracking) return;
+    console.log("boardTracking : ", boardTracking);
+  };
+
   return (
     <>
       <div
@@ -117,6 +127,7 @@ const Card = ({
         }}
         onMouseEnter={() => setIsCardHovered(true)}
         onMouseLeave={() => setIsCardHovered(false)}
+        onClick={boardClickTracking}
       >
         {/* Card Image */}
         <div
@@ -177,9 +188,12 @@ const Card = ({
               }}
             >
               <div>
-              {content?.map((co, index) => (
-                <div key={index} dangerouslySetInnerHTML={{ __html: sanitizeHtml(co) }} />
-              ))}
+                {content?.map((co, index) => (
+                  <div
+                    key={index}
+                    dangerouslySetInnerHTML={{ __html: sanitizeHtml(co) }}
+                  />
+                ))}
               </div>
             </div>
           ) : type === "MEDIA" ? (
@@ -198,36 +212,40 @@ const Card = ({
                   <img
                     src={image}
                     alt={`Preview image ${index}`}
-                    style={{ height: "400px", width: "100%", borderRadius: "20px" }} // 수정된 부분
+                    style={{
+                      height: "400px",
+                      width: "100%",
+                      borderRadius: "20px",
+                    }} // 수정된 부분
                   />
                 </div>
               ))}
             </Slider>
           ) : (
             <>
-             {content.map((video: string, index: number) => (
+              {content.map((video: string, index: number) => (
                 <div
-                key={index}
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  borderRadius: "20px", // 추가된 부분
-                  overflow: "hidden", // 추가된 부분
-                }}
-              >
-              {video && (
-                <YouTube
-                  videoId={getYouTubeVideoId({ url: video })}
-                  opts={{
-                    width: "760px",
-                    height: "400px",
-                    playerVars: { modestbranding: 1 },
+                  key={index}
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    borderRadius: "20px", // 추가된 부분
+                    overflow: "hidden", // 추가된 부분
                   }}
-                  style={{ borderRadius: "20px" }} // 추가된 부분
-                />
-              )}
-              </div>
-            ))}
+                >
+                  {video && (
+                    <YouTube
+                      videoId={getYouTubeVideoId({ url: video })}
+                      opts={{
+                        width: "760px",
+                        height: "400px",
+                        playerVars: { modestbranding: 1 },
+                      }}
+                      style={{ borderRadius: "20px" }} // 추가된 부분
+                    />
+                  )}
+                </div>
+              ))}
             </>
           )}
         </div>
@@ -239,7 +257,6 @@ const Card = ({
           alignItems: "flex-start",
           width: "100%", // 수정된 부분
           maxWidth: "800px", // 수정된 부분
-          
         }}
       >
         <div
