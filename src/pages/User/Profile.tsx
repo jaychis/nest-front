@@ -21,7 +21,7 @@ const Profile = () => {
 
   useEffect(() => {
     ExecuteBoardInquiryAPI({ id: ID }).then((res) => setMyPosts(res));
-  }, []);
+  }, [ID]);
 
   useEffect(() => {
     if (activeSection === "POSTS") {
@@ -44,7 +44,7 @@ const Profile = () => {
         console.log("Profile API response:", res);
       });
     }
-  }, [activeSection]);
+  }, [activeSection, ID, dispatch]);
 
   const handleReplySubmit = (reply: any) => {
     // Implement reply submit logic here
@@ -52,7 +52,7 @@ const Profile = () => {
 
   return (
     <>
-      <div style={{ display: "flex", width: "100%", height: "100vh" }}>
+      <div style={styles.container}>
         <div style={{ flex: 2, padding: "20px" }}>
           <div style={styles.buttonContainer}>
             <button
@@ -118,27 +118,27 @@ const Profile = () => {
           {activeSection === "PROFILE" && (
             <div style={styles.section}>
               <h2 style={styles.sectionTitle}>프로필</h2>
-                <div style={styles.info}>
-                  <label style={styles.label}>닉네임:</label>
-                  <span style={styles.value}>
-                    {user.data.nickname || "닉네임을 입력하세요"}
-                  </span>
-                </div>
-                <div style={styles.info}>
-                  <label style={styles.label}>이메일:</label>
-                  <span style={styles.value}>
-                    {user.data.email ? user.data.email : "이메일을 입력하세요"}
-                  </span>
-                </div>
-                <div style={styles.info}>
-                  <label style={styles.label}>전화번호:</label>
-                  <span style={styles.value}>
-                    {user.data.phone
-                      ? user.data.phone
-                      : "전화번호를 입력하세요"}
-                  </span>
-                </div>
+              <div style={styles.info}>
+                <label style={styles.label}>닉네임:</label>
+                <span style={styles.value}>
+                  {user.data.nickname || "닉네임을 입력하세요"}
+                </span>
               </div>
+              <div style={styles.info}>
+                <label style={styles.label}>이메일:</label>
+                <span style={styles.value}>
+                  {user.data.email ? user.data.email : "이메일을 입력하세요"}
+                </span>
+              </div>
+              <div style={styles.info}>
+                <label style={styles.label}>전화번호:</label>
+                <span style={styles.value}>
+                  {user.data.phone
+                    ? user.data.phone
+                    : "전화번호를 입력하세요"}
+                </span>
+              </div>
+            </div>
           )}
         </div>
       </div>
@@ -147,6 +147,11 @@ const Profile = () => {
 };
 
 const styles = {
+  container: {
+    display: "flex",
+    width: "100%",
+    height: "100vh",
+  },
   buttonContainer: {
     display: "flex",
     justifyContent: "center",
@@ -182,20 +187,14 @@ const styles = {
     padding: "20px",
     borderRadius: "10px",
     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    maxWidth: "1200px", // 섹션 너비를 동일하게 설정
+    width: "100%",
   },
   sectionTitle: {
     fontSize: "24px",
     marginBottom: "10px",
     borderBottom: "2px solid #333",
     paddingBottom: "5px",
-  },
-  card: {
-    backgroundColor: "white",
-    padding: "20px",
-    borderRadius: "10px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-    maxWidth: "500px",
-    width: "100%",
   },
   info: {
     display: "flex",
