@@ -4,6 +4,24 @@ import { CommunityVisibilityType } from "../../_common/CollectionTypes";
 
 const COMMUNITY_URL: string = "communities";
 
+interface GetCommunitiesNameParam {
+  readonly name: string;
+}
+
+export const GetCommunitiesNameAPI = async ({
+  name,
+}: GetCommunitiesNameParam) => {
+  try {
+    const URL: string = `${COMMUNITY_URL}/get/communities/name/${name}`;
+
+    const res = await client.get(URL);
+
+    return res;
+  } catch (e: any) {
+    ErrorHandling({ text: "GetSearchCommunitiesNameAPI", error: e });
+  }
+};
+
 export interface CommunitySubmitParams {
   readonly name: string;
   readonly description: string;
