@@ -184,32 +184,6 @@ const BoardReply = (re: ReplyType) => {
             싫어요
           </button>
         </div>
-        {/*<div*/}
-        {/*  style={{*/}
-        {/*    marginRight: "10px",*/}
-        {/*    borderRadius: "30px",*/}
-        {/*    width: "75px",*/}
-        {/*    height: "50px",*/}
-        {/*    display: "flex",*/}
-        {/*    justifyContent: "center",*/}
-        {/*    alignItems: "center",*/}
-        {/*  }}*/}
-        {/*>*/}
-        {/*  <button*/}
-        {/*    onMouseEnter={() => setIsCardReplyReplyHovered(true)}*/}
-        {/*    onMouseLeave={() => setIsCardReplyReplyHovered(false)}*/}
-        {/*    style={{*/}
-        {/*      backgroundColor: isCardReplyReplyHovered ? "#c9c6c5" : "#f5f5f5",*/}
-        {/*      border: "none",*/}
-        {/*      width: "65px",*/}
-        {/*      height: "30px",*/}
-        {/*      borderRadius: "30px",*/}
-        {/*    }}*/}
-        {/*    onClick={() => setIsReplyReplyButton(!isReplyReplyButton)}*/}
-        {/*  >*/}
-        {/*    답글*/}
-        {/*  </button>*/}
-        {/*</div>*/}
         <div
           style={{
             marginRight: "10px",
