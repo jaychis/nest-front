@@ -9,6 +9,30 @@ export type ReactionStateTypes = "LIKE" | "DISLIKE" | null;
 
 export type BoardType = "TEXT" | "LINK" | "MEDIA" | "YOUTUBE";
 
+export interface UserType {
+  readonly id: string;
+  readonly email: string;
+  readonly password: string;
+  readonly phone: string;
+  readonly nickname: string;
+  readonly refresh_token: string | null;
+  readonly created_at: Date;
+  readonly updated_at: Date;
+  readonly deleted_at: Date | null;
+}
+
+export interface CommunityType {
+  readonly id: string;
+  readonly name: string;
+  readonly description: string;
+  readonly banner: string;
+  readonly icon: string;
+  readonly visibility: "PUBLIC";
+  readonly created_at: Date;
+  readonly updated_at: Date;
+  readonly deleted_at: null | Date;
+}
+
 export interface CardType {
   readonly id: string;
   readonly identifier_id: string;

@@ -8,7 +8,11 @@ import {
 } from "../api/SearchApi";
 import { useSearchParams } from "react-router-dom";
 import Card from "../../components/Card";
-import { CardType } from "../../_common/CollectionTypes";
+import {
+  CardType,
+  CommunityType,
+  UserType,
+} from "../../_common/CollectionTypes";
 import BoardReply, { ReplyType } from "../Board/BoardReply";
 
 type SearchListTypes =
@@ -19,7 +23,13 @@ type SearchListTypes =
   | "PEOPLE";
 
 const SearchList = () => {
-  const [searchList, setSearchList] = useState([]);
+  const [searchCardList, setSearchCardList] = useState<CardType[]>([]);
+  const [searchCommunityList, setSearchCommunityList] = useState<
+    CommunityType[]
+  >([]);
+  const [searchReplyList, setSearchReplyList] = useState<ReplyType[]>([]);
+  const [searUserList, setSearchUserList] = useState<UserType[]>([]);
+
   const [params, setParams] = useSearchParams();
   const [searchType, setSearchType] = useState<SearchListTypes>("BOARDS");
   const QUERY: string = params.get("query") as string;
@@ -32,7 +42,7 @@ const SearchList = () => {
           const response = res.data.response;
           console.log("BOARDS response : ", response);
 
-          setSearchList(response);
+          setSearchCardList(response);
         })
         .catch((err) =>
           console.error("SearchList GetSearchBoardsAPI error : ", err),
@@ -40,17 +50,17 @@ const SearchList = () => {
     }
 
     if (searchType === "COMMUNITIES") {
-      alert("준비중입니다.");
-      // GetSearchCommunitiesAPI({ query: QUERY })
-      //   .then((res): void => {
-      //     const response = res.data.response;
-      //     console.log("response : ", response);
-      //
-      //     setSearchList(response);
-      //   })
-      //   .catch((err) =>
-      //     console.error("SearchList GetSearchCommunitiesAPI error : ", err),
-      //   );
+      GetSearchCommunitiesAPI({ query: QUERY })
+        .then((res): void => {
+          if (!res) return;
+          const response = res.data.response;
+          console.log("community response : ", response);
+
+          setSearchCommunityList(response);
+        })
+        .catch((err) =>
+          console.error("SearchList GetSearchCommunitiesAPI error : ", err),
+        );
     }
 
     if (searchType === "COMMENTS") {
@@ -61,7 +71,7 @@ const SearchList = () => {
           const response = res.data.response;
           console.log("COMMENTS response : ", response);
 
-          setSearchList(response);
+          setSearchReplyList(response);
         })
         .catch((err) =>
           console.error("SearchList GetSearchCommentsAPI error : ", err),
@@ -76,7 +86,7 @@ const SearchList = () => {
           const response = res.data.response;
           console.log("IMAGE&VIDEO response : ", response);
 
-          setSearchList(response);
+          setSearchCardList(response);
         })
         .catch((err) =>
           console.error("SearchList GetSearchMediaAPI error : ", err),
@@ -91,7 +101,7 @@ const SearchList = () => {
           const response = res.data.response;
           console.log("PEOPLE response : ", response);
 
-          setSearchList(response);
+          setSearchUserList(response);
         })
         .catch((err) =>
           console.error("SearchList GetSearchPeopleAPI error : ", err),
@@ -182,62 +192,87 @@ const SearchList = () => {
       </div>
     );
   };
+
+  const EmptyList = () => <div>검색된 내용이 존재하지 않습니다.</div>;
   return (
     <>
       <NavBar />
-      {searchList.length > 0 ? (
+      {searchCardList.length > 0 ? (
         searchType === "BOARDS" || searchType === "IMAGE&VIDEO" ? (
-          searchList.map((ca: CardType) => {
+          searchCardList.length > 0 ? (
+            searchCardList.map((ca: CardType) => {
+              return (
+                <>
+                  <Card
+                    id={ca.id}
+                    category={ca.category}
+                    content={ca.content}
+                    nickname={ca.nickname}
+                    title={ca.title}
+                    createdAt={ca.created_at}
+                    type={ca.type}
+                  />
+                </>
+              );
+            })
+          ) : (
+            <EmptyList />
+          )
+        ) : searchType === "COMMUNITIES" ? (
+          searchCommunityList.length > 0 ? (
+            searchCommunityList.map((ca: CommunityType) => {
+              return (
+                <>
+                  <div>
+                    <span>
+                      <h2>{ca.name}</h2>
+                    </span>
+                  </div>
+                  <div>
+                    <span>{ca.description}</span>
+                  </div>
+                </>
+              );
+            })
+          ) : (
+            <EmptyList />
+          )
+        ) : searchType === "COMMENTS" ? (
+          searchReplyList.length > 0 ? (
+            searchReplyList.map((re: ReplyType) => {
+              return (
+                <>
+                  <BoardReply
+                    id={re.id}
+                    comment_id={re.comment_id}
+                    user_id={re.user_id}
+                    content={re.content}
+                    nickname={re.nickname}
+                    created_at={re.created_at}
+                    updated_at={re.updated_at}
+                    deleted_at={re.deleted_at}
+                  />
+                </>
+              );
+            })
+          ) : (
+            <EmptyList />
+          )
+        ) : searUserList.length > 0 ? (
+          searUserList.map((el: UserType) => {
             return (
               <>
-                <Card
-                  id={ca.id}
-                  category={ca.category}
-                  content={ca.content}
-                  nickname={ca.nickname}
-                  title={ca.title}
-                  createdAt={ca.created_at}
-                  type={ca.type}
-                />
-              </>
-            );
-          })
-        ) : searchType === "COMMUNITIES" ? null : searchType === "COMMENTS" ? (
-          searchList.map((re: ReplyType) => {
-            return (
-              <>
-                <BoardReply
-                  id={re.id}
-                  comment_id={re.comment_id}
-                  user_id={re.user_id}
-                  content={re.content}
-                  nickname={re.nickname}
-                  created_at={re.created_at}
-                  updated_at={re.updated_at}
-                  deleted_at={re.deleted_at}
-                />
+                <div>{el.id}</div>
+                <div>{el.nickname}</div>
+                <div>{el.email}</div>
               </>
             );
           })
         ) : (
-          searchList.map((el: CardType) => {
-            return (
-              <>
-                <Card
-                  id={el.id}
-                  category={el.category}
-                  content={el.content}
-                  nickname={el.nickname}
-                  title={el.title}
-                  createdAt={el.created_at}
-                  type={el.type}
-                />
-              </>
-            );
-          })
+          <EmptyList />
         )
       ) : (
-        <div>텅!!</div>
+        <EmptyList />
       )}
     </>
   );
