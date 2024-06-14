@@ -8,7 +8,7 @@ const USERS_URL: string = "users";
 
 export const UsersKakaoAuthSignUpAPI = async () => {
   try {
-    const URL: string = `${USERS_URL}/kakao`;
+    const URL: string = `${USERS_URL}/kakao/login/page`;
 
     const res = await client.get(URL);
 
