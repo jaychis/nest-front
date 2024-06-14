@@ -1,5 +1,5 @@
 import React, { MouseEventHandler, useEffect, useState } from "react";
-import { LoginAPI, LoginParams } from "../api/UserApi";
+import { LoginAPI, LoginParams, UsersKakaoAuthSignUpAPI } from "../api/UserApi";
 import { CollectionTypes } from "../../_common/CollectionTypes";
 import { isValidPasswordFormat } from "../../_common/PasswordRegex";
 import { FaGoogle, FaApple, FaComment } from "react-icons/fa";
@@ -76,10 +76,21 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
     }
   };
 
+  const kakaoAuthLogin = async () => {
+    const res = await UsersKakaoAuthSignUpAPI();
+    if (!res) return;
+
+    console.log("kakaoAuthLogin res : ", res);
+  };
+
   return (
     <div style={styles.container}>
       {showAlert && (
-        <Alert message="로그인이 완료되었습니다." onClose={() => setShowAlert(false)} type="success" />
+        <Alert
+          message="로그인이 완료되었습니다."
+          onClose={() => setShowAlert(false)}
+          type="success"
+        />
       )}
       <div style={{ textAlign: "center", marginBottom: "20px" }}>
         <h2>로그인</h2>
@@ -106,10 +117,7 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
           <SiNaver style={styles.socialLogo} />
           네이버로 로그인
         </button>
-        <button
-          style={styles.socialButton}
-          onClick={() => alert("Continue with Kakao")}
-        >
+        <button style={styles.socialButton} onClick={kakaoAuthLogin}>
           <FaComment style={styles.socialLogo} />
           카카오로 로그인
         </button>
