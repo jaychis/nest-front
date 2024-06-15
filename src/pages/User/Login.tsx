@@ -76,7 +76,8 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
     }
   };
 
-  const [pageState, setPageState] = useState<string>("DEFAULT");
+  type PageStateTypes = "DEFAULT" | "KAKAO";
+  const [pageState, setPageState] = useState<PageStateTypes>("DEFAULT");
   const [kakaoOath, setKakaoOath] = useState<string>("");
   const kakaoOauthLogin = async () => {
     const res = await UsersKakaoAuthSignUpAPI();
@@ -87,11 +88,37 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
     setKakaoOath(KAKAO_URL);
     setPageState("KAKAO");
   };
-  const KakaoComponent = () => <>{kakaoOath}</>;
-
-  const LoginDefaultComponent = () => {
+  const KakaoComponent = () => {
     return (
       <>
+        <div>
+          {kakaoOath && (
+            // <iframe
+            //   style={{
+            //     width: "450px",
+            //     height: "700px",
+            //   }}
+            //   src={kakaoOath}
+            //   title={"Kakao Login"}
+            // ></iframe>
+            <>{window.open(kakaoOath, "_blank", "width=500,height=600")}</>
+          )}
+          dz
+        </div>
+      </>
+    );
+  };
+
+  return (
+    <div style={styles.container}>
+      {showAlert && (
+        <Alert
+          message="로그인이 완료되었습니다."
+          onClose={() => setShowAlert(false)}
+          type="success"
+        />
+      )}
+      <div>
         <div style={{ textAlign: "center", marginBottom: "20px" }}>
           <h2>로그인</h2>
         </div>
@@ -186,20 +213,110 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
             회원가입
           </button>
         </div>
-      </>
-    );
-  };
+      </div>
+      {pageState === "DEFAULT" ? null : <KakaoComponent />}
+      {/*{pageState === "DEFAULT" ? (*/}
+      {/*  <div>*/}
+      {/*    <div style={{ textAlign: "center", marginBottom: "20px" }}>*/}
+      {/*      <h2>로그인</h2>*/}
+      {/*    </div>*/}
+      {/*    <div style={styles.socialButtonsContainer}>*/}
+      {/*      <button*/}
+      {/*        style={styles.socialButton}*/}
+      {/*        onClick={() => alert("Continue with Google")}*/}
+      {/*      >*/}
+      {/*        <FaGoogle style={styles.socialLogo} />*/}
+      {/*        구글로 로그인*/}
+      {/*      </button>*/}
+      {/*      <button*/}
+      {/*        style={styles.socialButton}*/}
+      {/*        onClick={() => alert("Continue with Apple")}*/}
+      {/*      >*/}
+      {/*        <FaApple style={styles.socialLogo} />*/}
+      {/*        애플로 로그인*/}
+      {/*      </button>*/}
+      {/*      <button*/}
+      {/*        style={styles.socialButton}*/}
+      {/*        onClick={() => alert("Continue with Naver")}*/}
+      {/*      >*/}
+      {/*        <SiNaver style={styles.socialLogo} />*/}
+      {/*        네이버로 로그인*/}
+      {/*      </button>*/}
+      {/*      <button style={styles.socialButton} onClick={kakaoOauthLogin}>*/}
+      {/*        <FaComment style={styles.socialLogo} />*/}
+      {/*        카카오로 로그인*/}
+      {/*      </button>*/}
+      {/*    </div>*/}
+      {/*    <div style={styles.orContainer}>*/}
+      {/*      <div style={styles.orLine}></div>*/}
+      {/*      <div style={styles.orText}>OR</div>*/}
+      {/*      <div style={styles.orLine}></div>*/}
+      {/*    </div>*/}
+      {/*    <form>*/}
+      {/*      <input*/}
+      {/*        style={styles.input}*/}
+      {/*        placeholder="이메일 *"*/}
+      {/*        type="email"*/}
+      {/*        id="email"*/}
+      {/*        name="email"*/}
+      {/*        onChange={(value) =>*/}
+      {/*          handleChange({*/}
+      {/*            name: value.target.name,*/}
+      {/*            value: value.target.value,*/}
+      {/*          })*/}
+      {/*        }*/}
+      {/*        onKeyDown={handleKeyDown}*/}
+      {/*        required*/}
+      {/*      />*/}
+      {/*      <input*/}
+      {/*        style={styles.input}*/}
+      {/*        onChange={(value) =>*/}
+      {/*          handleChange({*/}
+      {/*            name: value.target.name,*/}
+      {/*            value: value.target.value,*/}
+      {/*          })*/}
+      {/*        }*/}
+      {/*        placeholder="비밀번호 *"*/}
+      {/*        type="password"*/}
+      {/*        id="password"*/}
+      {/*        name="password"*/}
+      {/*        onKeyDown={handleKeyDown}*/}
+      {/*        required*/}
+      {/*      />*/}
+      {/*      {errorMessage && <div style={styles.errorText}>{errorMessage}</div>}*/}
+      {/*      <div style={styles.forgotPasswordContainer}>*/}
+      {/*        <a href="/forgot-password" style={styles.forgotPasswordLink}>*/}
+      {/*          비밀번호를 잊으셨나요?*/}
+      {/*        </a>*/}
+      {/*      </div>*/}
+      {/*    </form>*/}
 
-  return (
-    <div style={styles.container}>
-      {showAlert && (
-        <Alert
-          message="로그인이 완료되었습니다."
-          onClose={() => setShowAlert(false)}
-          type="success"
-        />
-      )}
-      {pageState === "DEFAULT" ? <LoginDefaultComponent /> : <KakaoComponent />}
+      {/*    <div*/}
+      {/*      style={{ width: "100%", padding: "10px 0", textAlign: "center" }}*/}
+      {/*    >*/}
+      {/*      <button*/}
+      {/*        type="submit"*/}
+      {/*        style={styles.submitButton}*/}
+      {/*        onClick={handleSubmit}*/}
+      {/*      >*/}
+      {/*        로그인*/}
+      {/*      </button>*/}
+      {/*    </div>*/}
+      {/*    <div*/}
+      {/*      style={{*/}
+      {/*        display: "flex",*/}
+      {/*        justifyContent: "center",*/}
+      {/*        marginTop: "-50px",*/}
+      {/*      }}*/}
+      {/*    >*/}
+      {/*      <button onClick={onSwitchView} style={styles.switchButton}>*/}
+      {/*        회원가입*/}
+      {/*      </button>*/}
+      {/*    </div>*/}
+      {/*  </div>*/}
+      {/*) : (*/}
+      {/*  <KakaoComponent />*/}
+      {/*)}*/}
     </div>
   );
 };
