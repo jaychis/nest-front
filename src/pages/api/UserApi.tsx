@@ -11,6 +11,7 @@ export const UsersKakaoAuthSignUpAPI = async () => {
     const URL: string = `${USERS_URL}/kakao/login/page`;
 
     const res = await client.get(URL);
+    console.log("UsersKakaoAuthSignUpAPI res : ", res);
 
     return res;
   } catch (e: any) {

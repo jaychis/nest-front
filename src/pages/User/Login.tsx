@@ -80,12 +80,14 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
   const [pageState, setPageState] = useState<PageStateTypes>("DEFAULT");
   const [kakaoOath, setKakaoOath] = useState<string>("");
   const kakaoOauthLogin = async () => {
+    console.log("kakaoOauthLogin check");
     const res = await UsersKakaoAuthSignUpAPI();
     if (!res) return;
 
     console.log("kakaoAuthLogin res : ", res);
     const KAKAO_URL: string = res.data.response.url;
     setKakaoOath(KAKAO_URL);
+    window.location.href = KAKAO_URL;
     setPageState("KAKAO");
   };
   const KakaoComponent = () => {
@@ -101,9 +103,9 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
             //   src={kakaoOath}
             //   title={"Kakao Login"}
             // ></iframe>
-            <>{window.open(kakaoOath, "_blank", "width=500,height=600")}</>
+            // <>{window.open(kakaoOath, "_blank", "width=500,height=600")}</>
+            <>{(window.location.href = kakaoOath)}</>
           )}
-          dz
         </div>
       </>
     );
@@ -214,7 +216,7 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
           </button>
         </div>
       </div>
-      {pageState === "DEFAULT" ? null : <KakaoComponent />}
+      {/*{pageState === "DEFAULT" ? null : <KakaoComponent />}*/}
       {/*{pageState === "DEFAULT" ? (*/}
       {/*  <div>*/}
       {/*    <div style={{ textAlign: "center", marginBottom: "20px" }}>*/}
