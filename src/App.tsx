@@ -16,6 +16,7 @@ import CommunityCreatePage2 from "./pages/Board/CommunityCreate/CommunityCreateP
 import CommunityCreatePage3 from "./pages/Board/CommunityCreate/CommunityCreatePage3";
 import CommunityCreatePage4 from "./pages/Board/CommunityCreate/CommunityCreatePage4";
 import { CommunityProvider } from "./contexts/CommunityContext";
+import KakaoLogin from "./pages/Kakao/KakaoLogin";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -58,14 +59,23 @@ function App() {
                 </Layout>
               }
             />
-            {/*게시판*/}
-            <Route 
-              path="/boards/submit" 
+            {/*Kakao*/}
+            <Route
+              path={"/kakao/login"}
               element={
-              <Layout>
-                <BoardSubmit />
-              </Layout>
-              } 
+                <Layout>
+                  <KakaoLogin />
+                </Layout>
+              }
+            />
+            {/*게시판*/}
+            <Route
+              path="/boards/submit"
+              element={
+                <Layout>
+                  <BoardSubmit />
+                </Layout>
+              }
             />
             <Route
               path="/boards/read"
