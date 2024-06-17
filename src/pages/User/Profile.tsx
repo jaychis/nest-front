@@ -151,6 +151,8 @@ const styles = {
     display: "flex",
     width: "100%",
     height: "100vh",
+    justifyContent: "center", // 센터 정렬 추가
+    overflow: "hidden",
   },
   buttonContainer: {
     display: "flex",
@@ -187,7 +189,7 @@ const styles = {
     padding: "20px",
     borderRadius: "10px",
     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-    maxWidth: "1200px", // 섹션 너비를 동일하게 설정
+    maxWidth: "700px", // 섹션 너비 조정
     width: "100%",
   },
   sectionTitle: {

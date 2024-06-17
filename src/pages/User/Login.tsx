@@ -208,7 +208,7 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
           style={{
             display: "flex",
             justifyContent: "center",
-            marginTop: "-50px",
+            marginTop: "0px",
           }}
         >
           <button onClick={onSwitchView} style={styles.switchButton}>

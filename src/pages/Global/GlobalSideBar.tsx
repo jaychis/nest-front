@@ -70,7 +70,9 @@ const GlobalSideBar = () => {
         // height: "100vh", // 전체 화면 높이로 변경
         background: "#fff",
         marginRight: "20px",
-        border: "2px solid #D3D3D3",
+        borderRadius: "8px",
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+        border: "1px solid #ddd",
         borderTop: "none", // 홈 위에 상단 보더라인 삭제
       }}
     >

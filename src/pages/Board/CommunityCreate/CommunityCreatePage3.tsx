@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // useNavigate를 import합니다.
 import { useCommunity } from "../../../contexts/CommunityContext";
 import { TagListAPI } from "../../api/TagApi";
+import { CommunitySubmitAPI } from "../../api/CommunityApi";
+
 
 const CommunityCreatePage3: React.FC = () => {
   const navigate = useNavigate(); // useNavigate를 사용하여 navigate 함수를 정의합니다.
@@ -11,12 +13,13 @@ const CommunityCreatePage3: React.FC = () => {
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
   const handleAddTopic = (topic: string) => {
-    console.log("topic : ", topic);
-    if (topics.length < 3 && !topics.includes(topic)) {
-      setTopics([...topics, topic]);
+    const formattedTopic = topic.startsWith("#") ? topic : `#${topic}`;
+    if (topics.length < 3 && !topics.includes(formattedTopic)) {
+      setTopics([...topics, formattedTopic]);
       setSearchTerm("");
     }
   };
+
   useEffect(() => {
     console.log("topics : ", topics);
     console.log("searchTerm : ", searchTerm);
@@ -95,7 +98,7 @@ const CommunityCreatePage3: React.FC = () => {
               <button
                 type="button"
                 onClick={() => handleRemoveTopic(index)}
-                style={styles.removeButton}
+                style={{ ...styles.removeButton, display: topics.length > 0 ? "inline-block" : "none" }}
               >
                 &times;
               </button>
