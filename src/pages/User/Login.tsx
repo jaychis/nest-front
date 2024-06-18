@@ -5,7 +5,10 @@ import { isValidPasswordFormat } from "../../_common/PasswordRegex";
 import { FaGoogle, FaApple, FaComment } from "react-icons/fa";
 import { SiNaver } from "react-icons/si";
 import Alert from "../../components/Alert";
-import { UsersKakaoAuthSignUpAPI } from "../api/OAuthApi";
+import {
+  UsersKakaoOAuthSignUpAPI,
+  UsersKakaoOAuthRedirectAPI,
+} from "../api/OAuthApi";
 
 interface Props {
   readonly onSwitchView: () => void;
@@ -20,6 +23,27 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
   });
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [showAlert, setShowAlert] = useState<boolean>(false);
+
+  const setLoginProcess = ({
+    id,
+    nickname,
+    access_token,
+    refresh_token,
+  }: {
+    readonly id: string;
+    readonly nickname: string;
+    readonly access_token: string;
+    readonly refresh_token: string;
+  }) => {
+    modalIsOpen(false);
+    localStorage.setItem("access_token", access_token);
+    localStorage.setItem("refresh_token", refresh_token);
+    localStorage.setItem("id", id);
+    localStorage.setItem("nickname", nickname);
+    setShowAlert(true); // 알람 표시
+    setShowAlert(false); // 알람 숨기기
+    window.location.reload();
+  };
 
   const handleChange = (event: CollectionTypes): void => {
     const { name, value } = event;
@@ -48,16 +72,15 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
         .then((res): void => {
           const response = res.data.response;
           console.log("response ", response);
+          const { id, nickname, access_token, refresh_token } = response;
 
           if (res.status === 201 && response) {
-            modalIsOpen(false);
-            localStorage.setItem("access_token", response.access_token);
-            localStorage.setItem("refresh_token", response.refresh_token);
-            localStorage.setItem("id", response.id);
-            localStorage.setItem("nickname", response.nickname);
-            setShowAlert(true); // 알람 표시
-            setShowAlert(false); // 알람 숨기기
-            window.location.reload();
+            setLoginProcess({
+              id,
+              nickname,
+              access_token,
+              refresh_token,
+            });
           }
         })
         .catch((err): void => {
@@ -78,48 +101,34 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
     }
   };
 
-  type PageStateTypes = "DEFAULT" | "KAKAO";
-  const [pageState, setPageState] = useState<PageStateTypes>("DEFAULT");
-  const [kakaoOath, setKakaoOath] = useState<string>("");
   const kakaoOauthLogin = async () => {
     console.log("kakaoOauthLogin check");
-    const res = await UsersKakaoAuthSignUpAPI();
+    const res = await UsersKakaoOAuthSignUpAPI();
     if (!res) return;
 
     console.log("kakaoAuthLogin res : ", res);
     const TYPE: OAuthReturnType = res.data.response.type;
 
     if (TYPE === "NEW_USER") {
-      //
-    }
+      // 이메일 가지고 있고, 회원가입시 해당 이메일이 회원가입창에 입력될 수 있도록
+      const EMAIL: string = res.data.response.email as string;
+      console.log("EMAIL : ", EMAIL);
 
-    if (TYPE === "EXITING_USER") {
-      //
+      // onSwitchView();
+    } else if (TYPE === "EXITING_USER") {
+      const loginProfile = await UsersKakaoOAuthRedirectAPI();
+      if (!loginProfile) return;
+      console.log("loginProfile : ", loginProfile);
+      const { id, nickname, access_token, refresh_token } =
+        loginProfile.data.response;
+
+      setLoginProcess({
+        id,
+        nickname,
+        access_token,
+        refresh_token,
+      });
     }
-    // const KAKAO_URL: string = res.data.response.url;
-    // setKakaoOath(KAKAO_URL);
-    // window.location.href = KAKAO_URL;
-    // setPageState("KAKAO");
-  };
-  const KakaoComponent = () => {
-    return (
-      <>
-        <div>
-          {kakaoOath && (
-            // <iframe
-            //   style={{
-            //     width: "450px",
-            //     height: "700px",
-            //   }}
-            //   src={kakaoOath}
-            //   title={"Kakao Login"}
-            // ></iframe>
-            // <>{window.open(kakaoOath, "_blank", "width=500,height=600")}</>
-            <>{(window.location.href = kakaoOath)}</>
-          )}
-        </div>
-      </>
-    );
   };
 
   return (
@@ -227,109 +236,6 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
           </button>
         </div>
       </div>
-      {/*{pageState === "DEFAULT" ? null : <KakaoComponent />}*/}
-      {/*{pageState === "DEFAULT" ? (*/}
-      {/*  <div>*/}
-      {/*    <div style={{ textAlign: "center", marginBottom: "20px" }}>*/}
-      {/*      <h2>로그인</h2>*/}
-      {/*    </div>*/}
-      {/*    <div style={styles.socialButtonsContainer}>*/}
-      {/*      <button*/}
-      {/*        style={styles.socialButton}*/}
-      {/*        onClick={() => alert("Continue with Google")}*/}
-      {/*      >*/}
-      {/*        <FaGoogle style={styles.socialLogo} />*/}
-      {/*        구글로 로그인*/}
-      {/*      </button>*/}
-      {/*      <button*/}
-      {/*        style={styles.socialButton}*/}
-      {/*        onClick={() => alert("Continue with Apple")}*/}
-      {/*      >*/}
-      {/*        <FaApple style={styles.socialLogo} />*/}
-      {/*        애플로 로그인*/}
-      {/*      </button>*/}
-      {/*      <button*/}
-      {/*        style={styles.socialButton}*/}
-      {/*        onClick={() => alert("Continue with Naver")}*/}
-      {/*      >*/}
-      {/*        <SiNaver style={styles.socialLogo} />*/}
-      {/*        네이버로 로그인*/}
-      {/*      </button>*/}
-      {/*      <button style={styles.socialButton} onClick={kakaoOauthLogin}>*/}
-      {/*        <FaComment style={styles.socialLogo} />*/}
-      {/*        카카오로 로그인*/}
-      {/*      </button>*/}
-      {/*    </div>*/}
-      {/*    <div style={styles.orContainer}>*/}
-      {/*      <div style={styles.orLine}></div>*/}
-      {/*      <div style={styles.orText}>OR</div>*/}
-      {/*      <div style={styles.orLine}></div>*/}
-      {/*    </div>*/}
-      {/*    <form>*/}
-      {/*      <input*/}
-      {/*        style={styles.input}*/}
-      {/*        placeholder="이메일 *"*/}
-      {/*        type="email"*/}
-      {/*        id="email"*/}
-      {/*        name="email"*/}
-      {/*        onChange={(value) =>*/}
-      {/*          handleChange({*/}
-      {/*            name: value.target.name,*/}
-      {/*            value: value.target.value,*/}
-      {/*          })*/}
-      {/*        }*/}
-      {/*        onKeyDown={handleKeyDown}*/}
-      {/*        required*/}
-      {/*      />*/}
-      {/*      <input*/}
-      {/*        style={styles.input}*/}
-      {/*        onChange={(value) =>*/}
-      {/*          handleChange({*/}
-      {/*            name: value.target.name,*/}
-      {/*            value: value.target.value,*/}
-      {/*          })*/}
-      {/*        }*/}
-      {/*        placeholder="비밀번호 *"*/}
-      {/*        type="password"*/}
-      {/*        id="password"*/}
-      {/*        name="password"*/}
-      {/*        onKeyDown={handleKeyDown}*/}
-      {/*        required*/}
-      {/*      />*/}
-      {/*      {errorMessage && <div style={styles.errorText}>{errorMessage}</div>}*/}
-      {/*      <div style={styles.forgotPasswordContainer}>*/}
-      {/*        <a href="/forgot-password" style={styles.forgotPasswordLink}>*/}
-      {/*          비밀번호를 잊으셨나요?*/}
-      {/*        </a>*/}
-      {/*      </div>*/}
-      {/*    </form>*/}
-
-      {/*    <div*/}
-      {/*      style={{ width: "100%", padding: "10px 0", textAlign: "center" }}*/}
-      {/*    >*/}
-      {/*      <button*/}
-      {/*        type="submit"*/}
-      {/*        style={styles.submitButton}*/}
-      {/*        onClick={handleSubmit}*/}
-      {/*      >*/}
-      {/*        로그인*/}
-      {/*      </button>*/}
-      {/*    </div>*/}
-      {/*    <div*/}
-      {/*      style={{*/}
-      {/*        display: "flex",*/}
-      {/*        justifyContent: "center",*/}
-      {/*        marginTop: "-50px",*/}
-      {/*      }}*/}
-      {/*    >*/}
-      {/*      <button onClick={onSwitchView} style={styles.switchButton}>*/}
-      {/*        회원가입*/}
-      {/*      </button>*/}
-      {/*    </div>*/}
-      {/*  </div>*/}
-      {/*) : (*/}
-      {/*  <KakaoComponent />*/}
-      {/*)}*/}
     </div>
   );
 };

@@ -2,16 +2,11 @@ import { client } from "./Client";
 import { ErrorHandling } from "../../_common/ErrorHandling";
 
 const OAUTH_URL: string = "oauth";
-export interface UsersKakaoOAuthRedirectParam {
-  readonly code: string;
-}
 
-export const UsersKakaoOAuthRedirectAPI = async ({
-  code,
-}: UsersKakaoOAuthRedirectParam) => {
+export const UsersKakaoOAuthRedirectAPI = async () => {
   try {
     // const URL: string = `${OAUTH_URL}/kakao/callback?code=${code}`;
-    const URL: string = `${OAUTH_URL}/kakao/callback`;
+    const URL: string = `${OAUTH_URL}/kakao/login`;
 
     const res = await client.get(URL);
     console.log("UsersKakaoOAuthRedirectAPI res : ", res);
@@ -22,7 +17,7 @@ export const UsersKakaoOAuthRedirectAPI = async ({
   }
 };
 
-export const UsersKakaoAuthSignUpAPI = async () => {
+export const UsersKakaoOAuthSignUpAPI = async () => {
   try {
     const URL: string = `${OAUTH_URL}/kakao`;
 
