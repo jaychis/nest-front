@@ -1,5 +1,4 @@
 import React, { FormEvent, useEffect, useState, useRef } from "react";
-
 import { SubmitAPI, SubmitParams } from "../api/BoardApi";
 import { useNavigate } from "react-router-dom";
 import MarkdownIt from "markdown-it";
@@ -28,7 +27,7 @@ interface EditorChange {
 const BoardSubmit = () => {
   const navigate = useNavigate();
   const [inputType, setInputType] = useState<BoardType>("TEXT"); // 기본값은 텍스트
-  const editorRef = useRef<HTMLDivElement>(null); // MdEditor의 ref
+  const editorRef = useRef<any>(null); // MdEditor의 ref
   const [editorHeight, setEditorHeight] = useState(200); // 에디터 초기 높이
 
   const ID: string = localStorage.getItem("id") as string;
@@ -74,14 +73,13 @@ const BoardSubmit = () => {
 
   const handleEditorChange = async ({ html, text }: EditorChange) => {
     setTextContent(html);
-
     adjustEditorHeight();
   };
   useEffect(() => console.log("textContent : ", textContent), [textContent]);
 
   const adjustEditorHeight = () => {
     if (editorRef.current) {
-      const editorElement = editorRef.current.querySelector(".rc-md-editor"); // mdEditor root element
+      const editorElement = editorRef.current.editor; // MdEditor의 실제 DOM 엘리먼트 접근
       if (editorElement) {
         const scrollHeight = editorElement.scrollHeight;
         const newHeight = Math.min(scrollHeight, 700); // 최대 높이 700px
@@ -249,22 +247,21 @@ const BoardSubmit = () => {
   }, [inputType]);
   return (
     <>
-      <div style={{ display: "flex", width: "100%" }}>
+      <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
         <div style={{ flex: 2 }}>
           <div style={{ backgroundColor: "#4F657755", minHeight: "100vh" }}>
-            {/* <GlobalBar /> */}
-            <div style={{ display: "flex", width: "100%" }}>
-              {/* <GlobalSideBar /> */}
+            <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
               <div style={{ flex: 2 }}>
                 <div
                   style={{
-                    marginTop: "20px",
-                    width: "1000px",
+                    // marginTop: "20px",
+                    width: "100%",
+                    maxWidth: "726px", // 최대 너비를 800px로 설정
                     height: "auto",
-                    margin: "20px auto",
+                    // margin: "20px auto",
                     padding: "30px",
-                    border: "1px solid #ccc",
-                    borderRadius: "8px",
+                    // border: "1px solid #ccc",
+                    // borderRadius: "8px",
                     background: "#fff",
                   }}
                 >
@@ -310,7 +307,8 @@ const BoardSubmit = () => {
                         style={inputStyle}
                       />
                       <MdEditor
-                        style={{ height: "200px" }}
+                        ref={editorRef}
+                        style={{ height: editorHeight }}
                         renderHTML={(text) => mdParser.render(text)}
                         onChange={handleEditorChange}
                         view={{ menu: true, md: true, html: false }}
@@ -380,7 +378,6 @@ const BoardSubmit = () => {
                   </button>
                 </div>
               </div>
-              {/* <RightSideBar /> */}
             </div>
           </div>
         </div>
