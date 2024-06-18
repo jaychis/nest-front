@@ -7,8 +7,7 @@ import { CommunitySubmitAPI } from "../../api/CommunityApi";
 
 const CommunityCreatePage3: React.FC = () => {
   const navigate = useNavigate(); // useNavigate를 사용하여 navigate 함수를 정의합니다.
-  const { communityName, description, banner, icon, topics, setTopics } =
-    useCommunity();
+  const { communityName, description, banner, icon, topics, setTopics } = useCommunity();
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
@@ -36,27 +35,27 @@ const CommunityCreatePage3: React.FC = () => {
 
   useEffect(() => {
     if (searchTerm) {
-      // 실제 검색 API 호출 또는 추천 토픽 데이터를 사용합니다.
       TagListAPI()
         .then((res) => {
           if (!res) return;
-          interface tagListReturnType {
+          interface TagListReturnType {
             readonly id: string;
             readonly name: string;
           }
-          const response: tagListReturnType[] = res.data.response;
+          console.log("TagListAPI response:", res.data);
+          const response: TagListReturnType[] = res.data.response;
 
           const tagNameList: string[] = response.map(
-            (el: tagListReturnType) => el.name,
+            (el: TagListReturnType) => el.name
           );
-          console.log("tagNameList : ", tagNameList);
+          console.log("tagNameList:", tagNameList);
 
           const filteredTopics = tagNameList.filter((topic: string) =>
-            topic.toLowerCase().includes(searchTerm.toLowerCase()),
+            topic.toLowerCase().includes(searchTerm.toLowerCase())
           );
           setSuggestions(filteredTopics);
         })
-        .catch((err) => console.log("TagListAPI error : ", err));
+        .catch((err) => console.log("TagListAPI error:", err));
     } else {
       setSuggestions([]);
     }
@@ -90,15 +89,30 @@ const CommunityCreatePage3: React.FC = () => {
               ))}
             </ul>
           )}
+          {searchTerm && suggestions.length === 0 && (
+            <div style={styles.noSuggestions}>
+              <p>등록된 토픽이 없습니다. "{searchTerm}"로 새 토픽을 추가할 수 있습니다.</p>
+              <button onClick={() => handleAddTopic(searchTerm)} style={styles.addButton}>
+                "{searchTerm}" 추가
+              </button>
+            </div>
+          )}
         </div>
         <div style={styles.selectedTopics}>
           {topics.map((topic, index) => (
-            <div key={index} style={styles.topicItem}>
+            <div
+              key={index}
+              style={{
+                ...styles.topicItem,
+                padding: topics.length > 1 ? "10px 15px" : "10px 0",
+                justifyContent: topics.length > 1 ? "space-between" : "center",
+              }}
+            >
               <span style={styles.topicText}>{topic}</span>
               <button
                 type="button"
                 onClick={() => handleRemoveTopic(index)}
-                style={{ ...styles.removeButton, display: topics.length > 0 ? "inline-block" : "none" }}
+                style={{ ...styles.removeButton, display: topics.length > 1 ? "inline-block" : "none" }}
               >
                 &times;
               </button>
@@ -177,6 +191,26 @@ const styles = {
     padding: "10px",
     cursor: "pointer",
   },
+  noSuggestions: {
+    marginTop: "10px",
+    padding: "10px",
+    backgroundColor: "#f8f8f8",
+    border: "1px solid #ccc",
+    borderRadius: "8px",
+    textAlign: "center" as "center",
+  },
+  addButton: {
+    marginTop: "10px",
+    padding: "10px 20px",
+    border: "none",
+    borderRadius: "8px",
+    backgroundColor: "#0079D3",
+    color: "white",
+    cursor: "pointer",
+    fontSize: "14px",
+    fontWeight: "bold" as "bold",
+    transition: "background-color 0.3s ease",
+  },
   selectedTopics: {
     display: "flex",
     flexWrap: "wrap" as "wrap",
@@ -188,10 +222,8 @@ const styles = {
     alignItems: "center",
     backgroundColor: "#EDEDED",
     borderRadius: "20px",
-    padding: "10px 15px",
   },
   topicText: {
-    marginRight: "10px",
     fontSize: "14px",
   },
   removeButton: {
