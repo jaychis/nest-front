@@ -6,38 +6,6 @@ import { ErrorHandling } from "../../_common/ErrorHandling";
 
 const USERS_URL: string = "users";
 
-export interface UsersKakaoOAuthRedirectParam {
-  readonly code: string;
-}
-
-export const UsersKakaoOAuthRedirectAPI = async ({
-  code,
-}: UsersKakaoOAuthRedirectParam) => {
-  try {
-    const URL: string = `${USERS_URL}/kakao/callback?code=${code}`;
-
-    const res = await client.get(URL);
-    console.log("UsersKakaoOAuthRedirectAPI res : ", res);
-
-    return res;
-  } catch (e: any) {
-    ErrorHandling({ text: "UsersKakaoOAuthRedirectAPI", error: e });
-  }
-};
-
-export const UsersKakaoAuthSignUpAPI = async () => {
-  try {
-    const URL: string = `${USERS_URL}/kakao/login/page`;
-
-    const res = await client.get(URL);
-    console.log("UsersKakaoAuthSignUpAPI res : ", res);
-
-    return res;
-  } catch (e: any) {
-    ErrorHandling({ text: "UsersKakaoAuthSignUpAPI", error: e });
-  }
-};
-
 export interface UsersInquiryParams {
   readonly nickname: string;
   readonly take: number;

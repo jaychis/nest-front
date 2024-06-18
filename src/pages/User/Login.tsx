@@ -1,10 +1,11 @@
 import React, { MouseEventHandler, useEffect, useState } from "react";
-import { LoginAPI, LoginParams, UsersKakaoAuthSignUpAPI } from "../api/UserApi";
+import { LoginAPI, LoginParams } from "../api/UserApi";
 import { CollectionTypes } from "../../_common/CollectionTypes";
 import { isValidPasswordFormat } from "../../_common/PasswordRegex";
 import { FaGoogle, FaApple, FaComment } from "react-icons/fa";
 import { SiNaver } from "react-icons/si";
 import Alert from "../../components/Alert";
+import { UsersKakaoAuthSignUpAPI } from "../api/OAuthApi";
 
 interface Props {
   readonly onSwitchView: () => void;
@@ -85,10 +86,10 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
     if (!res) return;
 
     console.log("kakaoAuthLogin res : ", res);
-    const KAKAO_URL: string = res.data.response.url;
-    setKakaoOath(KAKAO_URL);
-    window.location.href = KAKAO_URL;
-    setPageState("KAKAO");
+    // const KAKAO_URL: string = res.data.response.url;
+    // setKakaoOath(KAKAO_URL);
+    // window.location.href = KAKAO_URL;
+    // setPageState("KAKAO");
   };
   const KakaoComponent = () => {
     return (

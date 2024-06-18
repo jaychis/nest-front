@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { UsersKakaoOAuthRedirectAPI } from "../api/UserApi";
+import { UsersKakaoOAuthRedirectAPI } from "../api/OAuthApi";
 
 const KakaoLogin = () => {
   const [params, setParams] = useSearchParams();
