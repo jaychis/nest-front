@@ -11,6 +11,7 @@ interface Props {
   readonly onSwitchView: () => void;
   readonly modalIsOpen: (state: boolean) => void;
 }
+type OAuthReturnType = "NEW_USER" | "EXITING_USER";
 
 const Login = ({ onSwitchView, modalIsOpen }: Props) => {
   const [login, setLogin] = useState<LoginParams>({
@@ -86,6 +87,15 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
     if (!res) return;
 
     console.log("kakaoAuthLogin res : ", res);
+    const TYPE: OAuthReturnType = res.data.response.type;
+
+    if (TYPE === "NEW_USER") {
+      //
+    }
+
+    if (TYPE === "EXITING_USER") {
+      //
+    }
     // const KAKAO_URL: string = res.data.response.url;
     // setKakaoOath(KAKAO_URL);
     // window.location.href = KAKAO_URL;
