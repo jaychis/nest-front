@@ -22,6 +22,8 @@ const CommunityCreatePage2: React.FC = () => {
   const [bannerPreviewUrls, setBannerPreviewUrls] = useState<string[]>([]);
   const [bannerFileList, setBannerFileList] = useState<File[]>([]);
 
+  const [primaryColor, setPrimaryColor] = useState<string>("#0079D3");
+
   const handleBannerChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ): Promise<void> => {

@@ -12,6 +12,8 @@ const RightSideBar = () => {
     number | null
   >(null);
   const navigate = useNavigate(); // Initialize useNavigate
+  const isLoggedIn = !!localStorage.getItem("access_token");
+
 
   const demoRecentPosts = [
     { id: "1", title: "최근 본 게시물 1" },
@@ -31,6 +33,7 @@ const RightSideBar = () => {
     };
     fetchTopTenList();
   }, []);
+
   useEffect(() => {
     if (selectedTab === "topSearches") {
       const fetchTopTenList = async (): Promise<void> => {
@@ -45,7 +48,7 @@ const RightSideBar = () => {
       fetchTopTenList();
     }
 
-    if (selectedTab === "recentBoards") {
+    if (selectedTab === "recentBoards" && isLoggedIn) {
       const recentBoardList = async (): Promise<void> => {
         const res = await GetRecentViewedBoardsAPI({
           userId: localStorage.getItem("id") as string,
@@ -59,11 +62,19 @@ const RightSideBar = () => {
       };
       recentBoardList();
     }
-  }, [selectedTab]);
+  }, [selectedTab, isLoggedIn]);
 
   const handleSearchClick = async (query: string) => {
     await AddSearchAPI({ query });
     navigate(`/search/list?query=${query}`);
+  };
+
+  const handleTabClick = (tab: SelectTapTypes) => {
+    if (tab === "recentBoards" && !isLoggedIn) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+    setSelectedTab(tab);
   };
 
   return (
@@ -119,31 +130,33 @@ const RightSideBar = () => {
             )}
           </ol>
         </div>
-      ) : (
-        <div>
-          <h3 style={styles.header}>최근 본 게시물</h3>
-          <ul style={styles.list}>
-            {demoRecentPosts.map((post, index) => (
-              <li
-                key={post.id}
-                style={
-                  hoveredRecentPostIndex === index
-                    ? styles.hoveredListItem
-                    : styles.listItem
-                }
-                onMouseEnter={() => setHoveredRecentPostIndex(index)}
-                onMouseLeave={() => setHoveredRecentPostIndex(null)}
-              >
-                <a
-                  href={`/boards/read?id=${post.id}&title=${post.title}`}
-                  style={styles.link}
+    ) : (
+        isLoggedIn && (
+          <div>
+            <h3 style={styles.header}>최근 본 게시물</h3>
+            <ul style={styles.list}>
+              {demoRecentPosts.map((post, index) => (
+                <li
+                  key={post.id}
+                  style={
+                    hoveredRecentPostIndex === index
+                      ? styles.hoveredListItem
+                      : styles.listItem
+                  }
+                  onMouseEnter={() => setHoveredRecentPostIndex(index)}
+                  onMouseLeave={() => setHoveredRecentPostIndex(null)}
                 >
-                  {post.title}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
+                  <a
+                    href={`/boards/read?id=${post.id}&title=${post.title}`}
+                    style={styles.link}
+                  >
+                    {post.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
       )}
     </div>
   );
