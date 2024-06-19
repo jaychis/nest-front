@@ -7,7 +7,7 @@ import { SiNaver } from "react-icons/si";
 import Alert from "../../components/Alert";
 import {
   UsersKakaoOAuthSignUpAPI,
-  UsersKakaoOAuthRedirectAPI,
+  UsersKakaoOAuthLoginAPI,
 } from "../api/OAuthApi";
 
 interface Props {
@@ -111,12 +111,16 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
 
     if (TYPE === "NEW_USER") {
       // 이메일 가지고 있고, 회원가입시 해당 이메일이 회원가입창에 입력될 수 있도록
-      const EMAIL: string = res.data.response.email as string;
+      console.log(
+        " res.data.response.profile.email : ",
+        res.data.response.profile.email,
+      );
+      const EMAIL: string = res.data.response.profile.email as string;
       console.log("EMAIL : ", EMAIL);
 
       // onSwitchView();
     } else if (TYPE === "EXITING_USER") {
-      const loginProfile = await UsersKakaoOAuthRedirectAPI();
+      const loginProfile = await UsersKakaoOAuthLoginAPI();
       if (!loginProfile) return;
       console.log("loginProfile : ", loginProfile);
       const { id, nickname, access_token, refresh_token } =
