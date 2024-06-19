@@ -1,5 +1,4 @@
 import React, { FormEvent, useEffect, useState, useRef } from "react";
-
 import { SubmitAPI, SubmitParams } from "../api/BoardApi";
 import { useNavigate } from "react-router-dom";
 import MarkdownIt from "markdown-it";
@@ -27,64 +26,43 @@ interface EditorChange {
 
 const BoardSubmit = () => {
   const navigate = useNavigate();
-  const [inputType, setInputType] = useState<BoardType>("TEXT"); // 기본값은 텍스트
-  const editorRef = useRef<HTMLDivElement>(null); // MdEditor의 ref
-  const [editorHeight, setEditorHeight] = useState(200); // 에디터 초기 높이
+  const [inputType, setInputType] = useState<BoardType>("TEXT");
+  const editorRef = useRef<any>(null);
+  const [editorHeight, setEditorHeight] = useState(200);
 
   const ID: string = localStorage.getItem("id") as string;
   const NICKNAME: string = localStorage.getItem("nickname") as string;
-  const [board, setBoard] = useState<SubmitParams>({
-    title: "",
-    content: [],
-    category: "",
-    identifierId: ID,
-    nickname: NICKNAME,
-    type: "TEXT",
-  });
-
-  // textTitle
   const [textTitle, setTextTitle] = useState<string>("");
-  const handleTextTitleChange = async (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ): Promise<void> => {
+  const handleTextTitleChange = async (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): Promise<void> => {
     const { value } = event.target;
     setTextTitle(value);
   };
 
-  // mediaTitle
   const [mediaTitle, setMediaTitle] = useState<string>("");
-  const handleMediaTitleChange = async (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ): Promise<void> => {
+  const handleMediaTitleChange = async (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): Promise<void> => {
     const { value } = event.target;
     setMediaTitle(value);
   };
 
-  // linkTitle
   const [linkTitle, setLinkTitle] = useState<string>("");
-  const handleLinkTitleChange = async (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ): Promise<void> => {
+  const handleLinkTitleChange = async (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): Promise<void> => {
     const { value } = event.target;
     setLinkTitle(value);
   };
 
-  // 텍스트
   const [textContent, setTextContent] = useState<string>("");
-
   const handleEditorChange = async ({ html, text }: EditorChange) => {
     setTextContent(html);
-
     adjustEditorHeight();
   };
   useEffect(() => console.log("textContent : ", textContent), [textContent]);
 
   const adjustEditorHeight = () => {
     if (editorRef.current) {
-      const editorElement = editorRef.current.querySelector(".rc-md-editor"); // mdEditor root element
+      const editorElement = editorRef.current.editor;
       if (editorElement) {
         const scrollHeight = editorElement.scrollHeight;
-        const newHeight = Math.min(scrollHeight, 700); // 최대 높이 700px
+        const newHeight = Math.min(scrollHeight, 700);
         setEditorHeight(newHeight);
       }
     }
@@ -92,91 +70,73 @@ const BoardSubmit = () => {
 
   useEffect(() => {
     adjustEditorHeight();
-  }, [board.content]);
+  }, [textContent]);
 
-  // 이미지 & 비디오
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [fileList, setFileList] = useState<File[]>([]);
-  const handleFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ): Promise<void> => {
-    const urls: ImageLocalPreviewUrlsReturnType = await ImageLocalPreviewUrls({
-      event,
-    });
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
+    const urls: ImageLocalPreviewUrlsReturnType = await ImageLocalPreviewUrls({ event });
     if (!urls) return;
     setPreviewUrls(urls.previewUrls);
     setFileList(urls.fileList);
   };
 
   const imageUrlListDelete = async () => {
-    const res: ImageLocalPreviewUrlsDeleteType =
-      await ImageLocalPreviewUrlsDelete({ urls: previewUrls });
+    const res: ImageLocalPreviewUrlsDeleteType = await ImageLocalPreviewUrlsDelete({ urls: previewUrls });
     if (!res) return;
-
     setPreviewUrls(res);
   };
 
-  // link
   const [linkContent, setLinkContent] = useState<string>("");
-  const handleLinkContentChange = async (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ): Promise<void> => {
+  const handleLinkContentChange = async (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): Promise<void> => {
     const { value } = event.target;
     setLinkContent(value);
   };
 
-  const handleSubmit = async (
-    event: FormEvent<HTMLFormElement | HTMLButtonElement>,
-  ) => {
+  const [selectedCommunity, setSelectedCommunity] = useState<string>("");
+
+  const handleCommunityChange = async (event: React.ChangeEvent<HTMLSelectElement>): Promise<void> => {
+    const { value } = event.target;
+    setSelectedCommunity(value);
+  };
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement | HTMLButtonElement>) => {
     event.preventDefault();
 
-    const paramObj: {
-      category: string;
-      title: string;
-      content: string[];
-      identifierId: string;
-      nickname: string;
-      type: BoardType;
-    } = {
-      identifierId: ID,
-      content: [],
-      title: "",
-      category: "경제",
-      nickname: NICKNAME,
-      type: "TEXT",
-    };
+    let content: string[] = [];
+    let title = "";
 
     try {
       if (inputType === "TEXT") {
-        paramObj.title = textTitle;
-        paramObj.content = [textContent];
+        title = textTitle;
+        content = [textContent];
       }
 
       if (inputType === "MEDIA") {
-        const res: AwsImageUploadFunctionalityReturnType =
-          await AwsImageUploadFunctionality({ fileList });
+        const res: AwsImageUploadFunctionalityReturnType = await AwsImageUploadFunctionality({ fileList });
         if (!res) return;
 
-        paramObj.content = res.imageUrls;
-        paramObj.title = mediaTitle;
-        paramObj.type = "MEDIA";
-        console.log("midia paramObj : ", paramObj);
+        content = res.imageUrls;
+        title = mediaTitle;
       }
 
       if (inputType === "LINK") {
-        paramObj.title = linkTitle;
-        paramObj.content = [linkContent];
-        paramObj.type = "LINK";
+        title = linkTitle;
+        content = [linkContent];
       }
 
-      if (inputType === "YOUTUBE") {
-        //
-      }
+      const paramObj: SubmitParams = {
+        identifierId: ID,
+        content: content,
+        title: title,
+        category: selectedCommunity,
+        nickname: NICKNAME,
+        type: inputType,
+      };
 
       SubmitAPI(paramObj)
         .then((res) => {
           const response = res.data.response;
-
           if (res.status === 201) {
             navigate(`/boards/read?id=${response.id}&title=${response.title}`);
           }
@@ -189,7 +149,7 @@ const BoardSubmit = () => {
 
   const inputStyle = {
     width: "100%",
-    height: "30px",
+    height: "40px",
     marginBottom: "10px",
     paddingTop: "10px",
     paddingBottom: "10px",
@@ -199,10 +159,10 @@ const BoardSubmit = () => {
 
   const textareaStyle = {
     ...inputStyle,
-    minHeight: "50px", // 기본 높이를 작게 설정
-    maxHeight: "700px", // 최대 높이를 설정
-    overflowY: "auto" as "auto", // 최대 높이를 넘으면 스크롤이 생기도록 설정
-    resize: "none", // 사용자가 높이를 조정할 수 없도록 설정
+    minHeight: "50px",
+    maxHeight: "700px",
+    overflowY: "auto" as "auto",
+    resize: "none",
   };
 
   const submitButtonStyle = {
@@ -247,70 +207,50 @@ const BoardSubmit = () => {
   useEffect(() => {
     console.log("inputType : ", inputType);
   }, [inputType]);
+
   return (
     <>
-      <div style={{ display: "flex", width: "100%" }}>
+      <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
         <div style={{ flex: 2 }}>
           <div style={{ backgroundColor: "#4F657755", minHeight: "100vh" }}>
-            {/* <GlobalBar /> */}
-            <div style={{ display: "flex", width: "100%" }}>
-              {/* <GlobalSideBar /> */}
+            <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
               <div style={{ flex: 2 }}>
                 <div
                   style={{
-                    marginTop: "20px",
-                    width: "1000px",
+                    width: "100%",
+                    maxWidth: "726px",
                     height: "auto",
-                    margin: "20px auto",
                     padding: "30px",
-                    border: "1px solid #ccc",
-                    borderRadius: "8px",
                     background: "#fff",
                   }}
                 >
-                  <div
-                    style={{
-                      marginBottom: "20px",
-                      display: "flex",
-                      justifyContent: "flex-start",
-                    }}
-                  >
-                    <button
-                      onClick={() => setInputType("TEXT")}
-                      style={
-                        inputType === "TEXT" ? activeButtonStyle : buttonStyle
-                      }
-                    >
+                  <div style={{ marginBottom: "20px", display: "flex", justifyContent: "flex-start" }}>
+                    <button onClick={() => setInputType("TEXT")} style={inputType === "TEXT" ? activeButtonStyle : buttonStyle}>
                       텍스트
                     </button>
-                    <button
-                      onClick={() => setInputType("MEDIA")}
-                      style={
-                        inputType === "MEDIA" ? activeButtonStyle : buttonStyle
-                      }
-                    >
+                    <button onClick={() => setInputType("MEDIA")} style={inputType === "MEDIA" ? activeButtonStyle : buttonStyle}>
                       이미지 & 비디오
                     </button>
-                    <button
-                      onClick={() => setInputType("LINK")}
-                      style={
-                        inputType === "LINK" ? activeButtonStyle : buttonStyle
-                      }
-                    >
+                    <button onClick={() => setInputType("LINK")} style={inputType === "LINK" ? activeButtonStyle : buttonStyle}>
                       링크
                     </button>
                   </div>
+                  <select value={selectedCommunity} onChange={handleCommunityChange} style={inputStyle}>
+                    <option value="" disabled>
+                      커뮤니티 선택
+                    </option>
+                    <option value="경제">경제</option>
+                    <option value="기술">기술</option>
+                    <option value="스포츠">스포츠</option>
+                    <option value="예술">예술</option>
+                    {/* Add more communities as needed */}
+                  </select>
                   {inputType === "TEXT" && (
                     <>
-                      <input
-                        name="title"
-                        type="text"
-                        placeholder="제목"
-                        onChange={handleTextTitleChange}
-                        style={inputStyle}
-                      />
+                      <input name="title" type="text" placeholder="제목" onChange={handleTextTitleChange} style={inputStyle} />
                       <MdEditor
-                        style={{ height: "200px" }}
+                        ref={editorRef}
+                        style={{ height: editorHeight }}
                         renderHTML={(text) => mdParser.render(text)}
                         onChange={handleEditorChange}
                         view={{ menu: true, md: true, html: false }}
@@ -319,13 +259,7 @@ const BoardSubmit = () => {
                   )}
                   {inputType === "MEDIA" && (
                     <>
-                      <input
-                        name="title"
-                        type="text"
-                        placeholder="제목"
-                        onChange={handleMediaTitleChange}
-                        style={inputStyle}
-                      />
+                      <input name="title" type="text" placeholder="제목" onChange={handleMediaTitleChange} style={inputStyle} />
 
                       {previewUrls.length > 0 ? (
                         <>
@@ -333,54 +267,29 @@ const BoardSubmit = () => {
                           <Slider {...sliderSetting}>
                             {previewUrls.map((image, index) => (
                               <div key={index}>
-                                <img
-                                  src={image}
-                                  alt={`Preview image ${index}`}
-                                  style={{ height: "400px", width: "400px" }}
-                                />
+                                <img src={image} alt={`Preview image ${index}`} style={{ height: "400px", width: "400px" }} />
                               </div>
                             ))}
                           </Slider>
                         </>
                       ) : (
                         <>
-                          <input
-                            type={"file"}
-                            multiple
-                            onChange={handleFileChange}
-                            style={inputStyle}
-                          />
+                          <input type={"file"} multiple onChange={handleFileChange} style={inputStyle} />
                         </>
                       )}
                     </>
                   )}
                   {inputType === "LINK" && (
                     <>
-                      <input
-                        name="title"
-                        type="text"
-                        placeholder="제목"
-                        onChange={handleLinkTitleChange}
-                        style={inputStyle}
-                      />
-                      <input
-                        type="text"
-                        placeholder="링크 추가"
-                        onChange={(e) => handleLinkContentChange(e)}
-                        style={inputStyle}
-                      />
+                      <input name="title" type="text" placeholder="제목" onChange={handleLinkTitleChange} style={inputStyle} />
+                      <input type="text" placeholder="링크 추가" onChange={(e) => handleLinkContentChange(e)} style={inputStyle} />
                     </>
                   )}
-                  <button
-                    type="submit"
-                    style={submitButtonStyle}
-                    onClick={(e) => handleSubmit(e)}
-                  >
+                  <button type="submit" style={submitButtonStyle} onClick={(e) => handleSubmit(e)}>
                     보내기
                   </button>
                 </div>
               </div>
-              {/* <RightSideBar /> */}
             </div>
           </div>
         </div>
