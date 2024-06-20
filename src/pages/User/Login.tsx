@@ -119,8 +119,6 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
       console.log("EMAIL : ", EMAIL);
 
       // onSwitchView();
-
-      //
     } else if (TYPE === "EXITING_USER") {
       const loginProfile = await UsersKakaoOAuthLoginAPI();
       if (!loginProfile) return;
