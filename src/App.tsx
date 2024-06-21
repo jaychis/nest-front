@@ -12,7 +12,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import RightSideBar from "./pages/Global/RightSideBar";
 import SearchList from "./pages/Search/SearchList";
 import CommunityCreatePage1 from "./pages/Board/CommunityCreate/CommunityCreatePage1";
-import CommunityCreatePage2 from "./pages/Board/CommunityCreate/CommunityCreatePage2";
+// import CommunityCreatePage2 from "./pages/Board/CommunityCreate/CommunityCreatePage2";
 import CommunityCreatePage3 from "./pages/Board/CommunityCreate/CommunityCreatePage3";
 import CommunityCreatePage4 from "./pages/Board/CommunityCreate/CommunityCreatePage4";
 import { CommunityProvider } from "./contexts/CommunityContext";
@@ -104,14 +104,14 @@ function App() {
                 </Layout>
               }
             />
-            <Route
+            {/* <Route
               path="/community/create2"
               element={
                 <Layout>
                   <CommunityCreatePage2 />
                 </Layout>
               }
-            />
+            /> */}
             <Route
               path="/community/create3"
               element={
