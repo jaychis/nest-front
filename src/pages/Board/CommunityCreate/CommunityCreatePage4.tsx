@@ -4,12 +4,13 @@ import { useCommunity } from "../../../contexts/CommunityContext";
 import { CommunitySubmitAPI } from "../../api/CommunityApi";
 import { CommunityVisibilityType } from "../../../_common/CollectionTypes";
 import { CommunityTagsSubmitAPI } from "../../api/CommunityTagsAPI";
+import { FaGlobe, FaLock, FaUsers } from "react-icons/fa"; // Importing icons from react-icons
 
 const CommunityCreatePage4: React.FC = () => {
   const navigate = useNavigate();
   const { communityName, description, banner, icon, topics } = useCommunity();
-  const [visibility, setVisibility] =
-    useState<CommunityVisibilityType>("PUBLIC");
+  const [visibility, setVisibility] = useState<CommunityVisibilityType>("PUBLIC");
+  
   useEffect(() => {
     console.log("topics : ", topics);
   }, [topics]);
@@ -29,6 +30,7 @@ const CommunityCreatePage4: React.FC = () => {
     visibility: "PUBLIC",
     topics: [],
   });
+
   const handleSubmit = async (): Promise<void> => {
     const coRes = await CommunitySubmitAPI({
       name: isCommunity.name,
@@ -79,7 +81,13 @@ const CommunityCreatePage4: React.FC = () => {
               onChange={() => setVisibility("PUBLIC")}
               style={styles.radio}
             />
-            공개
+            <div style={styles.optionContent}>
+              <FaGlobe style={styles.icon} />
+              <div>
+                <div>공개</div>
+                <div style={styles.optionDescription}>모든 사용자가 이 커뮤니티를 볼 수 있습니다.</div>
+              </div>
+            </div>
           </label>
         </div>
         <div style={styles.formGroup}>
@@ -92,7 +100,13 @@ const CommunityCreatePage4: React.FC = () => {
               onChange={() => setVisibility("RESTRICTED")}
               style={styles.radio}
             />
-            제한
+            <div style={styles.optionContent}>
+              <FaUsers style={styles.icon} />
+              <div>
+                <div>제한</div>
+                <div style={styles.optionDescription}>모든 사용자가 이 커뮤니티를 볼 수 있지만, 참여하려면 승인이 필요합니다.</div>
+              </div>
+            </div>
           </label>
         </div>
         <div style={styles.formGroup}>
@@ -105,7 +119,13 @@ const CommunityCreatePage4: React.FC = () => {
               onChange={() => setVisibility("PRIVATE")}
               style={styles.radio}
             />
-            비공개
+            <div style={styles.optionContent}>
+              <FaLock style={styles.icon} />
+              <div>
+                <div>비공개</div>
+                <div style={styles.optionDescription}>초대된 사용자만 이 커뮤니티를 볼 수 있습니다.</div>
+              </div>
+            </div>
           </label>
         </div>
         <div style={styles.buttonGroup}>
@@ -134,7 +154,7 @@ const styles = {
     backgroundColor: "#FFFFFF",
     padding: "20px",
     maxWidth: "600px",
-    height: "400px",
+    height: "auto",
     margin: "50px auto",
     boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
     borderRadius: "8px",
@@ -154,13 +174,28 @@ const styles = {
     marginBottom: "20px",
   },
   label: {
-    marginBottom: "8px",
+    display: "flex",
+    alignItems: "center",
     fontSize: "14px",
     color: "#555",
     fontWeight: "bold" as "bold",
+    cursor: "pointer",
   },
   radio: {
     marginRight: "10px",
+  },
+  optionContent: {
+    display: "flex",
+    alignItems: "center",
+  },
+  icon: {
+    width: "25px",
+    height: "25px",
+    margin: "0 10px",
+  },
+  optionDescription: {
+    fontSize: "12px",
+    color: "#888",
   },
   buttonGroup: {
     display: "flex",

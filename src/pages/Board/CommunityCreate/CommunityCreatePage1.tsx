@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useRef, ChangeEvent, CSSProperties } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCommunity } from "../../../contexts/CommunityContext";
+import {
+  AwsImageUploadFunctionality,
+  AwsImageUploadFunctionalityReturnType,
+  ImageLocalPreviewUrls,
+  ImageLocalPreviewUrlsReturnType,
+} from "../../../_common/ImageUploadFuntionality";
 
 const CommunityCreatePage1: React.FC = () => {
   const navigate = useNavigate();
@@ -24,32 +30,50 @@ const CommunityCreatePage1: React.FC = () => {
       setTextareaHeight(`${textareaRef.current.scrollHeight}px`);
     }
   }, [description]);
-  
+
   useEffect(() => {
-    if (profilePicture) {
+    if (profilePicture && typeof profilePicture !== "string") {
       const reader = new FileReader();
       reader.onloadend = () => {
         setProfilePreview(reader.result as string);
       };
       reader.readAsDataURL(profilePicture);
+    } else if (typeof profilePicture === "string") {
+      setProfilePreview(profilePicture);
     } else {
       setProfilePreview(null);
     }
   }, [profilePicture]);
 
   useEffect(() => {
-    if (backgroundPicture) {
+    if (backgroundPicture && typeof backgroundPicture !== "string") {
       const reader = new FileReader();
       reader.onloadend = () => {
         setBackgroundPreview(reader.result as string);
       };
       reader.readAsDataURL(backgroundPicture);
+    } else if (typeof backgroundPicture === "string") {
+      setBackgroundPreview(backgroundPicture);
     } else {
       setBackgroundPreview(null);
     }
   }, [backgroundPicture]);
 
-  const handleNext = () => {
+  const handleNext = async () => {
+    if (profilePicture && typeof profilePicture !== "string") {
+      const profileRes: AwsImageUploadFunctionalityReturnType =
+        await AwsImageUploadFunctionality({ fileList: [profilePicture] });
+      if (!profileRes) return;
+      setProfilePicture(profileRes.imageUrls[0]);
+    }
+
+    if (backgroundPicture && typeof backgroundPicture !== "string") {
+      const backgroundRes: AwsImageUploadFunctionalityReturnType =
+        await AwsImageUploadFunctionality({ fileList: [backgroundPicture] });
+      if (!backgroundRes) return;
+      setBackgroundPicture(backgroundRes.imageUrls[0]);
+    }
+
     navigate("/community/create3", {
       state: { communityName, description },
     });
@@ -59,14 +83,18 @@ const CommunityCreatePage1: React.FC = () => {
     navigate("/");
   };
 
-  const handleProfilePictureChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null;
-    setProfilePicture(file);
+  const handleProfilePictureChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const urls: ImageLocalPreviewUrlsReturnType = await ImageLocalPreviewUrls({ event: e });
+    if (!urls) return;
+    setProfilePreview(urls.previewUrls[0]);
+    setProfilePicture(urls.fileList[0]);
   };
 
-  const handleBackgroundPictureChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null;
-    setBackgroundPicture(file);
+  const handleBackgroundPictureChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const urls: ImageLocalPreviewUrlsReturnType = await ImageLocalPreviewUrls({ event: e });
+    if (!urls) return;
+    setBackgroundPreview(urls.previewUrls[0]);
+    setBackgroundPicture(urls.fileList[0]);
   };
 
   return (
@@ -106,7 +134,7 @@ const CommunityCreatePage1: React.FC = () => {
                   {profilePreview ? (
                     <img src={profilePreview} alt="Profile Preview" style={styles.imagePreview} />
                   ) : (
-                    <div style={styles.placeholder}>프로필 사진</div>
+                    <div style={styles.placeholder}>프로필</div>
                   )}
                 </div>
               </div>
