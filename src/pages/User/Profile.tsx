@@ -189,7 +189,7 @@ const styles = {
     padding: "20px",
     borderRadius: "10px",
     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-    maxWidth: "700px", // 섹션 너비 조정
+    maxWidth: "1450px", // 섹션 너비 조정
     width: "100%",
   },
   sectionTitle: {
