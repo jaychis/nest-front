@@ -16,6 +16,7 @@ const GlobalSideBar = () => {
   const [selectedButton, setSelectedButton] = useState<MainListTypes>("HOME");
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const isLoggedIn = !!localStorage.getItem("access_token");
 
   type CommunityType = {
     readonly name: string;
@@ -74,15 +75,23 @@ const GlobalSideBar = () => {
     setDisplayCount((prevCount) => prevCount + 5);
   };
 
+  const handleCreateCommunityClick = () => {
+    if (!isLoggedIn) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+    navigate("/community/create1");
+  };
+
   return (
     <div
       style={{
         display: "flex",
         flexDirection: "column",
-        width: "25vh",
+        width: "200px",
         height: "100%",
         background: "#fff",
-        marginRight: "20px",
+        marginRight: "10px",
         borderRadius: "8px",
         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
         border: "1px solid #ddd",
@@ -94,18 +103,18 @@ const GlobalSideBar = () => {
         style={{
           display: "flex",
           justifyContent: "center",
-          padding: "10px 0",
+          padding: "6px 0",
           backgroundColor: selectedButton === "HOME" || isSideHovered === "HOME" ? "#f0f0f0" : "white",
           borderRadius: "5px",
-          margin: "5px",
+          margin: "1px",
         }}
         onMouseEnter={() => setIsSideHovered("HOME")}
         onMouseLeave={() => setIsSideHovered(null)}
       >
-        <span onClick={() => handleClick("HOME")} style={{ fontSize: "24px", cursor: "pointer" }}>
+        <span onClick={() => handleClick("HOME")} style={{ fontSize: "16px", cursor: "pointer" }}>
           🏠
         </span>
-        <span onClick={() => handleClick("HOME")} style={{ marginLeft: "8px", cursor: "pointer", fontSize: "24px" }}>
+        <span onClick={() => handleClick("HOME")} style={{ marginLeft: "6px", cursor: "pointer", fontSize: "16px" }}>
           홈
         </span>
       </div>
@@ -113,18 +122,18 @@ const GlobalSideBar = () => {
         style={{
           display: "flex",
           justifyContent: "center",
-          padding: "10px 0",
+          padding: "6px 0",
           backgroundColor: selectedButton === "POPULAR" || isSideHovered === "POPULAR" ? "#f0f0f0" : "white",
           borderRadius: "5px",
-          margin: "5px",
+          margin: "1px",
         }}
         onMouseEnter={() => setIsSideHovered("POPULAR")}
         onMouseLeave={() => setIsSideHovered(null)}
       >
-        <span onClick={() => handleClick("POPULAR")} style={{ fontSize: "24px", cursor: "pointer" }}>
+        <span onClick={() => handleClick("POPULAR")} style={{ fontSize: "16px", cursor: "pointer" }}>
           🔥
         </span>
-        <span onClick={() => handleClick("POPULAR")} style={{ marginLeft: "8px", cursor: "pointer", fontSize: "24px" }}>
+        <span onClick={() => handleClick("POPULAR")} style={{ marginLeft: "6px", cursor: "pointer", fontSize: "16px" }}>
           실시간
         </span>
       </div>
@@ -132,48 +141,55 @@ const GlobalSideBar = () => {
         style={{
           display: "flex",
           justifyContent: "center",
-          padding: "10px 0",
+          padding: "6px 0",
           backgroundColor: selectedButton === "ALL" || isSideHovered === "ALL" ? "#f0f0f0" : "white",
           borderRadius: "5px",
-          margin: "5px",
+          margin: "1px",
         }}
         onMouseEnter={() => setIsSideHovered("ALL")}
         onMouseLeave={() => setIsSideHovered(null)}
       >
-        <span onClick={() => handleClick("ALL")} style={{ fontSize: "24px", cursor: "pointer" }}>
+        <span onClick={() => handleClick("ALL")} style={{ fontSize: "16px", cursor: "pointer" }}>
           🌐
         </span>
-        <span onClick={() => handleClick("ALL")} style={{ marginLeft: "8px", cursor: "pointer", fontSize: "24px" }}>
+        <span onClick={() => handleClick("ALL")} style={{ marginLeft: "6px", cursor: "pointer", fontSize: "16px" }}>
           게시글
         </span>
       </div>
-      <div style={{ fontWeight: "bold", paddingLeft: "10px" }}>RECENT</div>
-      <div style={{ padding: "10px 0 20px 10px" }}>
-        <div style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}>
-          <span style={{ fontSize: "24px" }}>🇰🇷</span>
-          <span style={{ marginLeft: "8px" }}>r/korea</span>
+      <div style={{ fontWeight: "bold", paddingLeft: "10px", fontSize: "14px" }}>RECENT</div>
+      <div style={{ padding: "5px 0 10px 10px" }}>
+        <div style={{ display: "flex", alignItems: "center", marginBottom: "6px" }}>
+          <span style={{ fontSize: "20px" }}>
+            🇰🇷
+          </span>
+          <span style={{ marginLeft: "6px", fontSize: "14px" }}>
+            r/korea
+          </span>
         </div>
       </div>
-      <div style={{ fontWeight: "bold", paddingLeft: "10px" }}>커뮤니티</div>
+      <div style={{ fontWeight: "bold", paddingLeft: "10px", fontSize: "14px" }}>커뮤니티</div>
       <div
         style={{
           display: "flex",
-          justifyContent: "center",
-          padding: "10px 0",
+          alignItems: "center",
+          padding: "8px 0",
           backgroundColor: isSideHovered === "CREATE_COMMUNITY" ? "#f0f0f0" : "white",
           borderRadius: "10px",
-          margin: "10px",
-          marginBottom: "10px",
+          margin: "5px",
           cursor: "pointer",
         }}
         onMouseEnter={() => setIsSideHovered("CREATE_COMMUNITY")}
         onMouseLeave={() => setIsSideHovered(null)}
-        onClick={() => navigate("/community/create1")}
+        onClick={handleCreateCommunityClick}
       >
-        <span style={{ fontSize: "24px", marginRight: "8px" }}>➕</span>
-        <span style={{ fontSize: "17px" }}>커뮤니티 만들기</span>
+        <span style={{ fontSize: "14px", marginRight: "10px" }}>
+          ➕
+        </span>
+        <span style={{ fontSize: "14px" }}>
+          커뮤니티 만들기
+        </span>
       </div>
-      <div style={{ flex: 1, padding: "10px 0 20px 10px", overflowY: "auto" }}>
+      <div style={{ flex: 1, padding: "5px 0 10px 10px", overflowY: "auto" }}>
         {communityList.length > 0
           ? communityList.slice(0, displayCount).map((community: CommunityType, index) => (
               <div
@@ -181,20 +197,20 @@ const GlobalSideBar = () => {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  marginBottom: "8px",
+                  marginBottom: "6px",
                 }}
               >
                 <img
                   src={logo}
                   alt={"community icon"}
                   style={{
-                    width: "25px",
-                    height: "25px",
+                    width: "20px",
+                    height: "20px",
                     cursor: "pointer",
                   }}
                   onClick={() => handleCommunityClick(community.name)}
                 />
-                <span style={{ marginLeft: "8px", cursor: "pointer" }} onClick={() => handleCommunityClick(community.name)}>
+                <span style={{ marginLeft: "6px", cursor: "pointer", fontSize: "14px" }} onClick={() => handleCommunityClick(community.name)}>
                   j/{community.name}
                 </span>
               </div>
@@ -207,7 +223,7 @@ const GlobalSideBar = () => {
             onClick={handleLoadMore}
             disabled={loading}
             style={{
-              padding: "10px 20px",
+              padding: "8px 16px",
               borderRadius: "5px",
               backgroundColor: "#0079D3",
               color: "white",

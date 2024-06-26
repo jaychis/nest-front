@@ -1,4 +1,3 @@
-// src/contexts/CommunityContext.tsx
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
 interface CommunityContextType {
@@ -12,6 +11,10 @@ interface CommunityContextType {
   setBanner: (banner: string | null) => void;
   setIcon: (icon: string | null) => void;
   setTopics: (topics: string[]) => void;
+  profilePicture: File | string | null;
+  setProfilePicture: (file: File | string | null) => void;
+  backgroundPicture: File | string | null;
+  setBackgroundPicture: (file: File | string | null) => void;
 }
 
 const CommunityContext = createContext<CommunityContextType | undefined>(
@@ -38,7 +41,9 @@ export const CommunityProvider: React.FC<CommunityProviderProps> = ({
   const [banner, setBanner] = useState<string | null>(null);
   const [icon, setIcon] = useState<string | null>(null);
   const [topics, setTopics] = useState<string[]>([""]);
-
+  const [profilePicture, setProfilePicture] = useState<File | string | null>(null);
+  const [backgroundPicture, setBackgroundPicture] = useState<File | string | null>(null);
+  
   return (
     <CommunityContext.Provider
       value={{
@@ -52,6 +57,10 @@ export const CommunityProvider: React.FC<CommunityProviderProps> = ({
         setBanner,
         setIcon,
         setTopics,
+        profilePicture,
+        setProfilePicture,
+        backgroundPicture,
+        setBackgroundPicture,
       }}
     >
       {children}

@@ -17,6 +17,7 @@ import {
   ImageLocalPreviewUrlsDeleteType,
   ImageLocalPreviewUrlsReturnType,
 } from "../../_common/ImageUploadFuntionality";
+import { GetCommunitiesNameAPI } from "../api/CommunityApi";
 
 const mdParser = new MarkdownIt();
 interface EditorChange {
@@ -94,6 +95,36 @@ const BoardSubmit = () => {
   };
 
   const [selectedCommunity, setSelectedCommunity] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchResults, setSearchResults] = useState<string[]>([]);
+
+  const handleCommunitySearchChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setSearchTerm(value);
+
+    if (value) {
+      try {
+        const res = await GetCommunitiesNameAPI({ name: value });
+        if (res && res.data && res.data.response) {
+          console.log("Search results:", res.data.response);
+          setSearchResults(res.data.response.map((community: any) => community.name));
+        } else {
+          setSearchResults([]);
+        }
+      } catch (error) {
+        console.error("Error fetching communities:", error);
+        setSearchResults([]);
+      }
+    } else {
+      setSearchResults([]);
+    }
+  };
+
+  const handleCommunitySelect = (community: string) => {
+    setSelectedCommunity(community);
+    setSearchTerm("");
+    setSearchResults([]);
+  };
 
   const handleCommunityChange = async (event: React.ChangeEvent<HTMLSelectElement>): Promise<void> => {
     const { value } = event.target;
@@ -218,7 +249,7 @@ const BoardSubmit = () => {
                 <div
                   style={{
                     width: "100%",
-                    maxWidth: "726px",
+                    maxWidth: "1450px",
                     height: "auto",
                     padding: "30px",
                     background: "#fff",
@@ -235,16 +266,34 @@ const BoardSubmit = () => {
                       링크
                     </button>
                   </div>
-                  <select value={selectedCommunity} onChange={handleCommunityChange} style={inputStyle}>
-                    <option value="" disabled>
-                      커뮤니티 선택
-                    </option>
-                    <option value="경제">경제</option>
-                    <option value="기술">기술</option>
-                    <option value="스포츠">스포츠</option>
-                    <option value="예술">예술</option>
-                    {/* Add more communities as needed */}
-                  </select>
+
+                  <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={handleCommunitySearchChange}
+                    placeholder="커뮤니티 검색"
+                    style={inputStyle}
+                  />
+                  {searchResults.length > 0 && (
+                    <ul style={{ listStyleType: "none", padding: 0 }}>
+                      {searchResults.map((result, index) => (
+                        <li
+                          key={index}
+                          onClick={() => handleCommunitySelect(result)}
+                          style={{
+                            cursor: "pointer",
+                            padding: "8px",
+                            backgroundColor: index % 2 === 0 ? "#f9f9f9" : "#fff",
+                          }}
+                        >
+                          {result}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  {searchResults.length === 0 && searchTerm && <div>No communities found.</div>}
+                  {selectedCommunity && <div>Selected Community: {selectedCommunity}</div>}
+
                   {inputType === "TEXT" && (
                     <>
                       <input name="title" type="text" placeholder="제목" onChange={handleTextTitleChange} style={inputStyle} />

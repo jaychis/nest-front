@@ -12,10 +12,11 @@ import ScrollToTop from "./components/ScrollToTop";
 import RightSideBar from "./pages/Global/RightSideBar";
 import SearchList from "./pages/Search/SearchList";
 import CommunityCreatePage1 from "./pages/Board/CommunityCreate/CommunityCreatePage1";
-import CommunityCreatePage2 from "./pages/Board/CommunityCreate/CommunityCreatePage2";
 import CommunityCreatePage3 from "./pages/Board/CommunityCreate/CommunityCreatePage3";
 import CommunityCreatePage4 from "./pages/Board/CommunityCreate/CommunityCreatePage4";
 import { CommunityProvider } from "./contexts/CommunityContext";
+import ErrorBoundary from "./pages/ErrorBoundary";
+
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -50,6 +51,7 @@ function App() {
       <Router>
         <ScrollToTop />
         <CommunityProvider>
+          <ErrorBoundary> {/* Wrap the Routes with ErrorBoundary */}
           <Routes>
             <Route
               path="/"
@@ -104,14 +106,14 @@ function App() {
                 </Layout>
               }
             />
-            <Route
+            {/* <Route
               path="/community/create2"
               element={
                 <Layout>
                   <CommunityCreatePage2 />
                 </Layout>
               }
-            />
+            /> */}
             <Route
               path="/community/create3"
               element={
@@ -139,6 +141,7 @@ function App() {
             />
             {/* 새 라우트 추가 */}
           </Routes>
+          </ErrorBoundary>
         </CommunityProvider>
       </Router>
     </>

@@ -122,7 +122,7 @@ const CommunityCreatePage3: React.FC = () => {
         <div style={styles.buttonGroup}>
           <button
             type="button"
-            onClick={() => navigate("/community/create2")}
+            onClick={() => navigate("/community/create1")}
             style={styles.cancelButton}
           >
             이전

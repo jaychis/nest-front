@@ -4,22 +4,20 @@ import { useNavigate } from "react-router-dom";
 import { GetRecentViewedBoardsAPI } from "../api/ViewedBoardsApi";
 
 type SelectTapTypes = "topSearches" | "recentBoards";
+
+type RecentViewedPost = {
+  id: string;
+  title: string;
+};
+
 const RightSideBar = () => {
   const [isTopTenList, setIsTopTenList] = useState([]);
+  const [recentViewedList, setRecentViewedList] = useState<RecentViewedPost[]>([]); // State for recent viewed posts with type
   const [selectedTab, setSelectedTab] = useState<SelectTapTypes>("topSearches");
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [hoveredRecentPostIndex, setHoveredRecentPostIndex] = useState<
-    number | null
-  >(null);
+  const [hoveredRecentPostIndex, setHoveredRecentPostIndex] = useState<number | null>(null);
   const navigate = useNavigate(); // Initialize useNavigate
   const isLoggedIn = !!localStorage.getItem("access_token");
-
-
-  const demoRecentPosts = [
-    { id: "1", title: "최근 본 게시물 1" },
-    { id: "2", title: "최근 본 게시물 2" },
-    { id: "3", title: "최근 본 게시물 3" },
-  ];
 
   useEffect(() => {
     const fetchTopTenList = async (): Promise<void> => {
@@ -58,7 +56,7 @@ const RightSideBar = () => {
         const response = res.data.response;
         console.log("response : ", response);
 
-        setIsTopTenList(response);
+        setRecentViewedList(response); // Update the recent viewed posts state
       };
       recentBoardList();
     }
@@ -88,7 +86,7 @@ const RightSideBar = () => {
         </div>
         <div
           style={selectedTab === "recentBoards" ? styles.activeTab : styles.tab}
-          onClick={() => setSelectedTab("recentBoards")}
+          onClick={() => handleTabClick("recentBoards")}
         >
           최근 본 게시물
         </div>
@@ -130,30 +128,34 @@ const RightSideBar = () => {
             )}
           </ol>
         </div>
-    ) : (
+      ) : (
         isLoggedIn && (
           <div>
             <h3 style={styles.header}>최근 본 게시물</h3>
             <ul style={styles.list}>
-              {demoRecentPosts.map((post, index) => (
-                <li
-                  key={post.id}
-                  style={
-                    hoveredRecentPostIndex === index
-                      ? styles.hoveredListItem
-                      : styles.listItem
-                  }
-                  onMouseEnter={() => setHoveredRecentPostIndex(index)}
-                  onMouseLeave={() => setHoveredRecentPostIndex(null)}
-                >
-                  <a
-                    href={`/boards/read?id=${post.id}&title=${post.title}`}
-                    style={styles.link}
+              {recentViewedList.length > 0 ? (
+                recentViewedList.map((post, index) => (
+                  <li
+                    key={post.id}
+                    style={
+                      hoveredRecentPostIndex === index
+                        ? styles.hoveredListItem
+                        : styles.listItem
+                    }
+                    onMouseEnter={() => setHoveredRecentPostIndex(index)}
+                    onMouseLeave={() => setHoveredRecentPostIndex(null)}
                   >
-                    {post.title}
-                  </a>
-                </li>
-              ))}
+                    <a
+                      href={`/boards/read?id=${post.id}&title=${post.title}`}
+                      style={styles.link}
+                    >
+                      {post.title}
+                    </a>
+                  </li>
+                ))
+              ) : (
+                <p>최근 본 게시물이 없습니다.</p>
+              )}
             </ul>
           </div>
         )
@@ -164,7 +166,7 @@ const RightSideBar = () => {
 
 const styles = {
   container: {
-    width: "350px",
+    width: "250px",
     padding: "20px",
     background: "#fff",
     border: "1px solid #ddd",
@@ -186,6 +188,8 @@ const styles = {
     border: "1px solid #ddd",
     background: "#f0f0f0",
     fontWeight: "bold" as "bold",
+    marginRight: "10px", // Added marginRight to create space between tabs
+    fontSize: "14px", // Reduced font size
   },
   activeTab: {
     padding: "10px 20px",
@@ -195,6 +199,7 @@ const styles = {
     background: "#0079D3",
     color: "#fff",
     fontWeight: "bold" as "bold",
+    fontSize: "14px", // Reduced font size
   },
   header: {
     borderBottom: "1px solid #ddd",
