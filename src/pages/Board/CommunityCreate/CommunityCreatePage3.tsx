@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // useNavigate를 import합니다.
+import { useNavigate } from "react-router-dom";
 import { useCommunity } from "../../../contexts/CommunityContext";
 import { TagListAPI } from "../../api/TagApi";
 import { CommunitySubmitAPI } from "../../api/CommunityApi";
 
 
 const CommunityCreatePage3: React.FC = () => {
-  const navigate = useNavigate(); // useNavigate를 사용하여 navigate 함수를 정의합니다.
+  const navigate = useNavigate();
   const { communityName, description, banner, icon, topics, setTopics } = useCommunity();
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -100,19 +100,12 @@ const CommunityCreatePage3: React.FC = () => {
         </div>
         <div style={styles.selectedTopics}>
           {topics.map((topic, index) => (
-            <div
-              key={index}
-              style={{
-                ...styles.topicItem,
-                padding: topics.length > 1 ? "10px 15px" : "10px 0",
-                justifyContent: topics.length > 1 ? "space-between" : "center",
-              }}
-            >
+            <div key={index} style={styles.topicItem}>
               <span style={styles.topicText}>{topic}</span>
               <button
                 type="button"
                 onClick={() => handleRemoveTopic(index)}
-                style={{ ...styles.removeButton, display: topics.length > 1 ? "inline-block" : "none" }}
+                style={styles.removeButton}
               >
                 &times;
               </button>
@@ -220,11 +213,13 @@ const styles = {
   topicItem: {
     display: "flex",
     alignItems: "center",
-    backgroundColor: "#EDEDED",
+    backgroundColor: "#F0F0F0",
     borderRadius: "20px",
+    padding: "8px 12px",
   },
   topicText: {
     fontSize: "14px",
+    marginRight: "10px",
   },
   removeButton: {
     background: "none",

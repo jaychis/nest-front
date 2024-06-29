@@ -98,7 +98,7 @@ const CommunityCreatePage1: React.FC = () => {
   };
 
   return (
-    <div style={{ ...styles.container, height: `calc(400px + ${textareaHeight} - 120px)` }}>
+    <div style={{ ...styles.container, height: `calc(400px + ${textareaHeight} + 40px)` }}>
       <h2 style={styles.heading}>커뮤니티 만들기</h2>
       <form onSubmit={(e) => e.preventDefault()} style={styles.form}>
         <div style={styles.formGroup}>
@@ -236,6 +236,7 @@ const styles: { [key: string]: CSSProperties } = {
     border: "1px solid #CCC",
     fontSize: "14px",
     minHeight: "120px",
+    marginTop: 10,
     resize: "none",
     backgroundColor: "#F7F7F7",
     boxSizing: "border-box",
@@ -251,8 +252,8 @@ const styles: { [key: string]: CSSProperties } = {
     cursor: "pointer",
   },
   imagePreviewWrapper: {
-    width: "50px",
-    height: "50px",
+    width: "90px",
+    height: "90px",
     borderRadius: "50%",
     backgroundColor: "#E0E0E0",
     display: "flex",
@@ -263,7 +264,7 @@ const styles: { [key: string]: CSSProperties } = {
   },
   backgroundImagePreviewWrapper: {
     width: "100%",
-    height: "100px",
+    height: "140px",
     borderRadius: "12px",
     backgroundColor: "#E0E0E0",
     display: "flex",

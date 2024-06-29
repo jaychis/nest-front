@@ -15,7 +15,6 @@ import CommunityCreatePage1 from "./pages/Board/CommunityCreate/CommunityCreateP
 import CommunityCreatePage3 from "./pages/Board/CommunityCreate/CommunityCreatePage3";
 import CommunityCreatePage4 from "./pages/Board/CommunityCreate/CommunityCreatePage4";
 import { CommunityProvider } from "./contexts/CommunityContext";
-import ErrorBoundary from "./pages/ErrorBoundary";
 
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
@@ -51,7 +50,6 @@ function App() {
       <Router>
         <ScrollToTop />
         <CommunityProvider>
-          <ErrorBoundary> {/* Wrap the Routes with ErrorBoundary */}
           <Routes>
             <Route
               path="/"
@@ -141,7 +139,6 @@ function App() {
             />
             {/* 새 라우트 추가 */}
           </Routes>
-          </ErrorBoundary>
         </CommunityProvider>
       </Router>
     </>

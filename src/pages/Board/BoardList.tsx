@@ -5,6 +5,7 @@ import { CardType } from "../../_common/CollectionTypes";
 import { MainListTypeState } from "../../reducers/mainListTypeSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
+import EmptyState from "../../components/EmptyState";
 
 interface ContainerProps {
   children?: React.ReactNode;
@@ -196,7 +197,7 @@ const BoardList = () => {
               );
             })
           ) : (
-            <div>텅!!</div>
+            <EmptyState /> // Use the EmptyState component
           )}
         </CardsContainer>
       </MainContainer>

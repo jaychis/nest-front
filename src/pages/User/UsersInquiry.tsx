@@ -5,6 +5,7 @@ import Card from "../../components/Card";
 import { useSearchParams } from "react-router-dom";
 import { UsersInquiryAPI } from "../api/UserApi";
 import { CardType, ReactionStateTypes } from "../../_common/CollectionTypes";
+import EmptyState from "../../components/EmptyState";
 
 interface ContainerProps {
   children?: React.ReactNode;
@@ -88,7 +89,7 @@ const UsersInquiry = () => {
                 );
               })
             ) : (
-              <div>'텅'</div>
+              <EmptyState /> // Use the EmptyState component
             )}
           </CardsContainer>
         </MainContainer>
