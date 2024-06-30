@@ -101,6 +101,11 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
     }
   };
 
+  const naverOauthLogin = async () => {
+    console.log("naverOauthLogin check");
+    alert("naverOauthLogin check");
+  };
+
   const kakaoOauthLogin = async () => {
     console.log("kakaoOauthLogin check");
     const res = await UsersKakaoOAuthSignUpAPI();
@@ -167,7 +172,7 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
             style={styles.socialButton}
             onClick={() => alert("Continue with Naver")}
           >
-            <SiNaver style={styles.socialLogo} />
+            <SiNaver style={styles.socialLogo} onClick={naverOauthLogin} />
             네이버로 로그인
           </button>
           <button style={styles.socialButton} onClick={kakaoOauthLogin}>
