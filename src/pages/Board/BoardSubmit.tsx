@@ -249,9 +249,8 @@ const BoardSubmit = () => {
                 <div
                   style={{
                     width: "100%",
-                    maxWidth: "1450px",
                     height: "auto",
-                    padding: "30px",
+                    padding: "10px",
                     background: "#fff",
                   }}
                 >
