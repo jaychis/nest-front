@@ -68,4 +68,4 @@ jobs:
           docker stop nest-front || true && docker rm nest-front || true
           docker rmi ${{ env.DOCKER_IMAGE }}:latest || true
           docker run -itd -p 9797:9797 
-            --name nest --restart always ${{ env.DOCKER_IMAGE }}:latest
+            --name nest-front --restart always ${{ env.DOCKER_IMAGE }}:latest
