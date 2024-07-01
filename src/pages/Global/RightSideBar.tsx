@@ -22,11 +22,9 @@ const RightSideBar = () => {
   useEffect(() => {
     const fetchTopTenList = async (): Promise<void> => {
       const res = await GetTopTenSearchesAPI();
-
       if (!res) return;
       const response = res.data.response;
       console.log("response ; ", response);
-
       setIsTopTenList(response);
     };
     fetchTopTenList();
@@ -36,11 +34,9 @@ const RightSideBar = () => {
     if (selectedTab === "topSearches") {
       const fetchTopTenList = async (): Promise<void> => {
         const res = await GetTopTenSearchesAPI();
-
         if (!res) return;
         const response = res.data.response;
         console.log("response ; ", response);
-
         setIsTopTenList(response);
       };
       fetchTopTenList();
@@ -56,7 +52,12 @@ const RightSideBar = () => {
         const response = res.data.response;
         console.log("response : ", response);
 
-        setRecentViewedList(response); // Update the recent viewed posts state
+        const formattedRecentViewedList = response.map((item: any) => ({
+          id: item.board_id,
+          title: item.board.title,
+        }));
+
+        setRecentViewedList(formattedRecentViewedList); // Update the recent viewed posts state
       };
       recentBoardList();
     }

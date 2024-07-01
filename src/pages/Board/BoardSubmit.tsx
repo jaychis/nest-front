@@ -95,7 +95,7 @@ const BoardSubmit = () => {
   };
 
   const [selectedCommunity, setSelectedCommunity] = useState<string>("");
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>("jaych");
   const [searchResults, setSearchResults] = useState<string[]>([]);
 
   const handleCommunitySearchChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -180,8 +180,9 @@ const BoardSubmit = () => {
 
   const inputStyle = {
     width: "100%",
-    height: "40px",
+    height: "30px",
     marginBottom: "10px",
+    marginTop: "10px",
     paddingTop: "10px",
     paddingBottom: "10px",
     border: "1px solid #ddd",
@@ -239,6 +240,26 @@ const BoardSubmit = () => {
     console.log("inputType : ", inputType);
   }, [inputType]);
 
+  useEffect(() => {
+    const fetchDefaultCommunities = async () => {
+      if (searchTerm) {
+        try {
+          const res = await GetCommunitiesNameAPI({ name: searchTerm });
+          if (res && res.data && res.data.response) {
+            setSearchResults(res.data.response.map((community: any) => community.name));
+          } else {
+            setSearchResults([]);
+          }
+        } catch (error) {
+          console.error("Error fetching communities:", error);
+          setSearchResults([]);
+        }
+      }
+    };
+
+    fetchDefaultCommunities();
+  }, []);
+
   return (
     <>
       <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
@@ -272,6 +293,7 @@ const BoardSubmit = () => {
                     onChange={handleCommunitySearchChange}
                     placeholder="커뮤니티 검색"
                     style={inputStyle}
+                    disabled={!!selectedCommunity} // Disable input if a community is selected
                   />
                   {searchResults.length > 0 && (
                     <ul style={{ listStyleType: "none", padding: 0 }}>
@@ -291,7 +313,7 @@ const BoardSubmit = () => {
                     </ul>
                   )}
                   {searchResults.length === 0 && searchTerm && <div>No communities found.</div>}
-                  {selectedCommunity && <div>Selected Community: {selectedCommunity}</div>}
+                  {selectedCommunity && <div>선택된 커뮤니티: {selectedCommunity}</div>}
 
                   {inputType === "TEXT" && (
                     <>

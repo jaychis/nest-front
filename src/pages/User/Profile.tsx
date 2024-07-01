@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, ChangeEvent, CSSProperties } from "react";
+import React, { useEffect, useState, ChangeEvent, CSSProperties } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import { ReduxProfileAPI } from "../api/UserApi";
@@ -9,8 +9,6 @@ import BoardComment, { CommentType } from "../Board/BoardComment";
 import { BoardInquiryAPI } from "../api/BoardApi";
 import { CommentInquiryAPI } from "../api/CommentApi";
 import {
-  AwsImageUploadFunctionality,
-  AwsImageUploadFunctionalityReturnType,
   ImageLocalPreviewUrls,
   ImageLocalPreviewUrlsReturnType,
 } from "../../_common/ImageUploadFuntionality";
@@ -25,6 +23,10 @@ const Profile = () => {
   const ID: string = (localStorage.getItem("id") as string) || "";
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [profilePreview, setProfilePreview] = useState<string | null>(null);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [nickname, setNickname] = useState<string>(user.data.nickname || "");
+  const [email, setEmail] = useState<string>(user.data.email || "");
+  const [phone, setPhone] = useState<string>(user.data.phone || "");
 
   useEffect(() => {
     ExecuteBoardInquiryAPI({ id: ID }).then((res) => setMyPosts(res));
@@ -48,6 +50,11 @@ const Profile = () => {
     if (activeSection === "PROFILE") {
       dispatch(ReduxProfileAPI({ id: ID })).then((res) => {
         console.log("Profile API response:", res);
+        if (res && res.payload) {
+          setNickname(res.payload.nickname);
+          setEmail(res.payload.email);
+          setPhone(res.payload.phone);
+        }
       });
     }
   }, [activeSection, ID, dispatch]);
@@ -75,6 +82,16 @@ const Profile = () => {
 
   const handleReplySubmit = (reply: any) => {
     // Implement reply submit logic here
+  };
+
+  const handleEditToggle = () => {
+    setIsEditing((prev) => !prev);
+  };
+
+  const handleSave = () => {
+    // Implement save logic here
+    // After saving, toggle editing mode off
+    setIsEditing(false);
   };
 
   return (
@@ -135,40 +152,83 @@ const Profile = () => {
           {activeSection === "PROFILE" && (
             <div style={styles.section}>
               <h2 style={styles.sectionTitle}>프로필</h2>
-              <div style={styles.imageUploadWrapper}>
-                <input
-                  type="file"
-                  id="profilePicture"
-                  accept="image/*"
-                  onChange={handleProfilePictureChange}
-                  style={styles.hiddenFileInput}
-                />
-                <div style={styles.imagePreviewWrapper} onClick={() => document.getElementById('profilePicture')?.click()}>
-                  {profilePreview ? (
-                    <img src={profilePreview} alt="Profile Preview" style={styles.imagePreview} />
+              <div style={styles.profileContainer}>
+                <div style={styles.imageUploadWrapper}>
+                  {isEditing ? (
+                    <>
+                      <input
+                        type="file"
+                        id="profilePicture"
+                        accept="image/*"
+                        onChange={handleProfilePictureChange}
+                        style={styles.hiddenFileInput}
+                      />
+                      <div
+                        style={styles.imagePreviewWrapper}
+                        onClick={() => document.getElementById("profilePicture")?.click()}
+                      >
+                        {profilePreview ? (
+                          <img src={profilePreview} alt="Profile Preview" style={styles.imagePreview} />
+                        ) : (
+                          <div style={styles.placeholder}>프로필</div>
+                        )}
+                      </div>
+                    </>
                   ) : (
-                    <div style={styles.placeholder}>프로필</div>
+                    <div style={styles.imagePreviewWrapper}>
+                      {profilePreview ? (
+                        <img src={profilePreview} alt="Profile Preview" style={styles.imagePreview} />
+                      ) : (
+                        <div style={styles.placeholder}>프로필</div>
+                      )}
+                    </div>
                   )}
                 </div>
+                <div style={styles.profileInfo}>
+                  <div style={styles.infoRow}>
+                    <label style={styles.label}>닉네임:</label>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        value={nickname}
+                        onChange={(e) => setNickname(e.target.value)}
+                        style={styles.input}
+                      />
+                    ) : (
+                      <span style={styles.value}>{nickname || "닉네임을 입력하세요"}</span>
+                    )}
+                  </div>
+                  <div style={styles.infoRow}>
+                    <label style={styles.label}>이메일:</label>
+                    {isEditing ? (
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        style={styles.input}
+                      />
+                    ) : (
+                      <span style={styles.value}>{email || "이메일을 입력하세요"}</span>
+                    )}
+                  </div>
+                  <div style={styles.infoRow}>
+                    <label style={styles.label}>전화번호:</label>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        style={styles.input}
+                      />
+                    ) : (
+                      <span style={styles.value}>{phone || "전화번호를 입력하세요"}</span>
+                    )}
+                  </div>
+                </div>
               </div>
-              <div style={styles.info}>
-                <label style={styles.label}>닉네임:</label>
-                <span style={styles.value}>
-                  {user.data.nickname || "닉네임을 입력하세요"}
-                </span>
-              </div>
-              <div style={styles.info}>
-                <label style={styles.label}>이메일:</label>
-                <span style={styles.value}>
-                  {user.data.email ? user.data.email : "이메일을 입력하세요"}
-                </span>
-              </div>
-              <div style={styles.info}>
-                <label style={styles.label}>전화번호:</label>
-                <span style={styles.value}>
-                  {user.data.phone ? user.data.phone : "전화번호를 입력하세요"}
-                </span>
-              </div>
+              <button onClick={isEditing ? handleSave : handleEditToggle} style={styles.editButton}>
+                {isEditing ? "저장" : "수정"}
+              </button>
             </div>
           )}
         </div>
@@ -228,19 +288,24 @@ const styles: { [key: string]: CSSProperties } = {
     borderBottom: "2px solid #333",
     paddingBottom: "5px",
   },
+  profileContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "flex-start",
+  },
   imageUploadWrapper: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     cursor: "pointer",
-    marginBottom: "20px",
+    marginRight: "20px",
   },
   hiddenFileInput: {
     display: "none",
   },
   imagePreviewWrapper: {
-    width: "90px",
-    height: "90px",
+    width: "110px",
+    height: "110px",
     borderRadius: "50%",
     backgroundColor: "#E0E0E0",
     display: "flex",
@@ -259,21 +324,45 @@ const styles: { [key: string]: CSSProperties } = {
     color: "#888",
     textAlign: "center",
   },
-  info: {
+  profileInfo: {
     display: "flex",
     flexDirection: "column",
-    alignItems: "flex-start",
-    marginBottom: "15px",
+    justifyContent: "center",
+    width: "100%", // Added to ensure consistency
+  },
+  infoRow: {
+    display: "flex",
+    alignItems: "center",
+    marginBottom: "10px",
   },
   label: {
     fontWeight: "bold",
     color: "#333",
     fontSize: "18px",
+    width: "100px",
   },
   value: {
     color: "#555",
     fontSize: "18px",
-    marginLeft: "120px",
+    flex: 1, // Added to ensure consistency
+  },
+  input: {
+    fontSize: "18px",
+    padding: "5px",
+    borderRadius: "10px",
+    border: "1px solid #ccc",
+    flex: 1, // Added to ensure consistency
+  },
+  editButton: {
+    marginTop: "20px",
+    padding: "10px 20px",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
+    backgroundColor: "#007BFF",
+    color: "white",
+    fontWeight: "bold",
+    transition: "background-color 0.3s, color 0.3s",
   },
 };
 

@@ -14,6 +14,7 @@ import {
   UserType,
 } from "../../_common/CollectionTypes";
 import BoardReply, { ReplyType } from "../Board/BoardReply";
+import EmptyState from "../../components/EmptyState";
 
 type SearchListTypes =
   | "BOARDS"
@@ -193,7 +194,7 @@ const SearchList = () => {
     );
   };
 
-  const EmptyList = () => <div>검색된 내용이 존재하지 않습니다.</div>;
+  const EmptyList = () => <EmptyState/>;
   return (
     <>
       <NavBar />
