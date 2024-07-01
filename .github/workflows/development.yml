@@ -10,8 +10,7 @@ env:
   DOCKER_IMAGE: ghcr.io/${{ github.actor }}/nest
   VERSION: ${{ github.sha }}
   NAME: go_cicd
-  AWSREGION: ${{ secrets.AWSREGION }}
-  S3BUCKETNAME: ${{ secrets.S3BUCKETNAME }}
+  AWSREGION: ${{ secrets.REACT_APP_AWSREGION }}
 
 jobs:
   build:
@@ -36,7 +35,6 @@ jobs:
       - name: Docker build
         run: |
           docker build --build-arg AWSREGION="${{ env.AWSREGION }}" \
-          --build-arg S3BUCKETNAME="${{ env.S3BUCKETNAME }}" \
           -t ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }} .
 
       - name: Login to ghcr
@@ -71,7 +69,6 @@ jobs:
         run: |
           docker stop nest-front || true && docker rm nest-front || true
           docker rmi ${{ env.DOCKER_IMAGE }}:latest || true
-          docker run -itd -p 9898:9898 
+          docker run -itd -p 9797:9797 
             -e AWSREGION="${{ secrets.AWSREGION }}" \
-            -e S3BUCKETNAME="${{ secrets.S3BUCKETNAME }}" \
             --name nest --restart always ${{ env.DOCKER_IMAGE }}:latest
