@@ -8,6 +8,7 @@ import Alert from "../../components/Alert";
 import {
   UsersKakaoOAuthSignUpAPI,
   UsersKakaoOAuthLoginAPI,
+  UsersNaverOAuthSignUpAPI,
 } from "../api/OAuthApi";
 
 interface Props {
@@ -103,7 +104,38 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
 
   const naverOauthLogin = async () => {
     console.log("naverOauthLogin check");
-    alert("naverOauthLogin check");
+    // alert("naverOauthLogin check");
+
+    const res = await UsersNaverOAuthSignUpAPI();
+    if (!res) return;
+
+    console.log("naverAuthLogin res : ", res);
+    const TYPE: OAuthReturnType = res.data.response.type;
+
+    if (TYPE === "NEW_USER") {
+      // 이메일 가지고 있고, 회원가입시 해당 이메일이 회원가입창에 입력될 수 있도록
+      console.log(
+        " res.data.response.profile.email : ",
+        res.data.response.profile.email,
+      );
+      const EMAIL: string = res.data.response.profile.email as string;
+      console.log("EMAIL : ", EMAIL);
+
+      // onSwitchView();
+    } else if (TYPE === "EXITING_USER") {
+      const loginProfile = await UsersKakaoOAuthLoginAPI();
+      if (!loginProfile) return;
+      console.log("loginProfile : ", loginProfile);
+      const { id, nickname, access_token, refresh_token } =
+        loginProfile.data.response;
+
+      setLoginProcess({
+        id,
+        nickname,
+        access_token,
+        refresh_token,
+      });
+    }
   };
 
   const kakaoOauthLogin = async () => {
@@ -168,11 +200,8 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
             <FaApple style={styles.socialLogo} />
             애플로 로그인
           </button>
-          <button
-            style={styles.socialButton}
-            onClick={() => alert("Continue with Naver")}
-          >
-            <SiNaver style={styles.socialLogo} onClick={naverOauthLogin} />
+          <button style={styles.socialButton} onClick={naverOauthLogin}>
+            <SiNaver style={styles.socialLogo} />
             네이버로 로그인
           </button>
           <button style={styles.socialButton} onClick={kakaoOauthLogin}>

@@ -29,3 +29,16 @@ export const UsersKakaoOAuthSignUpAPI = async () => {
     ErrorHandling({ text: "UsersKakaoAuthSignUpAPI", error: e });
   }
 };
+
+export const UsersNaverOAuthSignUpAPI = async () => {
+  try {
+    const URL: string = `${OAUTH_URL}/naver`;
+
+    const res = await client.get(URL);
+    console.log("UsersNaverOAuthSignUpAPI res : ", res);
+
+    return res;
+  } catch (e: any) {
+    ErrorHandling({ text: "UsersNaverOAuthSignUpAPI", error: e });
+  }
+};
