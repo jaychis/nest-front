@@ -10,7 +10,7 @@ RUN npm install -g cross-env
 
 RUN npm ci --force
 
-COPY ./ ./
+COPY src ./
 
 ENV PORT=9797
 ENV HOST=3.34.131.71
