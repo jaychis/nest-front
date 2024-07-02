@@ -6,7 +6,7 @@ COPY package*.json ./
 
 RUN npm install -g dotenv-cli cross-env
 
-RUN npm ci
+RUN npm install
 
 COPY . .
 
