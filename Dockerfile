@@ -1,16 +1,14 @@
-FROM node
+FROM node:14
 
-WORKDIR /app/server
+WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install -g dotenv-cli
-RUN npm install -g dotenv
-RUN npm install -g cross-env
+RUN npm install -g dotenv-cli cross-env
 
-RUN npm ci --force
+RUN npm ci
 
-COPY src ./
+COPY . .
 
 ENV PORT=9797
 ENV HOST=3.34.131.71

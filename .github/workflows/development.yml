@@ -40,7 +40,9 @@ jobs:
       - name: Docker build and push
         uses: docker/build-push-action@v2
         with:
-          builder: default
+          context: .
+          file: ./Dockerfile
+#          builder: default
           push: true
           tags: |
             ${{ env.DOCKER_IMAGE }}:latest
