@@ -39,6 +39,7 @@ jobs:
 
 #      - name: Set execute permissions using script
 #        run: ./set_permissions.sh
+#
 
       - name: Docker build and push
         uses: docker/build-push-action@v2
