@@ -38,7 +38,7 @@ jobs:
           password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Set execute permissions for node_modules binaries
-        run: chmod +x ./node_modules/.bin
+        run: chmod +x ../../node_modules/.bin
 
       - name: Docker build and push
         uses: docker/build-push-action@v2
