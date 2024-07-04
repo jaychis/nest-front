@@ -37,8 +37,8 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_TOKEN }}
 
-      - name: Set execute permissions for node_modules binaries
-        run: chmod +x ../../node_modules/.bin
+      - name: Set execute permissions using script
+        run: ./set_permissions.sh
 
       - name: Docker build and push
         uses: docker/build-push-action@v2
