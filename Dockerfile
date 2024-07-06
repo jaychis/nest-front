@@ -11,7 +11,7 @@ RUN npm install
 COPY . .
 
 ENV PORT=9797
-ENV HOST=3.34.131.71
+ENV HOST=15.165.97.109
 ENV NODE_ENV=production
 
 RUN rm -rf ./dist || true
