@@ -33,7 +33,8 @@
   "scripts": {
     "start:local": "cross-env REACT_APP_API_BASE_URL=http://127.0.0.1:9898 react-scripts start",
     "start:dev": "cross-env REACT_APP_API_BASE_URL=http://54.180.207.53:9898 react-scripts start",
-    "build:prod": "cross-env REACT_APP_API_BASE_URL=http://354.180.207.53:9898 react-scripts build",
+    "start:prod": "cross-env REACT_APP_API_BASE_URL=http://54.180.207.53:9898 react-scripts start",
+    "build:prod": "cross-env REACT_APP_API_BASE_URL=http://54.180.207.53:9898 react-scripts build",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
