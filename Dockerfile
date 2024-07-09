@@ -1,4 +1,3 @@
-# Stage 1: Build the React app
 FROM node AS build
 
 WORKDIR /app
@@ -13,7 +12,6 @@ ENV NODE_ENV=production
 
 RUN npm run build:prod
 
-# Stage 2: Serve the app with Nginx
 FROM nginx:alpine
 
 COPY --from=build /app/build /usr/share/nginx/html
