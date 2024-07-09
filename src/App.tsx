@@ -16,7 +16,7 @@ import CommunityCreatePage3 from "./pages/Board/CommunityCreate/CommunityCreateP
 import CommunityCreatePage4 from "./pages/Board/CommunityCreate/CommunityCreatePage4";
 import { CommunityProvider } from "./contexts/CommunityContext";
 
-
+//
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
