@@ -139,6 +139,7 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
   };
 
   const kakaoOauthLogin = async () => {
+    //
     console.log("kakaoOauthLogin check");
     const res = await UsersKakaoOAuthSignUpAPI();
     if (!res) return;
