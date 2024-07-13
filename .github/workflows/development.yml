@@ -70,5 +70,5 @@ jobs:
           docker stop nest-front || true
           docker rm nest-front || true
           docker rmi ${{ env.DOCKER_IMAGE }}:latest || true
-          docker run -itd -p 443:443 \
+          docker run -itd -p 80:80 \
             --name nest-front --restart always ${{ env.DOCKER_IMAGE }}:latest
