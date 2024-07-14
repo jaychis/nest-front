@@ -18,9 +18,9 @@ COPY --from=build /app/build /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # COPY SSL Certificate files
-COPY ../certs/certificate.crt /etc/ssl/certs/certificate.crt
-COPY ../certs/ca_bundle.crt   /etc/ssl/certs/ca_bundle.crt
-COPY ../certs/private.key   /etc/ssl/private/private.key
+COPY ../_certs/certificate.crt /etc/ssl/certs/certificate.crt
+COPY ../_certs/ca_bundle.crt   /etc/ssl/certs/ca_bundle.crt
+COPY ../_certs/private.key   /etc/ssl/private/private.key
 
 EXPOSE 80
 EXPOSE 443
