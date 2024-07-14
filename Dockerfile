@@ -18,9 +18,9 @@ COPY --from=build /app/build /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # Copy SSL certificate files using secrets
-ARG CERTIFICATE_CRT
-ARG CA_BUNDLE_CRT
-ARG PRIVATE_KEY
+#ARG CERTIFICATE_CRT
+#ARG CA_BUNDLE_CRT
+#ARG PRIVATE_KEY
 
 #RUN echo "$CERTIFICATE_CRT" > /etc/ssl/certs/certificate.crt
 #RUN echo "$CA_BUNDLE_CRT" > /etc/ssl/certs/ca_bundle.crt
