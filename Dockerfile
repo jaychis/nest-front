@@ -29,6 +29,10 @@ COPY _certs/certificate.crt /etc/ssl/certs/certificate.crt
 COPY _certs/ca_bundle.crt /etc/ssl/certs/ca_bundle.crt
 COPY _certs/private.key /etc/ssl/private/private.key
 
+# Debugging step: list the files in the container
+RUN ls -la /etc/ssl/certs
+RUN ls -la /etc/ssl/private
+
 EXPOSE 80
 EXPOSE 443
 
