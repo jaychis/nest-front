@@ -39,6 +39,9 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_TOKEN }}
 
+      - name: Create _certs directory
+        run: mkdir -p _certs
+
       - name: Create certificate.crt secret file
         run: echo "${{ secrets.CERTIFICATE_CRT }}" > _certs/certificate.crt
 
