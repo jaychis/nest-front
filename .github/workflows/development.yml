@@ -52,6 +52,18 @@ jobs:
       - name: Create private.key secret file
         run: echo "${{ secrets.PRIVATE_KEY }}" > _certs/private.key
 
+      - name: List _certs directory (debugging step)
+        run: ls -la _certs
+
+      - name: Display certificate.crt content (debugging step)
+        run: cat _certs/certificate.crt
+
+      - name: Display ca_bundle.crt content (debugging step)
+        run: cat _certs/ca_bundle.crt
+
+      - name: Display private.key content (debugging step)
+        run: cat _certs/private.key
+
       - name: Docker build and push
         uses: docker/build-push-action@v2
         with:
