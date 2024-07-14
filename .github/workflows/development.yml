@@ -39,16 +39,25 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_TOKEN }}
 
+      - name: Create certificate.crt secret file
+        run: echo "${{ secrets.CERTIFICATE_CRT }}" > _certs/certificate.crt
+
+      - name: Create ca_bundle.crt secret file
+        run: echo "${{ secrets.CA_BUNDLE_CRT }}" > _certs/ca_bundle.crt
+
+      - name: Create private.key secret file
+        run: echo "${{ secrets.PRIVATE_KEY }}" > _certs/private.key
+
       - name: Docker build and push
         uses: docker/build-push-action@v2
         with:
           context: .
           file: ./Dockerfile
           push: true
-          secrets: |
-            certificate.crt=../_certs/certificate.crt
-            ca_bundle.crt=../_certs/ca_bundle.crt
-            private.key=../_certs/private.key
+          build-args: |
+            CERTIFICATE_CRT=${{ secrets.CERTIFICATE_CRT }}
+            CA_BUNDLE_CRT=${{ secrets.CA_BUNDLE_CRT }}
+            PRIVATE_KEY=${{ secrets.PRIVATE_KEY }}
           tags: |
             ${{ env.DOCKER_IMAGE }}:latest
             ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }}
@@ -70,8 +79,5 @@ jobs:
           docker stop nest-front || true
           docker rm nest-front || true
           docker rmi ${{ env.DOCKER_IMAGE }}:latest || true
-          docker build --secret id=certificate.crt,src=../../../_certs/certificate.crt \
-                       --secret id=ca_bundle.crt,src=../../../_certs/ca_bundle.crt \
-                       --secret id=private.key,src=../../../_certs/private.key -t ${{ env.DOCKER_IMAGE }}:latest .
           docker run -itd -p 443:443 \
             --name nest-front --restart always ${{ env.DOCKER_IMAGE }}:latest
