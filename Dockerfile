@@ -22,9 +22,12 @@ ARG CERTIFICATE_CRT
 ARG CA_BUNDLE_CRT
 ARG PRIVATE_KEY
 
-RUN echo "$CERTIFICATE_CRT" > /etc/ssl/certs/certificate.crt
-RUN echo "$CA_BUNDLE_CRT" > /etc/ssl/certs/ca_bundle.crt
-RUN echo "$PRIVATE_KEY" > /etc/ssl/private/private.key
+#RUN echo "$CERTIFICATE_CRT" > /etc/ssl/certs/certificate.crt
+#RUN echo "$CA_BUNDLE_CRT" > /etc/ssl/certs/ca_bundle.crt
+#RUN echo "$PRIVATE_KEY" > /etc/ssl/private/private.key
+COPY _certs/certificate.crt /etc/ssl/certs/certificate.crt
+COPY _certs/ca_bundle.crt /etc/ssl/certs/ca_bundle.crt
+COPY _certs/private.key /etc/ssl/private/private.key
 
 EXPOSE 80
 EXPOSE 443
