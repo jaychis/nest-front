@@ -10,9 +10,6 @@ env:
   DOCKER_IMAGE: ghcr.io/${{ github.actor }}/nest
   VERSION: ${{ github.sha }}
   NAME: go_cicd
-  CERTIFICATE_CRT: ${{ secrets.CERTIFICATE_CRT }}
-  CA_BUNDLE_CRT: ${{ secrets.CA_BUNDLE_CRT }}
-  PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
 
 jobs:
   build:
@@ -95,5 +92,5 @@ jobs:
           docker stop nest-front || true
           docker rm nest-front || true
           docker rmi ${{ env.DOCKER_IMAGE }}:latest || true
-          docker run -itd -p 443:443 \
+          docker run -itd -p 443:443 -p 80:80 \
             --name nest-front --restart always ${{ env.DOCKER_IMAGE }}:latest
