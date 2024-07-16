@@ -103,6 +103,7 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
   };
 
   const naverOauthLogin = async () => {
+    //
     console.log("naverOauthLogin check");
     // alert("naverOauthLogin check");
 
