@@ -14,14 +14,17 @@ const GlobalBar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const searchResults = useSelector((state: RootState) => state.search.searchResults);
+  const searchResults = useSelector(
+    (state: RootState) => state.search.searchResults,
+  );
   const postSubmit = () => navigate("/boards/submit");
   const [postHover, setPostHover] = useState<boolean>(false);
   const [userHover, setUserHover] = useState<boolean>(false);
   const [bellHover, setBellHover] = useState<boolean>(false);
   const [logoHover, setLogoHover] = useState<boolean>(false); // 추가
   const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false);
-  const [isNotificationModalOpen, setIsNotificationModalOpen] = useState<boolean>(false);
+  const [isNotificationModalOpen, setIsNotificationModalOpen] =
+    useState<boolean>(false);
   const userButtonRef = useRef<HTMLDivElement>(null);
   const bellButtonRef = useRef<HTMLDivElement>(null);
 
@@ -40,7 +43,7 @@ const GlobalBar = () => {
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       clickSearch();
     }
   };
@@ -91,7 +94,7 @@ const GlobalBar = () => {
         onClick={() => navigate("/")}
       >
         <img src={logo} alt="Logo" style={{ width: "50px" }} />
-        <span style={{ marginLeft: "10px" }}>{"jaych.com"}</span>
+        <span style={{ marginLeft: "10px" }}>{"jaychis.com"}</span>
       </div>
 
       {/* Search Bar */}
@@ -139,7 +142,7 @@ const GlobalBar = () => {
           </div>
         )}
       </div>
-      
+
       {/* Navigation Icons */}
       <div style={{ display: "flex", alignItems: "center" }}>
         {localStorage.getItem("access_token") ? (
