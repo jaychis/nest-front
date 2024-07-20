@@ -291,6 +291,7 @@ const BoardSubmit = () => {
         }
       }
     };
+    
 
     fetchDefaultCommunities();
   }, []);
