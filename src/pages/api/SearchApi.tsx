@@ -1,17 +1,23 @@
+import { AxiosResponse } from "axios";
 import { client } from "./Client";
 import { ErrorHandling } from "../../_common/ErrorHandling";
+import debounce from "lodash.debounce";
 
 const SearchesURL: string = "searches";
 export interface SearchParam {
   readonly query: string;
 }
 
+// Cache to store fetched data
+const cache: { [key: string]: any } = {};
+
 export const GetSearchPeopleAPI = async (param: SearchParam) => {
   try {
     const URL: string = `${SearchesURL}/get/people/${param.query}`;
+    if (cache[URL]) return cache[URL]; // Return cached response if available
 
     const res = await client.get(URL);
-
+    cache[URL] = res; // Cache the response
     return res;
   } catch (e: any) {
     ErrorHandling({ text: "GetSearchPeopleAPI", error: e });

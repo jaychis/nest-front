@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { AddSearchAPI, GetTopTenSearchesAPI } from "../api/SearchApi";
 import { useNavigate } from "react-router-dom";
 import { GetRecentViewedBoardsAPI } from "../api/ViewedBoardsApi";
+import debounce from "lodash.debounce";
 
 type SelectTapTypes = "topSearches" | "recentBoards";
 
@@ -12,34 +13,41 @@ type RecentViewedPost = {
 
 const RightSideBar = () => {
   const [isTopTenList, setIsTopTenList] = useState([]);
-  const [recentViewedList, setRecentViewedList] = useState<RecentViewedPost[]>([]); // State for recent viewed posts with type
+  const [recentViewedList, setRecentViewedList] = useState<RecentViewedPost[]>([]);
   const [selectedTab, setSelectedTab] = useState<SelectTapTypes>("topSearches");
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [hoveredRecentPostIndex, setHoveredRecentPostIndex] = useState<number | null>(null);
-  const navigate = useNavigate(); // Initialize useNavigate
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
   const isLoggedIn = !!localStorage.getItem("access_token");
 
-  useEffect(() => {
-    const fetchTopTenList = async (): Promise<void> => {
+  // Debounced fetch function
+  const debouncedFetchTopTenList = debounce(async () => {
+    try {
       const res = await GetTopTenSearchesAPI();
       if (!res) return;
       const response = res.data.response;
       console.log("response ; ", response);
       setIsTopTenList(response);
-    };
-    fetchTopTenList();
+    } catch (e: any) {
+      if (e.response && e.response.status === 429) {
+        setError("Too many requests. Please try again later.");
+      } else if (e.response && e.response.status === 404) {
+        setError("Endpoint not found. Please check the URL.");
+      } else {
+        setError("An error occurred. Please try again.");
+      }
+      console.error(e);
+    }
+  }, 1000);
+
+  useEffect(() => {
+    debouncedFetchTopTenList();
   }, []);
 
   useEffect(() => {
     if (selectedTab === "topSearches") {
-      const fetchTopTenList = async (): Promise<void> => {
-        const res = await GetTopTenSearchesAPI();
-        if (!res) return;
-        const response = res.data.response;
-        console.log("response ; ", response);
-        setIsTopTenList(response);
-      };
-      fetchTopTenList();
+      debouncedFetchTopTenList();
     }
 
     if (selectedTab === "recentBoards" && isLoggedIn) {
@@ -57,7 +65,7 @@ const RightSideBar = () => {
           title: item.board.title,
         }));
 
-        setRecentViewedList(formattedRecentViewedList); // Update the recent viewed posts state
+        setRecentViewedList(formattedRecentViewedList);
       };
       recentBoardList();
     }
@@ -92,6 +100,7 @@ const RightSideBar = () => {
           최근 본 게시물
         </div>
       </div>
+      {error && <div style={{ color: "red" }}>{error}</div>}
       {selectedTab === "topSearches" ? (
         <div>
           <h3 style={styles.header}>실시간 검색어 TOP 10</h3>
@@ -119,7 +128,6 @@ const RightSideBar = () => {
                     </div>
                     <div style={styles.details}>
                       <span style={styles.count}>{search.count}</span>
-                      {/* <span style={styles.source}>{search.source}</span> */}
                     </div>
                   </li>
                 ),
