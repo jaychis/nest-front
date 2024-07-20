@@ -268,6 +268,7 @@ const BoardSubmit = () => {
         }
       }
     };
+    
 
     fetchDefaultCommunities();
   }, []);
