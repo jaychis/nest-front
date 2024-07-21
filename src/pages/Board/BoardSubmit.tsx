@@ -37,32 +37,40 @@ const BoardSubmit = () => {
   const ID: string = localStorage.getItem("id") as string;
   const NICKNAME: string = localStorage.getItem("nickname") as string;
   const [textTitle, setTextTitle] = useState<string>("");
-  const handleTextTitleChange = async (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): Promise<void> => {
+  const handleTextTitleChange = async (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ): Promise<void> => {
     const { value } = event.target;
     setTextTitle(value);
   };
 
   const [mediaTitle, setMediaTitle] = useState<string>("");
-  const handleMediaTitleChange = async (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): Promise<void> => {
+  const handleMediaTitleChange = async (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ): Promise<void> => {
     const { value } = event.target;
     setMediaTitle(value);
   };
 
   const [linkTitle, setLinkTitle] = useState<string>("");
-  const handleLinkTitleChange = async (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): Promise<void> => {
+  const handleLinkTitleChange = async (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ): Promise<void> => {
     const { value } = event.target;
     setLinkTitle(value);
   };
-  
+
   const [textContent, setTextContent] = useState<string>("");
   const handleEditorChange = (content: string) => {
     setTextContent(content);
   };
 
-  const handleTextContentChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleTextContentChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
     const textarea = event.target;
     setTextContent(textarea.value);
-  
+
     // Adjust textarea height to fit content
     textarea.style.height = "auto";
     textarea.style.height = `${textarea.scrollHeight}px`;
@@ -87,30 +95,39 @@ const BoardSubmit = () => {
 
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [fileList, setFileList] = useState<File[]>([]);
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
-    const urls: ImageLocalPreviewUrlsReturnType = await ImageLocalPreviewUrls({ event });
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ): Promise<void> => {
+    const urls: ImageLocalPreviewUrlsReturnType = await ImageLocalPreviewUrls({
+      event,
+    });
     if (!urls) return;
     setPreviewUrls(urls.previewUrls);
     setFileList(urls.fileList);
   };
 
   const imageUrlListDelete = async () => {
-    const res: ImageLocalPreviewUrlsDeleteType = await ImageLocalPreviewUrlsDelete({ urls: previewUrls });
+    const res: ImageLocalPreviewUrlsDeleteType =
+      await ImageLocalPreviewUrlsDelete({ urls: previewUrls });
     if (!res) return;
     setPreviewUrls(res);
   };
 
   const [linkContent, setLinkContent] = useState<string>("");
-  const handleLinkContentChange = async (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): Promise<void> => {
+  const handleLinkContentChange = async (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ): Promise<void> => {
     const { value } = event.target;
     setLinkContent(value);
   };
 
-  const [selectedCommunity, setSelectedCommunity] = useState<string>("");
+  const [selectedCommunity, setSelectedCommunity] = useState<string>("jaychis");
   const [searchTerm, setSearchTerm] = useState<string>("jaychis");
   const [searchResults, setSearchResults] = useState<string[]>([]);
 
-  const handleCommunitySearchChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCommunitySearchChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const { value } = event.target;
     setSearchTerm(value);
 
@@ -119,7 +136,9 @@ const BoardSubmit = () => {
         const res = await GetCommunitiesNameAPI({ name: value });
         if (res && res.data && res.data.response) {
           console.log("Search results:", res.data.response);
-          setSearchResults(res.data.response.map((community: any) => community.name));
+          setSearchResults(
+            res.data.response.map((community: any) => community.name),
+          );
         } else {
           setSearchResults([]);
         }
@@ -138,12 +157,16 @@ const BoardSubmit = () => {
     setSearchResults([]);
   };
 
-  const handleCommunityChange = async (event: React.ChangeEvent<HTMLSelectElement>): Promise<void> => {
+  const handleCommunityChange = async (
+    event: React.ChangeEvent<HTMLSelectElement>,
+  ): Promise<void> => {
     const { value } = event.target;
     setSelectedCommunity(value);
   };
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement | HTMLButtonElement>) => {
+  const handleSubmit = async (
+    event: FormEvent<HTMLFormElement | HTMLButtonElement>,
+  ) => {
     event.preventDefault();
 
     let content: string[] = [];
@@ -156,7 +179,8 @@ const BoardSubmit = () => {
       }
 
       if (inputType === "MEDIA") {
-        const res: AwsImageUploadFunctionalityReturnType = await AwsImageUploadFunctionality({ fileList });
+        const res: AwsImageUploadFunctionalityReturnType =
+          await AwsImageUploadFunctionality({ fileList });
         if (!res) return;
 
         content = res.imageUrls;
@@ -258,7 +282,9 @@ const BoardSubmit = () => {
         try {
           const res = await GetCommunitiesNameAPI({ name: searchTerm });
           if (res && res.data && res.data.response) {
-            setSearchResults(res.data.response.map((community: any) => community.name));
+            setSearchResults(
+              res.data.response.map((community: any) => community.name),
+            );
           } else {
             setSearchResults([]);
           }
@@ -277,7 +303,13 @@ const BoardSubmit = () => {
       <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
         <div style={{ flex: 2 }}>
           <div style={{ backgroundColor: "#fff", minHeight: "100vh" }}>
-            <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                width: "100%",
+              }}
+            >
               <div style={{ flex: 2 }}>
                 <div
                   style={{
@@ -287,14 +319,35 @@ const BoardSubmit = () => {
                     background: "#fff",
                   }}
                 >
-                  <div style={{ marginBottom: "20px", display: "flex", justifyContent: "flex-start" }}>
-                    <button onClick={() => setInputType("TEXT")} style={inputType === "TEXT" ? activeButtonStyle : buttonStyle}>
+                  <div
+                    style={{
+                      marginBottom: "20px",
+                      display: "flex",
+                      justifyContent: "flex-start",
+                    }}
+                  >
+                    <button
+                      onClick={() => setInputType("TEXT")}
+                      style={
+                        inputType === "TEXT" ? activeButtonStyle : buttonStyle
+                      }
+                    >
                       텍스트
                     </button>
-                    <button onClick={() => setInputType("MEDIA")} style={inputType === "MEDIA" ? activeButtonStyle : buttonStyle}>
+                    <button
+                      onClick={() => setInputType("MEDIA")}
+                      style={
+                        inputType === "MEDIA" ? activeButtonStyle : buttonStyle
+                      }
+                    >
                       이미지 & 비디오
                     </button>
-                    <button onClick={() => setInputType("LINK")} style={inputType === "LINK" ? activeButtonStyle : buttonStyle}>
+                    <button
+                      onClick={() => setInputType("LINK")}
+                      style={
+                        inputType === "LINK" ? activeButtonStyle : buttonStyle
+                      }
+                    >
                       링크
                     </button>
                   </div>
@@ -316,7 +369,8 @@ const BoardSubmit = () => {
                           style={{
                             cursor: "pointer",
                             padding: "8px",
-                            backgroundColor: index % 2 === 0 ? "#f9f9f9" : "#fff",
+                            backgroundColor:
+                              index % 2 === 0 ? "#f9f9f9" : "#fff",
                           }}
                         >
                           {result}
@@ -324,22 +378,38 @@ const BoardSubmit = () => {
                       ))}
                     </ul>
                   )}
-                  {searchResults.length === 0 && searchTerm && <div>선택된 커뮤니티: jaychis</div>}
-                  {selectedCommunity && <div>선택된 커뮤니티: {selectedCommunity}</div>}
+                  {/*{searchResults.length === 0 && searchTerm && (*/}
+                  {/*  <div>선택된 커뮤니티: jaychis</div>*/}
+                  {/*)}*/}
+                  {selectedCommunity && (
+                    <div>선택된 커뮤니티: {selectedCommunity}</div>
+                  )}
 
                   {inputType === "TEXT" && (
                     <>
-                      <input name="title" type="text" placeholder="제목" onChange={handleTextTitleChange} style={inputStyle} />
+                      <input
+                        name="title"
+                        type="text"
+                        placeholder="제목"
+                        onChange={handleTextTitleChange}
+                        style={inputStyle}
+                      />
                       <ReactQuill
                         value={textContent}
                         onChange={handleEditorChange}
-                        style={{ height: '400px' }}
+                        style={{ height: "400px" }}
                       />
                     </>
                   )}
                   {inputType === "MEDIA" && (
                     <>
-                      <input name="title" type="text" placeholder="제목" onChange={handleMediaTitleChange} style={inputStyle} />
+                      <input
+                        name="title"
+                        type="text"
+                        placeholder="제목"
+                        onChange={handleMediaTitleChange}
+                        style={inputStyle}
+                      />
 
                       {previewUrls.length > 0 ? (
                         <>
@@ -347,25 +417,49 @@ const BoardSubmit = () => {
                           <Slider {...sliderSetting}>
                             {previewUrls.map((image, index) => (
                               <div key={index}>
-                                <img src={image} alt={`Preview image ${index}`} style={{ height: "400px", width: "400px" }} />
+                                <img
+                                  src={image}
+                                  alt={`Preview image ${index}`}
+                                  style={{ height: "400px", width: "400px" }}
+                                />
                               </div>
                             ))}
                           </Slider>
                         </>
                       ) : (
                         <>
-                          <input type={"file"} multiple onChange={handleFileChange} style={inputStyle} />
+                          <input
+                            type={"file"}
+                            multiple
+                            onChange={handleFileChange}
+                            style={inputStyle}
+                          />
                         </>
                       )}
                     </>
                   )}
                   {inputType === "LINK" && (
                     <>
-                      <input name="title" type="text" placeholder="제목" onChange={handleLinkTitleChange} style={inputStyle} />
-                      <input type="text" placeholder="링크 추가" onChange={(e) => handleLinkContentChange(e)} style={inputStyle} />
+                      <input
+                        name="title"
+                        type="text"
+                        placeholder="제목"
+                        onChange={handleLinkTitleChange}
+                        style={inputStyle}
+                      />
+                      <input
+                        type="text"
+                        placeholder="링크 추가"
+                        onChange={(e) => handleLinkContentChange(e)}
+                        style={inputStyle}
+                      />
                     </>
                   )}
-                  <button type="submit" style={submitButtonStyle} onClick={(e) => handleSubmit(e)}>
+                  <button
+                    type="submit"
+                    style={submitButtonStyle}
+                    onClick={(e) => handleSubmit(e)}
+                  >
                     보내기
                   </button>
                 </div>
