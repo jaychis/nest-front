@@ -3,6 +3,8 @@ import { SubmitAPI, SubmitParams } from "../api/BoardApi";
 import { useNavigate } from "react-router-dom";
 import MarkdownIt from "markdown-it";
 import MdEditor from "react-markdown-editor-lite";
+import "react-quill/dist/quill.snow.css"; // import styles
+import ReactQuill from "react-quill";
 import "react-markdown-editor-lite/lib/index.css";
 import { AWSImageRegistAPI, getPresignedUrlAPI } from "../api/AWSApi";
 import Slider from "react-slick";
@@ -18,6 +20,7 @@ import {
   ImageLocalPreviewUrlsReturnType,
 } from "../../_common/ImageUploadFuntionality";
 import { GetCommunitiesNameAPI } from "../api/CommunityApi";
+import { Editor } from "@tinymce/tinymce-react";
 
 const mdParser = new MarkdownIt();
 interface EditorChange {
@@ -58,10 +61,21 @@ const BoardSubmit = () => {
   };
 
   const [textContent, setTextContent] = useState<string>("");
-  const handleEditorChange = async ({ html, text }: EditorChange) => {
-    setTextContent(html);
-    adjustEditorHeight();
+  const handleEditorChange = (content: string) => {
+    setTextContent(content);
   };
+
+  const handleTextContentChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    const textarea = event.target;
+    setTextContent(textarea.value);
+
+    // Adjust textarea height to fit content
+    textarea.style.height = "auto";
+    textarea.style.height = `${textarea.scrollHeight}px`;
+  };
+
   useEffect(() => console.log("textContent : ", textContent), [textContent]);
 
   const adjustEditorHeight = () => {
@@ -227,7 +241,7 @@ const BoardSubmit = () => {
     borderRadius: "4px",
     cursor: "pointer",
     fontWeight: "bold",
-    marginTop: "20px",
+    marginTop: "45px",
   };
 
   const buttonStyle = {
@@ -288,7 +302,7 @@ const BoardSubmit = () => {
     <>
       <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
         <div style={{ flex: 2 }}>
-          <div style={{ backgroundColor: "#4F657755", minHeight: "100vh" }}>
+          <div style={{ backgroundColor: "#fff", minHeight: "100vh" }}>
             <div
               style={{
                 display: "flex",
@@ -364,9 +378,9 @@ const BoardSubmit = () => {
                       ))}
                     </ul>
                   )}
-                  {searchResults.length === 0 && searchTerm && (
-                    <div>No communities found.</div>
-                  )}
+                  {/*{searchResults.length === 0 && searchTerm && (*/}
+                  {/*  <div>선택된 커뮤니티: jaychis</div>*/}
+                  {/*)}*/}
                   {selectedCommunity && (
                     <div>선택된 커뮤니티: {selectedCommunity}</div>
                   )}
@@ -380,12 +394,10 @@ const BoardSubmit = () => {
                         onChange={handleTextTitleChange}
                         style={inputStyle}
                       />
-                      <MdEditor
-                        ref={editorRef}
-                        style={{ height: editorHeight }}
-                        renderHTML={(text) => mdParser.render(text)}
+                      <ReactQuill
+                        value={textContent}
                         onChange={handleEditorChange}
-                        view={{ menu: true, md: true, html: false }}
+                        style={{ height: "400px" }}
                       />
                     </>
                   )}
