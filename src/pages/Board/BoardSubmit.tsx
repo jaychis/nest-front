@@ -53,7 +53,7 @@ const BoardSubmit = () => {
     const { value } = event.target;
     setLinkTitle(value);
   };
-
+  
   const [textContent, setTextContent] = useState<string>("");
   const handleEditorChange = (content: string) => {
     setTextContent(content);
@@ -62,7 +62,7 @@ const BoardSubmit = () => {
   const handleTextContentChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const textarea = event.target;
     setTextContent(textarea.value);
-
+  
     // Adjust textarea height to fit content
     textarea.style.height = "auto";
     textarea.style.height = `${textarea.scrollHeight}px`;
@@ -106,7 +106,7 @@ const BoardSubmit = () => {
     setLinkContent(value);
   };
 
-  const [selectedCommunity, setSelectedCommunity] = useState<string>("jaychis");
+  const [selectedCommunity, setSelectedCommunity] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("jaychis");
   const [searchResults, setSearchResults] = useState<string[]>([]);
 
@@ -287,35 +287,14 @@ const BoardSubmit = () => {
                     background: "#fff",
                   }}
                 >
-                  <div
-                    style={{
-                      marginBottom: "20px",
-                      display: "flex",
-                      justifyContent: "flex-start",
-                    }}
-                  >
-                    <button
-                      onClick={() => setInputType("TEXT")}
-                      style={
-                        inputType === "TEXT" ? activeButtonStyle : buttonStyle
-                      }
-                    >
+                  <div style={{ marginBottom: "20px", display: "flex", justifyContent: "flex-start" }}>
+                    <button onClick={() => setInputType("TEXT")} style={inputType === "TEXT" ? activeButtonStyle : buttonStyle}>
                       텍스트
                     </button>
-                    <button
-                      onClick={() => setInputType("MEDIA")}
-                      style={
-                        inputType === "MEDIA" ? activeButtonStyle : buttonStyle
-                      }
-                    >
+                    <button onClick={() => setInputType("MEDIA")} style={inputType === "MEDIA" ? activeButtonStyle : buttonStyle}>
                       이미지 & 비디오
                     </button>
-                    <button
-                      onClick={() => setInputType("LINK")}
-                      style={
-                        inputType === "LINK" ? activeButtonStyle : buttonStyle
-                      }
-                    >
+                    <button onClick={() => setInputType("LINK")} style={inputType === "LINK" ? activeButtonStyle : buttonStyle}>
                       링크
                     </button>
                   </div>

@@ -366,15 +366,47 @@ const styles: { [key: string]: CSSProperties } = {
   },
 };
 
+const cache: { [key: string]: any } = {};
+
+const exponentialBackoff = (retryCount: number): Promise<void> => {
+  return new Promise(resolve => setTimeout(resolve, Math.pow(2, retryCount) * 1000));
+};
+
 async function ExecuteBoardInquiryAPI({ id }: { readonly id: string }) {
-  try {
-    const res = await BoardInquiryAPI({ id });
-    const response = res.data.response;
-    console.log("profile board inquiry api response : ", response);
-    return response;
-  } catch (e: any) {
-    console.error("PROFILE BOARD INQUIRY ERROR : ", e);
+  const URL = `boards/${id}`;
+
+  // Return cached response if available
+  if (cache[URL]) {
+    return cache[URL];
   }
+
+  let retryCount = 0;
+  const maxRetries = 5;
+
+  while (retryCount < maxRetries) {
+    try {
+      const res = await BoardInquiryAPI({ id });
+      const response = res.data.response;
+      console.log("profile board inquiry api response : ", response);
+
+      // Cache the response
+      cache[URL] = response;
+
+      return response;
+    } catch (e: any) {
+      if (e.response && e.response.status === 429) {
+        retryCount++;
+        console.warn(`Retry ${retryCount} for ${URL} after 429 error.`);
+        await exponentialBackoff(retryCount);
+      } else {
+        console.error("PROFILE BOARD INQUIRY ERROR : ", e);
+        return []; // Return an empty array on error
+      }
+    }
+  }
+
+  console.error("Max retries reached. Returning empty response.");
+  return [];
 }
 
 export default Profile;
