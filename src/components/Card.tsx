@@ -382,27 +382,27 @@ const Card = ({
             보내기
           </button>
         </div>
-        <div
-          style={{
-            marginLeft: "auto", // 자동 여백을 사용하여 오른쪽 정렬
-            borderRadius: "30px",
-            width: "auto", // 너비 자동 조정
-            height: "50px",
-            display: "flex",
-            justifyContent: "right",
-            alignItems: "center",
-          }}
-        >
-          <span
-            style={{
-              fontSize: "14px",
-              color: "#000",
-            }}
-          >
-            {/* 조회수  */}
-            {viewCount}회
-          </span>
-        </div>
+        {/*<div*/}
+        {/*  style={{*/}
+        {/*    marginLeft: "auto", // 자동 여백을 사용하여 오른쪽 정렬*/}
+        {/*    borderRadius: "30px",*/}
+        {/*    width: "auto", // 너비 자동 조정*/}
+        {/*    height: "50px",*/}
+        {/*    display: "flex",*/}
+        {/*    justifyContent: "right",*/}
+        {/*    alignItems: "center",*/}
+        {/*  }}*/}
+        {/*>*/}
+        {/*  <span*/}
+        {/*    style={{*/}
+        {/*      fontSize: "14px",*/}
+        {/*      color: "#000",*/}
+        {/*    }}*/}
+        {/*  >*/}
+        {/*    /!* 조회수  *!/*/}
+        {/*    {viewCount}회*/}
+        {/*  </span>*/}
+        {/*</div>*/}
       </div>
       <hr
         style={{
