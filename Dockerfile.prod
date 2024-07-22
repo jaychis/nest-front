@@ -1,0 +1,52 @@
+FROM node AS build
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install -g dotenv-cli cross-env
+RUN npm install
+
+COPY . .
+
+ENV NODE_ENV=production
+
+RUN npm run build:prod
+
+FROM nginx:alpine
+
+COPY --from=build /app/build /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/nginx.conf.template
+
+# Copy SSL certificate files using secrets
+COPY _certs/certificate.crt /etc/ssl/certs/certificate.crt
+COPY _certs/ca_bundle.crt /etc/ssl/certs/ca_bundle.crt
+COPY _certs/private.key /etc/ssl/private/private.key
+
+# Install envsubst for template processing
+RUN apk add --no-cache gettext
+
+# Debugging step: list the files in the container
+RUN ls -la /etc/ssl/certs
+RUN ls -la /etc/ssl/private
+
+# Set environment variables for ports and server name
+ARG HTTP_PORT
+ARG HTTPS_PORT
+ARG SERVER_NAME
+
+# Use ARG values to set ENV values
+ENV HTTP_PORT=${HTTP_PORT}
+ENV HTTPS_PORT=${HTTPS_PORT}
+ENV SERVER_NAME=${SERVER_NAME}
+
+# Debugging step: echo the environment variables
+RUN echo "HTTP_PORT=${HTTP_PORT}" && echo "HTTPS_PORT=${HTTPS_PORT}" && echo "SERVER_NAME=${SERVER_NAME}"
+
+# Use envsubst to substitute environment variables in nginx template
+RUN envsubst '$HTTP_PORT $HTTPS_PORT $SERVER_NAME' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
+
+# Expose all potential ports
+EXPOSE 81
+EXPOSE 444
+
+CMD ["nginx", "-g", "daemon off;"]
