@@ -80,7 +80,7 @@ jobs:
             ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }}
 
   deploy-stage:
-    if: github.ref == 'refs/heads/stage'
+    if: github.ref == 'refs/heads/master'
     needs: build
     name: Deploy to Stage
     runs-on: [self-hosted, label-stage]
@@ -101,7 +101,7 @@ jobs:
             --name nest-front-stage --restart always ${{ env.DOCKER_IMAGE }}:latest
 
   deploy-prod:
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/prod'
     needs: build
     name: Deploy to Production
     runs-on: [self-hosted, label-go]
