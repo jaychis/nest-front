@@ -6,7 +6,6 @@ import MdEditor from "react-markdown-editor-lite";
 import "react-quill/dist/quill.snow.css"; // import styles
 import ReactQuill from "react-quill";
 import "react-markdown-editor-lite/lib/index.css";
-import { AWSImageRegistAPI, getPresignedUrlAPI } from "../api/AWSApi";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -20,13 +19,6 @@ import {
   ImageLocalPreviewUrlsReturnType,
 } from "../../_common/ImageUploadFuntionality";
 import { GetCommunitiesNameAPI } from "../api/CommunityApi";
-import { Editor } from "@tinymce/tinymce-react";
-
-const mdParser = new MarkdownIt();
-interface EditorChange {
-  html: string;
-  text: string;
-}
 
 const BoardSubmit = () => {
   const navigate = useNavigate();
