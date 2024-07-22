@@ -2,9 +2,13 @@ name: CI
 
 on:
   push:
-    branches: ['production']
+    branches:
+      - master
+      - stage
   pull_request:
-    branches: ['production']
+    branches:
+      - master
+      - stage
 env:
   DOCKER_IMAGE: ghcr.io/${{ github.actor }}/nest
   VERSION: ${{ github.sha }}
