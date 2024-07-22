@@ -45,8 +45,7 @@ RUN echo "HTTP_PORT=${HTTP_PORT}" && echo "HTTPS_PORT=${HTTPS_PORT}" && echo "SE
 # Use envsubst to substitute environment variables in nginx template
 RUN envsubst '$HTTP_PORT $HTTPS_PORT $SERVER_NAME' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
 
-# Expose all potential ports
-EXPOSE 81
-EXPOSE 444
+EXPOSE 80
+EXPOSE 443
 
 CMD ["nginx", "-g", "daemon off;"]

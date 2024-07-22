@@ -56,10 +56,7 @@ RUN envsubst '$HTTP_PORT $HTTPS_PORT $SERVER_NAME' < /etc/nginx/nginx.conf.templ
 # Debugging step: cat the final nginx.conf to check its contents
 RUN cat /etc/nginx/nginx.conf
 
-# Expose all potential ports
-EXPOSE 80
 EXPOSE 81
-EXPOSE 443
 EXPOSE 444
 
 CMD ["nginx", "-g", "daemon off;"]

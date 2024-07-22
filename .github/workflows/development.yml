@@ -61,7 +61,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./Dockerfile.stage.stage
+          file: ./Dockerfile-stage.stage
           push: true
           build-args: |
             CERTIFICATE_CRT=${{ secrets.CERTIFICATE_CRT }}
@@ -119,7 +119,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./Dockerfile.stage.prod
+          file: ./Dockerfile-stage.prod
           push: true
           build-args: |
             CERTIFICATE_CRT=${{ secrets.CERTIFICATE_CRT }}
