@@ -36,10 +36,6 @@ RUN apk add --no-cache gettext
 RUN ls -la /etc/ssl/certs
 RUN ls -la /etc/ssl/private
 
-# Debugging step: echo the environment variables
-RUN echo "HTTP_PORT=${HTTP_PORT}" && echo "HTTPS_PORT=${HTTPS_PORT}" && echo "SERVER_NAME=${SERVER_NAME}"
-
-
 # Set environment variables for ports and server name
 ARG HTTP_PORT
 ARG HTTPS_PORT
@@ -50,13 +46,16 @@ ENV HTTP_PORT=${HTTP_PORT}
 ENV HTTPS_PORT=${HTTPS_PORT}
 ENV SERVER_NAME=${SERVER_NAME}
 
+# Debugging step: echo the environment variables
+RUN echo "HTTP_PORT=${HTTP_PORT}" && echo "HTTPS_PORT=${HTTPS_PORT}" && echo "SERVER_NAME=${SERVER_NAME}"
+
 # Use envsubst to substitute environment variables in nginx template
 RUN envsubst '$HTTP_PORT $HTTPS_PORT $SERVER_NAME' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
 
 # Debugging step: cat the final nginx.conf to check its contents
 RUN cat /etc/nginx/nginx.conf
 
-EXPOSE 81
-EXPOSE 444
+EXPOSE 80
+EXPOSE 443
 
 CMD ["nginx", "-g", "daemon off;"]
