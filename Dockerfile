@@ -33,7 +33,23 @@ COPY _certs/private.key /etc/ssl/private/private.key
 RUN ls -la /etc/ssl/certs
 RUN ls -la /etc/ssl/private
 
+# Set environment variables for ports and server name
+ARG HTTP_PORT
+ARG HTTPS_PORT
+ARG SERVER_NAME
+
+# Use ARG values to set ENV values
+ENV HTTP_PORT=${HTTP_PORT}
+ENV HTTPS_PORT=${HTTPS_PORT}
+ENV SERVER_NAME=${SERVER_NAME}
+
+# Use envsubst to substitute environment variables in nginx template
+RUN envsubst '$HTTP_PORT $HTTPS_PORT $SERVER_NAME' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
+
+# Expose all potential ports
 EXPOSE 80
+EXPOSE 81
 EXPOSE 443
+EXPOSE 444
 
 CMD ["nginx", "-g", "daemon off;"]

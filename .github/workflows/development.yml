@@ -97,7 +97,18 @@ jobs:
           docker stop nest-front-stage || true
           docker rm nest-front-stage || true
           docker rmi ${{ env.DOCKER_IMAGE }}:latest || true
-          docker run -itd -p 443:443 -p 9797:80 \
+          docker pull ${{ env.DOCKER_IMAGE }}:latest
+          docker run -itd -p 444:444 -p 81:81 \
+            -e SERVER_NAME=stage.jaychis.com \
+            -e AWSACCESSKEYID="${{ secrets.AWSACCESSKEYID }}" \
+            -e AWSSECRETACCESSKEY="${{ secrets.AWSSECRETACCESSKEY }}" \
+            -e AWSREGION="${{ secrets.AWSREGION }}" \
+            -e S3BUCKETNAME="${{ secrets.S3BUCKETNAME }}" \
+            -e KAKAO_CLIENT_ID="${{ secrets.KAKAO_CLIENT_ID }}" \
+            -e KAKAO_TEST_CLIENT_ID="${{ secrets.KAKAO_TEST_CLIENT_ID }}" \
+            -e KAKAO_TEST_CLIENT_SECRET="${{ secrets.KAKAO_TEST_CLIENT_SECRET }}" \
+            -e NAVER_CLIENT_ID="${{ secrets.NAVER_CLIENT_ID }}" \
+            -e NAVER_CLIENT_SECRET="${{ secrets.NAVER_CLIENT_SECRET }}" \
             --name nest-front-stage --restart always ${{ env.DOCKER_IMAGE }}:latest
 
   deploy-prod:
@@ -118,5 +129,16 @@ jobs:
           docker stop nest-front || true
           docker rm nest-front || true
           docker rmi ${{ env.DOCKER_IMAGE }}:latest || true
-          docker run -itd -p 443:443 -p 9797:80 \
+          docker pull ${{ env.DOCKER_IMAGE }}:latest
+          docker run -itd -p 443:443 -p 80:80 \
+            -e SERVER_NAME=www.jaychis.com \
+            -e AWSACCESSKEYID="${{ secrets.AWSACCESSKEYID }}" \
+            -e AWSSECRETACCESSKEY="${{ secrets.AWSSECRETACCESSKEY }}" \
+            -e AWSREGION="${{ secrets.AWSREGION }}" \
+            -e S3BUCKETNAME="${{ secrets.S3BUCKETNAME }}" \
+            -e KAKAO_CLIENT_ID="${{ secrets.KAKAO_CLIENT_ID }}" \
+            -e KAKAO_TEST_CLIENT_ID="${{ secrets.KAKAO_TEST_CLIENT_ID }}" \
+            -e KAKAO_TEST_CLIENT_SECRET="${{ secrets.KAKAO_TEST_CLIENT_SECRET }}" \
+            -e NAVER_CLIENT_ID="${{ secrets.NAVER_CLIENT_ID }}" \
+            -e NAVER_CLIENT_SECRET="${{ secrets.NAVER_CLIENT_SECRET }}" \
             --name nest-front --restart always ${{ env.DOCKER_IMAGE }}:latest
