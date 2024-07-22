@@ -109,6 +109,9 @@ jobs:
             -e KAKAO_TEST_CLIENT_SECRET="${{ secrets.KAKAO_TEST_CLIENT_SECRET }}" \
             -e NAVER_CLIENT_ID="${{ secrets.NAVER_CLIENT_ID }}" \
             -e NAVER_CLIENT_SECRET="${{ secrets.NAVER_CLIENT_SECRET }}" \
+            -e HTTP_PORT="81" \
+            -e HTTPS_PORT="444" \
+            -e SERVER_NAME="stage.jaychis.com" \
             --name nest-front-stage --restart always ${{ env.DOCKER_IMAGE }}:latest
 
   deploy-prod:
@@ -141,4 +144,7 @@ jobs:
             -e KAKAO_TEST_CLIENT_SECRET="${{ secrets.KAKAO_TEST_CLIENT_SECRET }}" \
             -e NAVER_CLIENT_ID="${{ secrets.NAVER_CLIENT_ID }}" \
             -e NAVER_CLIENT_SECRET="${{ secrets.NAVER_CLIENT_SECRET }}" \
+            -e HTTP_PORT="80" \
+            -e HTTPS_PORT="443" \
+            -e SERVER_NAME="www.jaychis.com" \
             --name nest-front --restart always ${{ env.DOCKER_IMAGE }}:latest

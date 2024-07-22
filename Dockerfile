@@ -15,7 +15,7 @@ RUN npm run build:prod
 FROM nginx:alpine
 
 COPY --from=build /app/build /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY nginx.conf /etc/nginx/nginx.conf.template
 
 # Copy SSL certificate files using secrets
 #ARG CERTIFICATE_CRT
@@ -51,7 +51,10 @@ ENV HTTPS_PORT=${HTTPS_PORT}
 ENV SERVER_NAME=${SERVER_NAME}
 
 # Use envsubst to substitute environment variables in nginx template
-RUN envsubst '$HTTP_PORT $HTTPS_PORT $SERVER_NAME' < /etc/nginx/nginx.conf > /etc/nginx/nginx.conf
+RUN envsubst '$HTTP_PORT $HTTPS_PORT $SERVER_NAME' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
+
+# Debugging step: cat the final nginx.conf to check its contents
+RUN cat /etc/nginx/nginx.conf
 
 # Expose all potential ports
 EXPOSE 80
