@@ -44,7 +44,7 @@ ENV HTTPS_PORT=${HTTPS_PORT}
 ENV SERVER_NAME=${SERVER_NAME}
 
 # Use envsubst to substitute environment variables in nginx template
-RUN envsubst '$HTTP_PORT $HTTPS_PORT $SERVER_NAME' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
+RUN envsubst '$HTTP_PORT $HTTPS_PORT $SERVER_NAME' < /etc/nginx/nginx.conf > /etc/nginx/nginx.conf
 
 # Expose all potential ports
 EXPOSE 80
