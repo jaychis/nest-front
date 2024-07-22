@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - master
-      - stage
+      - prod
   pull_request:
     branches:
       - master
-      - stage
+      - prod
 
 env:
   DOCKER_IMAGE: ghcr.io/${{ github.actor }}/nest

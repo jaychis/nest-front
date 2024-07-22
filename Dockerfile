@@ -29,9 +29,16 @@ COPY _certs/certificate.crt /etc/ssl/certs/certificate.crt
 COPY _certs/ca_bundle.crt /etc/ssl/certs/ca_bundle.crt
 COPY _certs/private.key /etc/ssl/private/private.key
 
+# Install envsubst for template processing
+RUN apk add --no-cache gettext
+
 # Debugging step: list the files in the container
 RUN ls -la /etc/ssl/certs
 RUN ls -la /etc/ssl/private
+
+# Debugging step: echo the environment variables
+RUN echo "HTTP_PORT=${HTTP_PORT}" && echo "HTTPS_PORT=${HTTPS_PORT}" && echo "SERVER_NAME=${SERVER_NAME}"
+
 
 # Set environment variables for ports and server name
 ARG HTTP_PORT
