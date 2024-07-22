@@ -9,6 +9,7 @@ on:
     branches:
       - master
       - stage
+
 env:
   DOCKER_IMAGE: ghcr.io/${{ github.actor }}/nest
   VERSION: ${{ github.sha }}
@@ -78,9 +79,31 @@ jobs:
             ${{ env.DOCKER_IMAGE }}:latest
             ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }}
 
-  deploy:
+  deploy-stage:
+    if: github.ref == 'refs/heads/stage'
     needs: build
-    name: Deploy
+    name: Deploy to Stage
+    runs-on: [self-hosted, label-stage]
+    steps:
+      - name: Login to ghcr
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      - name: Docker run
+        run: |
+          docker stop nest-front-stage || true
+          docker rm nest-front-stage || true
+          docker rmi ${{ env.DOCKER_IMAGE }}:latest || true
+          docker run -itd -p 443:443 -p 9797:80 \
+            --name nest-front-stage --restart always ${{ env.DOCKER_IMAGE }}:latest
+
+  deploy-prod:
+    if: github.ref == 'refs/heads/master'
+    needs: build
+    name: Deploy to Production
     runs-on: [self-hosted, label-go]
     steps:
       - name: Login to ghcr
