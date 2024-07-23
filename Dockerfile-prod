@@ -22,7 +22,7 @@ COPY _certs/ca_bundle.crt /etc/ssl/certs/ca_bundle.crt
 COPY _certs/private.key /etc/ssl/private/private.key
 
 # Install envsubst for template processing
-RUN apk add --no-cache gettext
+#RUN apk add --no-cache gettext
 
 # Debugging step: list the files in the container
 RUN ls -la /etc/ssl/certs
