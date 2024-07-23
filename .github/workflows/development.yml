@@ -3,11 +3,11 @@ name: CI
 on:
   push:
     branches:
-      - master
+      - stage
       - prod
   pull_request:
     branches:
-      - master
+      - stage
       - prod
 
 env:
@@ -17,7 +17,7 @@ env:
 
 jobs:
   build-stage:
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/stage'
     name: Build Stage
     runs-on: ubuntu-latest
     steps:
@@ -129,7 +129,7 @@ jobs:
             ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }}
 
   deploy-stage:
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/stage'
     needs: build-stage
     name: Deploy to Stage
     runs-on: [self-hosted, lebel-stage]
