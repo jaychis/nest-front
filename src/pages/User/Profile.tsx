@@ -398,6 +398,10 @@ async function ExecuteBoardInquiryAPI({ id }: { readonly id: string }) {
         retryCount++;
         console.warn(`Retry ${retryCount} for ${URL} after 429 error.`);
         await exponentialBackoff(retryCount);
+      } else if (e.response && e.response.status === 401) {
+        console.error("Unauthorized error. Redirecting to login.");
+        window.location.href = "/login"; // Adjust this to your login route
+        return;
       } else {
         console.error("PROFILE BOARD INQUIRY ERROR : ", e);
         return []; // Return an empty array on error

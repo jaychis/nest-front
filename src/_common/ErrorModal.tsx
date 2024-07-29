@@ -13,14 +13,14 @@ const ErrorModal: React.FC<ErrorModalProps> = ({ show, handleClose, errorMessage
     <div style={modalOverlay}>
       <div style={modalContent}>
         <div style={modalHeader}>
-          <h2>Error</h2>
-          <button onClick={handleClose} style={closeButton}>X</button>
+          <h2>에러</h2>
+          <button onClick={handleClose} style={closeButton}>×</button>
         </div>
         <div style={modalBody}>
           <p>{errorMessage}</p>
         </div>
         <div style={modalFooter}>
-          <button onClick={handleClose} style={closeButton}>Close</button>
+          <button onClick={handleClose} style={footerButton}>닫기</button>
         </div>
       </div>
     </div>
@@ -37,20 +37,24 @@ const modalOverlay: CSSProperties = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
+  zIndex: 1000,
 };
 
 const modalContent: CSSProperties = {
-  backgroundColor: 'white',
+  backgroundColor: '#fff',
   padding: '20px',
-  borderRadius: '5px',
-  width: '300px',
-  boxShadow: '0 5px 15px rgba(0, 0, 0, 0.3)',
+  borderRadius: '8px',
+  width: '400px',
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+  animation: 'fadeIn 0.3s',
 };
 
 const modalHeader: CSSProperties = {
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
+  borderBottom: '1px solid #ddd',
+  paddingBottom: '10px',
 };
 
 const closeButton: CSSProperties = {
@@ -58,15 +62,28 @@ const closeButton: CSSProperties = {
   border: 'none',
   fontSize: '1.5em',
   cursor: 'pointer',
+  color: '#333',
 };
 
 const modalBody: CSSProperties = {
   margin: '20px 0',
+  fontSize: '16px',
+  color: '#333',
 };
 
 const modalFooter: CSSProperties = {
   display: 'flex',
   justifyContent: 'flex-end',
+};
+
+const footerButton: CSSProperties = {
+  padding: '10px 20px',
+  backgroundColor: '#ff5a5f',
+  color: 'white',
+  border: 'none',
+  borderRadius: '5px',
+  cursor: 'pointer',
+  fontWeight: 'bold',
 };
 
 export default ErrorModal;

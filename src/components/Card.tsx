@@ -16,6 +16,7 @@ import Slider from "react-slick";
 import YouTube from "react-youtube";
 import sanitizeHtml from "sanitize-html";
 import { LogViewedBoardAPI } from "../pages/api/ViewedBoardsApi";
+import debounce from "lodash.debounce";
 
 const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
   try {
@@ -47,10 +48,10 @@ const Card = ({
   const [isCardShareHovered, setIsCardShareHovered] = useState<boolean>(false);
   const [isCardSendHovered, setIsCardSendHovered] = useState<boolean>(false);
   const [viewCount, setViewCount] = useState<number>(0); // 조회수 상태 추가
-
   const [isReaction, setIsReaction] = useState<ReactionStateTypes>(null);
 
   const USER_ID: string = localStorage.getItem("id") as string;
+
   const reactionButton = async (type: ReactionStateTypes) => {
     if (type !== null) {
       const param: ReactionParams = {
@@ -59,54 +60,65 @@ const Card = ({
         type,
         reactionTarget: "BOARD",
       };
-      ReactionAPI(param)
-        .then((res) => {
-          const status: number = res.status;
+      try {
+        const res = await ReactionAPI(param);
+        const status: number = res.status;
+        const type = res.data.response?.type;
 
-          const type = res.data.response?.type;
-          console.log("ReactionAPI type : ", type);
-
-          if (type === undefined) setIsReaction(null);
-          if (type === "LIKE") setIsReaction("LIKE");
-          if (type === "DISLIKE") setIsReaction("DISLIKE");
-        })
-        .catch((err) => console.error(err));
+        if (type === undefined) setIsReaction(null);
+        if (type === "LIKE") setIsReaction("LIKE");
+        if (type === "DISLIKE") setIsReaction("DISLIKE");
+      } catch (err) {
+        console.error(err);
+      }
     }
   };
-
   const goBoardRead = () =>
     navigate(`/boards/read?id=${id}&title=${title}&content=${content}`);
-
-  useEffect(() => {
-    ReactionListAPI({ boardId: id }).then((res) => {
+  const fetchReactionList = async (boardId: string) => {
+    try {
+      const res = await ReactionListAPI({ boardId });
       const response = res.data.response;
-      // console.log("response : ", response);
-
       response.forEach((el: ReactionType) => {
         if (USER_ID === el.user_id) {
           setIsReaction(el.type);
         }
       });
-    });
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-    ReactionCountAPI({
-      boardId: id,
-    }).then((res) => {
+  const fetchReactionCount = async (boardId: string) => {
+    try {
+      const res = await ReactionCountAPI({ boardId });
       const resCount = res.data.response;
-      // console.log("ReactionCountAPI resCount : ", resCount.count);
-
       setIsCardCount(resCount.count);
-    });
-  }, [isReaction]);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const debouncedFetchReactionList = debounce(fetchReactionList, 300);
+  const debouncedFetchReactionCount = debounce(fetchReactionCount, 300);
+
+  useEffect(() => {
+    debouncedFetchReactionList(id);
+    debouncedFetchReactionCount(id);
+  }, [id]);
 
   const boardClickTracking = async () => {
-    const boardTracking = await LogViewedBoardAPI({
-      boardId: id,
-      userId: localStorage.getItem("id") as string,
-    });
+    try {
+      const boardTracking = await LogViewedBoardAPI({
+        boardId: id,
+        userId: localStorage.getItem("id") as string,
+      });
 
-    if (!boardTracking) return;
-    console.log("boardTracking : ", boardTracking);
+      if (!boardTracking) return;
+      console.log("boardTracking : ", boardTracking);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
