@@ -1,7 +1,5 @@
-import { AxiosResponse } from "axios";
 import { client } from "./Client";
 import { ErrorHandling } from "../../_common/ErrorHandling";
-import debounce from "lodash.debounce";
 
 const SearchesURL: string = "searches";
 export interface SearchParam {

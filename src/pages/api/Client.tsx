@@ -1,12 +1,18 @@
 import axios from "axios";
 import { AxiosError } from "axios";
 
-const BACK_URL = process.env.REACT_APP_API_BASE_URL;
+const BACK_URL: string = process.env.REACT_APP_API_BASE_URL as string;
 console.log("BACK_URL : ", BACK_URL);
+console.log(
+  "BACK_URL.startsWith('https://') : ",
+  BACK_URL.startsWith("https://"),
+);
 
 export const client = axios.create({
   baseURL: BACK_URL,
 });
+console.log("client.defaults.baseURL : ", client.defaults.baseURL);
+
 client.defaults.headers.patch["Content-Type"] = "application/json";
 client.defaults.headers.post["Content-Type"] = "application/json";
 
