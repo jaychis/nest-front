@@ -96,6 +96,17 @@ export const LoginAPI = async (params: LoginParams) => {
   const res = await client.post(URL, params);
   return res;
 };
+// 리프레쉬토큰 api인데 맞는지는 모르겠음
+export const RefreshTokenAPI = async () => {
+  const refreshToken = localStorage.getItem("refresh_token");
+  if (!refreshToken) throw new Error("No refresh token found");
+
+  const res = await client.post(`${USERS_URL}/refresh-token`, {
+    refresh_token: refreshToken,
+  });
+
+  return res;
+};
 
 export interface SignupParams {
   readonly email: string;
