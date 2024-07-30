@@ -8,9 +8,9 @@ RUN npm install
 
 COPY . .
 
-ENV NODE_ENV=production
+ENV NODE_ENV=stage
 
-RUN npm run build:prod
+RUN npm run build:stage
 
 FROM nginx:alpine
 

@@ -42,21 +42,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_TOKEN }}
 
-      - name: Create _certs directory
-        run: mkdir -p _certs
-
-      - name: Create certificate.crt secret file
-        run: echo "${{ secrets.CERTIFICATE_CRT }}" > _certs/certificate.crt
-
-      - name: Create ca_bundle.crt secret file
-        run: echo "${{ secrets.CA_BUNDLE_CRT }}" > _certs/ca_bundle.crt
-
-      - name: Create private.key secret file
-        run: echo "${{ secrets.PRIVATE_KEY }}" > _certs/private.key
-
-      - name: List _certs directory (debugging step)
-        run: ls -la _certs
-
       - name: Docker build and push
         uses: docker/build-push-action@v2
         with:
