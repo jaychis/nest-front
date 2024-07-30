@@ -108,7 +108,7 @@ jobs:
             PRIVATE_KEY=${{ secrets.PRIVATE_KEY }}
             HTTP_PORT=9797
             HTTPS_PORT=443
-            SERVER_NAME=www.jaychis.com
+            SERVER_NAME=jaychis.com
           tags: |
             ${{ env.DOCKER_IMAGE }}:prod
             ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }}
