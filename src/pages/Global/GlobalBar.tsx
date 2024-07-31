@@ -9,6 +9,7 @@ import { AddSearchAPI } from "../api/SearchApi";
 import NotificationModal from "../User/NotificationModal";
 import { searchQuery } from "../../reducers/searchSlice";
 import { RootState, AppDispatch } from "../../store/store";
+import debounce from "lodash.debounce";
 
 const GlobalBar = () => {
   const navigate = useNavigate();
@@ -32,15 +33,19 @@ const GlobalBar = () => {
     setIsProfileModalOpen(!isProfileModalOpen);
   };
 
-  const handleSearchChange = async (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ): Promise<void> => {
-    const value = event.target.value;
-    setSearchTerm(value);
+  const debouncedSearch = debounce((value: string) => {
     if (value.length > 2) {
       dispatch(searchQuery(value));
     }
-  };
+  }, 300); // 300ms 디바운싱
+  
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setSearchTerm(value);
+    debouncedSearch(value); // Use debounced search
+};
+
+
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
@@ -68,6 +73,11 @@ const GlobalBar = () => {
     navigate(`/search/list?query=${topic}`);
   };
 
+  const handleLogoClick = () => {
+    console.log("Logo clicked");
+    navigate("/");
+  };
+
   return (
     <nav
       style={{
@@ -91,7 +101,7 @@ const GlobalBar = () => {
         }}
         onMouseEnter={() => setLogoHover(true)}
         onMouseLeave={() => setLogoHover(false)}
-        onClick={() => navigate("/")}
+        onClick={handleLogoClick}
       >
         <img src={logo} alt="Logo" style={{ width: "50px" }} />
         <span style={{ marginLeft: "10px" }}>{"jaychis.com"}</span>

@@ -1,5 +1,5 @@
 import React, { MouseEventHandler, useEffect, useState } from "react";
-import { LoginAPI, LoginParams } from "../api/UserApi";
+import { LoginAPI, LoginParams, RefreshTokenAPI } from "../api/UserApi";
 import { CollectionTypes } from "../../_common/CollectionTypes";
 import { isValidPasswordFormat } from "../../_common/PasswordRegex";
 import { FaGoogle, FaApple, FaComment } from "react-icons/fa";
@@ -10,6 +10,7 @@ import {
   UsersKakaoOAuthLoginAPI,
   UsersNaverOAuthSignUpAPI,
 } from "../api/OAuthApi";
+import ErrorModal from "../../_common/ErrorModal";
 
 interface Props {
   readonly onSwitchView: () => void;
@@ -24,6 +25,8 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
   });
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [errorModalVisible, setErrorModalVisible] = useState<boolean>(false); // State for ErrorModal
+
 
   const setLoginProcess = ({
     id,
@@ -60,7 +63,7 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
     processLogin();
   };
 
-  const processLogin = () => {
+  const processLogin = async () => {
     const isPasswordValid: boolean = isValidPasswordFormat(login.password);
     const isEmailValid: boolean = /\S+@\S+\.\S+/.test(login.email);
     if (!isEmailValid) {
@@ -69,25 +72,52 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
     }
 
     if (isPasswordValid) {
-      LoginAPI(login)
-        .then((res): void => {
-          const response = res.data.response;
-          console.log("response ", response);
-          const { id, nickname, access_token, refresh_token } = response;
+      try {
+        const res = await LoginAPI(login);
+        const response = res.data.response;
+        console.log("response ", response);
+        const { id, nickname, access_token, refresh_token } = response;
 
-          if (res.status === 201 && response) {
+        if (res.status === 201 && response) {
+          setLoginProcess({
+            id,
+            nickname,
+            access_token,
+            refresh_token,
+          });
+        }
+      } catch (err: any) {
+        if (err.response?.status === 401) {
+          try {
+            const refreshRes = await RefreshTokenAPI();
+            const refreshResponse = refreshRes.data.response;
+            const { access_token, refresh_token } = refreshResponse;
+
+            localStorage.setItem("access_token", access_token);
+            localStorage.setItem("refresh_token", refresh_token);
+
+            // Retry the original request
+            const retryRes = await LoginAPI(login);
+            const retryResponse = retryRes.data.response;
+            const { id, nickname } = retryResponse;
+
             setLoginProcess({
               id,
               nickname,
               access_token,
               refresh_token,
             });
+          } catch (refreshErr) {
+            setErrorMessage("세션이 만료되었습니다. 다시 로그인해 주세요.");
+            console.error(refreshErr);
+            localStorage.clear();
+            modalIsOpen(true);
           }
-        })
-        .catch((err): void => {
+        } else {
           setErrorMessage("로그인 실패. 이메일과 비밀번호를 확인하세요.");
           console.error(err);
-        });
+        }
+      }
     } else {
       setErrorMessage(
         "비밀번호는 최소 8자, 하나 이상의 문자, 하나의 숫자 및 하나의 특수문자입니다.",
@@ -103,7 +133,6 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
   };
 
   const naverOauthLogin = async () => {
-    //
     console.log("naverOauthLogin check");
     // alert("naverOauthLogin check");
 
@@ -141,35 +170,60 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
 
   const kakaoOauthLogin = async () => {
     console.log("kakaoOauthLogin check");
-    const res = await UsersKakaoOAuthSignUpAPI();
-    if (!res) return;
-
-    console.log("kakaoAuthLogin res : ", res);
-    const TYPE: OAuthReturnType = res.data.response.type;
-
-    if (TYPE === "NEW_USER") {
-      // 이메일 가지고 있고, 회원가입시 해당 이메일이 회원가입창에 입력될 수 있도록
-      console.log(
-        " res.data.response.profile.email : ",
-        res.data.response.profile.email,
-      );
-      const EMAIL: string = res.data.response.profile.email as string;
-      console.log("EMAIL : ", EMAIL);
-
-      // onSwitchView();
-    } else if (TYPE === "EXITING_USER") {
-      const loginProfile = await UsersKakaoOAuthLoginAPI();
-      if (!loginProfile) return;
-      console.log("loginProfile : ", loginProfile);
-      const { id, nickname, access_token, refresh_token } =
-        loginProfile.data.response;
-
-      setLoginProcess({
-        id,
-        nickname,
-        access_token,
-        refresh_token,
-      });
+    try {
+      const res = await UsersKakaoOAuthSignUpAPI();
+      if (!res) return;
+  
+      console.log("kakaoAuthLogin res : ", res);
+      const TYPE: OAuthReturnType = res.data.response.type;
+  
+      if (TYPE === "NEW_USER") {
+        console.log(" res.data.response.profile.email : ", res.data.response.profile.email);
+        const EMAIL: string = res.data.response.profile.email as string;
+        console.log("EMAIL : ", EMAIL);
+      } else if (TYPE === "EXITING_USER") {
+        const loginProfile = await UsersKakaoOAuthLoginAPI();
+        if (!loginProfile) return;
+        console.log("loginProfile : ", loginProfile);
+        const { id, nickname, access_token, refresh_token } = loginProfile.data.response;
+        setLoginProcess({ id, nickname, access_token, refresh_token });
+      }
+    } catch (err: any) {
+      if (err.response?.status === 401) {
+        try {
+          const refreshRes = await RefreshTokenAPI();
+          const refreshResponse = refreshRes.data.response;
+          const { access_token, refresh_token } = refreshResponse;
+  
+          localStorage.setItem("access_token", access_token);
+          localStorage.setItem("refresh_token", refresh_token);
+  
+          // Retry the original request
+          const retryRes = await UsersKakaoOAuthLoginAPI();
+          if (retryRes) {
+            const retryResponse = retryRes.data.response;
+            const { id, nickname } = retryResponse;
+  
+            setLoginProcess({
+              id,
+              nickname,
+              access_token,
+              refresh_token,
+            });
+          } else {
+            throw new Error("Retry failed");
+          }
+        } catch (refreshErr) {
+          setErrorMessage("세션이 만료되었습니다. 다시 로그인해 주세요.");
+          setErrorModalVisible(true); // Show ErrorModal
+          console.error(refreshErr);
+          localStorage.clear();
+        }
+      } else {
+        setErrorMessage("카카오 로그인 실패. 다시 시도해 주세요.");
+        setErrorModalVisible(true); // Show ErrorModal
+        console.error(err);
+      }
     }
   };
 
