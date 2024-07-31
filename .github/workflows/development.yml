@@ -106,7 +106,7 @@ jobs:
             CERTIFICATE_CRT=${{ secrets.CERTIFICATE_CRT }}
             CA_BUNDLE_CRT=${{ secrets.CA_BUNDLE_CRT }}
             PRIVATE_KEY=${{ secrets.PRIVATE_KEY }}
-            HTTP_PORT=9797
+            HTTP_PORT=80
             HTTPS_PORT=443
             SERVER_NAME=jaychis.com
           tags: |
@@ -163,7 +163,7 @@ jobs:
           docker rm nest-front || true
           docker rmi ${{ env.DOCKER_IMAGE }}:prod || true
           docker pull ${{ env.DOCKER_IMAGE }}:prod
-          docker run -itd -p 443:443 -p 9797:80 \
+          docker run -itd -p 443:443 -p 80:80 \
             -e AWSACCESSKEYID="${{ secrets.AWSACCESSKEYID }}" \
             -e AWSSECRETACCESSKEY="${{ secrets.AWSSECRETACCESSKEY }}" \
             -e AWSREGION="${{ secrets.AWSREGION }}" \
