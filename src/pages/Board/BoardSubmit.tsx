@@ -1,8 +1,6 @@
 import React, { FormEvent, useEffect, useState, useRef } from "react";
 import { SubmitAPI, SubmitParams } from "../api/BoardApi";
 import { useNavigate } from "react-router-dom";
-import MarkdownIt from "markdown-it";
-import MdEditor from "react-markdown-editor-lite";
 import "react-quill/dist/quill.snow.css"; // import styles
 import ReactQuill from "react-quill";
 import "react-markdown-editor-lite/lib/index.css";
@@ -19,13 +17,15 @@ import {
   ImageLocalPreviewUrlsReturnType,
 } from "../../_common/ImageUploadFuntionality";
 import { GetCommunitiesNameAPI } from "../api/CommunityApi";
+import ErrorModal from "../../_common/ErrorModal";
 
 const BoardSubmit = () => {
   const navigate = useNavigate();
   const [inputType, setInputType] = useState<BoardType>("TEXT");
   const editorRef = useRef<any>(null);
   const [editorHeight, setEditorHeight] = useState(200);
-
+  const [errorModalVisible, setErrorModalVisible] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const ID: string = localStorage.getItem("id") as string;
   const NICKNAME: string = localStorage.getItem("nickname") as string;
   const [textTitle, setTextTitle] = useState<string>("");
@@ -166,20 +166,35 @@ const BoardSubmit = () => {
 
     try {
       if (inputType === "TEXT") {
+        if (!textTitle || !textContent) {
+          setErrorMessage("텍스트 게시물의 제목과 내용을 모두 입력해야 합니다.");
+          setErrorModalVisible(true);
+          return;
+        }
         title = textTitle;
         content = [textContent];
       }
 
       if (inputType === "MEDIA") {
+        if (!mediaTitle || fileList.length === 0) {
+          setErrorMessage("미디어 게시물의 제목과 파일을 모두 제공해야 합니다.");
+          setErrorModalVisible(true);
+          return;
+        }
         const res: AwsImageUploadFunctionalityReturnType =
           await AwsImageUploadFunctionality({ fileList });
         if (!res) return;
-
+  
         content = res.imageUrls;
         title = mediaTitle;
       }
-
+  
       if (inputType === "LINK") {
+        if (!linkTitle || !linkContent) {
+          setErrorMessage("링크 게시물의 제목과 링크를 모두 입력해야 합니다.");
+          setErrorModalVisible(true);
+          return;
+        }
         title = linkTitle;
         content = [linkContent];
       }
@@ -460,6 +475,11 @@ const BoardSubmit = () => {
           </div>
         </div>
       </div>
+      <ErrorModal
+        show={errorModalVisible}
+        handleClose={() => setErrorModalVisible(false)}
+        errorMessage={errorMessage}
+      />
     </>
   );
 };

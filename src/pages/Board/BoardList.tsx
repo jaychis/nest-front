@@ -6,10 +6,11 @@ import { MainListTypeState } from "../../reducers/mainListTypeSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import EmptyState from "../../components/EmptyState";
-
+import debounce from "lodash.debounce";
 interface ContainerProps {
   children?: React.ReactNode;
 }
+
 
 const MainContainer = ({ children }: ContainerProps) => {
   return (
@@ -50,83 +51,67 @@ const CardsContainer = ({ children }: ContainerProps) => {
 
 const BoardList = () => {
   const [list, setList] = useState<CardType[]>([]);
+  const [loading, setLoading] = useState<boolean>(false); // Move useState inside the component
   const TAKE: number = 5;
   const { buttonType }: MainListTypeState = useSelector(
     (state: RootState) => state.sideBarButton,
   );
 
   useEffect(() => {
-    if (buttonType === "HOME") {
-      ListAPI({ take: TAKE, lastId: null, category: null })
-        .then((res) => {
-          const response: CardType[] = res.data.response.current_list;
-
-          setList([...response]);
-        })
-        .catch((err) => console.error(err));
-
-      window.addEventListener("scroll", handleScroll);
-      return () => {
-        window.removeEventListener("scroll", handleScroll);
-      };
-    } else if (buttonType === "POPULAR") {
-      console.log("POPULAR : ", buttonType);
-      PopularListAPI({ take: TAKE, lastId: null, category: null })
-        .then((res) => {
-          const response: CardType[] = res.data.response.current_list;
-
-          setList([...response]);
-        })
-        .catch((err) => console.error(err));
-
-      window.addEventListener("scroll", handleScroll);
-      return () => {
-        window.removeEventListener("scroll", handleScroll);
-      };
-    } else if (buttonType === "ALL") {
-      AllListAPI({ take: TAKE, lastId: null, category: null })
-        .then((res) => {
-          const response: CardType[] = res.data.response.current_list;
-          console.log("list response : ", response);
-
-          setList([...response]);
-        })
-        .catch((err) => console.error(err));
-
-      window.addEventListener("scroll", handleScroll);
-      return () => {
-        window.removeEventListener("scroll", handleScroll);
-      };
-    } else {
-      AllListAPI({ take: TAKE, lastId: null, category: buttonType })
-        .then((res) => {
-          const response: CardType[] = res.data.response.current_list;
-          console.log("list response : ", response);
-
-          setList([...response]);
-        })
-        .catch((err) => console.error(err));
-
-      window.addEventListener("scroll", handleScroll);
-      return () => {
-        window.removeEventListener("scroll", handleScroll);
-      };
-    }
+    const fetchInitialData = () => {
+      if (buttonType === "HOME") {
+        ListAPI({ take: TAKE, lastId: null, category: null })
+          .then((res) => {
+            const response: CardType[] = res.data.response.current_list;
+            setList([...response]);
+          })
+          .catch((err) => console.error(err));
+      } else if (buttonType === "POPULAR") {
+        PopularListAPI({ take: TAKE, lastId: null, category: null })
+          .then((res) => {
+            const response: CardType[] = res.data.response.current_list;
+            setList([...response]);
+          })
+          .catch((err) => console.error(err));
+      } else if (buttonType === "ALL") {
+        AllListAPI({ take: TAKE, lastId: null, category: null })
+          .then((res) => {
+            const response: CardType[] = res.data.response.current_list;
+            setList([...response]);
+          })
+          .catch((err) => console.error(err));
+      } else {
+        AllListAPI({ take: TAKE, lastId: null, category: buttonType })
+          .then((res) => {
+            const response: CardType[] = res.data.response.current_list;
+            setList([...response]);
+          })
+          .catch((err) => console.error(err));
+      }
+    };
+  
+    fetchInitialData();
+  
+    const debouncedHandleScroll = debounce(handleScroll, 300);
+    window.addEventListener("scroll", debouncedHandleScroll);
+  
+    return () => {
+      window.removeEventListener("scroll", debouncedHandleScroll);
+    };
   }, [buttonType]);
   
   const handleScroll = () => {
     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-  
     if (scrollTop + clientHeight >= scrollHeight - 15) {
-      if (!loading) { // 로딩 상태를 확인하여 중복 요청 방지
+      if (!loading) {
         fetchData();
       }
     }
   };
-
+  
   window.addEventListener("scroll", handleScroll);
 
-  const [loading, setLoading] = useState<boolean>(false);
+
   const fetchData = () => {
     if (loading || list.length === 0) return;
     setLoading(true);

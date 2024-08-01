@@ -5,14 +5,18 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import store from "./store/store";
+import { ErrorProvider } from "./_common/ErrorContext";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
 );
 root.render(
   <Provider store={store}>
+    
     <React.StrictMode>
-      <App />
+      <ErrorProvider>
+        <App />
+      </ErrorProvider>
     </React.StrictMode>
   </Provider>,
 );
