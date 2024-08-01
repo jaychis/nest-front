@@ -7,7 +7,7 @@ interface ListParams {
   readonly category?: string | null;
 }
 export const ListAPI = ({ take, lastId, category }: ListParams) => {
-  let URL: string = `boards/list?take=${take}`;
+  let URL: string = `api/boards/list?take=${take}`;
 
   if (lastId) URL += `&lastId=${lastId}`;
   if (category) URL += `&category=${category}`;
@@ -17,7 +17,7 @@ export const ListAPI = ({ take, lastId, category }: ListParams) => {
 };
 
 export const AllListAPI = ({ take, lastId, category }: ListParams) => {
-  let URL: string = `boards/list/all?take=${take}`;
+  let URL: string = `api/boards/list/all?take=${take}`;
 
   if (lastId) URL += `&lastId=${lastId}`;
   if (category) URL += `&category=${category}`;
@@ -27,7 +27,7 @@ export const AllListAPI = ({ take, lastId, category }: ListParams) => {
 };
 
 export const PopularListAPI = ({ take, lastId, category }: ListParams) => {
-  let URL: string = `boards/list/all?take=${take}`;
+  let URL: string = `api/boards/list/all?take=${take}`;
 
   if (lastId) URL += `&lastId=${lastId}`;
   if (category) URL += `&category=${category}`;
@@ -41,7 +41,7 @@ interface ReadParams {
   readonly title: string;
 }
 export const ReadAPI = ({ id, title }: ReadParams) => {
-  const URL: string = `boards/read?id=${id}&title=${title}`;
+  const URL: string = `api/boards/read?id=${id}&title=${title}`;
 
   return client.get(URL);
 };
@@ -60,7 +60,7 @@ export interface SubmitParams {
 }
 
 export const SubmitAPI = async (params: SubmitParams) => {
-  const URL: string = `boards/`;
+  const URL: string = `api/boards/`;
 
   const res = await client.post(URL, params);
   return res;
@@ -71,7 +71,7 @@ export interface BoardInquiryParam {
 }
 
 export const BoardInquiryAPI = async (param: BoardInquiryParam) => {
-  const URL: string = `boards/${param.id}`;
+  const URL: string = `api/boards/${param.id}`;
 
   const res = await client.get(URL);
 
