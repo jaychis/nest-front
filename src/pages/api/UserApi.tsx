@@ -96,16 +96,30 @@ export const LoginAPI = async (params: LoginParams) => {
   const res = await client.post(URL, params);
   return res;
 };
-// 리프레쉬토큰 api인데 맞는지는 모르겠음
+
 export const RefreshTokenAPI = async () => {
   const refreshToken = localStorage.getItem("refresh_token");
   if (!refreshToken) throw new Error("No refresh token found");
 
-  const res = await client.post(`${USERS_URL}/refresh-token`, {
-    refresh_token: refreshToken,
-  });
+  try {
+    const res = await client.get(`${USERS_URL}/refresh/token`, {
+      headers: { 'Authorization': `Bearer ${refreshToken}` }
+    });
 
-  return res;
+    return res;
+  } catch (e: any) {
+    if (e.response) {
+      const { status, data } = e.response;
+      if (status === 400) {
+        if (data.message === 'nicknameRequired' || data.message === 'emailRequired') {
+          throw new Error(data.message);
+        }
+      } else if (status === 500) {
+        throw new Error('internalServerError');
+      }
+    }
+    throw new Error('An unknown error occurred');
+  }
 };
 
 export interface SignupParams {
