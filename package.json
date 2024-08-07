@@ -36,9 +36,11 @@
   },
   "scripts": {
     "start:local": "cross-env REACT_APP_API_BASE_URL=http://127.0.0.1:9898 react-scripts start",
-    "start:dev": "cross-env REACT_APP_API_BASE_URL=http://3.36.249.222:9898 react-scripts start",
-    "start:prod": "cross-env REACT_APP_API_BASE_URL=http://3.36.249.222:9898 react-scripts start",
-    "build:prod": "cross-env REACT_APP_API_BASE_URL=http://3.36.249.222:9898 react-scripts build",
+    "start:dev": "cross-env REACT_APP_API_BASE_URL=http://127.0.0.1:9898 react-scripts start",
+    "start:stage": "cross-env REACT_APP_API_BASE_URL=http://3.35.175.59:9898 react-scripts start",
+    "build:stage": "cross-env REACT_APP_API_BASE_URL=http://3.35.175.59:9898 react-scripts build",
+    "start:prod": "cross-env REACT_APP_API_BASE_URL=https://api.jaychis.com react-scripts start",
+    "build:prod": "cross-env REACT_APP_API_BASE_URL=https://api.jaychis.com react-scripts build",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
