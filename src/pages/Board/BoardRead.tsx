@@ -16,8 +16,9 @@ import RightSideBar from "../Global/RightSideBar";
 
 const BoardRead = () => {
   const [params, setParams] = useSearchParams();
+  const BOARD_ID: string = params.get("id") || "";
   const [isBoardState, setIsBoardStateBoard] = useState<CardType>({
-    id: params.get("id") as string,
+    id: BOARD_ID,
     identifier_id: "",
     category: "",
     content: [],
