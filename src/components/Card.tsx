@@ -38,6 +38,12 @@ const Card = ({
   title,
   type,
 }: BoardProps) => {
+  useEffect(() => {
+    console.log("card component");
+    console.log("id : ", id);
+    console.log("content : ", content);
+    console.log("nickname : ", nickname);
+  }, []);
   const navigate = useNavigate();
   const [isCardCount, setIsCardCount] = useState<number>(0);
   const [isCardHovered, setIsCardHovered] = useState<boolean>(false);
@@ -73,8 +79,11 @@ const Card = ({
       }
     }
   };
-  const goBoardRead = () =>
+  const goBoardRead = () => {
+    sessionStorage.setItem("boardId", id);
+    sessionStorage.setItem("boardTitle", title);
     navigate(`/boards/read?id=${id}&title=${title}&content=${content}`);
+  };
   const fetchReactionList = async (boardId: string) => {
     try {
       const res = await ReactionListAPI({ boardId });
@@ -200,12 +209,15 @@ const Card = ({
               }}
             >
               <div>
-                {content?.map((co, index) => (
-                  <div
-                    key={index}
-                    dangerouslySetInnerHTML={{ __html: sanitizeHtml(co) }}
-                  />
-                ))}
+                {content?.map((co, index) => {
+                  // console.log("card content : ", co);
+                  return (
+                    <div
+                      key={index}
+                      dangerouslySetInnerHTML={{ __html: sanitizeHtml(co) }}
+                    />
+                  );
+                })}
               </div>
             </div>
           ) : type === "MEDIA" ? (

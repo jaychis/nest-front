@@ -1,4 +1,5 @@
 import { client } from "./Client";
+import { ErrorHandling } from "../../_common/ErrorHandling";
 
 export interface CommentSubmitParams {
   readonly boardId: string;
@@ -17,12 +18,16 @@ export const CommentSubmitAPI = async (params: CommentSubmitParams) => {
 export interface CommentListParam {
   readonly boardId: string;
 }
-export const CommentListAPI = async ({ boardId }: CommentListParam) => {
-  const URL: string = `comments?boardId=${boardId}`;
+export const CommentListAPI = async (param: CommentListParam) => {
+  try {
+    const URL: string = `comments/`;
 
-  const res = await client.get(URL);
+    const res = await client.post(URL, param);
 
-  return res;
+    return res;
+  } catch (e: any) {
+    ErrorHandling({ text: "CommentListAPI", error: e });
+  }
 };
 
 export interface CommentInquiryParam {

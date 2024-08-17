@@ -11,7 +11,6 @@ interface ContainerProps {
   children?: React.ReactNode;
 }
 
-
 const MainContainer = ({ children }: ContainerProps) => {
   return (
     <div
@@ -89,17 +88,17 @@ const BoardList = () => {
           .catch((err) => console.error(err));
       }
     };
-  
+
     fetchInitialData();
-  
+
     const debouncedHandleScroll = debounce(handleScroll, 300);
     window.addEventListener("scroll", debouncedHandleScroll);
-  
+
     return () => {
       window.removeEventListener("scroll", debouncedHandleScroll);
     };
   }, [buttonType]);
-  
+
   const handleScroll = () => {
     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
     if (scrollTop + clientHeight >= scrollHeight - 15) {
@@ -108,9 +107,8 @@ const BoardList = () => {
       }
     }
   };
-  
-  window.addEventListener("scroll", handleScroll);
 
+  window.addEventListener("scroll", handleScroll);
 
   const fetchData = () => {
     if (loading || list.length === 0) return;
@@ -164,7 +162,7 @@ const BoardList = () => {
         <CardsContainer>
           {list.length > 0 ? (
             list.map((el: CardType) => {
-              // console.log("el : ", el);
+              console.log("list el : ", el);
 
               return (
                 <React.Fragment key={el.id}>

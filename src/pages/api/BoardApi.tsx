@@ -1,5 +1,6 @@
 import { client } from "./Client";
 import { BoardType } from "../../_common/CollectionTypes";
+import { ErrorHandling } from "../../_common/ErrorHandling";
 
 interface ListParams {
   readonly take: number;
@@ -40,10 +41,17 @@ interface ReadParams {
   readonly id: string;
   readonly title: string;
 }
-export const ReadAPI = ({ id, title }: ReadParams) => {
-  const URL: string = `boards/read?id=${id}&title=${title}`;
+export const ReadAPI = (params: ReadParams) => {
+  try {
+    const URL: string = `boards/`;
 
-  return client.get(URL);
+    const res = client.post(URL, params);
+    console.log("READ API res : ", res);
+
+    return res;
+  } catch (e: any) {
+    ErrorHandling({ text: "BoardReadAPI", error: e });
+  }
 };
 
 export interface SubmitParams {

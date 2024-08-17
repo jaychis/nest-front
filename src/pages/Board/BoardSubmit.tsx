@@ -149,13 +149,6 @@ const BoardSubmit = () => {
     setSearchResults([]);
   };
 
-  const handleCommunityChange = async (
-    event: React.ChangeEvent<HTMLSelectElement>,
-  ): Promise<void> => {
-    const { value } = event.target;
-    setSelectedCommunity(value);
-  };
-
   const handleSubmit = async (
     event: FormEvent<HTMLFormElement | HTMLButtonElement>,
   ) => {
@@ -167,7 +160,9 @@ const BoardSubmit = () => {
     try {
       if (inputType === "TEXT") {
         if (!textTitle || !textContent) {
-          setErrorMessage("텍스트 게시물의 제목과 내용을 모두 입력해야 합니다.");
+          setErrorMessage(
+            "텍스트 게시물의 제목과 내용을 모두 입력해야 합니다.",
+          );
           setErrorModalVisible(true);
           return;
         }
@@ -177,18 +172,20 @@ const BoardSubmit = () => {
 
       if (inputType === "MEDIA") {
         if (!mediaTitle || fileList.length === 0) {
-          setErrorMessage("미디어 게시물의 제목과 파일을 모두 제공해야 합니다.");
+          setErrorMessage(
+            "미디어 게시물의 제목과 파일을 모두 제공해야 합니다.",
+          );
           setErrorModalVisible(true);
           return;
         }
         const res: AwsImageUploadFunctionalityReturnType =
           await AwsImageUploadFunctionality({ fileList });
         if (!res) return;
-  
+
         content = res.imageUrls;
         title = mediaTitle;
       }
-  
+
       if (inputType === "LINK") {
         if (!linkTitle || !linkContent) {
           setErrorMessage("링크 게시물의 제목과 링크를 모두 입력해야 합니다.");
@@ -212,6 +209,8 @@ const BoardSubmit = () => {
         .then((res) => {
           const response = res.data.response;
           if (res.status === 201) {
+            sessionStorage.setItem("boardId", response.id);
+            sessionStorage.setItem("boardTitle", response.title);
             navigate(`/boards/read?id=${response.id}&title=${response.title}`);
           }
         })
@@ -230,14 +229,6 @@ const BoardSubmit = () => {
     paddingBottom: "10px",
     border: "1px solid #ddd",
     borderRadius: "4px",
-  };
-
-  const textareaStyle = {
-    ...inputStyle,
-    minHeight: "50px",
-    maxHeight: "700px",
-    overflowY: "auto" as "auto",
-    resize: "none",
   };
 
   const submitButtonStyle = {
@@ -385,9 +376,7 @@ const BoardSubmit = () => {
                       ))}
                     </ul>
                   )}
-                  {/*{searchResults.length === 0 && searchTerm && (*/}
-                  {/*  <div>선택된 커뮤니티: jaychis</div>*/}
-                  {/*)}*/}
+
                   {selectedCommunity && (
                     <div>선택된 커뮤니티: {selectedCommunity}</div>
                   )}

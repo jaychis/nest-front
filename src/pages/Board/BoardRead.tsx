@@ -15,14 +15,17 @@ import BoardReply, { ReplyType } from "./BoardReply";
 import RightSideBar from "../Global/RightSideBar";
 
 const BoardRead = () => {
-  const [params, setParams] = useSearchParams();
-  const BOARD_ID: string = params.get("id") || "";
+  const BOARD_ID: string = sessionStorage.getItem("boardId") as string;
+  const BOARD_TITLE: string = sessionStorage.getItem("boardTitle") as string;
+  useEffect(() => {
+    console.log("BOARD_ID : ", BOARD_ID);
+  }, [BOARD_ID]);
   const [isBoardState, setIsBoardStateBoard] = useState<CardType>({
     id: BOARD_ID,
     identifier_id: "",
     category: "",
     content: [],
-    title: params.get("title") as string,
+    title: BOARD_TITLE,
     nickname: "",
     created_at: new Date(),
     updated_at: new Date(),
@@ -32,32 +35,35 @@ const BoardRead = () => {
   const [isCommentState, setIsCommentState] = useState<CommentType[]>([]);
 
   useEffect(() => {
-    const ID: string = isBoardState.id;
-    const TITLE: string = isBoardState.title;
+    const ID: string = BOARD_ID;
+    const TITLE: string = BOARD_TITLE;
+    console.log("ID: ", ID);
+    console.log("TITLE: ", TITLE);
 
-    CommentListAPI({ boardId: ID })
-      .then((commentRes) => {
-        const commentResponse = commentRes.data.response;
-        console.log("CommentListAPI commentResponse : ", commentResponse);
+    const readBoard = async (): Promise<void> => {
+      const commentRes = await CommentListAPI({ boardId: ID });
 
-        setIsCommentState([...commentResponse]);
-      })
-      .catch((err) => console.error(err));
+      if (!commentRes) return;
+      const commentResponse = commentRes.data.response;
+      console.log("commentResponse : ", commentResponse);
+      setIsCommentState([...commentResponse]);
 
-    ReadAPI({
-      id: ID,
-      title: TITLE,
-    })
-      .then((res) => {
-        const response = res.data.response;
+      const res = await ReadAPI({
+        id: ID,
+        title: TITLE,
+      });
 
-        setIsBoardStateBoard(response);
-      })
-      .catch((err) => console.error(err));
+      if (!res) return;
+      const response = res.data.response;
+      console.log("response : ", response);
+
+      setIsBoardStateBoard(response);
+    };
+    readBoard();
   }, []);
 
   const [writeComment, setWriteComment] = useState<CommentSubmitParams>({
-    boardId: params.get("id") as string,
+    boardId: BOARD_ID,
     content: "",
     nickname: (localStorage.getItem("nickname") as string) || "",
     userId: (localStorage.getItem("id") as string) || "",
@@ -158,21 +164,26 @@ const BoardRead = () => {
     });
   };
 
+  useEffect(() => {
+    console.log("isBoardState : ", isBoardState);
+  }, [isBoardState]);
   return (
     <>
       {/*<GlobalBar />*/}
       <div style={{ display: "flex", width: "100%" }}>
         {/*<GlobalSideBar />*/}
         <div style={{ flex: 2 }}>
-          <Card
-            id={isBoardState.id}
-            category={isBoardState.category}
-            title={isBoardState.title}
-            nickname={isBoardState.nickname}
-            createdAt={isBoardState.created_at}
-            content={isBoardState.content}
-            type={isBoardState.type}
-          />
+          {!isBoardState?.id ? null : (
+            <Card
+              id={isBoardState.id}
+              category={isBoardState.category}
+              title={isBoardState.title}
+              nickname={isBoardState.nickname}
+              createdAt={isBoardState.created_at}
+              content={isBoardState.content}
+              type={isBoardState.type}
+            />
+          )}
           <div
             style={{
               display: "flex",
