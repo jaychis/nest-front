@@ -8,11 +8,15 @@ export interface CommentSubmitParams {
   readonly nickname: string;
 }
 export const CommentSubmitAPI = async (params: CommentSubmitParams) => {
-  const URL: string = "comments/";
+  try {
+    const URL: string = "comments/";
 
-  const res = await client.post(URL, params);
+    const res = await client.post(URL, params);
 
-  return res;
+    return res;
+  } catch (e: any) {
+    ErrorHandling({ text: "CommentSubmitAPI", error: e });
+  }
 };
 
 export interface CommentListParam {
@@ -20,7 +24,7 @@ export interface CommentListParam {
 }
 export const CommentListAPI = async (param: CommentListParam) => {
   try {
-    const URL: string = `comments/`;
+    const URL: string = `comments/list`;
 
     const res = await client.post(URL, param);
 
@@ -35,9 +39,13 @@ export interface CommentInquiryParam {
 }
 
 export const CommentInquiryAPI = async ({ userId }: CommentInquiryParam) => {
-  const URL: string = `comments/${userId}`;
+  try {
+    const URL: string = `comments/${userId}`;
 
-  const res = await client.get(URL);
+    const res = await client.get(URL);
 
-  return res;
+    return res;
+  } catch (e: any) {
+    ErrorHandling({ text: "CommentInquiryAPI", error: e });
+  }
 };

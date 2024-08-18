@@ -19,7 +19,8 @@ const Profile = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [myPosts, setMyPosts] = useState<CardType[]>([]);
   const [myComments, setMyComments] = useState<CommentType[]>([]);
-  const [activeSection, setActiveSection] = useState<ACTIVE_SECTION_TYPES>("POSTS");
+  const [activeSection, setActiveSection] =
+    useState<ACTIVE_SECTION_TYPES>("POSTS");
   const ID: string = (localStorage.getItem("id") as string) || "";
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [profilePreview, setProfilePreview] = useState<string | null>(null);
@@ -38,13 +39,14 @@ const Profile = () => {
     }
 
     if (activeSection === "COMMENTS") {
-      CommentInquiryAPI({ userId: ID })
-        .then((res) => {
-          const response = res.data.response;
-          console.log("profile comment inquiry api response : ", response);
-          setMyComments(response);
-        })
-        .catch((err) => console.error("PROFILE COMMENT INQUIRY ERROR : ", err));
+      const commentInquiry = async (): Promise<void> => {
+        const res = await CommentInquiryAPI({ userId: ID });
+        if (!res) return;
+
+        const response = res.data.response;
+        setMyComments(response);
+      };
+      commentInquiry();
     }
 
     if (activeSection === "PROFILE") {
@@ -73,8 +75,12 @@ const Profile = () => {
     }
   }, [profilePicture]);
 
-  const handleProfilePictureChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    const urls: ImageLocalPreviewUrlsReturnType = await ImageLocalPreviewUrls({ event: e });
+  const handleProfilePictureChange = async (
+    e: ChangeEvent<HTMLInputElement>,
+  ) => {
+    const urls: ImageLocalPreviewUrlsReturnType = await ImageLocalPreviewUrls({
+      event: e,
+    });
     if (!urls) return;
     setProfilePreview(urls.previewUrls[0]);
     setProfilePicture(urls.fileList[0]);
@@ -100,19 +106,29 @@ const Profile = () => {
         <div style={{ flex: 2, padding: "20px", overflowY: "auto" }}>
           <div style={styles.buttonContainer}>
             <button
-              style={activeSection === "POSTS" ? styles.activeButton : styles.button}
+              style={
+                activeSection === "POSTS" ? styles.activeButton : styles.button
+              }
               onClick={() => setActiveSection("POSTS")}
             >
               내가 등록한 게시글
             </button>
             <button
-              style={activeSection === "COMMENTS" ? styles.activeButton : styles.button}
+              style={
+                activeSection === "COMMENTS"
+                  ? styles.activeButton
+                  : styles.button
+              }
               onClick={() => setActiveSection("COMMENTS")}
             >
               내가 등록한 댓글
             </button>
             <button
-              style={activeSection === "PROFILE" ? styles.activeButton : styles.button}
+              style={
+                activeSection === "PROFILE"
+                  ? styles.activeButton
+                  : styles.button
+              }
               onClick={() => setActiveSection("PROFILE")}
             >
               나의 정보
@@ -165,10 +181,16 @@ const Profile = () => {
                       />
                       <div
                         style={styles.imagePreviewWrapper}
-                        onClick={() => document.getElementById("profilePicture")?.click()}
+                        onClick={() =>
+                          document.getElementById("profilePicture")?.click()
+                        }
                       >
                         {profilePreview ? (
-                          <img src={profilePreview} alt="Profile Preview" style={styles.imagePreview} />
+                          <img
+                            src={profilePreview}
+                            alt="Profile Preview"
+                            style={styles.imagePreview}
+                          />
                         ) : (
                           <div style={styles.placeholder}>프로필</div>
                         )}
@@ -177,7 +199,11 @@ const Profile = () => {
                   ) : (
                     <div style={styles.imagePreviewWrapper}>
                       {profilePreview ? (
-                        <img src={profilePreview} alt="Profile Preview" style={styles.imagePreview} />
+                        <img
+                          src={profilePreview}
+                          alt="Profile Preview"
+                          style={styles.imagePreview}
+                        />
                       ) : (
                         <div style={styles.placeholder}>프로필</div>
                       )}
@@ -195,7 +221,9 @@ const Profile = () => {
                         style={styles.input}
                       />
                     ) : (
-                      <span style={styles.value}>{nickname || "닉네임을 입력하세요"}</span>
+                      <span style={styles.value}>
+                        {nickname || "닉네임을 입력하세요"}
+                      </span>
                     )}
                   </div>
                   <div style={styles.infoRow}>
@@ -208,7 +236,9 @@ const Profile = () => {
                         style={styles.input}
                       />
                     ) : (
-                      <span style={styles.value}>{email || "이메일을 입력하세요"}</span>
+                      <span style={styles.value}>
+                        {email || "이메일을 입력하세요"}
+                      </span>
                     )}
                   </div>
                   <div style={styles.infoRow}>
@@ -221,12 +251,17 @@ const Profile = () => {
                         style={styles.input}
                       />
                     ) : (
-                      <span style={styles.value}>{phone || "전화번호를 입력하세요"}</span>
+                      <span style={styles.value}>
+                        {phone || "전화번호를 입력하세요"}
+                      </span>
                     )}
                   </div>
                 </div>
               </div>
-              <button onClick={isEditing ? handleSave : handleEditToggle} style={styles.editButton}>
+              <button
+                onClick={isEditing ? handleSave : handleEditToggle}
+                style={styles.editButton}
+              >
                 {isEditing ? "저장" : "수정"}
               </button>
             </div>
@@ -369,7 +404,9 @@ const styles: { [key: string]: CSSProperties } = {
 const cache: { [key: string]: any } = {};
 
 const exponentialBackoff = (retryCount: number): Promise<void> => {
-  return new Promise(resolve => setTimeout(resolve, Math.pow(2, retryCount) * 1000));
+  return new Promise((resolve) =>
+    setTimeout(resolve, Math.pow(2, retryCount) * 1000),
+  );
 };
 
 async function ExecuteBoardInquiryAPI({ id }: { readonly id: string }) {

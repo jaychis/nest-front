@@ -88,18 +88,19 @@ const BoardRead = () => {
         nickname: writeComment.nickname,
       };
 
-      CommentSubmitAPI(param)
-        .then((res) => {
-          const response = res.data.response;
+      const commentSubmit = async (): Promise<void> => {
+        const res = await CommentSubmitAPI(param);
+        if (!res) return;
 
-          setIsCommentState([response, ...isCommentState]);
+        const response = res.data.response;
+        setIsCommentState([response, ...isCommentState]);
 
-          setWriteComment((prev) => ({
-            ...prev,
-            content: "",
-          }));
-        })
-        .catch((err) => console.error(err));
+        setWriteComment((prev) => ({
+          ...prev,
+          content: "",
+        }));
+      };
+      commentSubmit();
     }
   };
 

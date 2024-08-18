@@ -116,7 +116,6 @@ const BoardList = () => {
 
     const ID = list[list.length - 1].id;
 
-    //
     if (buttonType === "HOME") {
       ListAPI({ take: TAKE, lastId: ID, category: null })
         .then((res) => {
