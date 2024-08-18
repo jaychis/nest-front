@@ -43,7 +43,7 @@ interface ReadParams {
 }
 export const ReadAPI = (params: ReadParams) => {
   try {
-    const URL: string = `boards/`;
+    const URL: string = `boards/read`;
 
     const res = client.post(URL, params);
     console.log("READ API res : ", res);
