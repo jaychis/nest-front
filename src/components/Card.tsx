@@ -57,23 +57,32 @@ const Card = ({
   const [isReaction, setIsReaction] = useState<ReactionStateTypes>(null);
 
   const USER_ID: string = localStorage.getItem("id") as string;
+  const kakaoApiKey = process.env.REACT_APP_KAKAO_API_KEY;
 
-  const reactionButton = async (type: ReactionStateTypes) => {
-    if (type !== null) {
+  /*좋아요 - 싫어요 수로 유저의 반응을 개수를 보여주는 상황이기 때문에 좋아요 0 싫어요 1인경우
+  -1로 표시 되어야 하지만 화면에는 그냥 1로 표시됨 그리고 이 상태에서 그냥 좋아요 버튼 눌러버리면
+  +2가 되는 로직으로 구현해서 3이 되는 이슈 존재 아직 좋아요를 클라이언트에게 어떻게 보여줄지 확정되지 않아서 수정하지 않음 기능 확정시 수정
+  (기존의 싫어요를 취소하면 -1이 사라지고 좋아요를 누르면 +1이기 때문에 싫어요 상태에서 좋아요 클릭시 +2 되게 구현)*/
+  const reactionButton = async (userReaction: ReactionStateTypes) => {
+    if (userReaction !== null) {
       const param: ReactionParams = {
         boardId: id,
         userId: USER_ID,
-        type,
+        type :userReaction,
         reactionTarget: "BOARD",
       };
       try {
         const res = await ReactionAPI(param);
         const status: number = res.status;
         const type = res.data.response?.type;
-
-        if (type === undefined) setIsReaction(null);
-        if (type === "LIKE") setIsReaction("LIKE");
-        if (type === "DISLIKE") setIsReaction("DISLIKE");
+        if (userReaction === undefined) {setIsReaction(null);}
+        else if (userReaction === "LIKE" && isReaction === 'LIKE') {setIsReaction(null); setIsCardCount((prevCount) => prevCount - 1); console.log(1)}
+        else if (userReaction === "LIKE" && isReaction === 'DISLIKE') {setIsReaction("LIKE"); setIsCardCount((prevCount) => prevCount + 2);console.log(2)}
+        else if (userReaction === "LIKE" && isReaction === null) {setIsReaction("LIKE"); setIsCardCount((prevCount) => prevCount +1);console.log(3)}
+        else if (userReaction === "DISLIKE" && isReaction === 'DISLIKE') {setIsReaction(null); setIsCardCount((prevCount) => prevCount + 1);console.log(4)}
+        else if (userReaction === "DISLIKE" && isReaction === 'LIKE') {setIsReaction("DISLIKE"); setIsCardCount((prevCount) => prevCount -2);console.log(5)}
+        else if (userReaction === "DISLIKE" && isReaction === null ) {setIsReaction("DISLIKE"); setIsCardCount((prevCount) => prevCount - 1);console.log(6)}
+        console.log(`상태 : ${isReaction} 좋아요 : ${isCardCount} 타입 : ${res}`)
       } catch (err) {
         console.error(err);
       }
@@ -90,8 +99,7 @@ const Card = ({
       const response = res.data.response;
       response.forEach((el: ReactionType) => {
         if (USER_ID === el.user_id) {
-          setIsReaction(el.type);
-        }
+          setIsReaction(el.type);}
       });
     } catch (err) {
       console.error(err);
@@ -102,6 +110,7 @@ const Card = ({
     try {
       const res = await ReactionCountAPI({ boardId });
       const resCount = res.data.response;
+      console.log(resCount)
       setIsCardCount(resCount.count);
     } catch (err) {
       console.error(err);
@@ -114,8 +123,17 @@ const Card = ({
   useEffect(() => {
     debouncedFetchReactionList(id);
     debouncedFetchReactionCount(id);
-  }, [id]);
+    if(kakaoApiKey && !window.Kakao.isInitialized()){
+      window.Kakao.init(kakaoApiKey);
+    }
+  },[]);
 
+  const shareKakao = () => {
+    window.Kakao.Link.sendCustom({
+      templateId: 111663,
+    });
+  };
+  
   const boardClickTracking = async () => {
     try {
       const boardTracking = await LogViewedBoardAPI({
@@ -178,7 +196,7 @@ const Card = ({
             {nickname}
           </div>
         </div>
-
+        
         {/* Card Content */}
         <div
           style={{
@@ -377,7 +395,7 @@ const Card = ({
               width: "100%",
               borderRadius: "30px",
             }}
-          >
+            onClick = {() => shareKakao}>
             공유
           </button>
         </div>

@@ -62,28 +62,28 @@ const BoardList = () => {
         ListAPI({ take: TAKE, lastId: null, category: null })
           .then((res) => {
             const response: CardType[] = res.data.response.current_list;
-            setList([...response]);
+            setList(response);
           })
           .catch((err) => console.error(err));
       } else if (buttonType === "POPULAR") {
         PopularListAPI({ take: TAKE, lastId: null, category: null })
           .then((res) => {
             const response: CardType[] = res.data.response.current_list;
-            setList([...response]);
+            setList(response);
           })
           .catch((err) => console.error(err));
       } else if (buttonType === "ALL") {
         AllListAPI({ take: TAKE, lastId: null, category: null })
           .then((res) => {
             const response: CardType[] = res.data.response.current_list;
-            setList([...response]);
+            setList(response);
           })
           .catch((err) => console.error(err));
       } else {
         AllListAPI({ take: TAKE, lastId: null, category: buttonType })
           .then((res) => {
             const response: CardType[] = res.data.response.current_list;
-            setList([...response]);
+            setList(response);
           })
           .catch((err) => console.error(err));
       }
@@ -97,7 +97,7 @@ const BoardList = () => {
     return () => {
       window.removeEventListener("scroll", debouncedHandleScroll);
     };
-  }, [buttonType]);
+  }, []);
 
   const handleScroll = () => {
     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
@@ -116,6 +116,7 @@ const BoardList = () => {
 
     const ID = list[list.length - 1].id;
 
+    //메인페이지에 console무한 호출 되는 이유 
     if (buttonType === "HOME") {
       ListAPI({ take: TAKE, lastId: ID, category: null })
         .then((res) => {
@@ -130,7 +131,7 @@ const BoardList = () => {
         .then((res) => {
           const response: CardType[] = res.data.response.current_list;
 
-          setList([...response]);
+          setList(response);
         })
         .catch((err) => console.error("fetchData PopularListAPI : ", err));
     } else if (buttonType === "ALL") {
@@ -138,7 +139,7 @@ const BoardList = () => {
         .then((res) => {
           const response: CardType[] = res.data.response.current_list;
 
-          setList([...response]);
+          setList(response);
         })
         .catch((err) => console.error(err));
     } else {
@@ -146,7 +147,7 @@ const BoardList = () => {
         .then((res) => {
           const response: CardType[] = res.data.response.current_list;
 
-          setList([...response]);
+          setList(response);
         })
         .catch((err) => console.error(err));
     }
@@ -162,7 +163,6 @@ const BoardList = () => {
           {list.length > 0 ? (
             list.map((el: CardType) => {
               console.log("list el : ", el);
-
               return (
                 <React.Fragment key={el.id}>
                   <Card

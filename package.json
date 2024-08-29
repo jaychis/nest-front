@@ -13,7 +13,6 @@
     "@types/react": "^18.2.75",
     "@types/react-dom": "^18.2.24",
     "@types/sanitize-html": "^2.11.0",
-    "cross-env": "^7.0.3",
     "lodash.debounce": "^4.0.8",
     "markdown-it": "^14.1.0",
     "react": "^18.3.1",
@@ -70,6 +69,7 @@
     "@types/react-modal": "^3.16.3",
     "@types/react-redux": "^7.1.33",
     "@types/react-slick": "^0.23.13",
+    "cross-env": "^7.0.3",
     "prettier": "^3.2.5"
   }
 }
