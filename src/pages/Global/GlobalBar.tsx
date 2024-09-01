@@ -19,7 +19,6 @@ const GlobalBar = () => {
     (state: RootState) => state.search.searchResults,
   );
   const postSubmit = () => navigate("/boards/submit");
-  const [postHover, setPostHover] = useState<boolean>(false);
   const [userHover, setUserHover] = useState<boolean>(false);
   const [bellHover, setBellHover] = useState<boolean>(false);
   const [logoHover, setLogoHover] = useState<boolean>(false); // 추가
@@ -203,18 +202,15 @@ const GlobalBar = () => {
               buttonRef={userButtonRef}
             />
             <button
-              onMouseEnter={() => setPostHover(true)}
-              onMouseLeave={() => setPostHover(false)}
               style={{
-                background: postHover ? "#f0f0f0" : "white",
                 border: "none",
                 display: "flex",
                 alignItems: "center",
                 cursor: "pointer",
                 padding: "10px 20px",
                 fontSize: "16px",
-                marginRight: "10px",
                 borderRadius: "25px",
+                background : 'white'
               }}
               onClick={postSubmit}
             >
@@ -222,6 +218,18 @@ const GlobalBar = () => {
               <span>글쓰기</span>
             </button>
             {/* Plus/Create Icon */}
+            <button 
+              onClick = {() => {navigate('/inquiry')}}
+              style={{
+                border: "none",
+                display: "flex",
+                alignItems: "center",
+                cursor: "pointer",
+                fontSize: "16px",
+                marginRight: "10px",
+                borderRadius: "25px",
+                background : 'white'
+              }}> 문의하기 </button>
 
             <div
               style={{

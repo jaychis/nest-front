@@ -13,6 +13,7 @@
     "@types/react": "^18.2.75",
     "@types/react-dom": "^18.2.24",
     "@types/sanitize-html": "^2.11.0",
+    "@types/styled-components": "^5.1.34",
     "lodash.debounce": "^4.0.8",
     "markdown-it": "^14.1.0",
     "react": "^18.3.1",
@@ -30,6 +31,7 @@
     "react-youtube": "^10.1.0",
     "sanitize-html": "^2.13.0",
     "slick-carousel": "^1.8.1",
+    "styled-components": "^6.1.13",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },

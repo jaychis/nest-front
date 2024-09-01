@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/img/panda_logo.png";
 import {
@@ -17,6 +17,7 @@ import YouTube from "react-youtube";
 import sanitizeHtml from "sanitize-html";
 import { LogViewedBoardAPI } from "../pages/api/ViewedBoardsApi";
 import debounce from "lodash.debounce";
+import { ShareModal } from "./ShareModal";
 
 const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
   try {
@@ -49,15 +50,15 @@ const Card = ({
   const [isCardHovered, setIsCardHovered] = useState<boolean>(false);
   const [isCardUpHovered, setIsCardUpHovered] = useState<boolean>(false);
   const [isCardDownHovered, setIsCardDownHovered] = useState<boolean>(false);
-  const [isCardCommentHovered, setIsCardCommentHovered] =
-    useState<boolean>(false);
+  const [isCardCommentHovered, setIsCardCommentHovered] =useState<boolean>(false);
   const [isCardShareHovered, setIsCardShareHovered] = useState<boolean>(false);
   const [isCardSendHovered, setIsCardSendHovered] = useState<boolean>(false);
+  const [isModal, setIsModal] = useState<boolean>(false);
   const [viewCount, setViewCount] = useState<number>(0); // 조회수 상태 추가
   const [isReaction, setIsReaction] = useState<ReactionStateTypes>(null);
+  const [shareContent, setShareContent] = useState<string>('')
 
   const USER_ID: string = localStorage.getItem("id") as string;
-  const kakaoApiKey = process.env.REACT_APP_KAKAO_API_KEY;
 
   /*좋아요 - 싫어요 수로 유저의 반응을 개수를 보여주는 상황이기 때문에 좋아요 0 싫어요 1인경우
   -1로 표시 되어야 하지만 화면에는 그냥 1로 표시됨 그리고 이 상태에서 그냥 좋아요 버튼 눌러버리면
@@ -76,13 +77,12 @@ const Card = ({
         const status: number = res.status;
         const type = res.data.response?.type;
         if (userReaction === undefined) {setIsReaction(null);}
-        else if (userReaction === "LIKE" && isReaction === 'LIKE') {setIsReaction(null); setIsCardCount((prevCount) => prevCount - 1); console.log(1)}
-        else if (userReaction === "LIKE" && isReaction === 'DISLIKE') {setIsReaction("LIKE"); setIsCardCount((prevCount) => prevCount + 2);console.log(2)}
-        else if (userReaction === "LIKE" && isReaction === null) {setIsReaction("LIKE"); setIsCardCount((prevCount) => prevCount +1);console.log(3)}
-        else if (userReaction === "DISLIKE" && isReaction === 'DISLIKE') {setIsReaction(null); setIsCardCount((prevCount) => prevCount + 1);console.log(4)}
-        else if (userReaction === "DISLIKE" && isReaction === 'LIKE') {setIsReaction("DISLIKE"); setIsCardCount((prevCount) => prevCount -2);console.log(5)}
-        else if (userReaction === "DISLIKE" && isReaction === null ) {setIsReaction("DISLIKE"); setIsCardCount((prevCount) => prevCount - 1);console.log(6)}
-        console.log(`상태 : ${isReaction} 좋아요 : ${isCardCount} 타입 : ${res}`)
+        else if (userReaction === "LIKE" && isReaction === 'LIKE') {setIsReaction(null); setIsCardCount((prevCount) => prevCount - 1); }
+        else if (userReaction === "LIKE" && isReaction === 'DISLIKE') {setIsReaction("LIKE"); setIsCardCount((prevCount) => prevCount + 2);}
+        else if (userReaction === "LIKE" && isReaction === null) {setIsReaction("LIKE"); setIsCardCount((prevCount) => prevCount +1);}
+        else if (userReaction === "DISLIKE" && isReaction === 'DISLIKE') {setIsReaction(null); setIsCardCount((prevCount) => prevCount + 1);}
+        else if (userReaction === "DISLIKE" && isReaction === 'LIKE') {setIsReaction("DISLIKE"); setIsCardCount((prevCount) => prevCount -2);}
+        else if (userReaction === "DISLIKE" && isReaction === null ) {setIsReaction("DISLIKE"); setIsCardCount((prevCount) => prevCount - 1);}
       } catch (err) {
         console.error(err);
       }
@@ -105,12 +105,11 @@ const Card = ({
       console.error(err);
     }
   };
-
+  
   const fetchReactionCount = async (boardId: string) => {
     try {
       const res = await ReactionCountAPI({ boardId });
       const resCount = res.data.response;
-      console.log(resCount)
       setIsCardCount(resCount.count);
     } catch (err) {
       console.error(err);
@@ -123,16 +122,9 @@ const Card = ({
   useEffect(() => {
     debouncedFetchReactionList(id);
     debouncedFetchReactionCount(id);
-    if(kakaoApiKey && !window.Kakao.isInitialized()){
-      window.Kakao.init(kakaoApiKey);
-    }
-  },[]);
-
-  const shareKakao = () => {
-    window.Kakao.Link.sendCustom({
-      templateId: 111663,
-    });
-  };
+    const temp = extractTextFromHTML(content[0])
+    setShareContent(temp)
+  });
   
   const boardClickTracking = async () => {
     try {
@@ -147,6 +139,12 @@ const Card = ({
       console.error(err);
     }
   };
+
+  const extractTextFromHTML = (htmlString : string):string => {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = htmlString;
+    return tempDiv.innerText || tempDiv.textContent ||'';
+  }
 
   return (
     <>
@@ -188,7 +186,6 @@ const Card = ({
               borderRadius: "30px",
             }}
           />
-
           <div
             style={{ fontSize: "15px" }}
             onClick={() => navigate(`/users/inquiry?nickname=${nickname}`)}
@@ -385,19 +382,26 @@ const Card = ({
             alignItems: "center",
           }}
         >
-          <button
-            onMouseEnter={() => setIsCardShareHovered(true)}
-            onMouseLeave={() => setIsCardShareHovered(false)}
-            style={{
-              backgroundColor: isCardShareHovered ? "#c9c6c5" : "#e0e0e0",
-              border: "none",
-              height: "100%",
-              width: "100%",
-              borderRadius: "30px",
-            }}
-            onClick = {() => shareKakao}>
-            공유
-          </button>
+          <button 
+        onMouseEnter={() => setIsCardShareHovered(true)}
+        onMouseLeave={() => setIsCardShareHovered(false)}
+        onClick = {() => {setIsModal((prev) => !prev)}}
+        style={{
+          backgroundColor: isCardShareHovered ? '#c9c6c5' : '#e0e0e0',
+          border: 'none',
+          height: '100%',
+          width: '100%',
+          borderRadius: '30px',
+        }}
+      >
+        공유
+      </button>
+      <ShareModal 
+        isModal = {isModal}
+        setIsModal = {setIsModal}
+        content = {shareContent}
+        title = {title}
+      />
         </div>
         <div
           style={{
