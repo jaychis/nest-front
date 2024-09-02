@@ -219,7 +219,7 @@ const GlobalBar = () => {
             </button>
             {/* Plus/Create Icon */}
             <button 
-              onClick = {() => {navigate('/inquiry')}}
+              onClick = {() => {navigate('/submit/inquiry')}}
               style={{
                 border: "none",
                 display: "flex",

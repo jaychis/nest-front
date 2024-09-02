@@ -88,7 +88,11 @@ function App() {
             />
             {/* 문의하기 게시판*/}
             <Route
-              path = '/inquiryPage'
+              path = "/submit/inquiry"
+              element = {
+              <Layout>
+                <SubmitInquiry/>
+              </Layout>}
             />
 
             <Route
