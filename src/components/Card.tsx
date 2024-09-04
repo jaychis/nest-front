@@ -300,12 +300,6 @@ const Card = ({
       >
         <div
           style={{
-            backgroundColor:
-              isReaction === null
-                ? "#e0e0e0"
-                : isReaction === "LIKE"
-                  ? "red"
-                  : "blue",
             padding: "10px",
             marginRight: "10px",
             borderRadius: "20px",
@@ -315,8 +309,8 @@ const Card = ({
             onMouseEnter={() => setIsCardUpHovered(true)}
             onMouseLeave={() => setIsCardUpHovered(false)}
             style={{
-              borderColor: isCardUpHovered ? "red" : "#e0e0e0",
-              backgroundColor: isCardUpHovered ? "#c9c6c5" : "#e0e0e0",
+              border : isReaction === 'LIKE' ? '2px solid blue' : '1px solid gray',
+              background : isCardUpHovered ? '#f0f0f0' : 'white',
               // border: "none",
               width: "65px",
               height: "30px",
@@ -333,8 +327,8 @@ const Card = ({
             onMouseEnter={() => setIsCardDownHovered(true)}
             onMouseLeave={() => setIsCardDownHovered(false)}
             style={{
-              borderColor: isCardDownHovered ? "blue" : "#e0e0e0",
-              backgroundColor: isCardDownHovered ? "#c9c6c5" : "#e0e0e0",
+              border : isReaction === 'DISLIKE' ? '1px solid red' : '1px solid gray',
+              background : isCardDownHovered ? '#f0f0f0' : 'white',
               // border: "none",
               width: "65px",
               height: "30px",
@@ -360,8 +354,8 @@ const Card = ({
             onMouseEnter={() => setIsCardCommentHovered(true)}
             onMouseLeave={() => setIsCardCommentHovered(false)}
             style={{
-              backgroundColor: isCardCommentHovered ? "#c9c6c5" : "#e0e0e0",
-              border: "none",
+              border : '1px solid gray',
+              background : isCardCommentHovered ? '#f0f0f0' : 'white',
               height: "100%",
               width: "100%",
               borderRadius: "30px",
@@ -375,27 +369,36 @@ const Card = ({
           style={{
             marginRight: "10px",
             borderRadius: "30px",
-            width: "75px",
+            width: "100px",
             height: "50px",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
           }}
         >
-          <button 
-        onMouseEnter={() => setIsCardShareHovered(true)}
-        onMouseLeave={() => setIsCardShareHovered(false)}
-        onClick = {() => {setIsModal((prev) => !prev)}}
-        style={{
-          backgroundColor: isCardShareHovered ? '#c9c6c5' : '#e0e0e0',
-          border: 'none',
-          height: '100%',
-          width: '100%',
-          borderRadius: '30px',
-        }}
-      >
-        공유
-      </button>
+            <button 
+            onMouseEnter={() => setIsCardShareHovered(true)}
+            onMouseLeave={() => setIsCardShareHovered(false)}
+            onClick={() => { setIsModal((prev) => !prev) }}
+            style={{
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              gap: '8px', 
+              background : isCardShareHovered ? '#f0f0f0' : 'white',
+              border: '1px solid gray',
+              height: '100%',
+              width: '100%',
+              borderRadius: '30px',
+            }}>
+            <img 
+              src="https://img.icons8.com/ios/50/forward-arrow.png" 
+              alt="Share Icon" 
+              style={{ height: '20px', width: '20px' }} // 아이콘 크기 조정
+            />
+            공유
+            </button>
+          
       <ShareModal 
         isModal = {isModal}
         setIsModal = {setIsModal}
@@ -418,8 +421,8 @@ const Card = ({
             onMouseEnter={() => setIsCardSendHovered(true)}
             onMouseLeave={() => setIsCardSendHovered(false)}
             style={{
-              backgroundColor: isCardSendHovered ? "#c9c6c5" : "#e0e0e0",
-              border: "none",
+              border : '1px solid gray',
+              background : isCardSendHovered ? '#f0f0f0' : 'white',
               height: "100%",
               width: "100%",
               borderRadius: "30px",

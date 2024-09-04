@@ -13,11 +13,11 @@ const root = ReactDOM.createRoot(
 root.render(
   <Provider store={store}>
     
-    <React.StrictMode>
+    
       <ErrorProvider>
         <App />
       </ErrorProvider>
-    </React.StrictMode>
+    
   </Provider>,
 );
 

@@ -109,21 +109,19 @@ const BoardList = () => {
   };
 
   window.addEventListener("scroll", handleScroll);
-
+ 
   const fetchData = () => {
     if (loading || list.length === 0) return;
     setLoading(true);
-
     const ID = list[list.length - 1].id;
-
-    //메인페이지에 console무한 호출 되는 이유 
+     
     if (buttonType === "HOME") {
       ListAPI({ take: TAKE, lastId: ID, category: null })
         .then((res) => {
           const response: CardType[] = res.data.response.current_list;
           const totalList: CardType[] = [...list, ...response];
-
           setList(totalList);
+          return;
         })
         .catch((err) => console.error("fetchData ListAPI error : ", err));
     } else if (buttonType === "POPULAR") {
@@ -151,8 +149,6 @@ const BoardList = () => {
         })
         .catch((err) => console.error(err));
     }
-
-    //
     setLoading(false);
   };
 
@@ -160,13 +156,13 @@ const BoardList = () => {
     <>
       <MainContainer>
         <CardsContainer>
-          {list.length > 0 ? (
-            list.map((el: CardType) => {
-              console.log("list el : ", el);
+          {list.length ? (
+            list.map((el: CardType,index) => {
+              console.log(index)
               return (
                 <React.Fragment key={el.id}>
                   <Card
-                    key={el.id} // 고유한 키 추가
+                    // 고유한 키 추가
                     id={el.id}
                     category={el.category}
                     title={el.title}

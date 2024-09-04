@@ -7,54 +7,57 @@ import emailjs from 'emailjs-com';
 const SubmitInquiry = () => {
 
     const form = useRef<HTMLFormElement | null>(null);
-    const serviceId:string = 'service_o561r9h'
-    const templateId:string = 'template_s34vz8h'
-    const publicKey:string = 'CPrb0IYDm3bwVoLXi'
-    const [content, setContent] = useState<string>('');
+    const serviceId: string = 'service_o561r9h';
+    const templateId: string = 'template_s34vz8h';
+    const publicKey: string = 'CPrb0IYDm3bwVoLXi';
+    const [content, setContent] = useState<string>('');  
+    const [title, setTitle] = useState<string>('');
 
     const sendEmail = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
     
         if (form.current) {
-            emailjs
-              .sendForm(serviceId, templateId, form.current, publicKey)
-              .then(
+            // 사용할 데이터 객체 생성
+            const templateParams = {
+                message: content  // message 변수에 ReactQuill에서 입력된 내용을 전달
+            };
+
+            emailjs.send(serviceId, templateId, templateParams, publicKey)
+            .then(
                 () => {
-                  console.log('SUCCESS!');
+                    console.log('SUCCESS!');
+                    setContent(''); // 전송 후 입력 필드 초기화
                 },
-                (error: any) => {
-                  console.log('FAILED...', error.text);
-                },
-              );
-          }
-        };
+                (error) => {
+                    console.log('FAILED...', error.text);
+                }
+            );
+        }
+    };
 
     const modules = {
-        toolbar: {
-          container: [
+        toolbar: [
             [{ 'header': '1'}, {'header': '2'}, { 'font': [] }],
             [{size: []}],
             ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-            [{'list': 'ordered'}, {'list': 'bullet'}, 
-             {'indent': '-1'}, {'indent': '+1'}],
+            [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
             ['link', 'image'],
-            ['clean']                                         
-          ],
-          handlers: {
-            
-          }
-        }
-      };
+            ['clean']
+        ]
+    };
 
-    return(
-    <>   
-    <form ref={form} onSubmit={sendEmail}>
+
+  return(
+      <>   
+        <form ref={form} onSubmit={sendEmail}>
             <InquiryContainer>
                 <TitleWrapper>
                     <InputTitle
                         name="title"
                         type="text"
                         placeholder="문의사항"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
                     />
                 </TitleWrapper>
                 <ReactQuillWrapper>
@@ -68,12 +71,14 @@ const SubmitInquiry = () => {
                 </ReactQuillWrapper>
             </InquiryContainer>
             <SumbitWrapper>
-                <button style = {submitButtonStyle}>보내기</button>
+            <button type="submit" style={submitButtonStyle}>
+              Send Message
+            </button>
             </SumbitWrapper>
         </form>
-    </>
-    )
-}
+        </>
+  );
+};
 
 
 const InquiryContainer = styled.div`
