@@ -180,6 +180,7 @@ const RightSideBar = () => {
 const styles = {
   container: {
     width: "250px",
+    marginLeft : '250px',
     padding: "20px",
     background: "#fff",
     border: "1px solid #ddd",
@@ -188,7 +189,7 @@ const styles = {
     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
     height: "100%",
     overflowY: "auto" as "auto",
-    marginTop : '80px',
+    marginTop : '5.5%',
     position: 'fixed' as 'fixed',
     right : '0'
   },

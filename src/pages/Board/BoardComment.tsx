@@ -321,7 +321,7 @@ const BoardComment = (co: BoardCommentProps) => {
           style={{
             display: "flex",
             flexDirection: "column",
-            width: "100%",
+            width: "80%",
             margin: "10px",
             border: "3px solid #ccc",
             borderRadius: "30px",

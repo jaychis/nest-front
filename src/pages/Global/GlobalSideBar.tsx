@@ -97,8 +97,9 @@ const GlobalSideBar = () => {
       boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
       border: "1px solid #ddd",
       borderTop: "none",
-      marginTop : '90px',
-      position : 'fixed'
+      marginTop : '5.6%',
+      position : 'fixed',
+      
     }}
   >
       <div

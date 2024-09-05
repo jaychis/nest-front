@@ -39,6 +39,9 @@ const styles = {
   mainContent: {
     flex: 1,
     padding: "20px",
+    marginLeft : '190px',
+    marginRight : '300px',
+    marginTop : '5%'
   },
 };
 function App() {

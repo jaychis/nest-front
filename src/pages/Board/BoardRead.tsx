@@ -171,91 +171,77 @@ const BoardRead = () => {
   return (
     <>
       {/*<GlobalBar />*/}
-      <div style={{ display: "flex", width: "100%" }}>
-        {/*<GlobalSideBar />*/}
-        <div style={{ flex: 2 }}>
-          {!isBoardState?.id ? null : (
-            <Card
-              id={isBoardState.id}
-              category={isBoardState.category}
-              title={isBoardState.title}
-              nickname={isBoardState.nickname}
-              createdAt={isBoardState.created_at}
-              content={isBoardState.content}
-              type={isBoardState.type}
-            />
-          )}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              width: "90%",
-              margin: "10px",
-              border: "3px solid #ccc",
-              borderRadius: "30px",
-              padding: "10px",
-            }}
-          >
-            <textarea
-              style={{
-                width: "100%",
-                border: "none",
-                borderRadius: "14px",
-                resize: "vertical",
-                boxSizing: "border-box",
-                outline: "none",
-              }}
-              name={"content"}
-              value={writeComment.content}
-              onChange={(value) =>
-                commentHandleChange({
-                  name: value.target.name,
-                  value: value.target.value,
-                })
-              }
-            ></textarea>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                marginTop: "10px",
-              }}
-            >
-              <button
-                style={{
-                  padding: "6px 12px",
-                  marginLeft: "5px",
-                  border: "none",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  fontSize: "14px",
-                  backgroundColor: "#f5f5f5",
-                  color: "#333",
-                }}
-              >
-                Cancel
-              </button>
-              <button
-                style={{
-                  padding: "6px 12px",
-                  marginLeft: "5px",
-                  border: "none",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  fontSize: "14px",
-                  backgroundColor: "#84d7fb",
-                  color: "white",
-                }}
-                onClick={commentWrite}
-              >
-                Comment
-              </button>
-            </div>
-          </div>
-          {isCommentState?.length > 0 ? renderComments(isCommentState) : []}
+      <div style={{ display: "flex", justifyContent: "center", height: "100vh", width: "100%", }}>
+  <div style={{ display: "flex", width: "90%" }}>
+    <div style={{ flex: 2 }}>
+      {!isBoardState?.id ? null : (
+        <Card
+          id={isBoardState.id}
+          category={isBoardState.category}
+          title={isBoardState.title}
+          nickname={isBoardState.nickname}
+          createdAt={isBoardState.created_at}
+          content={isBoardState.content}
+          type={isBoardState.type}
+        />
+      )}
+      <div style={{
+        display: "flex",
+        flexDirection: "column",
+        width: "90%",
+        margin: "10px",
+        border: "3px solid #ccc",
+        borderRadius: "30px",
+        padding: "10px",
+      }}>
+        <textarea style={{
+          width: "100%",
+          border: "none",
+          borderRadius: "14px",
+          resize: "vertical",
+          boxSizing: "border-box",
+          outline: "none",
+        }} name={"content"} value={writeComment.content} onChange={(value) =>
+          commentHandleChange({
+            name: value.target.name,
+            value: value.target.value,
+          })
+        }></textarea>
+        <div style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          marginTop: "10px",
+        }}>
+          <button style={{
+            padding: "6px 12px",
+            marginLeft: "5px",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+            fontSize: "14px",
+            backgroundColor: "#f5f5f5",
+            color: "#333",
+          }}>
+            Cancel
+          </button>
+          <button style={{
+            padding: "6px 12px",
+            marginLeft: "5px",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+            fontSize: "14px",
+            backgroundColor: "#84d7fb",
+            color: "white",
+          }} onClick={commentWrite}>
+            Comment
+          </button>
         </div>
-        {/*<RightSideBar />*/}
       </div>
+      {isCommentState?.length > 0 ? renderComments(isCommentState) : []}
+    </div>
+  </div>
+</div>
     </>
   );
 };

@@ -155,7 +155,7 @@ const Card = ({
           justifyContent: "flex-start",
           alignItems: "flex-start",
           width: "100%", // 수정된 부분
-          maxWidth: "800px", // 수정된 부분
+          maxWidth: "1000px", // 수정된 부분
           minHeight: "200px",
           margin: "10px",
           borderRadius: "10px",
@@ -463,7 +463,8 @@ const Card = ({
           height: "2px",
           backgroundColor: "#f0f0f0",
           margin: "16px 0",
-          width: "800px",
+          width: "100%",
+          maxWidth: "900px"
         }}
       />
     </>

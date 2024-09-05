@@ -24,7 +24,6 @@ const MainContainer = ({ children }: ContainerProps) => {
         paddingTop: "20px",
         width: "100%",
         boxSizing: "border-box",
-        marginTop : '5%'
       }}
     >
       {children}
