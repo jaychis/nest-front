@@ -186,8 +186,11 @@ const styles = {
     borderTop: "none",
     borderRadius: "8px",
     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-    height: "100vh",
+    height: "100%",
     overflowY: "auto" as "auto",
+    marginTop : '80px',
+    position: 'fixed' as 'fixed',
+    right : '0'
   },
   tabs: {
     display: "flex",

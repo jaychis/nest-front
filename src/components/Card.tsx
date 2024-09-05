@@ -300,9 +300,13 @@ const Card = ({
       >
         <div
           style={{
-            padding: "10px",
-            marginRight: "10px",
-            borderRadius: "20px",
+            marginRight: "5px",
+            borderRadius: "30px",
+            width: "150px",
+            height: "50px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
           <button
@@ -312,8 +316,8 @@ const Card = ({
               border : isReaction === 'LIKE' ? '2px solid blue' : '1px solid gray',
               background : isCardUpHovered ? '#f0f0f0' : 'white',
               // border: "none",
-              width: "65px",
-              height: "30px",
+              width: "100%",
+              height: "100%",
               borderRadius: "30px",
             }}
             onClick={() => reactionButton("LIKE")}
@@ -330,8 +334,8 @@ const Card = ({
               border : isReaction === 'DISLIKE' ? '1px solid red' : '1px solid gray',
               background : isCardDownHovered ? '#f0f0f0' : 'white',
               // border: "none",
-              width: "65px",
-              height: "30px",
+              width: "100%",
+              height: "100%",
               borderRadius: "30px",
             }}
             onClick={() => reactionButton("DISLIKE")}
@@ -341,7 +345,7 @@ const Card = ({
         </div>
         <div
           style={{
-            marginRight: "10px",
+            marginRight: "5px",
             borderRadius: "30px",
             width: "75px",
             height: "50px",
@@ -367,9 +371,9 @@ const Card = ({
         </div>
         <div
           style={{
-            marginRight: "10px",
+            marginRight: "5px",
             borderRadius: "30px",
-            width: "100px",
+            width: "15%",
             height: "50px",
             display: "flex",
             justifyContent: "center",
@@ -394,9 +398,9 @@ const Card = ({
             <img 
               src="https://img.icons8.com/ios/50/forward-arrow.png" 
               alt="Share Icon" 
-              style={{ height: '20px', width: '20px' }} // 아이콘 크기 조정
+              style={{ height: '35px', width: '35px' }} // 아이콘 크기 조정
             />
-            공유
+            <p style = {{display : 'flex', fontSize : '20px', marginBottom : '15px',fontWeight : '500' }}>0</p>
             </button>
           
       <ShareModal 

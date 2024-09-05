@@ -85,20 +85,22 @@ const GlobalSideBar = () => {
 
   return (
     <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        width: "200px",
-        height: "100%",
-        background: "#fff",
-        marginRight: "10px",
-        borderRadius: "8px",
-        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-        border: "1px solid #ddd",
-        borderTop: "none",
-        overflowY: "hidden",
-      }}
-    >
+    style={{
+      display: "flex",
+      flexDirection: "column",
+      width: "200px",
+      height: "100%", // 전체 높이를 채우되,
+      overflowY: "auto", // 필요한 경우에만 스크롤을 생성
+      background: "#fff",
+      marginRight: "10px",
+      borderRadius: "8px",
+      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+      border: "1px solid #ddd",
+      borderTop: "none",
+      marginTop : '90px',
+      position : 'fixed'
+    }}
+  >
       <div
         style={{
           display: "flex",

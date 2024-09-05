@@ -34,16 +34,13 @@ const styles = {
   layoutContainer: {
     display: "flex",
     width: "100%",
-    height: "calc(100vh - 70px)", // GlobalBar의 높이를 제외한 높이 설정
-    overflow: "hidden", // 레이아웃 컨테이너 내부 스크롤 방지
+    height: "100vh", 
   },
   mainContent: {
     flex: 1,
-    overflowY: "auto" as "auto",
     padding: "20px",
   },
 };
-
 function App() {
   return (
     <>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import { AllListAPI, ListAPI, PopularListAPI } from "../api/BoardApi";
 import Card from "../../components/Card";
 import { CardType } from "../../_common/CollectionTypes";
@@ -7,9 +7,11 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import EmptyState from "../../components/EmptyState";
 import debounce from "lodash.debounce";
+import { useInView } from 'react-intersection-observer'
 interface ContainerProps {
   children?: React.ReactNode;
 }
+
 
 const MainContainer = ({ children }: ContainerProps) => {
   return (
@@ -22,6 +24,7 @@ const MainContainer = ({ children }: ContainerProps) => {
         paddingTop: "20px",
         width: "100%",
         boxSizing: "border-box",
+        marginTop : '5%'
       }}
     >
       {children}
@@ -49,116 +52,70 @@ const CardsContainer = ({ children }: ContainerProps) => {
 };
 
 const BoardList = () => {
+  type IdType = null | string;
+
   const [list, setList] = useState<CardType[]>([]);
   const [loading, setLoading] = useState<boolean>(false); // Move useState inside the component
   const TAKE: number = 5;
-  const { buttonType }: MainListTypeState = useSelector(
-    (state: RootState) => state.sideBarButton,
-  );
+  const { buttonType }: MainListTypeState = useSelector((state: RootState) => state.sideBarButton,);
+  const [ref, inView] = useInView();
+  const [Id, setId] = useState<IdType>(null)
+  const [lastInView, setLastInView] = useState<boolean>(false);
+  const [allDataLoaded, setAllDataLoaded] = useState<boolean>(false);
 
   useEffect(() => {
-    const fetchInitialData = () => {
-      if (buttonType === "HOME") {
-        ListAPI({ take: TAKE, lastId: null, category: null })
-          .then((res) => {
-            const response: CardType[] = res.data.response.current_list;
-            setList(response);
-          })
-          .catch((err) => console.error(err));
-      } else if (buttonType === "POPULAR") {
-        PopularListAPI({ take: TAKE, lastId: null, category: null })
-          .then((res) => {
-            const response: CardType[] = res.data.response.current_list;
-            setList(response);
-          })
-          .catch((err) => console.error(err));
-      } else if (buttonType === "ALL") {
-        AllListAPI({ take: TAKE, lastId: null, category: null })
-          .then((res) => {
-            const response: CardType[] = res.data.response.current_list;
-            setList(response);
-          })
-          .catch((err) => console.error(err));
-      } else {
-        AllListAPI({ take: TAKE, lastId: null, category: buttonType })
-          .then((res) => {
-            const response: CardType[] = res.data.response.current_list;
-            setList(response);
-          })
-          .catch((err) => console.error(err));
+    if (inView && !lastInView) {
+      ListApi(Id);
+    }
+    setLastInView(inView)
+  }, [inView]);
+
+  useEffect(() => {
+    ListApi(Id);
+  },[])
+
+  const ListApi = async (id: IdType) => {
+    if(allDataLoaded) return;
+    try {
+      console.log('실행되고있음')
+      let response;
+      switch (buttonType) {
+        case "HOME":
+          response = await ListAPI({ take: TAKE, lastId: id, category: null });
+          break;
+        case "POPULAR":
+          response = await PopularListAPI({ take: TAKE, lastId: id, category: null });
+          break;
+        case "ALL":
+          response = await AllListAPI({ take: TAKE, lastId: id, category: null });
+          break;
+        default:
+          response = await AllListAPI({ take: TAKE, lastId: id, category: buttonType });
+          break;
       }
-    };
-
-    fetchInitialData();
-
-    const debouncedHandleScroll = debounce(handleScroll, 300);
-    window.addEventListener("scroll", debouncedHandleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", debouncedHandleScroll);
-    };
-  }, []);
-
-  const handleScroll = () => {
-    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-    if (scrollTop + clientHeight >= scrollHeight - 15) {
-      if (!loading) {
-        fetchData();
+      const newCards = response.data.response.current_list;
+      setList(prevList => [...prevList, ...newCards]);
+      if (newCards.length > 0) {
+        setId(newCards[newCards.length - 1].id);
       }
+      else {
+        setAllDataLoaded(true)
+      }
+    } catch (err) {
+      console.error("API error: ", err);
     }
   };
 
-  window.addEventListener("scroll", handleScroll);
- 
-  const fetchData = () => {
-    if (loading || list.length === 0) return;
-    setLoading(true);
-    const ID = list[list.length - 1].id;
-     
-    if (buttonType === "HOME") {
-      ListAPI({ take: TAKE, lastId: ID, category: null })
-        .then((res) => {
-          const response: CardType[] = res.data.response.current_list;
-          const totalList: CardType[] = [...list, ...response];
-          setList(totalList);
-          return;
-        })
-        .catch((err) => console.error("fetchData ListAPI error : ", err));
-    } else if (buttonType === "POPULAR") {
-      PopularListAPI({ take: TAKE, lastId: ID, category: null })
-        .then((res) => {
-          const response: CardType[] = res.data.response.current_list;
-
-          setList(response);
-        })
-        .catch((err) => console.error("fetchData PopularListAPI : ", err));
-    } else if (buttonType === "ALL") {
-      AllListAPI({ take: TAKE, lastId: ID, category: null })
-        .then((res) => {
-          const response: CardType[] = res.data.response.current_list;
-
-          setList(response);
-        })
-        .catch((err) => console.error(err));
-    } else {
-      AllListAPI({ take: TAKE, lastId: ID, category: buttonType })
-        .then((res) => {
-          const response: CardType[] = res.data.response.current_list;
-
-          setList(response);
-        })
-        .catch((err) => console.error(err));
-    }
-    setLoading(false);
-  };
-
+  if(!list[0]){
+    return(<div>로딩중..</div>)
+  }
+  
   return (
     <>
       <MainContainer>
         <CardsContainer>
           {list.length ? (
             list.map((el: CardType,index) => {
-              console.log(index)
               return (
                 <React.Fragment key={el.id}>
                   <Card
@@ -179,6 +136,7 @@ const BoardList = () => {
           )}
         </CardsContainer>
       </MainContainer>
+      <div style = {{opacity : '0'}}ref = {ref}>d</div>
     </>
   );
 };

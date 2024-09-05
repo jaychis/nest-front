@@ -17,16 +17,15 @@ const SubmitInquiry = () => {
         e.preventDefault();
     
         if (form.current) {
-            // 사용할 데이터 객체 생성
             const templateParams = {
-                message: content  // message 변수에 ReactQuill에서 입력된 내용을 전달
+                message: content  
             };
 
             emailjs.send(serviceId, templateId, templateParams, publicKey)
             .then(
                 () => {
                     console.log('SUCCESS!');
-                    setContent(''); // 전송 후 입력 필드 초기화
+                    setContent('');
                 },
                 (error) => {
                     console.log('FAILED...', error.text);
