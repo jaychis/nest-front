@@ -76,7 +76,6 @@ const BoardList = () => {
   const ListApi = async (id: IdType) => {
     if(allDataLoaded) return;
     try {
-      console.log('실행되고있음')
       let response;
       switch (buttonType) {
         case "HOME":

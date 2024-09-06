@@ -73,6 +73,7 @@ const Card = ({
         reactionTarget: "BOARD",
       };
       try {
+        console.log('tttt')
         const res = await ReactionAPI(param);
         const status: number = res.status;
         const type = res.data.response?.type;
@@ -124,7 +125,7 @@ const Card = ({
     debouncedFetchReactionCount(id);
     const temp = extractTextFromHTML(content[0])
     setShareContent(temp)
-  });
+  },[]);
   
   const boardClickTracking = async () => {
     try {
