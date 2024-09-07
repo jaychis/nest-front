@@ -150,6 +150,7 @@ const BoardComment = (co: BoardCommentProps) => {
           flexDirection: "column",
           fontFamily: "Arial, sans-serif",
           marginBottom: "10px",
+           marginRight : '5%'
         }}
       >
         <div style={{ display: "flex" }}>

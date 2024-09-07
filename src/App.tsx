@@ -34,15 +34,15 @@ const styles = {
   layoutContainer: {
     display: "flex",
     width: "100%",
-    height: "100vh", 
+    height: "100vh",
   },
   mainContent: {
     flex: 1,
     padding: "20px",
-    marginLeft : '190px',
-    marginRight : '300px',
-    marginTop : '5%'
+    marginLeft : '11%',
+    marginTop : '80px',
   },
+  
 };
 function App() {
   return (

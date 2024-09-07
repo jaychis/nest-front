@@ -4,8 +4,10 @@ import GlobalSideBar from "../Global/GlobalSideBar";
 import Card from "../../components/Card";
 import { useSearchParams } from "react-router-dom";
 import { UsersInquiryAPI } from "../api/UserApi";
-import { CardType, ReactionStateTypes } from "../../_common/CollectionTypes";
+import { CardType } from "../../_common/CollectionTypes";
 import EmptyState from "../../components/EmptyState";
+import { getContactAllListAPi } from "../api/InquiryApi";
+
 
 interface ContainerProps {
   children?: React.ReactNode;
@@ -20,8 +22,8 @@ const MainContainer = ({ children }: ContainerProps) => {
         alignItems: "center",
         justifyContent: "flex-start",
         paddingTop: "20px",
-        height: "100vh",
-        width: "80vw",
+        width: "100%",
+        boxSizing: "border-box",
       }}
     >
       {children}
@@ -31,6 +33,14 @@ const MainContainer = ({ children }: ContainerProps) => {
 
 // const CardsContainer: React.FC<ContainerProps> = ({ children }) => {
 const CardsContainer = ({ children }: ContainerProps) => {
+
+  const TAKE: number = 5;
+
+  useEffect(() => {
+    
+    getContactAllListAPi({take :TAKE})
+  },[])
+
   return (
     <div
       style={{
@@ -38,7 +48,9 @@ const CardsContainer = ({ children }: ContainerProps) => {
         flexDirection: "column",
         alignItems: "center",
         width: "100%",
-        maxWidth: "600px",
+        maxWidth: "800px", // 적절한 최대 너비 설정
+        boxSizing: "border-box",
+        padding: "0 20px", // 좌우 패딩 추가
       }}
     >
       {children}
@@ -69,7 +81,6 @@ const UsersInquiry = () => {
 
   return (
     <>
-      <div style={{ display: "flex" }}>
         <MainContainer>
           <CardsContainer>
             {list.length > 0 ? (
@@ -93,7 +104,6 @@ const UsersInquiry = () => {
             )}
           </CardsContainer>
         </MainContainer>
-      </div>
     </>
   );
 };

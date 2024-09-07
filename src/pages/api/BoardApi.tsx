@@ -7,6 +7,7 @@ interface ListParams {
   readonly lastId?: string | null;
   readonly category?: string | null;
 }
+
 export const ListAPI = ({ take, lastId, category }: ListParams) => {
   let URL: string = `boards/list?take=${take}`;
 

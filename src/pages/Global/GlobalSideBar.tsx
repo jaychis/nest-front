@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import { MainListTypes } from "../../_common/CollectionTypes";
 import { AppDispatch } from "../../store/store";
 import { sideButtonSliceActions } from "../../reducers/mainListTypeSlice";
+import { RootState } from "../../store/store";
+import { UserModalState, setModalState} from "../../reducers/modalStateSlice";
+
 
 import logo from "../../assets/img/panda_logo.png";
 import { CommunityListAPI } from "../api/CommunityApi";
@@ -11,7 +14,7 @@ import { CommunityListAPI } from "../api/CommunityApi";
 const GlobalSideBar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-
+  const modalState : UserModalState = useSelector((state: RootState) => state.modalState);
   const [isSideHovered, setIsSideHovered] = useState<MainListTypes | "CREATE_COMMUNITY" | null>(null);
   const [selectedButton, setSelectedButton] = useState<MainListTypes>("HOME");
   const [page, setPage] = useState(1);
@@ -97,9 +100,9 @@ const GlobalSideBar = () => {
       boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
       border: "1px solid #ddd",
       borderTop: "none",
-      marginTop : '5.6%',
+      marginTop : '90px',
       position : 'fixed',
-      
+      zIndex : modalState.modalState ? -1 : 1000
     }}
   >
       <div

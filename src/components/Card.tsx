@@ -18,6 +18,7 @@ import sanitizeHtml from "sanitize-html";
 import { LogViewedBoardAPI } from "../pages/api/ViewedBoardsApi";
 import debounce from "lodash.debounce";
 import { ShareModal } from "./ShareModal";
+import { useSelector } from 'react-redux';
 
 const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
   try {
@@ -47,6 +48,7 @@ const Card = ({
   }, []);
   const navigate = useNavigate();
   const [isCardCount, setIsCardCount] = useState<number>(0);
+  const [localCount, setLocalCount] = useState<number>(0);
   const [isCardHovered, setIsCardHovered] = useState<boolean>(false);
   const [isCardUpHovered, setIsCardUpHovered] = useState<boolean>(false);
   const [isCardDownHovered, setIsCardDownHovered] = useState<boolean>(false);
@@ -57,13 +59,9 @@ const Card = ({
   const [viewCount, setViewCount] = useState<number>(0); // 조회수 상태 추가
   const [isReaction, setIsReaction] = useState<ReactionStateTypes>(null);
   const [shareContent, setShareContent] = useState<string>('')
-
+  
   const USER_ID: string = localStorage.getItem("id") as string;
 
-  /*좋아요 - 싫어요 수로 유저의 반응을 개수를 보여주는 상황이기 때문에 좋아요 0 싫어요 1인경우
-  -1로 표시 되어야 하지만 화면에는 그냥 1로 표시됨 그리고 이 상태에서 그냥 좋아요 버튼 눌러버리면
-  +2가 되는 로직으로 구현해서 3이 되는 이슈 존재 아직 좋아요를 클라이언트에게 어떻게 보여줄지 확정되지 않아서 수정하지 않음 기능 확정시 수정
-  (기존의 싫어요를 취소하면 -1이 사라지고 좋아요를 누르면 +1이기 때문에 싫어요 상태에서 좋아요 클릭시 +2 되게 구현)*/
   const reactionButton = async (userReaction: ReactionStateTypes) => {
     if (userReaction !== null) {
       const param: ReactionParams = {
@@ -73,31 +71,39 @@ const Card = ({
         reactionTarget: "BOARD",
       };
       try {
-        console.log('tttt')
         const res = await ReactionAPI(param);
         const status: number = res.status;
         const type = res.data.response?.type;
-        if (userReaction === undefined) {setIsReaction(null);}
+        if (userReaction === "DISLIKE" && isReaction === "DISLIKE" && localCount === 0) { setIsReaction(null)}
+        else if (userReaction === "LIKE" && isReaction === 'DISLIKE' && localCount === 0) {setIsReaction("LIKE"); setIsCardCount((prevCount) => prevCount + 1);}
         else if (userReaction === "LIKE" && isReaction === 'LIKE') {setIsReaction(null); setIsCardCount((prevCount) => prevCount - 1); }
         else if (userReaction === "LIKE" && isReaction === 'DISLIKE') {setIsReaction("LIKE"); setIsCardCount((prevCount) => prevCount + 2);}
         else if (userReaction === "LIKE" && isReaction === null) {setIsReaction("LIKE"); setIsCardCount((prevCount) => prevCount +1);}
+
+        else if (userReaction === "DISLIKE" && isReaction === null && localCount === 0) {setIsReaction('DISLIKE');}
+        else if (userReaction === "DISLIKE" && isReaction === 'LIKE' && isCardCount === 1) { setIsReaction('DISLIKE'); setIsCardCount((prev) => prev - 1)}
+        else if (userReaction === "DISLIKE" && isReaction === null && localCount != 0) {setIsReaction("DISLIKE"); setIsCardCount((prevCount) => prevCount - 1);}
         else if (userReaction === "DISLIKE" && isReaction === 'DISLIKE') {setIsReaction(null); setIsCardCount((prevCount) => prevCount + 1);}
         else if (userReaction === "DISLIKE" && isReaction === 'LIKE') {setIsReaction("DISLIKE"); setIsCardCount((prevCount) => prevCount -2);}
-        else if (userReaction === "DISLIKE" && isReaction === null ) {setIsReaction("DISLIKE"); setIsCardCount((prevCount) => prevCount - 1);}
+        
+        
       } catch (err) {
         console.error(err);
       }
     }
   };
+
   const goBoardRead = () => {
     sessionStorage.setItem("boardId", id);
     sessionStorage.setItem("boardTitle", title);
     navigate(`/boards/read?id=${id}&title=${title}&content=${content}`);
   };
+  
   const fetchReactionList = async (boardId: string) => {
     try {
       const res = await ReactionListAPI({ boardId });
       const response = res.data.response;
+      
       response.forEach((el: ReactionType) => {
         if (USER_ID === el.user_id) {
           setIsReaction(el.type);}
@@ -111,7 +117,14 @@ const Card = ({
     try {
       const res = await ReactionCountAPI({ boardId });
       const resCount = res.data.response;
-      setIsCardCount(resCount.count);
+      if(resCount.board_score  > 0){
+        setIsCardCount(resCount.board_score)
+        setLocalCount(resCount.board_score)
+      }
+      else{
+        setIsCardCount(0);
+        setLocalCount(0);
+      }
     } catch (err) {
       console.error(err);
     }
@@ -126,6 +139,12 @@ const Card = ({
     const temp = extractTextFromHTML(content[0])
     setShareContent(temp)
   },[]);
+
+  useEffect(() => {
+    if(localCount < 0){
+      setLocalCount(0)
+    }
+  },[localCount])
   
   const boardClickTracking = async () => {
     try {

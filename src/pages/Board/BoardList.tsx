@@ -69,10 +69,6 @@ const BoardList = () => {
     setLastInView(inView)
   }, [inView]);
 
-  useEffect(() => {
-    ListApi(Id);
-  },[])
-
   const ListApi = async (id: IdType) => {
     if(allDataLoaded) return;
     try {
@@ -103,10 +99,6 @@ const BoardList = () => {
       console.error("API error: ", err);
     }
   };
-
-  if(!list[0]){
-    return(<div>로딩중..</div>)
-  }
   
   return (
     <>

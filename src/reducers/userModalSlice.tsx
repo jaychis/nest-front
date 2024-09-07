@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface UserModalState {
-  modalType: "login" | "signup";
+  modalType: "login" | "signup" | string;
 }
 
 const initialState: UserModalState = {
@@ -24,4 +24,5 @@ const userModalSlice = createSlice({
 export const { openLogin, openSignup } = userModalSlice.actions;
 
 const userModalReducer = userModalSlice.reducer;
+
 export default userModalReducer;

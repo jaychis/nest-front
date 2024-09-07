@@ -12,12 +12,9 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <Provider store={store}>
-    
-    
       <ErrorProvider>
         <App />
       </ErrorProvider>
-    
   </Provider>,
 );
 

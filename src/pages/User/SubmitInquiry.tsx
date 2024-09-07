@@ -2,36 +2,41 @@ import styled from "styled-components";
 import ReactQuill from "react-quill";
 import { useState,useRef } from "react";
 import emailjs from 'emailjs-com';
-
+import { postContactApi, InquiryParam } from "../api/InquiryApi";
 
 const SubmitInquiry = () => {
 
     const form = useRef<HTMLFormElement | null>(null);
-    const serviceId: string = 'service_o561r9h';
-    const templateId: string = 'template_s34vz8h';
-    const publicKey: string = 'CPrb0IYDm3bwVoLXi';
+    const serviceId: string = 'service_y1seuv8';
+    const templateId: string = 'template_ws10r99';
+    const publicKey: string = 'vIug5xjBisxtUBSFM';
     const [content, setContent] = useState<string>('');  
     const [title, setTitle] = useState<string>('');
+    const nickName = localStorage.getItem("nickname") as string;
+    const toDay = new Date();
 
     const sendEmail = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-    
+
         if (form.current) {
             const templateParams = {
-                message: content  
+                title : title,
+                message: content,
+                from_name : nickName,
+                date : toDay
             };
 
-            emailjs.send(serviceId, templateId, templateParams, publicKey)
-            .then(
-                () => {
-                    console.log('SUCCESS!');
-                    setContent('');
-                },
-                (error) => {
-                    console.log('FAILED...', error.text);
-                }
-            );
-        }
+        emailjs.send(serviceId, templateId, templateParams, publicKey)
+        .then(
+            () => {
+                console.log('SUCCESS!');
+                setContent('');
+            },
+            (error) => {
+                console.log('FAILED...', error.text);
+            }
+        );
+    }
     };
 
     const modules = {
@@ -45,10 +50,9 @@ const SubmitInquiry = () => {
         ]
     };
 
-
   return(
       <>   
-        <form ref={form} onSubmit={sendEmail}>
+        <form  ref={form} onSubmit={sendEmail}>
             <InquiryContainer>
                 <TitleWrapper>
                     <InputTitle
@@ -70,12 +74,12 @@ const SubmitInquiry = () => {
                 </ReactQuillWrapper>
             </InquiryContainer>
             <SumbitWrapper>
-            <button type="submit" style={submitButtonStyle}>
+            <button type="submit" style={submitButtonStyle} onClick={() => {postContactApi({title, nickName, content})}}>
               Send Message
             </button>
             </SumbitWrapper>
         </form>
-        </>
+    </>
   );
 };
 

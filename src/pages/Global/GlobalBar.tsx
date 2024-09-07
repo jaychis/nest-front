@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState,useEffect } from "react";
 import { FaSistrix, FaPlus, FaBell } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,10 +10,13 @@ import NotificationModal from "../User/NotificationModal";
 import { searchQuery } from "../../reducers/searchSlice";
 import { RootState, AppDispatch } from "../../store/store";
 import debounce from "lodash.debounce";
+import modalStateReducer from "../../reducers/modalStateSlice";
+import { UserModalState, setModalState} from "../../reducers/modalStateSlice";
 
 const GlobalBar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
+  const modalState : UserModalState = useSelector((state: RootState) => state.modalState);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const searchResults = useSelector(
     (state: RootState) => state.search.searchResults,
@@ -32,6 +35,11 @@ const GlobalBar = () => {
     setIsProfileModalOpen(!isProfileModalOpen);
   };
 
+  const openModal = () => {
+    dispatch(setModalState(!modalState.modalState));
+    console.log(modalState.modalState)
+  };
+
   const debouncedSearch = debounce((value: string) => {
     if (value.length > 2) {
       dispatch(searchQuery(value));
@@ -43,8 +51,6 @@ const GlobalBar = () => {
     setSearchTerm(value);
     debouncedSearch(value); // Use debounced search
 };
-
-
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
@@ -76,6 +82,12 @@ const GlobalBar = () => {
     console.log("Logo clicked");
     navigate("/");
   };
+
+  useEffect(() => {
+    if(isProfileModalOpen === false && modalState.modalState === true){
+      openModal()
+    }
+  },[isProfileModalOpen])
 
   return (
   <div >
@@ -192,6 +204,7 @@ const GlobalBar = () => {
               <img
                 src={logo}
                 alt="Profile"
+                onClick = {openModal}
                 style={{
                   width: "40px",
                   height: "40px",

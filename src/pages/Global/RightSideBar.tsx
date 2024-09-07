@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import { AddSearchAPI, GetTopTenSearchesAPI } from "../api/SearchApi";
 import { useNavigate } from "react-router-dom";
 import debounce from "lodash.debounce";
+import { useDispatch,useSelector } from "react-redux";
 import { GetRecentViewedBoardsAPI } from "../api/ViewedBoardsApi";
+import { RootState } from "../../store/store";
+import { UserModalState, setModalState} from "../../reducers/modalStateSlice";
 
 type SelectTapTypes = "topSearches" | "recentBoards";
 
@@ -12,10 +15,9 @@ type RecentViewedPost = {
 };
 
 const RightSideBar = () => {
+  const modalState : UserModalState = useSelector((state: RootState) => state.modalState);
   const [isTopTenList, setIsTopTenList] = useState([]);
-  const [recentViewedList, setRecentViewedList] = useState<RecentViewedPost[]>(
-    [],
-  );
+  const [recentViewedList, setRecentViewedList] = useState<RecentViewedPost[]>([],);
   const [selectedTab, setSelectedTab] = useState<SelectTapTypes>("topSearches");
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [hoveredRecentPostIndex, setHoveredRecentPostIndex] = useState<
@@ -24,14 +26,13 @@ const RightSideBar = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const isLoggedIn = !!localStorage.getItem("access_token");
-
+  console.log(modalState.modalState)
   // Debounced fetch function
   const debouncedFetchTopTenList = debounce(async () => {
     try {
       const res = await GetTopTenSearchesAPI();
       if (!res) return;
       const response = res.data.response;
-      console.log("response ; ", response);
       setIsTopTenList(response);
     } catch (e: any) {
       if (e.response && e.response.status === 429) {
@@ -62,7 +63,6 @@ const RightSideBar = () => {
 
         if (!res) return;
         const response = res.data.response;
-        console.log("response : ", response);
 
         const formattedRecentViewedList = response.map((item: any) => ({
           id: item.board_id,
@@ -89,7 +89,24 @@ const RightSideBar = () => {
   };
 
   return (
-    <div style={styles.container}>
+    <div style = {{
+      width: '250px', 
+      marginLeft: 'auto', 
+      marginRight : '20px'
+    }}>
+      <div style={{
+      width: "250px",
+      padding: "20px",
+      background: "#fff",
+      border: "1px solid #ddd",
+      borderTop: "none",
+      borderRadius: "8px",
+      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+      height: "100%",
+      marginTop : '90px',
+      position: 'fixed' as 'fixed',
+      zIndex : modalState.modalState ? -1 : 1000
+      }}>
       <div style={styles.tabs}>
         <div
           style={selectedTab === "topSearches" ? styles.activeTab : styles.tab}
@@ -174,25 +191,12 @@ const RightSideBar = () => {
         )
       )}
     </div>
+    </div>
+    
   );
 };
 
 const styles = {
-  container: {
-    width: "250px",
-    marginLeft : '250px',
-    padding: "20px",
-    background: "#fff",
-    border: "1px solid #ddd",
-    borderTop: "none",
-    borderRadius: "8px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-    height: "100%",
-    overflowY: "auto" as "auto",
-    marginTop : '5.5%',
-    position: 'fixed' as 'fixed',
-    right : '0'
-  },
   tabs: {
     display: "flex",
     justifyContent: "space-around",

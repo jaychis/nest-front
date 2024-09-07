@@ -171,7 +171,7 @@ const BoardRead = () => {
   return (
     <>
       {/*<GlobalBar />*/}
-      <div style={{ display: "flex", justifyContent: "center", height: "100vh", width: "100%", }}>
+      <div style={{ display: "flex", justifyContent: "center", height: "100vh", width: "100%",}}>
   <div style={{ display: "flex", width: "90%" }}>
     <div style={{ flex: 2 }}>
       {!isBoardState?.id ? null : (
@@ -188,11 +188,12 @@ const BoardRead = () => {
       <div style={{
         display: "flex",
         flexDirection: "column",
-        width: "90%",
+        width: "80%",
         margin: "10px",
         border: "3px solid #ccc",
         borderRadius: "30px",
         padding: "10px",
+        marginLeft : '-0.5%'
       }}>
         <textarea style={{
           width: "100%",

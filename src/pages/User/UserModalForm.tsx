@@ -3,12 +3,22 @@ import React, { useState } from "react";
 import Modal from "../../components/Modal";
 import Login from "./Login";
 import Signup from "./Signup";
-
+import { useDispatch, useSelector,  } from "react-redux";
+import { RootState } from "../../store/store";
+import modalStateReducer from "../../reducers/modalStateSlice";
+import { UserModalState, setModalState} from "../../reducers/modalStateSlice";
+  
 type modalType = "login" | "signup";
-const UserModalForm = () => {
+  const UserModalForm = () => {
+  const dispatch = useDispatch();
+  const modalState : UserModalState = useSelector((state: RootState) => state.modalState);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [activeView, setActiveView] = useState<modalType>("login");
   const [isLoginHovered, setIsLoginHovered] = useState<boolean>(false);
+  
+  const openModal = () => {
+    dispatch(setModalState(!modalState.modalState));
+  };
 
   const switchView = (view: modalType) => {
     setActiveView(view);
@@ -17,6 +27,7 @@ const UserModalForm = () => {
   return (
     <>
       <div
+        className = 'modalContainer'
         style={{
           marginRight: "5px",
           marginLeft: "5px",
@@ -32,6 +43,7 @@ const UserModalForm = () => {
           onClick={() => {
             setModalIsOpen(true);
             setActiveView("login");
+            openModal();
           }}
           style={{
             height: "100%",
@@ -51,10 +63,12 @@ const UserModalForm = () => {
       </div>
 
       <Modal
+        openModal = {openModal}
         buttonLabel={activeView}
         isOpen={modalIsOpen}
         onClose={() => {
           setModalIsOpen(false);
+
         }}
         // onSubmit={handleSubmit}
       >

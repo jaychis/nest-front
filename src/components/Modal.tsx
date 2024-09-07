@@ -1,15 +1,21 @@
 import React from "react";
+import { setModalState, modalState,UserModalState } from "../reducers/modalStateSlice";
+import modalStateReducer from "../reducers/modalStateSlice";
+
+import { RootState } from "../store/store";
 
 interface Props {
   readonly children: React.ReactNode;
   readonly isOpen: boolean;
   readonly onClose: () => void;
   readonly buttonLabel: string;
+  openModal: () => void;
   // readonly onSubmit: () => void;
 }
-const Modal = ({ children, isOpen, onClose, buttonLabel }: Props) => {
-  if (!isOpen) return null;
+const Modal = ({ children, isOpen, onClose, buttonLabel,openModal }: Props) => {
 
+  if (!isOpen) return null;
+  
   return (
     <>
       <div
@@ -41,6 +47,7 @@ const Modal = ({ children, isOpen, onClose, buttonLabel }: Props) => {
               maxWidth: "90%",
               maxHeight: "90%",
               overflow: "auto",
+              zIndex: 1000,
             }}
           >
             <div style={{ display: "flex", height: "20%" }}>
@@ -57,7 +64,7 @@ const Modal = ({ children, isOpen, onClose, buttonLabel }: Props) => {
                   marginRight: "10px",
                 }}
                 
-                onClick={onClose}
+                onClick = {() => {onClose();openModal()}}
               >
                 Close
               </button>
