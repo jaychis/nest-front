@@ -99,7 +99,7 @@ jobs:
     if: github.ref == 'refs/heads/stage'
     needs: build-stage
     name: Deploy to Stage
-    runs-on: [self-hosted, lebel-stage]
+    runs-on: [self-hosted, label-go]
     steps:
       - name: Login to ghcr
         uses: docker/login-action@v1
