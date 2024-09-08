@@ -12,6 +12,10 @@ import { RootState, AppDispatch } from "../../store/store";
 import debounce from "lodash.debounce";
 import modalStateReducer from "../../reducers/modalStateSlice";
 import { UserModalState, setModalState} from "../../reducers/modalStateSlice";
+import 'react-tooltip/dist/react-tooltip.css' 
+import { Tooltip } from 'react-tooltip'
+import './GlobalBar.css' ;
+
 
 const GlobalBar = () => {
   const navigate = useNavigate();
@@ -88,6 +92,7 @@ const GlobalBar = () => {
       openModal()
     }
   },[isProfileModalOpen])
+  
 
   return (
   <div >
@@ -112,7 +117,6 @@ const GlobalBar = () => {
           borderRadius: "25px", // 추가
           padding: "10px",
           cursor: "pointer",
-          
         }}
         onMouseEnter={() => setLogoHover(true)}
         onMouseLeave={() => setLogoHover(false)}
@@ -230,8 +234,17 @@ const GlobalBar = () => {
                 background : 'white'
               }}
               onClick={postSubmit}
-            >
-              <FaPlus style={{ marginRight: "5px" }} />
+              
+            ><Tooltip
+            id = 'tooltip'
+            place="top"
+            arrowColor='transparent'
+            />
+              <FaPlus 
+              data-tooltip-content='글쓰기' 
+              data-tooltip-id='tooltip'
+              style={{ marginRight: "5px"}} 
+              />
             </button>
             {/* Plus/Create Icon */}
             <button 
@@ -246,7 +259,16 @@ const GlobalBar = () => {
                 borderRadius: "25px",
                 background : 'white'
               }}> 
-              <img height = "55%" width = '55%' src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAB7klEQVR4nO3Yz4uNURzH8df4kfyakowsLGQU2diIiMjKhkiilJ3ZmRr/gFhYs5iFslMWSikLWSkZUjY2QpRQfqc0fvPoqe/iaRjm3rn3Pj867zrdOs/5fp9z7nnO5/v9HhKJRCJREllDmsYtpK5kjV3IoPox+LeFvMMW9WEDXk122L/ggOqzB+OTHfbR+P2JEdVlJOZYnPMfh324MOgsZqkOM3Em5vYLx/+nWnvxKfquYqHymY/Lhc//4FTldyNeR/8dLFUei3GzIEhbW40jK/Egnj3BGuXI68OYw2Osbjcg5v/GjXj+Htv0jk14E+++jYHpRvY5uBBjvuKQ7rMPn+OdlzCvUylKX6jERMXoBsMF5TyNGd3ItY7ge4w/h9k6K6+j4fsHjnY7adxdiKrX0G/6LMCV8Jl/Uvt7lf2ux8uwu4fl2mcZ7oavt9jc6zR+Be6H7Qusa8PHWjwNH4+wqqx6ZBGuh/1H7GzBdgc+hO0YlpRdWOXyfD585EIwNAWbw/gWNhcxtyoVYh9OFeT5RKjQRPK+kzEmC5vctnKl7lBBnvP8aFdE5IFQu7EWd67Umn07nv/jtuNZjKnF5UM/jkWONB7tVhRFnS4LssbeotSVLC2kYmRpRypGlnakYmSN3ZGs5k1jFpJIJBIJveY3S2K8l4EjqFIAAAAASUVORK5CYII="></img> </button>
+              <Tooltip
+            id = 'tooltip2'
+            place="top"
+            arrowColor='transparent'
+            />
+              <img 
+              data-tooltip-content='문의하기' 
+              data-tooltip-id='tooltip2'
+              height = "55%" width = '55%' 
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAB7klEQVR4nO3Yz4uNURzH8df4kfyakowsLGQU2diIiMjKhkiilJ3ZmRr/gFhYs5iFslMWSikLWSkZUjY2QpRQfqc0fvPoqe/iaRjm3rn3Pj867zrdOs/5fp9z7nnO5/v9HhKJRCJREllDmsYtpK5kjV3IoPox+LeFvMMW9WEDXk122L/ggOqzB+OTHfbR+P2JEdVlJOZYnPMfh324MOgsZqkOM3Em5vYLx/+nWnvxKfquYqHymY/Lhc//4FTldyNeR/8dLFUei3GzIEhbW40jK/Egnj3BGuXI68OYw2Osbjcg5v/GjXj+Htv0jk14E+++jYHpRvY5uBBjvuKQ7rMPn+OdlzCvUylKX6jERMXoBsMF5TyNGd3ItY7ge4w/h9k6K6+j4fsHjnY7adxdiKrX0G/6LMCV8Jl/Uvt7lf2ux8uwu4fl2mcZ7oavt9jc6zR+Be6H7Qusa8PHWjwNH4+wqqx6ZBGuh/1H7GzBdgc+hO0YlpRdWOXyfD585EIwNAWbw/gWNhcxtyoVYh9OFeT5RKjQRPK+kzEmC5vctnKl7lBBnvP8aFdE5IFQu7EWd67Umn07nv/jtuNZjKnF5UM/jkWONB7tVhRFnS4LssbeotSVLC2kYmRpRypGlnakYmSN3ZGs5k1jFpJIJBIJveY3S2K8l4EjqFIAAAAASUVORK5CYII="></img> </button>
             <div
               style={{
                 display: "flex",

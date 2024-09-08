@@ -30,6 +30,7 @@
     "react-scripts": "5.0.1",
     "react-slick": "^0.30.2",
     "react-textarea-autosize": "^8.5.3",
+    "react-tooltip": "^5.28.0",
     "react-youtube": "^10.1.0",
     "sanitize-html": "^2.13.0",
     "slick-carousel": "^1.8.1",
@@ -40,8 +41,8 @@
   "scripts": {
     "start:local": "cross-env REACT_APP_API_BASE_URL=http://127.0.0.1:9898 react-scripts start",
     "start:dev": "cross-env REACT_APP_API_BASE_URL=http://127.0.0.1:9898 react-scripts start",
-    "start:stage": "cross-env REACT_APP_API_BASE_URL=http://3.35.175.59:9898 react-scripts start",
-    "build:stage": "cross-env REACT_APP_API_BASE_URL=http://3.35.175.59:9898 react-scripts build",
+    "start:stage": "cross-env REACT_APP_API_BASE_URL=http://52.79.203.209:9898 react-scripts start",
+    "build:stage": "cross-env REACT_APP_API_BASE_URL=http://52.79.203.209:9898 react-scripts build",
     "start:prod": "cross-env REACT_APP_API_BASE_URL=https://api.jaychis.com react-scripts start",
     "build:prod": "cross-env REACT_APP_API_BASE_URL=https://api.jaychis.com react-scripts build",
     "build": "react-scripts build",

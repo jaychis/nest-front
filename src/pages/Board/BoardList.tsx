@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { AllListAPI, ListAPI, PopularListAPI } from "../api/BoardApi";
 import Card from "../../components/Card";
 import { CardType } from "../../_common/CollectionTypes";
@@ -6,12 +6,11 @@ import { MainListTypeState } from "../../reducers/mainListTypeSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import EmptyState from "../../components/EmptyState";
-import debounce from "lodash.debounce";
-import { useInView } from 'react-intersection-observer'
+import { useInView } from "react-intersection-observer";
+
 interface ContainerProps {
   children?: React.ReactNode;
 }
-
 
 const MainContainer = ({ children }: ContainerProps) => {
   return (
@@ -56,9 +55,11 @@ const BoardList = () => {
   const [list, setList] = useState<CardType[]>([]);
   const [loading, setLoading] = useState<boolean>(false); // Move useState inside the component
   const TAKE: number = 5;
-  const { buttonType }: MainListTypeState = useSelector((state: RootState) => state.sideBarButton,);
+  const { buttonType }: MainListTypeState = useSelector(
+    (state: RootState) => state.sideBarButton,
+  );
   const [ref, inView] = useInView();
-  const [Id, setId] = useState<IdType>(null)
+  const [Id, setId] = useState<IdType>(null);
   const [lastInView, setLastInView] = useState<boolean>(false);
   const [allDataLoaded, setAllDataLoaded] = useState<boolean>(false);
 
@@ -66,11 +67,15 @@ const BoardList = () => {
     if (inView && !lastInView) {
       ListApi(Id);
     }
-    setLastInView(inView)
+    setLastInView(inView);
   }, [inView]);
 
+  useEffect(() => {
+    ListApi(Id);
+  }, []);
+
   const ListApi = async (id: IdType) => {
-    if(allDataLoaded) return;
+    if (allDataLoaded) return;
     try {
       let response;
       switch (buttonType) {
@@ -78,34 +83,49 @@ const BoardList = () => {
           response = await ListAPI({ take: TAKE, lastId: id, category: null });
           break;
         case "POPULAR":
-          response = await PopularListAPI({ take: TAKE, lastId: id, category: null });
+          response = await PopularListAPI({
+            take: TAKE,
+            lastId: id,
+            category: null,
+          });
           break;
         case "ALL":
-          response = await AllListAPI({ take: TAKE, lastId: id, category: null });
+          response = await AllListAPI({
+            take: TAKE,
+            lastId: id,
+            category: null,
+          });
           break;
         default:
-          response = await AllListAPI({ take: TAKE, lastId: id, category: buttonType });
+          response = await AllListAPI({
+            take: TAKE,
+            lastId: id,
+            category: buttonType,
+          });
           break;
       }
       const newCards = response.data.response.current_list;
-      setList(prevList => [...prevList, ...newCards]);
+      setList((prevList) => [...prevList, ...newCards]);
       if (newCards.length > 0) {
         setId(newCards[newCards.length - 1].id);
-      }
-      else {
-        setAllDataLoaded(true)
+      } else {
+        setAllDataLoaded(true);
       }
     } catch (err) {
       console.error("API error: ", err);
     }
   };
-  
+
+  if (!list[0]) {
+    return <div>로딩중..</div>;
+  }
+
   return (
     <>
       <MainContainer>
         <CardsContainer>
           {list.length ? (
-            list.map((el: CardType,index) => {
+            list.map((el: CardType, index) => {
               return (
                 <React.Fragment key={el.id}>
                   <Card
@@ -126,7 +146,9 @@ const BoardList = () => {
           )}
         </CardsContainer>
       </MainContainer>
-      <div style = {{opacity : '0'}}ref = {ref}>d</div>
+      <div style={{ opacity: "0" }} ref={ref}>
+        d
+      </div>
     </>
   );
 };

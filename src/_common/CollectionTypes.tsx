@@ -73,7 +73,6 @@ export interface InquiryType {
   readonly nickname: string;
   readonly title: string;
   readonly update_at: Date;
-
 }
 
 export type CommunityVisibilityType = "PUBLIC" | "RESTRICTED" | "PRIVATE";

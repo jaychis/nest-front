@@ -172,7 +172,8 @@ const BoardComment = (co: BoardCommentProps) => {
             backgroundColor: isHovered ? "#f0f0f0" : "white",
             borderRadius: "10px",
             padding: "8px",
-            width: "100%",
+            width: "85%",
+            textAlign : 'justify',
           }}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
