@@ -8,6 +8,7 @@ export interface InquiryParam{
 
 interface ListParams {
     readonly take: number;
+    readonly page: number;
     readonly lastId?: string | null;
     readonly category?: string | null;
   } 
@@ -25,13 +26,14 @@ export const postContactApi = ({title, nickName, content} : InquiryParam) => {
     catch(err){console.error(err)}
 }
 
-export const getContactAllListAPi = ({take,lastId}:ListParams) => {
+export const getContactAllListAPi = async ({take,page,lastId}:ListParams) => {
+    
     try{
-        let URL: string = `boards/list/all?take=${take}`;
+        let URL: string = `contact/us/list?page=${page}&take=${take}`;
         if(lastId) URL += `&lastId=${lastId}`;
 
-        const res = client.get(URL);
+        const res = await client.get(URL);
         return res;
     }
-    catch(err){}
+    catch(err){ console.error(err)}
 }

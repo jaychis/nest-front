@@ -26,7 +26,6 @@ const RightSideBar = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const isLoggedIn = !!localStorage.getItem("access_token");
-  console.log(modalState.modalState)
   // Debounced fetch function
   const debouncedFetchTopTenList = debounce(async () => {
     try {

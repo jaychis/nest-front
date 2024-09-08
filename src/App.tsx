@@ -145,7 +145,8 @@ function App() {
                 </Layout>
               }
             />
-            {/* 새 라우트 추가 */}
+            {/* 새 라우터 */}
+
           </Routes>
         </CommunityProvider>
       </Router>
