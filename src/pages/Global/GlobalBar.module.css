@@ -7,7 +7,3 @@ body {
     font-family: 'MyFont', sans-serif;
 }
 
-:root {
-    --rt-color-white: black;
-    --rt-color-dark: white;   
-  }
