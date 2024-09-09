@@ -317,7 +317,7 @@ const GlobalBar = () => {
               }}
               onMouseEnter={() => setBellHover(true)}
               onMouseLeave={() => setBellHover(false)}
-              onClick={toggleNotificationModal}
+              onClick = {() => {toggleNotificationModal(); openModal()}}
             >
               <FaBell
                 style={{
