@@ -10,7 +10,6 @@ import {
   UsersKakaoOAuthLoginAPI,
   UsersNaverOAuthSignUpAPI,
 } from "../api/OAuthApi";
-import ErrorModal from "../../_common/ErrorModal";
 
 interface Props {
   readonly onSwitchView: () => void;
@@ -153,7 +152,7 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
 
       // onSwitchView();
     } else if (TYPE === "EXITING_USER") {
-      const loginProfile = await UsersKakaoOAuthLoginAPI();
+      const loginProfile = await UsersNaverOAuthSignUpAPI();
       if (!loginProfile) return;
       console.log("loginProfile : ", loginProfile);
       const { id, nickname, access_token, refresh_token } =
@@ -167,14 +166,47 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
       });
     }
   };
+  const KAKAO_CLIENT_ID = '026c54fa1a5db9470f3de31c6951c6df';
+  const REDIRECT_URI = 'http://127.0.0.1:9898/users/kakao/callback';
+  // const KAKAO_CLIENT_ID = process.env.KAKAO_TEST_CLIENT_ID;
+  // const REDIRECT_URI = process.env.KAKAO_TEST_REDIRECT_URI;
 
   const kakaoOauthLogin = () => {
-    const KAKAO_CLIENT_ID = "05fd707ffee9942bacd1630d5c05bb4f"; // Your actual Kakao REST API key
-    const REDIRECT_URI = "http://127.0.0.1:9898/users/kakao/callback"; // Use the appropriate redirect URI
-  
-    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`;
-  
-    window.location.href = kakaoAuthUrl;
+    const popup = window.open(
+      `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=account_email`,
+      'PopupWin',
+      'width=500,height=600',
+    );
+    // 이벤트 리스너를 통해 팝업에서 인증 후 리디렉트된 URL의 코드를 받아 처리
+    window.addEventListener(
+      'message',
+      async (event) => {
+        try {
+          const { user } = event.data;
+
+          const parsedUser = JSON.parse(user);
+
+          console.log(`Received user info: ${JSON.stringify(parsedUser)}`);
+          if (parsedUser.subscriptionStatus == true) {
+            setLoginProcess(
+              {
+                id: parsedUser.id,
+                nickname: parsedUser.nickname,
+                access_token: parsedUser.access_token,
+                refresh_token: parsedUser.refresh_token
+              }
+            );
+          } else {
+            // TODO : 회원가입 로직을 진행하도록 변경하기
+          }
+          if (popup) popup.close();
+        } catch (error) {
+          console.error("로그인 실패:", error);
+          alert("로그인에 실패했습니다. 다시 시도해주세요.");
+        }
+      },
+      { once: true },
+    );
   };
 
   return (

@@ -70,6 +70,18 @@ export const GetSearchBoardsAPI = async (param: SearchParam) => {
   }
 };
 
+export const GetSearchTagsAPI = async (param: SearchParam) => {
+  try {
+    const URL: string = `${SearchesURL}/get/tags/${param.query}`;
+
+    const res = await client.get(URL);
+
+    return res;
+  } catch (e: any) {
+    ErrorHandling({ text: "GetSearchTagsAPI", error: e });
+  }
+};
+
 export const AddSearchAPI = async (param: SearchParam) => {
   try {
     const URL: string = `${SearchesURL}/`;

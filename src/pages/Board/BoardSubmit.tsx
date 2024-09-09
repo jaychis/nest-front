@@ -356,7 +356,6 @@ const BoardSubmit = () => {
                     onChange={handleCommunitySearchChange}
                     placeholder="커뮤니티 검색"
                     style={inputStyle}
-                    disabled={!!selectedCommunity} // Disable input if a community is selected
                   />
                   {searchResults.length > 0 && (
                     <ul style={{ listStyleType: "none", padding: 0 }}>

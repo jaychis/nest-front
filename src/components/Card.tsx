@@ -379,7 +379,6 @@ const Card = ({
         </div>
         <div
           style={{
-            marginRight: "5px",
             borderRadius: "30px",
             width: "75px",
             height: "50px",
@@ -405,7 +404,6 @@ const Card = ({
         </div>
         <div
           style={{
-            marginRight: "5px",
             borderRadius: "30px",
             width: "15%",
             height: "50px",
@@ -428,6 +426,7 @@ const Card = ({
               height: '100%',
               width: '80%',
               borderRadius: '30px',
+              marginLeft : '-7px',
             }}>
             <img 
               src="https://img.icons8.com/ios/50/forward-arrow.png" 
@@ -446,7 +445,7 @@ const Card = ({
         </div>
         <div
           style={{
-            marginRight: "10px",
+            marginLeft : '-7px',
             borderRadius: "30px",
             width: "75px",
             height: "50px",

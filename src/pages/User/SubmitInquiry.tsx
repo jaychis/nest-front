@@ -75,7 +75,7 @@ const SubmitInquiry = () => {
             </InquiryContainer>
             <SumbitWrapper>
             <button type="submit" style={submitButtonStyle} onClick={() => {postContactApi({title, nickName, content})}}>
-              Send Message
+              작성
             </button>
             </SumbitWrapper>
         </form>

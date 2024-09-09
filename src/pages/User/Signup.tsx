@@ -137,6 +137,46 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
     }
   };
 
+  const KAKAO_CLIENT_ID = '026c54fa1a5db9470f3de31c6951c6df';
+  const REDIRECT_URI = 'http://127.0.0.1:9898/users/kakao/callback';
+  // const KAKAO_CLIENT_ID = process.env.KAKAO_CLIENT_ID;
+  // const REDIRECT_URI = process.env.KAKAO_REDIRECT_URI;
+
+  const kakaoOauthSignUp = () => {
+    const popup = window.open(
+      `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=account_email`,
+      'PopupWin',
+      'width=500,height=600',
+    );
+    // 이벤트 리스너를 통해 팝업에서 인증 후 리디렉트된 URL의 코드를 받아 처리
+    window.addEventListener(
+      'message',
+      async (event) => {
+        try {
+          const { user } = event.data; // 카카오로부터 받은 사용자 정보
+          const parsedUser = JSON.parse(user); // 문자열로 온 경우 파싱
+
+          console.log(`Received user info: ${JSON.stringify(parsedUser)}`);
+
+          // 이메일, 닉네임, 전화번호를 기입할 수 있도록 상태 업데이트
+          setSignup((prevSignup) => ({
+            ...prevSignup,
+            email: parsedUser.email || "",
+            nickname: parsedUser.nickname || "",
+            phone: parsedUser.phone || "",
+          }));
+
+          // 팝업이 열려 있으면 닫기
+          if (popup) popup.close();
+        } catch (error) {
+          console.error("카카오로부터 사용자 정보를 받아오는 데 실패했습니다.", error);
+          alert("카카오로부터 사용자 정보를 받아오는 데 실패했습니다. 다시 시도해주세요.");
+        }
+      },
+      { once: true }, // 한 번만 실행되도록 설정
+    );
+  };
+
   return (
     <div
       style={{
@@ -152,7 +192,7 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
       }}
     >
-       {showAlert && (
+      {showAlert && (
         <Alert message="회원가입이 완료되었습니다." onClose={() => setShowAlert(false)} type="success" />
       )}
       <div style={{ textAlign: "center", marginBottom: "20px" }}>
@@ -183,7 +223,7 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
         </button>
         <button
           style={styles.socialButton}
-          onClick={() => alert("Continue with Kakao")}
+          onClick={() => kakaoOauthSignUp()}
         >
           <FaComment style={styles.socialLogo} />
           카카오로 가입
@@ -218,6 +258,7 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
             type="email"
             id="email"
             name="email"
+            value={signup.email}
             onChange={(value) =>
               handleChange({
                 name: value.target.name,
@@ -268,6 +309,7 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
             type="text"
             id="nickname"
             name="nickname"
+            value={signup.nickname}
             onChange={(value) =>
               handleChange({
                 name: value.target.name,
@@ -348,6 +390,7 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
             type="text"
             id="phone"
             name="phone"
+            value={signup.phone}
             onChange={(value) =>
               handleChange({
                 name: value.target.name,

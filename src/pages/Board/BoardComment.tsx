@@ -201,6 +201,7 @@ const BoardComment = (co: BoardCommentProps) => {
             padding: "10px",
             marginRight: "10px",
             borderRadius: "20px",
+            marginLeft : '-10px'
           }}
         >
           <button

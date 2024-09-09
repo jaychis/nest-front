@@ -5,6 +5,7 @@ import {
   GetSearchCommunitiesAPI,
   GetSearchMediaAPI,
   GetSearchPeopleAPI,
+  GetSearchTagsAPI,
 } from "../api/SearchApi";
 import { useSearchParams } from "react-router-dom";
 import Card from "../../components/Card";
@@ -21,7 +22,8 @@ type SearchListTypes =
   | "COMMUNITIES"
   | "COMMENTS"
   | "IMAGE&VIDEO"
-  | "PEOPLE";
+  | "PEOPLE"
+  | "TAGS";
 
 const SearchList = () => {
   const [searchCardList, setSearchCardList] = useState<CardType[]>([]);
@@ -30,6 +32,7 @@ const SearchList = () => {
   >([]);
   const [searchReplyList, setSearchReplyList] = useState<ReplyType[]>([]);
   const [searUserList, setSearchUserList] = useState<UserType[]>([]);
+  const [searchTagList, setSearchTagsList] = useState([]);
 
   const [params, setParams] = useSearchParams();
   const [searchType, setSearchType] = useState<SearchListTypes>("BOARDS");
@@ -108,6 +111,23 @@ const SearchList = () => {
           console.error("SearchList GetSearchPeopleAPI error : ", err),
         );
     }
+
+    if (searchType === "TAGS") {
+      GetSearchTagsAPI({ query: QUERY })
+        .then((res): void => {
+          if (!res) return;
+
+          const response = res.data.response[0].communities.map(
+            (tag: { community: CommunityType }) => tag.community,
+          );
+          console.log("TAGS response : ", response);
+
+          setSearchTagsList(response);
+        })
+        .catch((err) =>
+          console.error("SearchList GetSearchTagsAPI error : ", err),
+        );
+    }
   }, [searchType, QUERY]); // QUERY를 의존성 배열에 추가하여 쿼리 변경 시 재실행
 
   useEffect(() => console.log("searchType : ", searchType), [searchType]);
@@ -121,11 +141,9 @@ const SearchList = () => {
     if (type === "BOARDS") setSearchType("BOARDS");
     if (type === "COMMUNITIES") setSearchType("COMMUNITIES");
     if (type === "COMMENTS") setSearchType("COMMENTS");
-    if (type === "IMAGE&VIDEO") {
-      console.log("check");
-      setSearchType("IMAGE&VIDEO");
-    }
+    if (type === "IMAGE&VIDEO") setSearchType("IMAGE&VIDEO");
     if (type === "PEOPLE") setSearchType("PEOPLE");
+    if (type === "TAGS") setSearchType("TAGS");
   };
   const styles = {
     navContainer: {
@@ -181,6 +199,7 @@ const SearchList = () => {
         >
           사진 & 영상
         </div>
+
         <div
           style={{
             ...styles.navItem,
@@ -190,16 +209,28 @@ const SearchList = () => {
         >
           사람
         </div>
+
+        <div
+          style={{
+            ...styles.navItem,
+            backgroundColor: searchType === "TAGS" ? "#f0f0f0" : "white",
+          }}
+          onClick={() => NavBarStateChange({ type: "TAGS" })}
+        >
+          태그
+        </div>
       </div>
     );
   };
 
-  const EmptyList = () => <EmptyState/>;
+  const EmptyList = () => <EmptyState />;
   return (
     <>
       <NavBar />
       {searchCardList.length > 0 ? (
-        searchType === "BOARDS" || searchType === "IMAGE&VIDEO" ? (
+        searchType === "BOARDS" ||
+        searchType === "IMAGE&VIDEO" ||
+        searchType === "TAGS" ? (
           searchCardList.length > 0 ? (
             searchCardList.map((ca: CardType) => {
               return (
