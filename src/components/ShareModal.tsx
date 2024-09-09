@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import Modal from 'react-modal';
 import styled from "styled-components";
 import { useLocation } from "react-router-dom";
+import { RootState, AppDispatch } from "../store/store";
+import {  UserModalState, setModalState } from "../reducers/modalStateSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 //navigate(`/boards/read?id=${id}&title=${title}&content=${content}`);
 export interface ShaerModalProps{
@@ -21,6 +24,8 @@ export const ShareModal : React.FC<ShaerModalProps> = ({isModal, setIsModal,cont
     const location = useLocation();
     const url : string = './'
     const shareText : string = 'naver.com'
+    const dispatch = useDispatch<AppDispatch>();
+   
     
     useEffect(() => {
         if(baseUrl === 'http://127.0.0.1:9898'){

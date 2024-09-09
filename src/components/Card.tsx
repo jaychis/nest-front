@@ -18,7 +18,9 @@ import sanitizeHtml from "sanitize-html";
 import { LogViewedBoardAPI } from "../pages/api/ViewedBoardsApi";
 import debounce from "lodash.debounce";
 import { ShareModal } from "./ShareModal";
-import { useSelector } from 'react-redux';
+import {  UserModalState, setModalState } from "../reducers/modalStateSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "../store/store";
 
 const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
   try {
@@ -59,6 +61,8 @@ const Card = ({
   const [viewCount, setViewCount] = useState<number>(0); // 조회수 상태 추가
   const [isReaction, setIsReaction] = useState<ReactionStateTypes>(null);
   const [shareContent, setShareContent] = useState<string>('')
+  const dispatch = useDispatch<AppDispatch>();
+  const modalState : UserModalState = useSelector((state: RootState) => state.modalState);
   
   const USER_ID: string = localStorage.getItem("id") as string;
 
@@ -129,6 +133,16 @@ const Card = ({
       console.error(err);
     }
   };
+
+    const openModal = () => {
+      dispatch(setModalState(!modalState.modalState));
+    };
+
+    useEffect(() => {
+        if( modalState.modalState === true && isModal === false){
+          openModal()
+        }
+    },[isModal])
 
   const debouncedFetchReactionList = debounce(fetchReactionList, 300);
   const debouncedFetchReactionCount = debounce(fetchReactionCount, 300);
@@ -403,8 +417,8 @@ const Card = ({
             <button 
             onMouseEnter={() => setIsCardShareHovered(true)}
             onMouseLeave={() => setIsCardShareHovered(false)}
-            onClick={() => { setIsModal((prev) => !prev) }}
-            style={{
+            onClick={() => { setIsModal(true); openModal()}}
+            style={{ 
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'center', 
@@ -412,15 +426,15 @@ const Card = ({
               background : isCardShareHovered ? '#f0f0f0' : 'white',
               border: '1px solid gray',
               height: '100%',
-              width: '100%',
+              width: '80%',
               borderRadius: '30px',
             }}>
             <img 
               src="https://img.icons8.com/ios/50/forward-arrow.png" 
               alt="Share Icon" 
-              style={{ height: '35px', width: '35px' }} // 아이콘 크기 조정
+              style={{ height: '35px', width: '25px' }}
             />
-            <p style = {{display : 'flex', fontSize : '20px', marginBottom : '15px',fontWeight : '500' }}>0</p>
+            <p style = {{display : 'flex', fontSize : '20px', marginBottom : '15px',fontWeight : '700' }}>0</p>
             </button>
           
       <ShareModal 
