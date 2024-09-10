@@ -111,6 +111,7 @@ const GlobalBar = () => {
         padding: "10px",
         border: "2px solid #D3D3D3",
         width : '100%',
+        zIndex : modalState.modalState ? -1 : 2000
       }}
     >
       {/* Logo and Site Name */}
@@ -206,7 +207,6 @@ const GlobalBar = () => {
                 style={{
                   width: "40px",
                   height: "40px",
-                  
                   borderRadius: "50%",
                   zIndex: 2,
                 }}
@@ -237,7 +237,7 @@ const GlobalBar = () => {
               style={{
                 border: "none",
                 marginLeft : '4px',
-                background : plusHover ? '#D3D3D3' : 'white'
+                background : plusHover ? '#D3D3D3' : 'white',
               }}
               onClick={postSubmit}
               
@@ -249,7 +249,7 @@ const GlobalBar = () => {
               <FaPlus 
               data-tooltip-content='글쓰기' 
               data-tooltip-id='tooltip'
-              
+              style = {{height : '30px', width : '15px'}}
               />
             </button>
             </div>
@@ -262,7 +262,7 @@ const GlobalBar = () => {
                 cursor: "pointer",
                 fontSize: "16px",
                 borderRadius: "25px",
-                background : inquiryHover ? '#D3D3D3' : 'white'
+                background : inquiryHover ? '#D3D3D3' : 'white',
                 }}
                 onMouseEnter = {() => {setInquiryHover(true)}}
                 onMouseLeave = {() => {setInquiryHover(false)}}

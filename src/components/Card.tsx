@@ -22,6 +22,7 @@ import {  UserModalState, setModalState } from "../reducers/modalStateSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../store/store";
 
+
 const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
   try {
     const urlObj: URL = new URL(url);
@@ -270,16 +271,8 @@ const Card = ({
               </div>
             </div>
           ) : type === "MEDIA" ? (
-            <Slider
-              {...{
-                dots: true,
-                infinite: content.length > 1,
-                speed: 500,
-                slidesToShow: 1,
-                slidesToScroll: 1,
-                arrows: true,
-              }}
-            >
+            
+              <div style = {{zIndex : 2000}}>
               {content.map((image, index) => (
                 <div key={index}>
                   <img
@@ -293,7 +286,8 @@ const Card = ({
                   />
                 </div>
               ))}
-            </Slider>
+              </div>
+            
           ) : (
             <>
               {content.map((video: string, index: number) => (

@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import EmptyState from "../../components/EmptyState";
 import { useInView } from "react-intersection-observer";
+import { UserModalState, setModalState} from "../../reducers/modalStateSlice";
 
 interface ContainerProps {
   children?: React.ReactNode;
@@ -32,6 +33,7 @@ const MainContainer = ({ children }: ContainerProps) => {
 
 // const CardsContainer: React.FC<ContainerProps> = ({ children }) => {
 const CardsContainer = ({ children }: ContainerProps) => {
+  const modalState : UserModalState = useSelector((state: RootState) => state.modalState);
   return (
     <div
       style={{
@@ -42,6 +44,7 @@ const CardsContainer = ({ children }: ContainerProps) => {
         maxWidth: "800px", // 적절한 최대 너비 설정
         boxSizing: "border-box",
         padding: "0 20px", // 좌우 패딩 추가
+        zIndex : !modalState.modalState ? 100 : -2
       }}
     >
       {children}
@@ -62,6 +65,7 @@ const BoardList = () => {
   const [Id, setId] = useState<IdType>(null);
   const [lastInView, setLastInView] = useState<boolean>(false);
   const [allDataLoaded, setAllDataLoaded] = useState<boolean>(false);
+  
 
   useEffect(() => {
     if (inView && !lastInView) {
