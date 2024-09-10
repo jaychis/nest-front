@@ -320,9 +320,9 @@ const GlobalBar = () => {
             {/* Notification Icon */}
           </>
         ) : (
-          <>
+          <div>
             <UserModalForm />
-          </>
+          </div>
         )}
       </div>
     </nav>

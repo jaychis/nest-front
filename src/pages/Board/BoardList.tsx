@@ -44,7 +44,7 @@ const CardsContainer = ({ children }: ContainerProps) => {
         maxWidth: "800px", // 적절한 최대 너비 설정
         boxSizing: "border-box",
         padding: "0 20px", // 좌우 패딩 추가
-        zIndex : !modalState.modalState ? 100 : -2
+        
       }}
     >
       {children}

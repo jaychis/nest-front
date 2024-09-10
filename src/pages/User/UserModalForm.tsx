@@ -5,11 +5,12 @@ import Login from "./Login";
 import Signup from "./Signup";
 import { useDispatch, useSelector,  } from "react-redux";
 import { RootState } from "../../store/store";
-import modalStateReducer from "../../reducers/modalStateSlice";
 import { UserModalState, setModalState} from "../../reducers/modalStateSlice";
+
   
 type modalType = "login" | "signup";
   const UserModalForm = () => {
+
   const dispatch = useDispatch();
   const modalState : UserModalState = useSelector((state: RootState) => state.modalState);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
@@ -19,7 +20,7 @@ type modalType = "login" | "signup";
   const openModal = () => {
     dispatch(setModalState(!modalState.modalState));
   };
-
+  
   const switchView = (view: modalType) => {
     setActiveView(view);
   };
@@ -43,7 +44,6 @@ type modalType = "login" | "signup";
           onClick={() => {
             setModalIsOpen(true);
             setActiveView("login");
-            openModal();
           }}
           style={{
             height: "100%",
@@ -63,12 +63,10 @@ type modalType = "login" | "signup";
       </div>
 
       <Modal
-        openModal = {openModal}
         buttonLabel={activeView}
         isOpen={modalIsOpen}
         onClose={() => {
           setModalIsOpen(false);
-
         }}
         // onSubmit={handleSubmit}
       >

@@ -272,7 +272,7 @@ const Card = ({
             </div>
           ) : type === "MEDIA" ? (
             
-              <div style = {{zIndex : 2000}}>
+              <div style = {{zIndex : 1001}}>
               {content.map((image, index) => (
                 <div key={index}>
                   <img
@@ -284,7 +284,7 @@ const Card = ({
                       borderRadius: "20px",
                     }} // 수정된 부분
                   />
-                </div>
+              </div>
               ))}
               </div>
             
