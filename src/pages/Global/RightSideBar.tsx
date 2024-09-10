@@ -102,9 +102,9 @@ const RightSideBar = () => {
       borderRadius: "8px",
       boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
       height: "100%",
-      marginTop : '100px',
       position: 'fixed' as 'fixed',
-      zIndex : modalState.modalState ? -1 : 1
+      zIndex : modalState.modalState ? -1 : 1000,
+      marginTop : '90px'
       }}>
       <div style={styles.tabs}>
         <div

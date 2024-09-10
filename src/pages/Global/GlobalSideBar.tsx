@@ -5,7 +5,7 @@ import { MainListTypes } from "../../_common/CollectionTypes";
 import { AppDispatch } from "../../store/store";
 import { sideButtonSliceActions } from "../../reducers/mainListTypeSlice";
 import { RootState } from "../../store/store";
-import { UserModalState, setModalState} from "../../reducers/modalStateSlice";
+import { UserModalState} from "../../reducers/modalStateSlice";
 
 
 import logo from "../../assets/img/panda_logo.png";

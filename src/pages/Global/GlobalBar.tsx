@@ -113,6 +113,7 @@ const GlobalBar = () => {
           padding: "10px",
           border: "2px solid #D3D3D3",
           width: "100%",
+          zIndex : modalState.modalState ? -1 : 2000
         }}
       >
         {/* Logo and Site Name */}
@@ -200,19 +201,6 @@ const GlobalBar = () => {
               onMouseLeave={() => setUserHover(false)}
               onClick={toggleProfileModal}
             >
-              <div
-                style={{
-                  position: "absolute", // 추가
-                  top: 0,
-                  left: 0,
-                  width: "100%",
-                  height: "100%",
-                  borderRadius: "50%",
-                  backgroundColor: userHover ? "#D3D3D3" : "transparent",
-                  zIndex: 1,
-                  
-                }}
-              ></div>
               <img
                 src={logo}
                 alt="Profile"
@@ -247,7 +235,7 @@ const GlobalBar = () => {
             <button
               style={{
                 border: "none",
-                background : plusHover ? '#D3D3D3' : 'white'
+                background : plusHover ? '#D3D3D3' : 'white',
               }}
               onClick={postSubmit}
               
@@ -259,10 +247,7 @@ const GlobalBar = () => {
               <FaPlus 
               data-tooltip-content='글쓰기' 
               data-tooltip-id='tooltip'
-              style={{
-                width: "20px",
-                height: "20px",
-              }}
+              style = {{height : '30px', width : '15px'}}
               />
             </button>
             </div>
@@ -275,7 +260,7 @@ const GlobalBar = () => {
                 cursor: "pointer",
                 fontSize: "16px",
                 borderRadius: "25px",
-                background : inquiryHover ? '#D3D3D3' : 'white'
+                background : inquiryHover ? '#D3D3D3' : 'white',
                 }}
                 onMouseEnter = {() => {setInquiryHover(true)}}
                 onMouseLeave = {() => {setInquiryHover(false)}}
