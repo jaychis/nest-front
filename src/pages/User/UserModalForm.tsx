@@ -3,23 +3,14 @@ import React, { useState } from "react";
 import Modal from "../../components/Modal";
 import Login from "./Login";
 import Signup from "./Signup";
-import { useDispatch, useSelector,  } from "react-redux";
-import { RootState } from "../../store/store";
-import { UserModalState, setModalState} from "../../reducers/modalStateSlice";
+
 
   
 type modalType = "login" | "signup";
   const UserModalForm = () => {
-
-  const dispatch = useDispatch();
-  const modalState : UserModalState = useSelector((state: RootState) => state.modalState);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [activeView, setActiveView] = useState<modalType>("login");
   const [isLoginHovered, setIsLoginHovered] = useState<boolean>(false);
-  
-  const openModal = () => {
-    dispatch(setModalState(!modalState.modalState));
-  };
   
   const switchView = (view: modalType) => {
     setActiveView(view);

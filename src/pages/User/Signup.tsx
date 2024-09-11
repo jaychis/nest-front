@@ -7,7 +7,7 @@ import {
   SignupParams,
 } from "../api/UserApi";
 import { CollectionTypes } from "../../_common/CollectionTypes";
-import { isValidPasswordFormat } from "../../_common/PasswordRegex";
+import { isValidPasswordFormat,isValidPhoneNumber } from "../../_common/PasswordRegex";
 import { FaGoogle, FaApple, FaComment } from "react-icons/fa";
 import { SiNaver } from "react-icons/si";
 import vLogo from "../../assets/img/v-check.png";
@@ -23,9 +23,12 @@ interface ValidSignupType {
   readonly email: null | boolean;
   readonly phone: null | boolean;
   readonly nickname: null | boolean;
+  readonly password? : false | boolean;
+  readonly confirmPassword? : false | boolean;
 }
 
 const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
+
   const [signup, setSignup] = useState<SignupParams>({
     email: "",
     nickname: "",
@@ -41,6 +44,7 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
   });
 
   const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [validPassword, setValidPassword] = useState<boolean>(false);
 
   useEffect(() => {
     if (signup.email.length >= 12) {
@@ -97,10 +101,17 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
           })
           .catch((err) => console.error(err));
       }, 1000);
-
       return () => clearTimeout(timeOutPhone);
     }
   }, [signup.phone]);
+
+  useEffect(() => {
+    if(signup.password.length > 7 && (signup.password === signup.confirmPassword)){
+      setValidPassword(true)
+    }else{
+      setValidPassword(false)
+    }
+  },[signup.confirmPassword,signup.password])
 
   const handleChange = (event: CollectionTypes) => {
     const { name, value } = event;
@@ -113,6 +124,11 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
 
   const handleSubmit: MouseEventHandler<HTMLButtonElement> = (event) => {
     if (event) event.preventDefault();
+
+    if(!signup.email || !signup.nickname || !signup.password || !signup.confirmPassword || !signup.phone)
+      {return alert('모든 정보를 입력해주세요')}
+
+    if(!isValidPhoneNumber(signup.phone)) return alert('핸드폰 번호를 확인 해주세요') 
 
     const isPasswordValid: boolean = isValidPasswordFormat(signup.password);
     const isConfirmPasswordValid: boolean = isValidPasswordFormat(
@@ -130,12 +146,15 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
           }
         })
         .catch((err): void => console.error(err));
-    } else {
+    } 
+    else {
       alert(
         "비밀번호는 최소 8자, 하나 이상의 문자, 하나의 숫자 및 하나의 특수문자입니다.",
       );
     }
   };
+
+  
 
   const KAKAO_CLIENT_ID = '026c54fa1a5db9470f3de31c6951c6df';
   const REDIRECT_URI = 'http://127.0.0.1:9898/users/kakao/callback';
@@ -347,12 +366,19 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
           )}
         </div>
 
+        <div
+        style={{
+          position: "relative",
+          width: "100%",
+          marginBottom: "10px",
+        }}>
         <input
           style={styles.input}
           placeholder="비밀번호 *"
           type="password"
           id="password"
           name="password"
+          value={signup.password}
           onChange={(value) =>
             handleChange({
               name: value.target.name,
@@ -361,21 +387,41 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
           }
           required
         />
+        </div>
 
-        <input
-          style={styles.input}
-          placeholder="비밀번호 확인 *"
-          type="password"
-          id="confirmPassword"
-          name="confirmPassword"
-          onChange={(value) =>
-            handleChange({
-              name: value.target.name,
-              value: value.target.value,
-            })
-          }
-          required
-        />
+        <div 
+            style={{
+            position: "relative",
+            width: "100%",
+            marginBottom: "10px",
+          }}>
+          <input
+            style={styles.input}
+            placeholder="비밀번호 확인 *"
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            value={signup.confirmPassword}
+            onChange={(value) =>
+              handleChange({
+                name: value.target.name,
+                value: value.target.value,
+              })
+            }
+            required
+          />{ validPassword ? <img
+            src={vLogo}
+            alt={"v logo"}
+            style={{
+              width: "20px",
+              height: "20px",
+              position: "absolute",
+              right: "10px",
+              top: "50%",
+              transform: "translateY(-50%)",
+            }}
+          /> : null}
+        </div>
 
         <div
           style={{

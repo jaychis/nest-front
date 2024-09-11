@@ -330,6 +330,7 @@ const GlobalBar = () => {
   );
 };
 
+
 const styles = {
   searchResults: {
     position: "absolute" as "absolute",
