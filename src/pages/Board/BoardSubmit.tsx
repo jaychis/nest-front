@@ -221,47 +221,6 @@ const BoardSubmit = () => {
     }
   };
 
-  const inputStyle = {
-    width: '100%',
-    height: '30px',
-    marginBottom: '10px',
-    marginTop: '10px',
-    paddingTop: '10px',
-    paddingBottom: '10px',
-    border: '1px solid #ddd',
-    borderRadius: '4px',
-  };
-
-  const submitButtonStyle = {
-    padding: '10px 20px',
-    backgroundColor: '#84d7fb',
-    color: 'white',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    fontWeight: 'bold',
-    marginTop: '45px',
-  };
-
-  const buttonStyle = {
-    padding: '10px 20px',
-    margin: '0 0',
-    border: '1px solid #fff',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    backgroundColor: 'white',
-    color: '#0079D3',
-    fontWeight: 'bold',
-    transition: 'background-color 0.3s, color 0.3s',
-  };
-
-  const activeButtonStyle = {
-    ...buttonStyle,
-    backgroundColor: '#84d7fb',
-    color: 'white',
-    border: '#84d7fb',
-  };
-
   const sliderSetting = {
     dots: true,
     infinite: previewUrls.length > 1,
@@ -299,53 +258,40 @@ const BoardSubmit = () => {
 
   return (
     <>
-      <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-        <div style={{ flex: 2 }}>
-          <div style={{ backgroundColor: '#fff', minHeight: '100vh' }}>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                width: '100%',
-              }}
-            >
-              <div style={{ flex: 2 }}>
-                <div
-                  style={{
-                    width: '100%',
-                    height: 'auto',
-                    padding: '10px',
-                    background: '#fff',
-                  }}
-                >
-                  <div
-                    style={{
-                      marginBottom: '20px',
-                      display: 'flex',
-                      justifyContent: 'flex-start',
-                    }}
-                  >
+      <div className='flex justify-center w-full'>
+        <div className='flex-1'>
+          <div className='min-h-screen bg-white'>
+            <div className='flex justify-center w-full'>
+              <div className='flex-1'>
+                <div className='w-full h-auto p-2.5 bg-white'>
+                  <div className='flex justify-start mb-5'>
                     <button
                       onClick={() => setInputType('TEXT')}
-                      style={
-                        inputType === 'TEXT' ? activeButtonStyle : buttonStyle
-                      }
+                      className={`px-5 py-2.5 m-0 rounded cursor-pointer font-bold transition-colors duration-300 ${
+                        inputType === 'TEXT'
+                          ? 'bg-[#84d7fb] text-white border border-[#84d7fb]'
+                          : 'bg-blue-500 text-[#0079D3] border border-white'
+                      }`}
                     >
                       텍스트
                     </button>
                     <button
                       onClick={() => setInputType('MEDIA')}
-                      style={
-                        inputType === 'MEDIA' ? activeButtonStyle : buttonStyle
-                      }
+                      className={`px-5 py-2.5 m-0 rounded cursor-pointer font-bold transition-colors duration-300 ${
+                        inputType === 'MEDIA'
+                          ? 'bg-[#84d7fb] text-white border border-[#84d7fb]'
+                          : 'bg-white text-[#0079D3] border border-white'
+                      }`}
                     >
                       이미지 & 비디오
                     </button>
                     <button
                       onClick={() => setInputType('LINK')}
-                      style={
-                        inputType === 'LINK' ? activeButtonStyle : buttonStyle
-                      }
+                      className={`px-5 py-2.5 m-0 rounded cursor-pointer font-bold transition-colors duration-300 ${
+                        inputType === 'LINK'
+                          ? 'bg-[#84d7fb] text-white border border-[#84d7fb]'
+                          : 'bg-white text-[#0079D3] border border-white'
+                      }`}
                     >
                       링크
                     </button>
@@ -356,20 +302,17 @@ const BoardSubmit = () => {
                     value={searchTerm}
                     onChange={handleCommunitySearchChange}
                     placeholder='커뮤니티 검색'
-                    style={inputStyle}
+                    className='w-full h-[30px] mb-2.5 mt-2.5 pt-2.5 pb-2.5 border border-gray-300 rounded'
                   />
                   {searchResults.length > 0 && (
-                    <ul style={{ listStyleType: 'none', padding: 0 }}>
+                    <ul className='p-0 list-none'>
                       {searchResults.map((result, index) => (
                         <li
                           key={index}
                           onClick={() => handleCommunitySelect(result)}
-                          style={{
-                            cursor: 'pointer',
-                            padding: '8px',
-                            backgroundColor:
-                              index % 2 === 0 ? '#f9f9f9' : '#fff',
-                          }}
+                          className={`cursor-pointer p-2 ${
+                            index % 2 === 0 ? 'bg-gray-100' : 'bg-white'
+                          }`}
                         >
                           {result}
                         </li>
@@ -388,7 +331,7 @@ const BoardSubmit = () => {
                         type='text'
                         placeholder='제목'
                         onChange={handleTextTitleChange}
-                        style={inputStyle}
+                        className='w-full h-[30px] mb-2.5 mt-2.5 pt-2.5 pb-2.5 border border-gray-300 rounded'
                       />
                       <ReactQuill
                         value={textContent}
@@ -404,9 +347,8 @@ const BoardSubmit = () => {
                         type='text'
                         placeholder='제목'
                         onChange={handleMediaTitleChange}
-                        style={inputStyle}
+                        className='w-full h-[30px] mb-2.5 mt-2.5 pt-2.5 pb-2.5 border border-gray-300 rounded'
                       />
-
                       {previewUrls.length > 0 ? (
                         <>
                           <button onClick={imageUrlListDelete}>휴지통</button>
@@ -416,7 +358,7 @@ const BoardSubmit = () => {
                                 <img
                                   src={image}
                                   alt={`Preview image ${index}`}
-                                  style={{ height: '400px', width: '400px' }}
+                                  className='h-[400px] w-[400px]'
                                 />
                               </div>
                             ))}
@@ -425,10 +367,10 @@ const BoardSubmit = () => {
                       ) : (
                         <>
                           <input
-                            type={'file'}
+                            type='file'
                             multiple
                             onChange={handleFileChange}
-                            style={inputStyle}
+                            className='w-full h-[30px] mb-2.5 mt-2.5 pt-2.5 pb-2.5 border border-gray-300 rounded'
                           />
                         </>
                       )}
@@ -441,35 +383,30 @@ const BoardSubmit = () => {
                         type='text'
                         placeholder='제목'
                         onChange={handleLinkTitleChange}
-                        style={inputStyle}
+                        className='w-full h-[30px] mb-2.5 mt-2.5 pt-2.5 pb-2.5 border border-gray-300 rounded'
                       />
                       <input
                         type='text'
                         placeholder='링크 추가'
                         onChange={(e) => handleLinkContentChange(e)}
-                        style={inputStyle}
+                        className='w-full h-[30px] mb-2.5 mt-2.5 pt-2.5 pb-2.5 border border-gray-300 rounded'
                       />
                     </>
                   )}
                   <Button
                     type='submit'
-                    className='border-2 border-black mt-14 bg-blue-500 text-black'
+                    onClick={(e) => handleSubmit(e)}
+                    className='bg-blue-500'
                   >
                     보내기
                   </Button>
-                  {/* <button
-                    type="submit"
-                    style={submitButtonStyle}
-                    onClick={(e) => handleSubmit(e)}
-                  >
-                    보내기
-                  </button> */}
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+
       <ErrorModal
         show={errorModalVisible}
         handleClose={() => setErrorModalVisible(false)}
