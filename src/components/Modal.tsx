@@ -1,9 +1,3 @@
-import React from "react";
-import { setModalState, modalState,UserModalState } from "../reducers/modalStateSlice";
-import modalStateReducer from "../reducers/modalStateSlice";
-
-import { RootState } from "../store/store";
-
 interface Props {
   readonly children: React.ReactNode;
   readonly isOpen: boolean;

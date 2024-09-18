@@ -7,6 +7,7 @@ import {
   ImageLocalPreviewUrls,
   ImageLocalPreviewUrlsReturnType,
 } from "../../../_common/ImageUploadFuntionality";
+import styled from "styled-components";
 
 const CommunityCreatePage1: React.FC = () => {
   const navigate = useNavigate();
@@ -98,11 +99,13 @@ const CommunityCreatePage1: React.FC = () => {
   };
 
   return (
-    <div style={{ ...styles.container, height: `calc(400px + ${textareaHeight} + 40px)` }}>
-      <h2 style={styles.heading}>커뮤니티 만들기</h2>
-      <form onSubmit={(e) => e.preventDefault()} style={styles.form}>
-        <div style={styles.formGroup}>
-          <div style={styles.imageUploadWrapper}>
+    <Container textareaHeight={textareaHeight}>
+      <Heading>커뮤니티 만들기</Heading>
+      <form onSubmit={(e) => e.preventDefault()} style={{
+        display: "flex",
+        flexDirection: "column",
+      }}>
+        <BackgroundUploader>
             <input
               type="file"
               id="backgroundPicture"
@@ -117,56 +120,49 @@ const CommunityCreatePage1: React.FC = () => {
                 <div style={styles.placeholder}>배경 사진</div>
               )}
             </div>
-          </div>
-        </div>
+        </BackgroundUploader>
         <div style={styles.row}>
-          <div style={styles.profilePictureWrapper}>
-            <div style={styles.formGroup}>
-              <div style={styles.imageUploadWrapper}>
-                <input
-                  type="file"
-                  id="profilePicture"
-                  accept="image/*"
-                  onChange={handleProfilePictureChange}
-                  style={styles.hiddenFileInput}
-                />
-                <div style={styles.imagePreviewWrapper} onClick={() => document.getElementById('profilePicture')?.click()}>
-                  {profilePreview ? (
-                    <img src={profilePreview} alt="Profile Preview" style={styles.imagePreview} />
-                  ) : (
-                    <div style={styles.placeholder}>프로필</div>
-                  )}
-                </div>
-              </div>
+            <ImageUploadWrapper>
+            <input
+              type="file"
+              id="profilePicture"
+              accept="image/*"
+              onChange={handleProfilePictureChange}
+              style={styles.hiddenFileInput}
+            />
+            <div style={styles.imagePreviewWrapper} onClick={() => document.getElementById('profilePicture')?.click()}>
+              {profilePreview ? (
+                <img src={profilePreview} alt="Profile Preview" style={styles.imagePreview} />
+              ) : (
+                <div style={styles.placeholder}>프로필</div>
+              )}
             </div>
-          </div>
-          <div style={styles.column}>
-            <div style={styles.formGroup}>
-              <input
-                type="text"
-                id="communityName"
-                value={communityName}
-                onChange={(e) => setCommunityName(e.target.value)}
-                placeholder="커뮤니티 이름"
-                required
-                style={styles.input}
-              />
-            </div>
-          </div>
-        </div>
-        <div style={styles.formGroup}>
-          <label htmlFor="description" style={styles.label}>
-            설명
-          </label>
-          <textarea
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+          </ImageUploadWrapper>
+          <CommunityNameInput
             required
-            style={{ ...styles.textarea, height: textareaHeight }}
-            ref={textareaRef}
+            type="text"
+            id="communityName"
+            value={communityName}
+            placeholder="커뮤니티 이름"
+            onChange={(e) => setCommunityName(e.target.value)}
           />
         </div>
+        <DescriptionWrapper>
+          <label htmlFor="description" style={{
+            color: "#555",
+            fontWeight: "bold",
+          }}>
+            설명
+          </label>
+          <DescriptionTextArea
+            required
+            id="description"
+            ref={textareaRef}
+            value={description}
+            height={textareaHeight}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </DescriptionWrapper>
         <div style={styles.buttonGroup}>
           <button type="button" onClick={handleCancel} style={styles.cancelButton}>
             취소
@@ -176,71 +172,79 @@ const CommunityCreatePage1: React.FC = () => {
           </button>
         </div>
       </form>
-    </div>
+    </Container>
   );
 };
 
+const Container = styled.div<{textareaHeight: string}>`
+  background-color: #FFFFFF;
+  padding: 20px;
+  max-width: 800px;
+  margin: 50px auto;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border-radius: 8px;
+  border: 1px solid #EDEDED;
+  height: calc(400px + ${props => props.textareaHeight} + 40px)}
+`;
+
+const Heading = styled.h2`
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+  text-align: center;
+`;
+const BackgroundUploader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-bottom: 20px;
+`;
+const CommunityNameInput = styled.input`
+  flex: 1;
+  width: 100%;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid #CCC;
+  font-size: 14px;
+  background-color: #F7F7F7;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+`;
+const DescriptionWrapper = styled.div`
+  margin-bottom: 20px;
+  font-size: 14px;
+`;
+const DescriptionTextArea = styled.textarea<{height: string}>`
+  width: 100%;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid #CCC;
+  min-height: 120px;
+  margin-top: 18px;
+  resize: none;
+  background-color: #F7F7F7;
+  box-sizing: border-box;
+  overflow: hidden;
+  height: ${props => props.height};
+`;
+const ImageUploadWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  justify-content: center;
+  cursor: pointer;
+`;
+
 const styles: { [key: string]: CSSProperties } = {
-  container: {
-    backgroundColor: "#FFFFFF",
-    padding: "20px",
-    maxWidth: "800px",
-    margin: "50px auto",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-    borderRadius: "8px",
-    border: "1px solid #EDEDED",
-  },
-  heading: {
-    fontSize: "24px",
-    marginBottom: "20px",
-    color: "#333",
-    textAlign: "center",
-  },
-  form: {
-    display: "flex",
-    flexDirection: "column",
-  },
   row: {
     display: "flex",
     justifyContent: "flex-start",
     alignItems: "center",
   },
-  profilePictureWrapper: {
-    marginRight: "20px",
-  },
-  column: {
-    flex: 1,
-  },
-  formGroup: {
-    marginBottom: "20px",
-  },
   label: {
     marginBottom: "8px",
-    fontSize: "14px",
-    color: "#555",
-    fontWeight: "bold",
-  },
-  input: {
-    width: "100%",
-    padding: "10px",
-    borderRadius: "12px",
-    border: "1px solid #CCC",
-    fontSize: "14px",
-    backgroundColor: "#F7F7F7",
-    boxSizing: "border-box",
-  },
-  textarea: {
-    width: "100%",
-    padding: "10px",
-    borderRadius: "12px",
-    border: "1px solid #CCC",
-    fontSize: "14px",
-    minHeight: "120px",
-    marginTop: 10,
-    resize: "none",
-    backgroundColor: "#F7F7F7",
-    boxSizing: "border-box",
-    overflow: "hidden",
   },
   hiddenFileInput: {
     display: "none",
