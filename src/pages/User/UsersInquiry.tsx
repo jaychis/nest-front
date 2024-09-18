@@ -8,6 +8,7 @@ import EmptyState from "../../components/EmptyState";
 import { getContactAllListAPi } from "../api/InquiryApi";
 import { InquiryType } from "../../_common/CollectionTypes";
 import InquiryList from "../../components/InquiryList";
+import SubmitInquiry from "./SubmitInquiry";
 
 
 interface ContainerProps {
@@ -52,23 +53,53 @@ const CardsContainer = ({ children }: ContainerProps) => {
   );
 };
 
+const submitButtonStyle = {
+  backgroundColor: "black",
+  color: "white",
+  border: "none",
+  padding: "10px 20px",
+  borderRadius: "5px",
+  fontSize: "16px",
+  cursor: "pointer",
+  transition: "background-color 0.3s ease",
+  marginLeft : 'auto',
+  marginBottom : '15px'
+};
+
+
+
 const UsersInquiry = () => {
   const [params, setParams] = useSearchParams();
   const [list, setList] = useState<InquiryType[]>([]);
-  const TAKE: number = 5;
-  
-  useEffect(() => {
-    getContactAllListAPi({take :TAKE, page : 1})
+  const TAKE: number = 10;
+  const nickname:string = localStorage.getItem('nickname') as string;
+  const [isopen, setIsopen] = useState<boolean>(false);
+
+  getContactAllListAPi({take :TAKE, page : 1, nickname : nickname})
     .then((res) => {
       const status = res?.data.response.current_list
       setList(status)
     })
+  
+  useEffect(() => {
+    getContactAllListAPi({take :TAKE, page : 1, nickname : nickname})
   },[])
+
+  if(!list){
+    return(
+    <div>로딩중..</div>)
+  }
 
   return (
     <>
+    <SubmitInquiry
+    isopen = {isopen}
+    setIsopen={setIsopen}
+    />
         <MainContainer>
           <CardsContainer>
+            <br/><br/><br/><br/><br/><br/>
+            <button style = {submitButtonStyle} onClick = {() => {setIsopen(true)}}>글 작성</button>
             {list.length > 0 ? (
               list.map((el) => {
                 return (

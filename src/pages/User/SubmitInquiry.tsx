@@ -3,8 +3,16 @@ import ReactQuill from "react-quill";
 import { useState,useRef } from "react";
 import emailjs from 'emailjs-com';
 import { postContactApi, InquiryParam } from "../api/InquiryApi";
+import Modal from 'react-modal';
+import GlobalBar from "../Global/GlobalBar";
+import logo from '../../assets/img/panda_logo.png'
 
-const SubmitInquiry = () => {
+interface SubmitModalProps {
+    isopen: boolean;
+    setIsopen: (prev: boolean) => void;
+}
+
+const SubmitInquiry: React.FC<SubmitModalProps> = ({isopen, setIsopen,}) => {
 
     const form = useRef<HTMLFormElement | null>(null);
     const serviceId: string = 'service_y1seuv8';
@@ -12,17 +20,16 @@ const SubmitInquiry = () => {
     const publicKey: string = 'vIug5xjBisxtUBSFM';
     const [content, setContent] = useState<string>('');  
     const [title, setTitle] = useState<string>('');
-    const nickName = localStorage.getItem("nickname") as string;
+    const nickname = localStorage.getItem("nickname") as string;
     const toDay = new Date();
 
     const sendEmail = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
         if (form.current) {
             const templateParams = {
                 title : title,
                 message: content,
-                from_name : nickName,
+                from_name :nickname,
                 date : toDay
             };
 
@@ -52,37 +59,73 @@ const SubmitInquiry = () => {
 
   return(
       <>   
-        <form  ref={form} onSubmit={sendEmail}>
-            <InquiryContainer>
-                <TitleWrapper>
-                    <InputTitle
-                        name="title"
-                        type="text"
-                        placeholder="문의사항"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                    />
-                </TitleWrapper>
-                <ReactQuillWrapper>
-                    <ReactQuill
-                        value={content}
-                        onChange={setContent}
-                        modules={modules}
-                        theme="snow"
-                        style={{ height: '400px'}}
-                    />
-                </ReactQuillWrapper>
-            </InquiryContainer>
-            <SumbitWrapper>
-            <button type="submit" style={submitButtonStyle} onClick={() => {postContactApi({title, nickName, content})}}>
-              작성
-            </button>
-            </SumbitWrapper>
-        </form>
+        <GlobalBar/>
+        <Modal
+        isOpen = {isopen}
+        onRequestClose={() => setIsopen(false)}
+        style={{
+            content: {
+                width: '50%',
+                height: '70%',
+                margin: 'auto',
+                padding: '20px',
+                background: 'white',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              },
+            overlay: {
+                backgroundColor: 'rgba(0, 0, 0, 0.30)',
+            },
+        }}
+        >
+            <form  ref={form} onSubmit={sendEmail}>
+                <InquiryContainer>    
+                    <LogoTitleWrapper>
+                    <img src = {logo} style = {{height : '50px', width : '50px', display : 'flex', justifyContent : 'center', marginRight : '35%'}}/>
+                    <SectionTitle>1:1 문의</SectionTitle><br/>
+                    </LogoTitleWrapper>
+                    
+                    <TitleWrapper>
+                        <InputTitle
+                            name="title"
+                            type="text"
+                            placeholder="문의사항"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                        />
+                    </TitleWrapper>
+                    <ReactQuillWrapper>
+                        <ReactQuill
+                            value={content}
+                            onChange={setContent}
+                            modules={modules}
+                            theme="snow"
+                            style={{ height: '400px'}}
+                        />
+                    </ReactQuillWrapper>
+                </InquiryContainer>
+                <SumbitWrapper>
+                <button type="submit" style={submitButtonStyle} onClick={() => {postContactApi({title,nickname, content})}}>
+                    작성
+                </button>
+                </SumbitWrapper>
+            </form>
+        </Modal>
     </>
   );
 };
 
+const LogoTitleWrapper = styled.div`
+  display: flex; 
+  align-items: center;    
+`;
+
+const SectionTitle = styled.h2`
+  font-size: 24px;
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+`;
 
 const InquiryContainer = styled.div`
     width: 100%;
