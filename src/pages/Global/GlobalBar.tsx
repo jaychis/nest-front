@@ -266,7 +266,7 @@ const GlobalBar = () => {
                 onMouseLeave = {() => {setInquiryHover(false)}}
             >
               <button 
-                onClick = {() => {navigate('/submit/inquiry')}}
+                onClick = {() => {navigate('/users/inquiry')}}
                 style={{
                   display: "flex",
                   alignItems: "center",
