@@ -166,10 +166,12 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
       });
     }
   };
-  const KAKAO_CLIENT_ID = '026c54fa1a5db9470f3de31c6951c6df';
-  const REDIRECT_URI = 'http://127.0.0.1:9898/users/kakao/callback';
-  // const KAKAO_CLIENT_ID = process.env.KAKAO_TEST_CLIENT_ID;
-  // const REDIRECT_URI = process.env.KAKAO_TEST_REDIRECT_URI;
+  const KAKAO_CLIENT_ID = process.env.REACT_APP_NODE_ENV == 'production'
+    ? process.env.REACT_APP_KAKAO_CLIENT_ID
+    : process.env.REACT_APP_KAKAO_TEST_CLIENT_ID;
+  const REDIRECT_URI = process.env.REACT_APP_NODE_ENV == 'production'
+    ? process.env.REACT_APP_KAKAO_REDIRECT_URL
+    : process.env.REACT_APP_KAKAO_TEST_REDIRECT_URL;
 
   const kakaoOauthLogin = () => {
     const popup = window.open(
