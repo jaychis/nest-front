@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import React from "react";
-import debounce from "lodash.debounce";
 
 
 interface InquiryProps{
@@ -25,34 +24,47 @@ const InquiryList = ({
 }:InquiryProps) => {
 
     let navigate = useNavigate()
-    const parentRef = React.useRef<HTMLDivElement>(null)
-    const childRef = React.useRef<HTMLDivElement>(null)
+    const contentWrapperRef = React.useRef<HTMLDivElement>(null);
+    const contentRef = React.useRef<HTMLDivElement>(null);
+    const CommentWrapperRef = React.useRef<HTMLDivElement>(null);
+    const CommentRef = React.useRef<HTMLDivElement>(null);
     const [isCollapse, setIsCollapse] = React.useState(false);
     const [textContent, setTextContent] = useState('');
+    const [comment, setComment] = useState<string>('Hello World');
 
     useEffect(() => {
         const pTagSlice = () => {
             if (content.startsWith('<p>') && content.endsWith('</p>')) {
                 setTextContent(content.slice(3, -4));
             }
-    };pTagSlice()
+    };
+    pTagSlice();
     },[])
-    
+
+    const commentChange = (e: any) => {
+        setComment(e.target.value)
+    }
 
     const handleButtonClick = React.useCallback((event:any) => {
         event.stopPropagation();
-        if (parentRef.current === null || childRef.current === null) {
+        if (contentWrapperRef.current === null || contentRef.current === null || CommentWrapperRef.current === null || CommentRef.current === null) {
           return;
         }
-        if (parentRef.current.clientHeight > 0) {
-          parentRef.current.style.height = "0";
-          parentRef.current.style.margin = '0';
+        if (contentWrapperRef.current.clientHeight > 0) {
+          contentWrapperRef.current.style.height = "0";
+          contentWrapperRef.current.style.margin = '0';
+          CommentWrapperRef.current.style.height = "0";
+          CommentWrapperRef.current.style.margin = "0";
         } else {
-          parentRef.current.style.height = `${childRef.current.clientHeight}px`;
-          parentRef.current.style.margin = '20px';
+          contentWrapperRef.current.style.height = `${contentRef.current.clientHeight}px`;
+          contentWrapperRef.current.style.margin = '20px';
+          CommentWrapperRef.current.style.height = `${CommentRef.current.clientHeight + 30}px`;
+          CommentWrapperRef.current.style.margin = `20px`;
         }
         setIsCollapse(!isCollapse);
       }, [isCollapse]);
+     
+      console.log(`${title} ${comment} ${nickname}`)
 
     return(
     <>
@@ -62,10 +74,68 @@ const InquiryList = ({
             </TitleButton>
             <ArrowImage src="https://img.icons8.com/ios/50/expand-arrow--v1.png" />
         </InquiryListContainer>
-        <ContetntWrapper ref = {parentRef}>
-                <Content ref = {childRef}>{textContent}</Content>
-        </ContetntWrapper>
-        <hr style = {{border : '1px solid #f0f0f0', width : '100%', marginTop : '16px'}}/>
+        <ContentWrapper ref = {contentWrapperRef}>
+            <Content ref={contentRef}>{textContent}</Content>
+        </ContentWrapper>
+        <hr style = {{border : '1px solid #f0f0f0', width : '95%',}}/>
+        <CommentWrapper ref = {CommentWrapperRef}>
+            {comment && nickname === 'admin' ? <Comment ref={CommentRef}>댓글</Comment> : 
+            <Comment ref={CommentRef}><div style={{
+            display: "flex",
+            flexDirection: "column",
+            width: "95%",
+            margin: "10px",
+            border: "3px solid #ccc",
+            borderRadius: "30px",
+            padding: "10px",
+            marginLeft : '-0.5%',
+            
+        }}>
+            <textarea 
+            style={{
+            width: "100%",
+            border: "none",
+            borderRadius: "14px",
+            resize: "vertical",
+            boxSizing: "border-box",
+            outline: "none",
+            }} 
+            value = {comment}
+            onChange={commentChange}
+            name={"content"} ></textarea>
+            <div style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            marginTop: "10px",
+            }}>
+            <button style={{
+                padding: "6px 12px",
+                marginLeft: "5px",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+                fontSize: "14px",
+                backgroundColor: "#f5f5f5",
+                color: "#333",
+            }}>
+                Cancel
+            </button>
+            <button
+            style={{
+            padding: "6px 12px",
+            marginLeft: "5px",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+            fontSize: "14px",
+            backgroundColor: "#84d7fb",
+            color: "white",
+            }} >
+                Comment
+            </button>
+            </div>
+        </div></Comment>}
+        </CommentWrapper>
     </>
     )
 }
@@ -78,7 +148,7 @@ const InquiryListContainer = styled.div `
     max-width: 1000px;
     min-height: 50px;
     margin-top : 10px;
-    margin-bottom : 10px
+    
     border-radius: 10px;
     cursor: pointer;
     background: white;
@@ -105,16 +175,28 @@ const ArrowImage = styled.img`
     margin-bottom : auto;
 `
 
-const ContetntWrapper = styled.div`
+const ContentWrapper = styled.div`
     height : 0;
     width : 100%;
     overflow : hidden;
     transition: height 0.35s ease, margin 0.35s ease;
     margin-top : 0;
-    
 `
 
 const Content = styled.div`
-    margin-left : 15px;
+    margin-left : 35px;
+    font-weight : 100;
+`
+
+const CommentWrapper = styled.div`
+    height : 0;
+    width : 100%;
+    overflow : hidden;
+    transition: height 0.35s ease, margin 0.35s ease;
+    margin-top : 0;
+`
+
+const Comment = styled.div`
+    margin-left : 35px;
     font-weight : 100;
 `

@@ -193,7 +193,7 @@ const BoardRead = () => {
         border: "3px solid #ccc",
         borderRadius: "30px",
         padding: "10px",
-        marginLeft : '-0.5%'
+        marginLeft : '-0.5%',
       }}>
         <textarea style={{
           width: "100%",
@@ -202,12 +202,7 @@ const BoardRead = () => {
           resize: "vertical",
           boxSizing: "border-box",
           outline: "none",
-        }} name={"content"} value={writeComment.content} onChange={(value) =>
-          commentHandleChange({
-            name: value.target.name,
-            value: value.target.value,
-          })
-        }></textarea>
+        }} name={"content"} ></textarea>
         <div style={{
           display: "flex",
           justifyContent: "flex-end",
@@ -234,7 +229,7 @@ const BoardRead = () => {
             fontSize: "14px",
             backgroundColor: "#84d7fb",
             color: "white",
-          }} onClick={commentWrite}>
+          }} >
             Comment
           </button>
         </div>

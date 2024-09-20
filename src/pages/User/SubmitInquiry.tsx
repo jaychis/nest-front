@@ -38,6 +38,8 @@ const SubmitInquiry: React.FC<SubmitModalProps> = ({isopen, setIsopen,}) => {
             () => {
                 console.log('SUCCESS!');
                 setContent('');
+                setIsopen(false);
+                alert('등록되었습니다.')
             },
             (error) => {
                 console.log('FAILED...', error.text);
