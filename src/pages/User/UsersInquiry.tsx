@@ -59,8 +59,8 @@ const UsersInquiry = () => {
   const nickname:string = localStorage.getItem('nickname') as string;
   const [isopen, setIsopen] = useState<boolean>(false);
   const userId:string = localStorage.getItem('id') as string;
-  const [count, setCount] = useState<number>(0);
   const [comment, setComment] = useState<string | null>();
+  const [count, setCount] = useState<number>(0);
 
   const checkComment = (number:number):number => {
     setComment('Hello World');
@@ -75,19 +75,24 @@ const UsersInquiry = () => {
     console.log(status)
   })*/
 
-  
-  
+  const getAllList = () => {
+    return getContactAllListAPi({take :TAKE, page : 1, nickname : nickname})
+    .then((res) => {
+      const status = res?.data.response.current_list
+      setList(status)
+      console.log(status)
+    })
+    .catch((error) => {
+      console.error(error)
+      setCount((prev) => prev + 1)
+    })
+  }
+
   useEffect(() => {
-    const getAllList = getContactAllListAPi({take :TAKE, page : 1, nickname : nickname})
-  .then((res) => {
-    const status = res?.data.response.current_list
-    setList(status)
-    console.log(status)
-  });
+    if(count < 10) getAllList()
   },[count])
 
   if(!list){
-    setCount(count +1)
     return(
     <div>로딩중..</div>)
   }
