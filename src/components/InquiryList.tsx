@@ -80,7 +80,8 @@ const InquiryList = ({
         <hr style = {{border : '1px solid #f0f0f0', width : '95%',}}/>
         <CommentWrapper ref = {CommentWrapperRef}>
             {comment && nickname === 'admin' ? <Comment ref={CommentRef}>댓글</Comment> : 
-            <Comment ref={CommentRef}><div style={{
+            <Comment ref = {CommentRef}>hi</Comment>
+            /*<Comment ref={CommentRef}><div style={{
             display: "flex",
             flexDirection: "column",
             width: "95%",
@@ -134,7 +135,7 @@ const InquiryList = ({
                 Comment
             </button>
             </div>
-        </div></Comment>}
+        </div></Comment>*/}
         </CommentWrapper>
     </>
     )
