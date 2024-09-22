@@ -91,26 +91,13 @@ export const ShareModal : React.FC<ShaerModalProps> = ({isModal, setIsModal,cont
 
     return(
         <>
-            <Modal
-            isOpen = {isModal}
-            onRequestClose={() => setIsModal(false)}
-            style={{
-                content: {
-                    width: '40%',
-                    height: '35%',
-                    margin: 'auto',
-                    padding: '20px',
-                    background: 'white',
-                    borderRadius: '10px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                },
-                overlay: {
-                    backgroundColor: 'rgba(0, 0, 0, 0.30)',
-                },
-            }}
-            >
+              <Modal
+              isOpen={isModal}
+              onRequestClose={() => setIsModal(false)}
+              overlayClassName="_"
+              contentElement={(props, children) => <ModalContent {...props}>{children}</ModalContent>}
+              overlayElement={(props, contentElement) => <ModalOverlay {...props}>{contentElement}</ModalOverlay>}
+              >
                 <ModalStyle>
                     <ShareIcon onClick = {() => {handleCopyClipBoard(domain)}} src="https://img.icons8.com/glyph-neue/64/link.png"/>
                     <ShareIcon onClick = {() => {handleShareKakao()}} src = 'https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_medium.png'/>
@@ -138,5 +125,23 @@ const ShareIcon = styled.img`
   border-radius : 45% !important;
 `
 
-const ShareIconWrapper = styled.div`
-`
+const ModalContent = styled.div`
+  width: 40%;
+  height: 35%;
+  margin: auto;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ModalOverlay = styled.div`
+  background-color: rgba(0, 0, 0, 0.30);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+`;
