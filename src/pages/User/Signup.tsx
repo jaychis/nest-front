@@ -7,7 +7,10 @@ import {
   SignupParams,
 } from "../api/UserApi";
 import { CollectionTypes } from "../../_common/CollectionTypes";
-import { isValidPasswordFormat, isValidPhoneNumber } from "../../_common/PasswordRegex";
+import {
+  isValidPasswordFormat,
+  isValidPhoneNumber,
+} from "../../_common/PasswordRegex";
 import { FaGoogle, FaApple, FaComment } from "react-icons/fa";
 import { SiNaver } from "react-icons/si";
 import vLogo from "../../assets/img/v-check.png";
@@ -28,7 +31,6 @@ interface ValidSignupType {
 }
 
 const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
-
   const [signup, setSignup] = useState<SignupParams>({
     email: "",
     nickname: "",
@@ -106,12 +108,15 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
   }, [signup.phone]);
 
   useEffect(() => {
-    if (signup.password.length > 7 && (signup.password === signup.confirmPassword)) {
-      setValidPassword(true)
+    if (
+      signup.password.length > 7 &&
+      signup.password === signup.confirmPassword
+    ) {
+      setValidPassword(true);
     } else {
-      setValidPassword(false)
+      setValidPassword(false);
     }
-  }, [signup.confirmPassword, signup.password])
+  }, [signup.confirmPassword, signup.password]);
 
   const handleChange = (event: CollectionTypes) => {
     const { name, value } = event;
@@ -125,9 +130,18 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
   const handleSubmit: MouseEventHandler<HTMLButtonElement> = (event) => {
     if (event) event.preventDefault();
 
-    if (!signup.email || !signup.nickname || !signup.password || !signup.confirmPassword || !signup.phone) { return alert('모든 정보를 입력해주세요') }
+    if (
+      !signup.email ||
+      !signup.nickname ||
+      !signup.password ||
+      !signup.confirmPassword ||
+      !signup.phone
+    ) {
+      return alert("모든 정보를 입력해주세요");
+    }
 
-    if (!isValidPhoneNumber(signup.phone)) return alert('핸드폰 번호를 확인 해주세요')
+    if (!isValidPhoneNumber(signup.phone))
+      return alert("핸드폰 번호를 확인 해주세요");
 
     const isPasswordValid: boolean = isValidPasswordFormat(signup.password);
     const isConfirmPasswordValid: boolean = isValidPasswordFormat(
@@ -145,29 +159,33 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
           }
         })
         .catch((err): void => console.error(err));
-    }
-    else {
+    } else {
       alert(
         "비밀번호는 최소 8자, 하나 이상의 문자, 하나의 숫자 및 하나의 특수문자입니다.",
       );
     }
   };
-  const KAKAO_CLIENT_ID = process.env.REACT_APP_NODE_ENV == 'production'
-    ? process.env.REACT_APP_KAKAO_CLIENT_ID
-    : process.env.REACT_APP_KAKAO_TEST_CLIENT_ID;
-  const REDIRECT_URI = process.env.REACT_APP_NODE_ENV == 'production'
-    ? process.env.REACT_APP_KAKAO_REDIRECT_URL
-    : process.env.REACT_APP_KAKAO_TEST_REDIRECT_URL;
-
+  const KAKAO_CLIENT_ID =
+    process.env.REACT_APP_NODE_ENV === "production"
+      ? process.env.REACT_APP_KAKAO_CLIENT_ID
+      : process.env.REACT_APP_NODE_ENV === "stage"
+        ? process.env.REACT_APP_KAKAO_STAGE_REDIRECT_URL
+        : process.env.REACT_APP_KAKAO_TEST_CLIENT_ID;
+  const REDIRECT_URI =
+    process.env.REACT_APP_NODE_ENV === "production"
+      ? process.env.REACT_APP_KAKAO_CLIENT_ID
+      : process.env.REACT_APP_NODE_ENV === "stage"
+        ? process.env.REACT_APP_KAKAO_STAGE_REDIRECT_URL
+        : process.env.REACT_APP_KAKAO_TEST_CLIENT_ID;
   const kakaoOauthSignUp = () => {
     const popup = window.open(
       `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=account_email`,
-      'PopupWin',
-      'width=500,height=600',
+      "PopupWin",
+      "width=500,height=600",
     );
     // 이벤트 리스너를 통해 팝업에서 인증 후 리디렉트된 URL의 코드를 받아 처리
     window.addEventListener(
-      'message',
+      "message",
       async (event) => {
         try {
           const { user } = event.data; // 카카오로부터 받은 사용자 정보
@@ -186,8 +204,13 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
           // 팝업이 열려 있으면 닫기
           if (popup) popup.close();
         } catch (error) {
-          console.error("카카오로부터 사용자 정보를 받아오는 데 실패했습니다.", error);
-          alert("카카오로부터 사용자 정보를 받아오는 데 실패했습니다. 다시 시도해주세요.");
+          console.error(
+            "카카오로부터 사용자 정보를 받아오는 데 실패했습니다.",
+            error,
+          );
+          alert(
+            "카카오로부터 사용자 정보를 받아오는 데 실패했습니다. 다시 시도해주세요.",
+          );
         }
       },
       { once: true }, // 한 번만 실행되도록 설정
@@ -210,7 +233,11 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
       }}
     >
       {showAlert && (
-        <Alert message="회원가입이 완료되었습니다." onClose={() => setShowAlert(false)} type="success" />
+        <Alert
+          message="회원가입이 완료되었습니다."
+          onClose={() => setShowAlert(false)}
+          type="success"
+        />
       )}
       <div style={{ textAlign: "center", marginBottom: "20px" }}>
         <h2>회원가입</h2>
@@ -238,10 +265,7 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
           <SiNaver style={styles.socialLogo} />
           네이버로 가입
         </button>
-        <button
-          style={styles.socialButton}
-          onClick={() => kakaoOauthSignUp()}
-        >
+        <button style={styles.socialButton} onClick={() => kakaoOauthSignUp()}>
           <FaComment style={styles.socialLogo} />
           카카오로 가입
         </button>
@@ -335,7 +359,8 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
             }
             required
           />
-          {validSignup.nickname === null ? null : validSignup.nickname === true ? (
+          {validSignup.nickname === null ? null : validSignup.nickname ===
+            true ? (
             <img
               src={vLogo}
               alt={"v logo"}
@@ -369,7 +394,8 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
             position: "relative",
             width: "100%",
             marginBottom: "10px",
-          }}>
+          }}
+        >
           <input
             style={styles.input}
             placeholder="비밀번호 *"
@@ -392,7 +418,8 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
             position: "relative",
             width: "100%",
             marginBottom: "10px",
-          }}>
+          }}
+        >
           <input
             style={styles.input}
             placeholder="비밀번호 확인 *"
@@ -407,18 +434,21 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
               })
             }
             required
-          />{validPassword ? <img
-            src={vLogo}
-            alt={"v logo"}
-            style={{
-              width: "20px",
-              height: "20px",
-              position: "absolute",
-              right: "10px",
-              top: "50%",
-              transform: "translateY(-50%)",
-            }}
-          /> : null}
+          />
+          {validPassword ? (
+            <img
+              src={vLogo}
+              alt={"v logo"}
+              style={{
+                width: "20px",
+                height: "20px",
+                position: "absolute",
+                right: "10px",
+                top: "50%",
+                transform: "translateY(-50%)",
+              }}
+            />
+          ) : null}
         </div>
 
         <div
@@ -473,7 +503,9 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
         </div>
       </form>
 
-      <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+      <div
+        style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}
+      >
         <button
           type="submit"
           style={styles.submitButton}
