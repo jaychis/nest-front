@@ -21,7 +21,7 @@ import { ShareModal } from "./ShareModal";
 import {  UserModalState, setModalState } from "../reducers/modalStateSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../store/store";
-
+import styled from "styled-components";
 
 const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
   try {
@@ -183,82 +183,28 @@ const Card = ({
 
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-start",
-          alignItems: "flex-start",
-          width: "100%", // 수정된 부분
-          maxWidth: "1000px", // 수정된 부분
-          minHeight: "200px",
-          margin: "10px",
-          borderRadius: "10px",
-          cursor: "pointer",
-          backgroundColor: isCardHovered ? "#f0f0f0" : "white",
-        }}
+      <CardContainer
         onMouseEnter={() => setIsCardHovered(true)}
         onMouseLeave={() => setIsCardHovered(false)}
         onClick={boardClickTracking}
+        isHovered = {isCardHovered}
       >
         {/* Card Image */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            width: "100%",
-            padding: "10px",
-          }}
-        >
-          <img
-            src={logo}
-            style={{
-              width: "50px",
-              height: "50px",
-              objectFit: "cover",
-              marginRight: "10px", // 이미지와 닉네임 사이의 간격
-              borderRadius: "30px",
-            }}
-          />
-          <div
-            style={{ fontSize: "15px" }}
-            onClick={() => navigate(`/users/inquiry?nickname=${nickname}`)}
-          >
+        <ImageWrapper>
+          <LogoImg src = {logo}/>
+          <NicknameWrapper onClick={() => navigate(`/users/inquiry?nickname=${nickname}`)}>
             {nickname}
-          </div>
-        </div>
+          </NicknameWrapper>
+        </ImageWrapper>
         
         {/* Card Content */}
-        <div
-          style={{
-            width: "100%",
-            overflow: "visible",
-          }}
-        >
-          <h3
-            style={{
-              fontWeight: "bold",
-              textAlign: "left",
-              whiteSpace: "normal",
-              fontSize: "30px",
-            }}
-            onClick={goBoardRead}
-          >
+        <ContentContainer>
+          <BoardTitle onClick={goBoardRead}>
             {title}
-          </h3>
+          </BoardTitle>
 
           {type === "TEXT" ? (
-            <div
-              style={{
-                textAlign: "left",
-                whiteSpace: "normal",
-                wordBreak: "break-word",
-                width: "100%",
-                fontSize: "20px",
-              }}
-            >
-              <div>
+            <TextContainer>
                 {content?.map((co, index) => {
                   // console.log("card content : ", co);
                   return (
@@ -268,38 +214,19 @@ const Card = ({
                     />
                   );
                 })}
-              </div>
-            </div>
+            </TextContainer>
           ) : type === "MEDIA" ? (
-            
-              <div style = {{zIndex : 1001}}>
+              <MediaContainer>
               {content.map((image, index) => (
                 <div key={index}>
-                  <img
-                    src={image}
-                    alt={`Preview image ${index}`}
-                    style={{
-                      height: "400px",
-                      width: "100%",
-                      borderRadius: "20px",
-                    }} // 수정된 부분
-                  />
-              </div>
+                  <ImagePreview src={image}alt={`Preview image ${index}`}/>
+                </div>
               ))}
-              </div>
-            
+              </MediaContainer>
           ) : (
             <>
               {content.map((video: string, index: number) => (
-                <div
-                  key={index}
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    borderRadius: "20px", // 추가된 부분
-                    overflow: "hidden", // 추가된 부분
-                  }}
-                >
+                <VideoContainer key={index}>
                   {video && (
                     <YouTube
                       videoId={getYouTubeVideoId({ url: video })}
@@ -311,132 +238,64 @@ const Card = ({
                       style={{ borderRadius: "20px" }} // 추가된 부분
                     />
                   )}
-                </div>
+                </VideoContainer>
               ))}
             </>
           )}
-        </div>
-      </div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-start",
-          alignItems: "flex-start",
-          width: "100%", // 수정된 부분
-          maxWidth: "800px", // 수정된 부분
-        }}
-      >
-        <div
-          style={{
-            marginRight: "5px",
-            borderRadius: "30px",
-            width: "150px",
-            height: "50px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <button
-            onMouseEnter={() => setIsCardUpHovered(true)}
-            onMouseLeave={() => setIsCardUpHovered(false)}
-            style={{
-              border : isReaction === 'LIKE' ? '2px solid blue' : '1px solid gray',
-              background : isCardUpHovered ? '#f0f0f0' : 'white',
-              // border: "none",
-              width: "100%",
-              height: "100%",
-              borderRadius: "30px",
-            }}
-            onClick={() => reactionButton("LIKE")}
+        </ContentContainer>
+      </CardContainer>
+      <ButtonContainer>
+        <ReactionWrapper>
+          <LikeButton
+          isLiked={isReaction === 'LIKE'}
+          isHovered={isCardUpHovered}
+          onMouseEnter={() => setIsCardUpHovered(true)}
+          onMouseLeave={() => setIsCardUpHovered(false)}
+          onClick={() => reactionButton("LIKE")}
           >
             좋아요
-          </button>
-          <span style={{ margin: "10px", width: "10px", height: "10px" }}>
+          </LikeButton>
+          <ReactionCount>
             {isCardCount}
-          </span>
-          <button
-            onMouseEnter={() => setIsCardDownHovered(true)}
-            onMouseLeave={() => setIsCardDownHovered(false)}
-            style={{
-              border : isReaction === 'DISLIKE' ? '1px solid red' : '1px solid gray',
-              background : isCardDownHovered ? '#f0f0f0' : 'white',
-              // border: "none",
-              width: "100%",
-              height: "100%",
-              borderRadius: "30px",
-            }}
-            onClick={() => reactionButton("DISLIKE")}
+          </ReactionCount>
+          <DisLikeButton
+          isDisliked={isReaction === 'DISLIKE'}
+          isHovered={isCardDownHovered}
+          onMouseEnter={() => setIsCardDownHovered(true)}
+          onMouseLeave={() => setIsCardDownHovered(false)}
+          onClick={() => reactionButton("DISLIKE")}
           >
             싫어요
-          </button>
-        </div>
-        <div
-          style={{
-            borderRadius: "30px",
-            width: "75px",
-            height: "50px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <button
-            onMouseEnter={() => setIsCardCommentHovered(true)}
-            onMouseLeave={() => setIsCardCommentHovered(false)}
-            style={{
-              border : '1px solid gray',
-              background : isCardCommentHovered ? '#f0f0f0' : 'white',
-              height: "100%",
-              width: "100%",
-              borderRadius: "30px",
-            }}
-            onClick={goBoardRead}
+          </DisLikeButton>
+        </ReactionWrapper>
+        <CommentWrapper>
+          <CommentButton
+          isHovered={isCardCommentHovered}
+          onMouseEnter={() => setIsCardCommentHovered(true)}
+          onMouseLeave={() => setIsCardCommentHovered(false)}
+          onClick={goBoardRead}
           >
             댓글
-          </button>
-        </div>
-        <div
-          style={{
-            borderRadius: "30px",
-            width: "15%",
-            height: "50px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-            <button 
-            onMouseEnter={() => setIsCardShareHovered(true)}
-            onMouseLeave={() => setIsCardShareHovered(false)}
-            onClick={() => { setIsModal(true); openModal()}}
-            style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center', 
-              gap: '8px', 
-              background : isCardShareHovered ? '#f0f0f0' : 'white',
-              border: '1px solid gray',
-              height: '100%',
-              width: '80%',
-              borderRadius: '30px',
-              marginLeft : '-7px',
-            }}>
-            <img 
-              src="https://img.icons8.com/ios/50/forward-arrow.png" 
-              alt="Share Icon" 
-              style={{ height: '35px', width: '25px' }}
-            />
-            <p style = {{display : 'flex', fontSize : '20px', marginBottom : '15px',fontWeight : '700' }}>0</p>
-            </button>
-          
-      <ShareModal 
-        isModal = {isModal}
-        setIsModal = {setIsModal}
-        content = {shareContent}
-        title = {title}
-      />
-        </div>
+          </CommentButton>
+        </CommentWrapper>
+        <ShareWrapper>
+          <ShareButton
+          isHovered={isCardShareHovered}
+          onMouseEnter={() => setIsCardShareHovered(true)}
+          onMouseLeave={() => setIsCardShareHovered(false)}
+          onClick={() => {setIsModal(true);openModal();}}
+          >
+          <ShareImage src="https://img.icons8.com/ios/50/forward-arrow.png" alt="Share Icon" />
+          <ShareCount>0</ShareCount>
+          </ShareButton>
+          <ShareModal 
+          isModal = {isModal}
+          setIsModal = {setIsModal}
+          content = {shareContent}
+          title = {title}
+          />
+        </ShareWrapper>
+        {/* 추후 삭제될 수 있는 기능이라 변환 x*/}
         <div
           style={{
             marginLeft : '-7px',
@@ -483,19 +342,186 @@ const Card = ({
         {/*    {viewCount}회*/}
         {/*  </span>*/}
         {/*</div>*/}
-      </div>
-      <hr
-        style={{
-          border: "none",
-          height: "2px",
-          backgroundColor: "#f0f0f0",
-          margin: "16px 0",
-          width: "100%",
-          maxWidth: "900px"
-        }}
-      />
+      </ButtonContainer>
+      <Hr/>
     </>
   );
 };
+
+const CardContainer = styled.div<{ isHovered: boolean }>`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 1000px;
+  min-height: 200px;
+  margin: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  background-color: ${(props) => (props.isHovered ? "#f0f0f0" : "white")};
+`;
+
+const ImageWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+`;
+
+const LogoImg = styled.img`
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  margin-right: 10px; // 이미지와 닉네임 사이의 간격
+  border-radius: 30px;
+`;
+
+const NicknameWrapper = styled.div`
+  font-size: 15px;
+`;
+
+const ContentContainer = styled.div`
+  width: 100%;
+  overflow: visible;
+`;
+
+const BoardTitle = styled.h3`
+  font-weight: bold;
+  text-align: left;
+  white-space: normal;
+  font-size: 30px;
+`;
+
+const TextContainer = styled.div`
+  text-align: left;
+  white-space: normal;
+  word-break: break-word;
+  width: 100%;
+  font-size: 20px;
+`;
+
+const ImagePreview = styled.img`
+  height: 400px;
+  width: 100%;
+  border-radius: 20px;
+`;
+
+const MediaContainer = styled.div`
+  z-index: 1001;
+  width: 85%;
+`;
+
+const VideoContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  border-radius: 20px; // 추가된 부분
+  overflow: hidden; // 추가된 부분
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 800px;
+`;
+
+const ReactionWrapper = styled.div`
+  margin-right: 5px;
+  border-radius: 30px;
+  width: 150px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const LikeButton = styled.button<{isLiked: boolean, isHovered:boolean}>`
+  border: ${(props) => (props.isLiked ? '2px solid blue' : '1px solid gray')};
+  background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
+  width: 100%;
+  height: 100%;
+  border-radius: 30px;
+  cursor: pointer;
+`;
+
+const ReactionCount = styled.span`
+  margin: 10px;
+  width: 10px;
+  height: 10px;
+`;
+
+const DisLikeButton = styled.button<{isDisliked: boolean, isHovered:boolean}>`
+  border: ${(props) => (props.isDisliked ? '1px solid red' : '1px solid gray')};
+  background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
+  width: 100%;
+  height: 100%;
+  border-radius: 30px;
+  cursor: pointer;
+`;
+
+const CommentWrapper = styled.div`
+  border-radius: 30px;
+  width: 75px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const CommentButton = styled.button<{isHovered: boolean}>`
+  border: 1px solid gray;
+  background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
+  height: 100%;
+  width: 100%;
+  border-radius: 30px;
+  cursor: pointer;
+`;
+
+const ShareWrapper = styled.div`
+  border-radius: 30px;
+  width: 15%;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ShareButton = styled.button<{isHovered: boolean}>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
+  border: 1px solid gray;
+  height: 100%;
+  width: 80%;
+  border-radius: 30px;
+  margin-left: -7px;
+  cursor: pointer;
+`;
+
+const ShareImage = styled.img`
+  height: 35px;
+  width: 25px;
+`;
+
+const ShareCount = styled.span`
+  display: flex;
+  font-size: 20px;
+  margin-bottom: 15px;
+  font-weight: 700;
+`;
+
+const Hr = styled.hr`
+  border: none;
+  height: 2px;
+  background-color: #f0f0f0;
+  margin: 16px 0;
+  width: 100%;
+  max-width: 900px;
+`;
 
 export default Card;

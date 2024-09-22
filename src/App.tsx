@@ -87,20 +87,11 @@ function App() {
               }
             />
             {/* 문의하기 게시판*/}
-            <Route
-              path = "/submit/inquiry"
-              element = {
-              <Layout>
-                <SubmitInquiry/>
-              </Layout>}
-            />
-
+            
             <Route
               path="/users/inquiry"
               element={
-                <Layout>
                   <UsersInquiry />
-                </Layout>
               }
             />
             {/* 커뮤니티 만들기*/}

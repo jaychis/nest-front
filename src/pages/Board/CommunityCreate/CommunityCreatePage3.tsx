@@ -1,27 +1,29 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useCommunity } from "../../../contexts/CommunityContext";
-import { TagListAPI } from "../../api/TagApi";
-import { CommunitySubmitAPI } from "../../api/CommunityApi";
-
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useCommunity } from '../../../contexts/CommunityContext';
+import { TagListAPI } from '../../api/TagApi';
+import styled from 'styled-components';
+import Button from '../../../components/Buttons/Button';
+import MultiStepNav from '../../../components/Buttons/MultiStepNav';
+import DeleteButton from '../../../components/Buttons/DeleteButton';
 
 const CommunityCreatePage3: React.FC = () => {
   const navigate = useNavigate();
-  const { communityName, description, banner, icon, topics, setTopics } = useCommunity();
-  const [searchTerm, setSearchTerm] = useState("");
+  const { topics, setTopics } = useCommunity();
+  const [searchTerm, setSearchTerm] = useState('');
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
   const handleAddTopic = (topic: string) => {
-    const formattedTopic = topic.startsWith("#") ? topic : `#${topic}`;
+    const formattedTopic = topic.startsWith('#') ? topic : `#${topic}`;
     if (topics.length < 3 && !topics.includes(formattedTopic)) {
       setTopics([...topics, formattedTopic]);
-      setSearchTerm("");
+      setSearchTerm('');
     }
   };
 
   useEffect(() => {
-    console.log("topics : ", topics);
-    console.log("searchTerm : ", searchTerm);
+    console.log('topics : ', topics);
+    console.log('searchTerm : ', searchTerm);
   }, [topics, searchTerm]);
 
   const handleRemoveTopic = (index: number) => {
@@ -42,217 +44,174 @@ const CommunityCreatePage3: React.FC = () => {
             readonly id: string;
             readonly name: string;
           }
-          console.log("TagListAPI response:", res.data);
+          console.log('TagListAPI response:', res.data);
           const response: TagListReturnType[] = res.data.response;
 
           const tagNameList: string[] = response.map(
             (el: TagListReturnType) => el.name
           );
-          console.log("tagNameList:", tagNameList);
+          console.log('tagNameList:', tagNameList);
 
           const filteredTopics = tagNameList.filter((topic: string) =>
             topic.toLowerCase().includes(searchTerm.toLowerCase())
           );
           setSuggestions(filteredTopics);
         })
-        .catch((err) => console.log("TagListAPI error:", err));
+        .catch((err) => console.log('TagListAPI error:', err));
     } else {
       setSuggestions([]);
     }
   }, [searchTerm]);
 
   return (
-    <div style={styles.container}>
-      <h2 style={styles.heading}>토픽 추가</h2>
-      <form onSubmit={(e) => e.preventDefault()} style={styles.form}>
-        <div style={styles.formGroup}>
-          <label htmlFor="topicSearch" style={styles.label}>
-            토픽 검색
-          </label>
-          <input
-            type="text"
-            id="topicSearch"
+    <Container>
+      <Heading>토픽 추가</Heading>
+      <Form onSubmit={(e) => e.preventDefault()}>
+        <div style={{ marginBottom: '20px' }}>
+          <Label htmlFor='topicSearch'>토픽 검색</Label>
+          <TopicSearchInput
+            type='text'
+            id='topicSearch'
             value={searchTerm}
             onChange={handleSearchChange}
-            style={styles.input}
           />
           {suggestions.length > 0 && (
-            <ul style={styles.suggestionsList}>
+            <Suggestions>
               {suggestions.map((suggestion, index) => (
-                <li
+                <Suggestion
                   key={index}
                   onClick={() => handleAddTopic(suggestion)}
-                  style={styles.suggestionItem}
                 >
                   {suggestion}
-                </li>
+                </Suggestion>
               ))}
-            </ul>
+            </Suggestions>
           )}
           {searchTerm && suggestions.length === 0 && (
-            <div style={styles.noSuggestions}>
-              <p>등록된 토픽이 없습니다. "{searchTerm}"로 새 토픽을 추가할 수 있습니다.</p>
-              <button onClick={() => handleAddTopic(searchTerm)} style={styles.addButton}>
+            <NoSuggestionWrapper>
+              <p>
+                등록된 토픽이 없습니다. "{searchTerm}"로 새 토픽을 추가할 수
+                있습니다.
+              </p>
+              <AddButton onClick={() => handleAddTopic(searchTerm)}>
                 "{searchTerm}" 추가
-              </button>
-            </div>
+              </AddButton>
+            </NoSuggestionWrapper>
           )}
         </div>
-        <div style={styles.selectedTopics}>
+        <SelectedTopicWrapper>
           {topics.map((topic, index) => (
-            <div key={index} style={styles.topicItem}>
-              <span style={styles.topicText}>{topic}</span>
-              <button
-                type="button"
-                onClick={() => handleRemoveTopic(index)}
-                style={styles.removeButton}
-              >
-                &times;
-              </button>
-            </div>
+            <TopicItem key={index}>
+              <TopicText>{topic}</TopicText>
+              <DeleteButton onClick={() => handleRemoveTopic(index)} />
+            </TopicItem>
           ))}
-        </div>
-        <div style={styles.buttonGroup}>
-          <button
-            type="button"
-            onClick={() => navigate("/community/create1")}
-            style={styles.cancelButton}
+        </SelectedTopicWrapper>
+        <MultiStepNav>
+          <Button
+            type='button'
+            bgColor='cancel'
+            onClick={() => navigate('/community/create1')}
           >
             이전
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate("/community/create4")}
-            style={styles.nextButton}
+          </Button>
+          <Button
+            type='button'
+            bgColor='next'
+            onClick={() => navigate('/community/create4')}
           >
             다음
-          </button>
-        </div>
-      </form>
-    </div>
+          </Button>
+        </MultiStepNav>
+      </Form>
+    </Container>
   );
 };
 
-const styles = {
-  container: {
-    backgroundColor: "#FFFFFF",
-    padding: "20px",
-    maxWidth: "600px",
-    height: "auto",
-    margin: "50px auto",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-    borderRadius: "8px",
-    border: "1px solid #EDEDED",
-  },
-  heading: {
-    fontSize: "24px",
-    marginBottom: "20px",
-    color: "#333",
-    textAlign: "center" as "center",
-  },
-  form: {
-    display: "flex",
-    flexDirection: "column" as "column",
-  },
-  formGroup: {
-    marginBottom: "20px",
-  },
-  label: {
-    marginBottom: "8px",
-    fontSize: "14px",
-    color: "#555",
-    fontWeight: "bold" as "bold",
-  },
-  input: {
-    width: "100%",
-    padding: "10px",
-    borderRadius: "12px",
-    border: "1px solid #CCC",
-    fontSize: "14px",
-    backgroundColor: "#F7F7F7",
-    boxSizing: "border-box" as "border-box",
-  },
-  suggestionsList: {
-    listStyleType: "none" as "none",
-    padding: 0,
-    marginTop: "10px",
-    border: "1px solid #CCC",
-    borderRadius: "8px",
-    backgroundColor: "#FFF",
-  },
-  suggestionItem: {
-    padding: "10px",
-    cursor: "pointer",
-  },
-  noSuggestions: {
-    marginTop: "10px",
-    padding: "10px",
-    backgroundColor: "#f8f8f8",
-    border: "1px solid #ccc",
-    borderRadius: "8px",
-    textAlign: "center" as "center",
-  },
-  addButton: {
-    marginTop: "10px",
-    padding: "10px 20px",
-    border: "none",
-    borderRadius: "8px",
-    backgroundColor: "#0079D3",
-    color: "white",
-    cursor: "pointer",
-    fontSize: "14px",
-    fontWeight: "bold" as "bold",
-    transition: "background-color 0.3s ease",
-  },
-  selectedTopics: {
-    display: "flex",
-    flexWrap: "wrap" as "wrap",
-    gap: "10px",
-    marginBottom: "20px",
-  },
-  topicItem: {
-    display: "flex",
-    alignItems: "center",
-    backgroundColor: "#F0F0F0",
-    borderRadius: "20px",
-    padding: "8px 12px",
-  },
-  topicText: {
-    fontSize: "14px",
-    marginRight: "10px",
-  },
-  removeButton: {
-    background: "none",
-    border: "none",
-    fontSize: "14px",
-    cursor: "pointer",
-  },
-  buttonGroup: {
-    display: "flex",
-    justifyContent: "space-between",
-  },
-  cancelButton: {
-    padding: "12px 20px",
-    borderRadius: "20px",
-    border: "none",
-    backgroundColor: "#CCC",
-    color: "white",
-    cursor: "pointer",
-    fontSize: "16px",
-    fontWeight: "bold" as "bold",
-    transition: "background-color 0.3s ease",
-  },
-  nextButton: {
-    padding: "12px 20px",
-    borderRadius: "20px",
-    border: "none",
-    backgroundColor: "#0079D3",
-    color: "white",
-    cursor: "pointer",
-    fontSize: "16px",
-    fontWeight: "bold" as "bold",
-    transition: "background-color 0.3s ease",
-  },
-};
+const Container = styled.div`
+  background-color: #ffffff;
+  padding: 20px;
+  max-width: 600px;
+  height: auto;
+  margin: 50px auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  border: 1px solid #ededed;
+`;
+const Heading = styled.h2`
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+  text-align: center;
+`;
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+`;
+const SelectedTopicWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+`;
+const TopicItem = styled.div`
+  display: flex;
+  align-items: center;
+  background-color: #f0f0f0;
+  border-radius: 20px;
+  padding: 8px 12px;
+`;
+const TopicText = styled.span`
+  font-size: 14px;
+  margin-right: 10px;
+`;
+const Label = styled.label`
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #555;
+  font-weight: bold;
+`;
+const TopicSearchInput = styled.input`
+  width: 100%;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  background-color: #f7f7f7;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+`;
+const Suggestions = styled.ul`
+  list-style-type: none;
+  padding: 0;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+`;
+const Suggestion = styled.li`
+  padding: 10px;
+  cursor: pointer;
+`;
+const NoSuggestionWrapper = styled.div`
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  text-align: center;
+`;
+const AddButton = styled.button`
+  margin-top: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background-color: #0079d3;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+`;
 
 export default CommunityCreatePage3;
