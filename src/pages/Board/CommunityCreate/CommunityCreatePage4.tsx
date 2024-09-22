@@ -1,18 +1,22 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useCommunity } from "../../../contexts/CommunityContext";
-import { CommunitySubmitAPI } from "../../api/CommunityApi";
-import { CommunityVisibilityType } from "../../../_common/CollectionTypes";
-import { CommunityTagsSubmitAPI } from "../../api/CommunityTagsAPI";
-import { FaGlobe, FaLock, FaUsers } from "react-icons/fa"; // Importing icons from react-icons
+import { FC, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useCommunity } from '../../../contexts/CommunityContext';
+import { CommunitySubmitAPI } from '../../api/CommunityApi';
+import { CommunityVisibilityType } from '../../../_common/CollectionTypes';
+import { CommunityTagsSubmitAPI } from '../../api/CommunityTagsAPI';
+import { FaGlobe, FaLock, FaUsers } from 'react-icons/fa'; // Importing icons from react-icons
+import styled from 'styled-components';
+import MultiStepNav from '../../../components/Buttons/MultiStepNav';
+import Button from '../../../components/Buttons/Button';
 
-const CommunityCreatePage4: React.FC = () => {
+const CommunityCreatePage4: FC = () => {
   const navigate = useNavigate();
   const { communityName, description, banner, icon, topics } = useCommunity();
-  const [visibility, setVisibility] = useState<CommunityVisibilityType>("PUBLIC");
-  
+  const [visibility, setVisibility] =
+    useState<CommunityVisibilityType>('PUBLIC');
+
   useEffect(() => {
-    console.log("topics : ", topics);
+    console.log('topics : ', topics);
   }, [topics]);
 
   const [isCommunity, setIsCommunity] = useState<{
@@ -27,7 +31,7 @@ const CommunityCreatePage4: React.FC = () => {
     description: description,
     banner: banner,
     icon: icon,
-    visibility: "PUBLIC",
+    visibility: 'PUBLIC',
     topics: [],
   });
 
@@ -42,7 +46,7 @@ const CommunityCreatePage4: React.FC = () => {
 
     if (!coRes) return;
     const coResponse = await coRes.data.response;
-    console.log("community Submit coResponse : ", coResponse);
+    console.log('community Submit coResponse : ', coResponse);
 
     const tagResponse = [];
     if (topics.length > 0) {
@@ -51,179 +55,157 @@ const CommunityCreatePage4: React.FC = () => {
         communityId: coResponse.id,
       });
       if (!tagRes) return;
-      console.log("tagRes : ", tagRes);
+      console.log('tagRes : ', tagRes);
       tagResponse.push(tagRes.data.response);
     }
-    console.log("tagResponse : ", tagResponse);
+    console.log('tagResponse : ', tagResponse);
     setIsCommunity({
       ...coResponse,
       topic: tagResponse,
     });
 
-    navigate("/");
+    navigate('/');
   };
 
   const handleBack = () => {
-    navigate("/community/create3");
+    navigate('/community/create3');
   };
 
   return (
-    <div style={styles.container}>
-      <h2 style={styles.heading}>커뮤니티 공개 설정</h2>
-      <form onSubmit={(e) => e.preventDefault()} style={styles.form}>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>
-            <input
-              type="radio"
-              name="visibility"
-              value="public"
-              checked={visibility === "PUBLIC"}
-              onChange={() => setVisibility("PUBLIC")}
-              style={styles.radio}
+    <Container>
+      <Heading>커뮤니티 공개 설정</Heading>
+      <Form onSubmit={(e) => e.preventDefault()}>
+        <FormGroup>
+          <Label>
+            <Radio
+              type='radio'
+              name='visibility'
+              value='public'
+              checked={visibility === 'PUBLIC'}
+              onChange={() => setVisibility('PUBLIC')}
             />
-            <div style={styles.optionContent}>
-              <FaGlobe style={styles.icon} />
+            <OptionContent>
+              <FaGlobe />
               <div>
-                <div>공개</div>
-                <div style={styles.optionDescription}>모든 사용자가 이 커뮤니티를 볼 수 있습니다.</div>
+                <OptionTitle>공개</OptionTitle>
+                <OptionDescription>
+                  모든 사용자가 이 커뮤니티를 볼 수 있습니다.
+                </OptionDescription>
               </div>
-            </div>
-          </label>
-        </div>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>
-            <input
-              type="radio"
-              name="visibility"
-              value="restricted"
-              checked={visibility === "RESTRICTED"}
-              onChange={() => setVisibility("RESTRICTED")}
-              style={styles.radio}
+            </OptionContent>
+          </Label>
+        </FormGroup>
+
+        <FormGroup>
+          <Label>
+            <Radio
+              type='radio'
+              name='visibility'
+              value='restricted'
+              checked={visibility === 'RESTRICTED'}
+              onChange={() => setVisibility('RESTRICTED')}
             />
-            <div style={styles.optionContent}>
-              <FaUsers style={styles.icon} />
+            <OptionContent>
+              <FaUsers />
               <div>
-                <div>제한</div>
-                <div style={styles.optionDescription}>모든 사용자가 이 커뮤니티를 볼 수 있지만, 참여하려면 승인이 필요합니다.</div>
+                <OptionTitle>제한</OptionTitle>
+                <OptionDescription>
+                  모든 사용자가 이 커뮤니티를 볼 수 있지만, 참여하려면 승인이
+                  필요합니다.
+                </OptionDescription>
               </div>
-            </div>
-          </label>
-        </div>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>
-            <input
-              type="radio"
-              name="visibility"
-              value="private"
-              checked={visibility === "PRIVATE"}
-              onChange={() => setVisibility("PRIVATE")}
-              style={styles.radio}
+            </OptionContent>
+          </Label>
+        </FormGroup>
+
+        <FormGroup>
+          <Label>
+            <Radio
+              type='radio'
+              name='visibility'
+              value='private'
+              checked={visibility === 'PRIVATE'}
+              onChange={() => setVisibility('PRIVATE')}
             />
-            <div style={styles.optionContent}>
-              <FaLock style={styles.icon} />
+            <OptionContent>
+              <FaLock />
               <div>
-                <div>비공개</div>
-                <div style={styles.optionDescription}>초대된 사용자만 이 커뮤니티를 볼 수 있습니다.</div>
+                <OptionTitle>비공개</OptionTitle>
+                <OptionDescription>
+                  초대된 사용자만 이 커뮤니티를 볼 수 있습니다.
+                </OptionDescription>
               </div>
-            </div>
-          </label>
-        </div>
-        <div style={styles.buttonGroup}>
-          <button
-            type="button"
-            onClick={handleBack}
-            style={styles.cancelButton}
-          >
+            </OptionContent>
+          </Label>
+        </FormGroup>
+
+        <MultiStepNav>
+          <Button type='button' onClick={handleBack} bgColor='cancel'>
             이전
-          </button>
-          <button
-            type="button"
-            onClick={handleSubmit}
-            style={styles.nextButton}
-          >
+          </Button>
+          <Button type='button' onClick={handleSubmit} bgColor='next'>
             완료
-          </button>
-        </div>
-      </form>
-    </div>
+          </Button>
+        </MultiStepNav>
+      </Form>
+    </Container>
   );
 };
 
-const styles = {
-  container: {
-    backgroundColor: "#FFFFFF",
-    padding: "20px",
-    maxWidth: "600px",
-    height: "auto",
-    margin: "50px auto",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-    borderRadius: "8px",
-    border: "1px solid #EDEDED",
-  },
-  heading: {
-    fontSize: "24px",
-    marginBottom: "20px",
-    color: "#333",
-    textAlign: "center" as "center",
-  },
-  form: {
-    display: "flex",
-    flexDirection: "column" as "column",
-  },
-  formGroup: {
-    marginBottom: "20px",
-  },
-  label: {
-    display: "flex",
-    alignItems: "center",
-    fontSize: "14px",
-    color: "#555",
-    fontWeight: "bold" as "bold",
-    cursor: "pointer",
-  },
-  radio: {
-    marginRight: "10px",
-  },
-  optionContent: {
-    display: "flex",
-    alignItems: "center",
-  },
-  icon: {
-    width: "25px",
-    height: "25px",
-    margin: "0 10px",
-  },
-  optionDescription: {
-    fontSize: "12px",
-    color: "#888",
-  },
-  buttonGroup: {
-    display: "flex",
-    justifyContent: "space-between",
-    marginTop: "20px",
-  },
-  cancelButton: {
-    padding: "12px 20px",
-    borderRadius: "20px",
-    border: "none",
-    backgroundColor: "#CCC",
-    color: "white",
-    cursor: "pointer",
-    fontSize: "16px",
-    fontWeight: "bold" as "bold",
-    transition: "background-color 0.3s ease",
-  },
-  nextButton: {
-    padding: "12px 20px",
-    borderRadius: "20px",
-    border: "none",
-    backgroundColor: "#0079D3",
-    color: "white",
-    cursor: "pointer",
-    fontSize: "16px",
-    fontWeight: "bold" as "bold",
-    transition: "background-color 0.3s ease",
-  },
-};
-
 export default CommunityCreatePage4;
+
+// Styled Components
+const Container = styled.div`
+  background-color: #ffffff;
+  padding: 20px;
+  max-width: 600px;
+  height: auto;
+  margin: 50px auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  border: 1px solid #ededed;
+`;
+
+const Heading = styled.h2`
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+  text-align: center;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+`;
+
+const FormGroup = styled.div`
+  margin-bottom: 20px;
+`;
+
+const Label = styled.label`
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #555;
+  font-weight: bold;
+  cursor: pointer;
+`;
+
+const Radio = styled.input`
+  margin-right: 10px;
+`;
+
+const OptionContent = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const OptionTitle = styled.div`
+  font-size: 14px;
+  font-weight: bold;
+`;
+
+const OptionDescription = styled.div`
+  font-size: 12px;
+  color: #888;
+`;
