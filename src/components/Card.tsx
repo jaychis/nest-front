@@ -508,7 +508,7 @@ const ShareImage = styled.img`
   width: 25px;
 `;
 
-const ShareCount = styled.span`
+const ShareCount = styled.p`
   display: flex;
   font-size: 20px;
   margin-bottom: 15px;

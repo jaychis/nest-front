@@ -70,6 +70,14 @@ const UsersInquiry = () => {
   const TAKE: number = 10;
   const nickname: string = localStorage.getItem("nickname") as string;
   const [isopen, setIsopen] = useState<boolean>(false);
+  const userId:string = localStorage.getItem('id') as string;
+  const [comment, setComment] = useState<string | null>();
+  const [count, setCount] = useState<number>(0);
+
+  const checkComment = (number:number):number => {
+    setComment('Hello World');
+    return 0;
+  }
 
   getContactAllListAPi({ take: TAKE, page: 1, nickname: nickname }).then(
     (res) => {
@@ -78,12 +86,26 @@ const UsersInquiry = () => {
     },
   );
 
-  useEffect(() => {
-    getContactAllListAPi({ take: TAKE, page: 1, nickname: nickname });
-  }, []);
+  const getAllList = () => {
+    return getContactAllListAPi({take :TAKE, page : 1, nickname : nickname})
+    .then((res) => {
+      const status = res?.data.response.current_list
+      setList(status)
+      console.log(status)
+    })
+    .catch((error) => {
+      console.error(error)
+      setCount((prev) => prev + 1)
+    })
+  }
 
-  if (!list) {
-    return <div>로딩중..</div>;
+  useEffect(() => {
+    if(count < 10) getAllList()
+  },[count])
+
+  if(!list){
+    return(
+    <div>로딩중..</div>)
   }
 
   return (
