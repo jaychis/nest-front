@@ -168,9 +168,7 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
   const KAKAO_CLIENT_ID =
     process.env.REACT_APP_NODE_ENV === "production"
       ? process.env.REACT_APP_KAKAO_CLIENT_ID
-      : process.env.REACT_APP_NODE_ENV === "stage"
-        ? process.env.REACT_APP_KAKAO_STAGE_REDIRECT_URL
-        : process.env.REACT_APP_KAKAO_TEST_CLIENT_ID;
+      : process.env.REACT_APP_KAKAO_TEST_CLIENT_ID;
   const REDIRECT_URI =
     process.env.REACT_APP_NODE_ENV === "production"
       ? process.env.REACT_APP_KAKAO_CLIENT_ID
