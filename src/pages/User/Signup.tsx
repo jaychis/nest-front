@@ -165,16 +165,28 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
       );
     }
   };
-  const KAKAO_CLIENT_ID =
-    process.env.REACT_APP_NODE_ENV === "production"
-      ? process.env.REACT_APP_KAKAO_CLIENT_ID
-      : process.env.REACT_APP_KAKAO_TEST_CLIENT_ID;
+  const KAKAO_CLIENT_ID = (() => {
+    switch (process.env.REACT_APP_NODE_ENV) {
+      case "production":
+        return process.env.REACT_APP_KAKAO_CLIENT_ID; // production 환경의 Client ID
+      default:
+        return process.env.REACT_APP_KAKAO_TEST_CLIENT_ID; // 기본값 또는 undefined 방지
+    }
+  })();
   const REDIRECT_URI =
     process.env.REACT_APP_NODE_ENV === "production"
       ? process.env.REACT_APP_KAKAO_REDIRECT_URL
       : process.env.REACT_APP_NODE_ENV === "stage"
         ? process.env.REACT_APP_KAKAO_STAGE_REDIRECT_URL
         : process.env.REACT_APP_KAKAO_TEST_REDIRECT_URL;
+  useEffect(() => {
+    console.log("SIGNUP KAKAO_CLIENT_ID : ", KAKAO_CLIENT_ID);
+    console.log("SIGNUP REDIRECT_URI : ", REDIRECT_URI);
+    console.log(
+      `SIGNUP process.env.REACT_APP_NODE_ENV ${process.env.REACT_APP_NODE_ENV}`,
+    );
+  });
+
   const kakaoOauthSignUp = () => {
     const popup = window.open(
       `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=account_email`,
