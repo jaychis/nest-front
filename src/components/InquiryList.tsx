@@ -39,11 +39,7 @@ const InquiryList = ({
             }
     };
     pTagSlice();
-    },[])
-
-    const commentChange = (e: any) => {
-        setComment(e.target.value)
-    }
+    },[content])
 
     const handleButtonClick = React.useCallback((event:any) => {
         event.stopPropagation();
@@ -61,14 +57,12 @@ const InquiryList = ({
           CommentWrapperRef.current.style.height = `${CommentRef.current.clientHeight + 30}px`;
           CommentWrapperRef.current.style.margin = `20px`;
         }
-        setIsCollapse(!isCollapse);
-      }, [isCollapse]);
-     
-      console.log(`${title} ${comment} ${nickname}`)
+        setIsCollapse((prev) => !prev);
+      }, []);
 
     return(
     <>
-        <InquiryListContainer onClick = {handleButtonClick}>
+        <InquiryListContainer onClick = {(event) => {handleButtonClick(event)}}>
             <TitleButton>
                 <TitleWrapper> [Q&A] {title.slice(0,25)} </TitleWrapper>
             </TitleButton>
