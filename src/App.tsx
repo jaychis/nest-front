@@ -87,7 +87,9 @@ function App() {
               }
             />
             {/* 문의하기 게시판*/}
-            
+
+
+
             <Route
               path="/users/inquiry"
               element={

@@ -2,6 +2,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { FaTimes } from "react-icons/fa";
+import styled from 'styled-components';
 
 // Alert 컴포넌트의 타입 정의
 interface AlertProps {
@@ -11,25 +12,22 @@ interface AlertProps {
 }
 
 // Alert 컴포넌트 정의
-const Alert = ({ message, onClose, type = "info" }: AlertProps) => {
-  return ReactDOM.createPortal(
-    <div className={`alert-container ${type}`}>
-      <div className="alert-content">
+const Alert = ({ message, type, onClose }:AlertProps) => {
+  return (
+    <AlertContainer className={type}>
+      <AlertContent>
         <span>{message}</span>
-        <button className="close-button" onClick={onClose}>
+        <CloseButton onClick={onClose}>
           <FaTimes />
-        </button>
-      </div>
-    </div>,
-    document.body
+        </CloseButton>
+      </AlertContent>
+    </AlertContainer>
   );
 };
 
 export default Alert;
 
-/// CSS 스타일을 JS 파일에 포함
-const styles = `
-.alert-container {
+const AlertContainer = styled.div`
   position: fixed;
   top: 20px;
   left: 50%;
@@ -43,46 +41,39 @@ const styles = `
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
 
-.alert-container.success {
-  background-color: #dff0d8;
-  color: #3c763d;
-}
+  &.success {
+    background-color: #dff0d8;
+    color: #3c763d;
+  }
 
-.alert-container.error {
-  background-color: #f2dede;
-  color: #a94442;
-}
+  &.error {
+    background-color: #f2dede;
+    color: #a94442;
+  }
 
-.alert-container.warning {
-  background-color: #fcf8e3;
-  color: #8a6d3b;
-}
+  &.warning {
+    background-color: #fcf8e3;
+    color: #8a6d3b;
+  }
 
-.alert-container.info {
-  background-color: #d9edf7;
-  color: #31708f;
-}
+  &.info {
+    background-color: #d9edf7;
+    color: #31708f;
+  }
+`;
 
-.alert-content {
+const AlertContent = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
-}
+`;
 
-.close-button {
+const CloseButton = styled.button`
   background: none;
   border: none;
   color: inherit;
   cursor: pointer;
   font-size: 1.2em;
-}
 `;
-
-// CSS 스타일을 동적으로 추가
-const styleSheet = document.createElement("style");
-styleSheet.type = "text/css";
-styleSheet.innerText = styles;
-document.head.appendChild(styleSheet);

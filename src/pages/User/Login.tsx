@@ -26,7 +26,6 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [errorModalVisible, setErrorModalVisible] = useState<boolean>(false); // State for ErrorModal
 
-
   const setLoginProcess = ({
     id,
     nickname,
@@ -166,22 +165,28 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
       });
     }
   };
-  const KAKAO_CLIENT_ID = process.env.REACT_APP_NODE_ENV == 'production'
-    ? process.env.REACT_APP_KAKAO_CLIENT_ID
-    : process.env.REACT_APP_KAKAO_TEST_CLIENT_ID;
-  const REDIRECT_URI = process.env.REACT_APP_NODE_ENV == 'production'
-    ? process.env.REACT_APP_KAKAO_REDIRECT_URL
-    : process.env.REACT_APP_KAKAO_TEST_REDIRECT_URL;
+  const KAKAO_CLIENT_ID =
+    process.env.REACT_APP_NODE_ENV === "production"
+      ? process.env.REACT_APP_KAKAO_CLIENT_ID
+      : process.env.REACT_APP_NODE_ENV === "stage"
+        ? process.env.REACT_APP_KAKAO_STAGE_REDIRECT_URL
+        : process.env.REACT_APP_KAKAO_TEST_CLIENT_ID;
+  const REDIRECT_URI =
+    process.env.REACT_APP_NODE_ENV === "production"
+      ? process.env.REACT_APP_KAKAO_CLIENT_ID
+      : process.env.REACT_APP_NODE_ENV === "stage"
+        ? process.env.REACT_APP_KAKAO_STAGE_REDIRECT_URL
+        : process.env.REACT_APP_KAKAO_TEST_CLIENT_ID;
 
   const kakaoOauthLogin = () => {
     const popup = window.open(
       `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=account_email`,
-      'PopupWin',
-      'width=500,height=600',
+      "PopupWin",
+      "width=500,height=600",
     );
     // 이벤트 리스너를 통해 팝업에서 인증 후 리디렉트된 URL의 코드를 받아 처리
     window.addEventListener(
-      'message',
+      "message",
       async (event) => {
         try {
           const { user } = event.data;
@@ -189,15 +194,13 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
           const parsedUser = JSON.parse(user);
 
           console.log(`Received user info: ${JSON.stringify(parsedUser)}`);
-          if (parsedUser.subscriptionStatus == true) {
-            setLoginProcess(
-              {
-                id: parsedUser.id,
-                nickname: parsedUser.nickname,
-                access_token: parsedUser.access_token,
-                refresh_token: parsedUser.refresh_token
-              }
-            );
+          if (parsedUser.subscriptionStatus === true) {
+            setLoginProcess({
+              id: parsedUser.id,
+              nickname: parsedUser.nickname,
+              access_token: parsedUser.access_token,
+              refresh_token: parsedUser.refresh_token,
+            });
           } else {
             // TODO : 회원가입 로직을 진행하도록 변경하기
           }
