@@ -12,13 +12,13 @@ import {
   ReactionStateTypes,
   ReactionType,
 } from "../_common/CollectionTypes";
-import Slider from "react-slick";
+import { getShareCount } from "../pages/api/ShaerApi";
 import YouTube from "react-youtube";
 import sanitizeHtml from "sanitize-html";
 import { LogViewedBoardAPI } from "../pages/api/ViewedBoardsApi";
 import debounce from "lodash.debounce";
 import { ShareModal } from "./ShareModal";
-import {  UserModalState, setModalState } from "../reducers/modalStateSlice";
+import {  UserModalState, modalState, setModalState } from "../reducers/modalStateSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../store/store";
 import styled from "styled-components";
@@ -188,6 +188,7 @@ const Card = ({
         onMouseLeave={() => setIsCardHovered(false)}
         onClick={boardClickTracking}
         isHovered = {isCardHovered}
+        modalState={modalState.modalState}
       >
         {/* Card Image */}
         <ImageWrapper>
@@ -244,7 +245,7 @@ const Card = ({
           )}
         </ContentContainer>
       </CardContainer>
-      <ButtonContainer>
+      <ButtonContainer modalState = {modalState.modalState}>
         <ReactionWrapper>
           <LikeButton
           isLiked={isReaction === 'LIKE'}
@@ -348,7 +349,7 @@ const Card = ({
   );
 };
 
-const CardContainer = styled.div<{ isHovered: boolean }>`
+const CardContainer = styled.div<{ isHovered: boolean, modalState: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -360,6 +361,7 @@ const CardContainer = styled.div<{ isHovered: boolean }>`
   border-radius: 10px;
   cursor: pointer;
   background-color: ${(props) => (props.isHovered ? "#f0f0f0" : "white")};
+  z-index: ${(props) => (props.modalState ? -10 : 999)}
 `;
 
 const ImageWrapper = styled.div`
@@ -406,10 +408,10 @@ const ImagePreview = styled.img`
   height: 400px;
   width: 100%;
   border-radius: 20px;
+  
 `;
 
 const MediaContainer = styled.div`
-  z-index: 1001;
   width: 85%;
 `;
 
@@ -420,12 +422,13 @@ const VideoContainer = styled.div`
   overflow: hidden; // 추가된 부분
 `;
 
-const ButtonContainer = styled.div`
+const ButtonContainer = styled.div<{modalState: boolean}>`
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
   width: 100%;
   max-width: 800px;
+  z-index: ${(props) => (props.modalState ? -10 : 999)}
 `;
 
 const ReactionWrapper = styled.div`
