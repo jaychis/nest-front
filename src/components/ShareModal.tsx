@@ -3,20 +3,21 @@ import Modal from 'react-modal';
 import styled from "styled-components";
 import { useLocation } from "react-router-dom";
 import { RootState, AppDispatch } from "../store/store";
-import {  UserModalState, setModalState } from "../reducers/modalStateSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { shareCountApi } from "../pages/api/BoardApi";
 
 //navigate(`/boards/read?id=${id}&title=${title}&content=${content}`);
 export interface ShaerModalProps{
-    isModal : boolean;
+    isModal: boolean;
     setIsModal: (prev: boolean) => void;
-    content : string;
-    title : string;
+    content: string;
+    title: string;
+    id: string;
 }
 
 Modal.setAppElement('#root');
 
-export const ShareModal : React.FC<ShaerModalProps> = ({isModal, setIsModal,content,title, ...props}) => {
+export const ShareModal : React.FC<ShaerModalProps> = ({isModal, setIsModal,content,title,id, ...props}) => {
 
     const kakaoApiKey = process.env.REACT_APP_KAKAO_API_KEY;
     const baseUrl = process.env.REACT_APP_API_BASE_URL
@@ -26,7 +27,6 @@ export const ShareModal : React.FC<ShaerModalProps> = ({isModal, setIsModal,cont
     const shareText : string = 'naver.com'
     const dispatch = useDispatch<AppDispatch>();
    
-    
     useEffect(() => {
         if(baseUrl === 'http://127.0.0.1:9898'){
           setDomain('http://localhost:3000/')
@@ -42,22 +42,26 @@ export const ShareModal : React.FC<ShaerModalProps> = ({isModal, setIsModal,cont
         
     const handleShaerTwitter = () => {
       const twitterShareUrl: string = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent('https://naver.com')}`;
+      shareCountApi(id)
       window.open(twitterShareUrl, '_blank', 'noopener,noreferrer');
     };
 
     const handleShareInstagram = () => {
       const instagramShareUrl : string = `https://www.instagram.com/direct/inbox/?url=${encodeURIComponent(domain)}&text=${encodeURIComponent(content)}`;
       navigator.clipboard.writeText(url);
+      shareCountApi(id)
       window.open(instagramShareUrl, '_blank', 'noopener,noreferrer');
     }
 
     const handelShareFaceBook = () => {
       const facebookShareUrl : string = `https:///www.facebook.com/sharer/sharer.php?u=naver.com`
+      shareCountApi(id)
       window.open(facebookShareUrl, '_blank', 'noopener,noreferrer')
     }
 
     const handleCopyClipBoard = (url : any) => {
       navigator.clipboard.writeText(url);
+      shareCountApi(id)
       alert("링크가 복사되었습니다.");
     }
 
@@ -84,6 +88,7 @@ export const ShareModal : React.FC<ShaerModalProps> = ({isModal, setIsModal,cont
             },
           ],
         });
+        shareCountApi(id)
       } else {
         console.error('Kakao SDK가 초기화되지 않았습니다.');
       }

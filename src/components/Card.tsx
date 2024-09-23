@@ -12,7 +12,6 @@ import {
   ReactionStateTypes,
   ReactionType,
 } from "../_common/CollectionTypes";
-import { getShareCount } from "../pages/api/ShaerApi";
 import YouTube from "react-youtube";
 import sanitizeHtml from "sanitize-html";
 import { LogViewedBoardAPI } from "../pages/api/ViewedBoardsApi";
@@ -42,6 +41,7 @@ const Card = ({
   nickname,
   title,
   type,
+  shareCount
 }: BoardProps) => {
   useEffect(() => {
     console.log("card component");
@@ -287,16 +287,17 @@ const Card = ({
           onClick={() => {setIsModal(true);openModal();}}
           >
           <ShareImage src="https://img.icons8.com/ios/50/forward-arrow.png" alt="Share Icon" />
-          <ShareCount>0</ShareCount>
+          <ShareCount>{shareCount}</ShareCount>
           </ShareButton>
           <ShareModal 
           isModal = {isModal}
           setIsModal = {setIsModal}
           content = {shareContent}
           title = {title}
+          id = {id}
           />
         </ShareWrapper>
-        {/* 추후 삭제될 수 있는 기능이라 변환 x*/}
+        {/* 추후 삭제될 수 있는 기능이라 styled 컴포넌트로 변환하지않음*/}
         <div
           style={{
             marginLeft : '-7px',

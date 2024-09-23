@@ -140,7 +140,7 @@ const Profile = () => {
               <h2 style={styles.sectionTitle}>내가 등록한 게시글</h2>
               {myPosts.length > 0 ? (
                 myPosts.map((post: CardType) => (
-                  <Card key={post.id} {...post} createdAt={post.created_at} />
+                  <Card shareCount = {post.share_count} key={post.id} {...post} createdAt={post.created_at} />
                 ))
               ) : (
                 <p>등록된 포스트가 없습니다.</p>

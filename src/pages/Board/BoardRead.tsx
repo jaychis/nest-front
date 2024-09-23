@@ -31,6 +31,7 @@ const BoardRead = () => {
     updated_at: new Date(),
     deleted_at: null,
     type: "TEXT",
+    share_count: 0
   });
   const [isCommentState, setIsCommentState] = useState<CommentType[]>([]);
 
@@ -183,6 +184,7 @@ const BoardRead = () => {
           createdAt={isBoardState.created_at}
           content={isBoardState.content}
           type={isBoardState.type}
+          shareCount={isBoardState.share_count}
         />
       )}
       <div style={{

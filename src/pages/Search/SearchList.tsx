@@ -243,6 +243,7 @@ const SearchList = () => {
                     title={ca.title}
                     createdAt={ca.created_at}
                     type={ca.type}
+                    shareCount={ca.share_count}
                   />
                 </>
               );
