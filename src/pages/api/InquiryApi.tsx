@@ -3,9 +3,9 @@ import { client } from "./Client";
 import axios from 'axios'
 
 export interface InquiryParam{
-    title : string;
-    nickname : string;
-    content : string;
+    title : string | null
+    nickname : string | null;
+    content : string | null;
 }
 
 interface ListParams {

@@ -187,6 +187,7 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
       `process.env.REACT_APP_NODE_ENV ${process.env.REACT_APP_NODE_ENV}`,
     );
   });
+
   const kakaoOauthLogin = () => {
     const popup = window.open(
       `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=account_email`,
@@ -210,6 +211,7 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
               access_token: parsedUser.access_token,
               refresh_token: parsedUser.refresh_token,
             });
+            console.log(parsedUser)
           } else {
             // TODO : 회원가입 로직을 진행하도록 변경하기
           }

@@ -86,3 +86,14 @@ export const BoardInquiryAPI = async (param: BoardInquiryParam) => {
 
   return res;
 };
+
+export const shareCountApi = async(id: string) => {
+  try{
+      const URL: string = `boards/${id}/share-count`
+      const res = await client.patch(URL)
+      return res
+  }
+  catch(err){
+      console.error(err)
+  }
+}
