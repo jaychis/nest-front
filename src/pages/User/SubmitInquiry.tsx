@@ -9,7 +9,7 @@ import logo from '../../assets/img/panda_logo.png'
 
 interface SubmitModalProps {
     isopen: boolean;
-    setIsopen: (prev: boolean) => void;
+    setIsopen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const SubmitInquiry: React.FC<SubmitModalProps> = ({isopen, setIsopen,}) => {
@@ -47,6 +47,14 @@ const SubmitInquiry: React.FC<SubmitModalProps> = ({isopen, setIsopen,}) => {
         );
     }
     };
+
+    const checkForm = () => {
+        if(title.trim() === '' || content.trim() === '') alert('제목과 내용은 필수 입력 항목입니다.')
+        else {
+            postContactApi({title,nickname, content})}
+            setIsopen((prev) => !prev)
+            alert('접수되었습니다.')
+    }
 
     const modules = {
         toolbar: [
@@ -108,9 +116,9 @@ const SubmitInquiry: React.FC<SubmitModalProps> = ({isopen, setIsopen,}) => {
                     </ReactQuillWrapper>
                 </InquiryContainer>
                 <SumbitWrapper>
-                <button type="submit" style={submitButtonStyle} onClick={() => {postContactApi({title,nickname, content})}}>
-                    작성
-                </button>
+                    <button type="submit" style={submitButtonStyle} onClick={() => {checkForm()}}>
+                        작성
+                    </button>
                 </SumbitWrapper>
             </form>
         </Modal>
