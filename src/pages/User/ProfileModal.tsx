@@ -44,7 +44,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onRequestClose, but
     onRequestClose();
     navigate("/users/profile");
   };
-
+  
   return (
     <Modal
       isOpen={isOpen}
