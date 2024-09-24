@@ -34,14 +34,17 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onRequestClose, but
 
   const handleLogout = () => {
     localStorage.removeItem("access_token");
-    window.location.reload();
+    localStorage.removeItem("refresh_token")
+    localStorage.removeItem("nickname")
+    localStorage.removeItem("id")
+    window.location.href = '/';
   };
 
   const handleMyPage = () => {
     onRequestClose();
     navigate("/users/profile");
   };
-
+  
   return (
     <Modal
       isOpen={isOpen}

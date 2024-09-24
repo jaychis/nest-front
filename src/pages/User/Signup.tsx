@@ -5,6 +5,8 @@ import {
   ExistingPhoneAPI,
   SignupAPI,
   SignupParams,
+  LoginAPI,
+  LoginParams
 } from "../api/UserApi";
 import { CollectionTypes } from "../../_common/CollectionTypes";
 import {
@@ -17,9 +19,10 @@ import vLogo from "../../assets/img/v-check.png";
 import xLogo from "../../assets/img/x-check.png";
 import Alert from "../../components/Alert";
 
+
 interface Props {
   readonly onSwitchView: () => void;
-  readonly modalIsOpen?: (state: boolean) => void; // Optional prop, not required for independent usage
+  readonly modalIsOpen: (state: boolean) => void; // Optional prop, not required for independent usage
 }
 
 interface ValidSignupType {
@@ -45,6 +48,27 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
     nickname: null,
   });
 
+  const setLoginProcess = ({
+    id,
+    nickname,
+    access_token,
+    refresh_token,
+  }: {
+    readonly id: string;
+    readonly nickname: string;
+    readonly access_token: string;
+    readonly refresh_token: string;
+  }) => {
+    modalIsOpen(false);
+    localStorage.setItem("access_token", access_token);
+    localStorage.setItem("refresh_token", refresh_token);
+    localStorage.setItem("id", id);
+    localStorage.setItem("nickname", nickname);
+    setShowAlert(true); // 알람 표시
+    setShowAlert(false); // 알람 숨기기
+    window.location.reload();
+  };
+
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [validPassword, setValidPassword] = useState<boolean>(false);
 
@@ -55,7 +79,6 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
         ExistingEmailAPI({ email })
           .then((res) => {
             const response = res.data.response?.existing_email;
-
             setValidSignup({
               ...validSignup,
               email: response,
@@ -63,7 +86,6 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
           })
           .catch((err) => console.error(err));
       }, 1000); // 1000ms
-
       return () => clearTimeout(timeOutEmail);
     }
   }, [signup.email]);
@@ -127,6 +149,26 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
     });
   };
 
+  const processLogin = async () => {
+        try{
+          const login = {email: signup.email, password: signup.password}
+          const res = await LoginAPI(login);
+          const response = res.data.response;
+          const { id, nickname, access_token, refresh_token } = response;
+
+        if (res.status === 201 && response) {
+          setLoginProcess({
+            id,
+            nickname,
+            access_token,
+            refresh_token,
+          });
+        }
+        }catch(err){
+          console.error(err)
+        }
+  }
+
   const handleSubmit: MouseEventHandler<HTMLButtonElement> = (event) => {
     if (event) event.preventDefault();
 
@@ -152,9 +194,9 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
       SignupAPI(signup)
         .then((res): void => {
           const response = res.data.response;
-
           if (res.status === 201 && response) {
             setShowAlert(true); // 알람 표시
+            processLogin();
             if (modalIsOpen) modalIsOpen(false);
           }
         })
@@ -179,13 +221,6 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
       : process.env.REACT_APP_NODE_ENV === "stage"
         ? process.env.REACT_APP_KAKAO_STAGE_REDIRECT_URL
         : process.env.REACT_APP_KAKAO_TEST_REDIRECT_URL;
-  useEffect(() => {
-    console.log("SIGNUP KAKAO_CLIENT_ID : ", KAKAO_CLIENT_ID);
-    console.log("SIGNUP REDIRECT_URI : ", REDIRECT_URI);
-    console.log(
-      `SIGNUP process.env.REACT_APP_NODE_ENV ${process.env.REACT_APP_NODE_ENV}`,
-    );
-  });
 
   const kakaoOauthSignUp = () => {
     const popup = window.open(
