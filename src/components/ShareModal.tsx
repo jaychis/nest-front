@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 import { RootState, AppDispatch } from "../store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { shareCountApi } from "../pages/api/BoardApi";
-
+import logo from '../assets/img/panda_logo.png'
 //navigate(`/boards/read?id=${id}&title=${title}&content=${content}`);
 export interface ShaerModalProps{
     isModal: boolean;
@@ -103,7 +103,9 @@ export const ShareModal : React.FC<ShaerModalProps> = ({isModal, setIsModal,cont
               contentElement={(props, children) => <ModalContent {...props}>{children}</ModalContent>}
               overlayElement={(props, contentElement) => <ModalOverlay {...props}>{contentElement}</ModalOverlay>}
               >
+                
                 <ModalStyle>
+                <TitleWrapper> 공유하기</TitleWrapper>
                     <ShareIcon onClick = {() => {handleCopyClipBoard(domain)}} src="https://img.icons8.com/glyph-neue/64/link.png"/>
                     <ShareIcon onClick = {() => {handleShareKakao()}} src = 'https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_medium.png'/>
                     <ShareIcon onClick = {() => {handleShaerTwitter()}} src="https://img.icons8.com/ios-filled/50/twitterx--v1.png" />
@@ -118,7 +120,7 @@ export const ShareModal : React.FC<ShaerModalProps> = ({isModal, setIsModal,cont
 const ModalStyle =  styled.div`
     width : 100%;
     height : 100%;
-    display : flex;
+    display : inline;
     align-items : center;
 `
 
@@ -150,3 +152,16 @@ const ModalOverlay = styled.div`
   right: 0;
   bottom: 0;
 `;
+
+const TitleWrapper = styled.div`
+  font-weight: 700;
+  display: flex;
+  width: 100%;
+  height: 50px;
+`
+
+const Logo = styled.img`
+  width:50px;
+  height: 50px;
+  display: flex;
+`

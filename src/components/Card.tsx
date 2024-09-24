@@ -43,12 +43,7 @@ const Card = ({
   type,
   shareCount
 }: BoardProps) => {
-  useEffect(() => {
-    console.log("card component");
-    console.log("id : ", id);
-    console.log("content : ", content);
-    console.log("nickname : ", nickname);
-  }, []);
+  
   const navigate = useNavigate();
   const [isCardCount, setIsCardCount] = useState<number>(0);
   const [localCount, setLocalCount] = useState<number>(0);
@@ -66,7 +61,7 @@ const Card = ({
   const modalState : UserModalState = useSelector((state: RootState) => state.modalState);
   
   const USER_ID: string = localStorage.getItem("id") as string;
-
+  
   const reactionButton = async (userReaction: ReactionStateTypes) => {
     if (userReaction !== null) {
       const param: ReactionParams = {
