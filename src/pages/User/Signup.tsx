@@ -150,23 +150,23 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
   };
 
   const processLogin = async () => {
-        try{
-          const login = {email: signup.email, password: signup.password}
-          const res = await LoginAPI(login);
-          const response = res.data.response;
-          const { id, nickname, access_token, refresh_token } = response;
+    try {
+      const login = { email: signup.email, password: signup.password }
+      const res = await LoginAPI(login);
+      const response = res.data.response;
+      const { id, nickname, access_token, refresh_token } = response;
 
-        if (res.status === 201 && response) {
-          setLoginProcess({
-            id,
-            nickname,
-            access_token,
-            refresh_token,
-          });
-        }
-        }catch(err){
-          console.error(err)
-        }
+      if (res.status === 201 && response) {
+        setLoginProcess({
+          id,
+          nickname,
+          access_token,
+          refresh_token,
+        });
+      }
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   const handleSubmit: MouseEventHandler<HTMLButtonElement> = (event) => {
@@ -223,8 +223,11 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
         : process.env.REACT_APP_KAKAO_TEST_REDIRECT_URL;
 
   const kakaoOauthSignUp = () => {
+    const currentUrl = window.location.href; // 현재 페이지의 경로
+    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=account_email&state=${encodeURIComponent(currentUrl)}`;
+
     const popup = window.open(
-      `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=account_email`,
+      KAKAO_AUTH_URL,
       "PopupWin",
       "width=500,height=600",
     );

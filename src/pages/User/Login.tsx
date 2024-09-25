@@ -189,8 +189,11 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
   });
 
   const kakaoOauthLogin = () => {
+    const currentUrl = window.location.href; // 현재 페이지의 경로
+    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=account_email&state=${encodeURIComponent(currentUrl)}`;
+
     const popup = window.open(
-      `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=account_email`,
+      KAKAO_AUTH_URL,
       "PopupWin",
       "width=500,height=600",
     );
