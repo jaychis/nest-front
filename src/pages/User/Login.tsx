@@ -73,7 +73,6 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
       try {
         const res = await LoginAPI(login);
         const response = res.data.response;
-        console.log("response ", response);
         const { id, nickname, access_token, refresh_token } = response;
 
         if (res.status === 201 && response) {
