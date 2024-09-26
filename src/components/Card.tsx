@@ -21,11 +21,11 @@ import YouTube from "react-youtube";
 import sanitizeHtml from "sanitize-html";
 import { LogViewedBoardAPI } from "../pages/api/ViewedBoardsApi";
 import debounce from "lodash.debounce";
-
 import {  UserModalState, modalState, setModalState } from "../reducers/modalStateSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../store/store";
 import styled from "styled-components";
+import { shareCountApi } from "../pages/api/BoardApi";
 
 const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
   try {
@@ -212,27 +212,37 @@ const Card = ({
 
   const handleShaerTwitter = () => {
     const twitterShareUrl: string = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent('https://naver.com')}`;
+    shareCountApi(id);
+    setIsActive(false);
     window.open(twitterShareUrl, '_blank', 'noopener,noreferrer');
   };
 
   const handleShareInstagram = () => {
     const instagramShareUrl : string = `https://www.instagram.com/direct/inbox/?url=${encodeURIComponent(domain)}&text=${encodeURIComponent('여기에 내용 넣으면 됨')}`;
     navigator.clipboard.writeText(domain);
+    shareCountApi(id);
+    setIsActive(false);
     window.open(instagramShareUrl, '_blank', 'noopener,noreferrer');
   }
 
   const handelShareFaceBook = () => {
     const facebookShareUrl : string = `https:///www.facebook.com/sharer/sharer.php?u=naver.com`
+    shareCountApi(id);
+    setIsActive(false);
     window.open(facebookShareUrl, '_blank', 'noopener,noreferrer')
   }
 
   const handleCopyClipBoard = (url : any) => {
     navigator.clipboard.writeText(url);
+    shareCountApi(id);
+    setIsActive(false);
     alert("링크가 복사되었습니다.");
   }
 
   const handleShareKakao = () => {
     if (window.Kakao && window.Kakao.isInitialized()) {
+      shareCountApi(id);
+      setIsActive(false);
       window.Kakao.Share.sendDefault({
         objectType: 'feed',
         content: {
