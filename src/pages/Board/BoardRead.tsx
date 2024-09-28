@@ -31,6 +31,7 @@ const BoardRead = () => {
     updated_at: new Date(),
     deleted_at: null,
     type: "TEXT",
+    share_count: 0
   });
   const [isCommentState, setIsCommentState] = useState<CommentType[]>([]);
 
@@ -183,6 +184,7 @@ const BoardRead = () => {
           createdAt={isBoardState.created_at}
           content={isBoardState.content}
           type={isBoardState.type}
+          shareCount={isBoardState.share_count}
         />
       )}
       <div style={{
@@ -195,14 +197,24 @@ const BoardRead = () => {
         padding: "10px",
         marginLeft : '-0.5%',
       }}>
-        <textarea style={{
-          width: "100%",
-          border: "none",
-          borderRadius: "14px",
-          resize: "vertical",
-          boxSizing: "border-box",
-          outline: "none",
-        }} name={"content"} ></textarea>
+        <textarea
+              style={{
+                width: "100%",
+                border: "none",
+                borderRadius: "14px",
+                resize: "vertical",
+                boxSizing: "border-box",
+                outline: "none",
+              }}
+              name={"content"}
+              value={writeComment.content}
+              onChange={(value) =>
+                commentHandleChange({
+                  name: value.target.name,
+                  value: value.target.value,
+                })
+              }
+            ></textarea>
         <div style={{
           display: "flex",
           justifyContent: "flex-end",
@@ -220,7 +232,9 @@ const BoardRead = () => {
           }}>
             Cancel
           </button>
-          <button style={{
+          <button
+            onClick = {() => {commentWrite()}}
+            style={{
             padding: "6px 12px",
             marginLeft: "5px",
             border: "none",

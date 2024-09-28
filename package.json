@@ -19,6 +19,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "emailjs-com": "^3.2.0",
+    "env-cmd": "^10.1.0",
     "lodash.debounce": "^4.0.8",
     "lucide-react": "^0.441.0",
     "markdown-it": "^14.1.0",
@@ -46,12 +47,12 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start:local": "cross-env REACT_APP_API_BASE_URL=http://127.0.0.1:9898 react-scripts start",
-    "start:dev": "cross-env REACT_APP_API_BASE_URL=http://127.0.0.1:9898 react-scripts start",
-    "start:stage": "cross-env REACT_APP_API_BASE_URL=http://13.124.5.63:9898 react-scripts start",
-    "build:stage": "cross-env REACT_APP_API_BASE_URL=http://13.124.5.63:9898 react-scripts build",
-    "start:prod": "cross-env REACT_APP_API_BASE_URL=https://api.jaychis.com react-scripts start",
-    "build:prod": "cross-env REACT_APP_API_BASE_URL=https://api.jaychis.com react-scripts build",
+    "start:local": "env-cmd -f .env.development react-scripts start",
+    "start:dev": "env-cmd -f .env.development react-scripts start",
+    "start:stage": "env-cmd -f .env.stage react-scripts start",
+    "build:stage": "env-cmd -f .env.stage react-scripts build",
+    "start:prod": "env-cmd -f .env.production react-scripts start",
+    "build:prod": "env-cmd -f .env.production react-scripts build",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

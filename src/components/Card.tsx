@@ -1,6 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/img/panda_logo.png";
+import kakao from "../assets/img/kakao.png"
+import instagram from "../assets/img/instagram.png"
+import facebook from "../assets/img/facebook.png"
+import twitter from "../assets/img/twitter.png"
+import copy from "../assets/img/copy.png"
 import {
   ReactionAPI,
   ReactionCountAPI,
@@ -12,16 +17,15 @@ import {
   ReactionStateTypes,
   ReactionType,
 } from "../_common/CollectionTypes";
-import Slider from "react-slick";
 import YouTube from "react-youtube";
 import sanitizeHtml from "sanitize-html";
 import { LogViewedBoardAPI } from "../pages/api/ViewedBoardsApi";
 import debounce from "lodash.debounce";
-import { ShareModal } from "./ShareModal";
-import {  UserModalState, setModalState } from "../reducers/modalStateSlice";
+import {  UserModalState, modalState, setModalState } from "../reducers/modalStateSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../store/store";
 import styled from "styled-components";
+import { shareCountApi } from "../pages/api/BoardApi";
 
 const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
   try {
@@ -42,13 +46,9 @@ const Card = ({
   nickname,
   title,
   type,
+  shareCount
 }: BoardProps) => {
-  useEffect(() => {
-    console.log("card component");
-    console.log("id : ", id);
-    console.log("content : ", content);
-    console.log("nickname : ", nickname);
-  }, []);
+  
   const navigate = useNavigate();
   const [isCardCount, setIsCardCount] = useState<number>(0);
   const [localCount, setLocalCount] = useState<number>(0);
@@ -64,8 +64,39 @@ const Card = ({
   const [shareContent, setShareContent] = useState<string>('')
   const dispatch = useDispatch<AppDispatch>();
   const modalState : UserModalState = useSelector((state: RootState) => state.modalState);
+  const [active, setIsActive] = useState<boolean>(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [domain, setDomain] = useState<string>('');
+  const kakaoApiKey = process.env.REACT_APP_KAKAO_API_KEY;
+  const baseUrl = process.env.REACT_APP_API_BASE_URL
   
   const USER_ID: string = localStorage.getItem("id") as string;
+  
+  const handleClickOutside = (event: MouseEvent) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)){
+      setIsActive(false)
+    }
+  }
+
+  React.useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    if(baseUrl === 'http://127.0.0.1:9898'){
+      setDomain('http://localhost:3000/')
+    }
+    else{
+      setDomain('jaychis.com')
+    }
+
+    if (window.Kakao && !window.Kakao.isInitialized()) {
+        window.Kakao.init(kakaoApiKey);
+      }
+    }, [kakaoApiKey]);
 
   const reactionButton = async (userReaction: ReactionStateTypes) => {
     if (userReaction !== null) {
@@ -90,8 +121,6 @@ const Card = ({
         else if (userReaction === "DISLIKE" && isReaction === null && localCount != 0) {setIsReaction("DISLIKE"); setIsCardCount((prevCount) => prevCount - 1);}
         else if (userReaction === "DISLIKE" && isReaction === 'DISLIKE') {setIsReaction(null); setIsCardCount((prevCount) => prevCount + 1);}
         else if (userReaction === "DISLIKE" && isReaction === 'LIKE') {setIsReaction("DISLIKE"); setIsCardCount((prevCount) => prevCount -2);}
-        
-        
       } catch (err) {
         console.error(err);
       }
@@ -135,15 +164,15 @@ const Card = ({
     }
   };
 
-    const openModal = () => {
-      dispatch(setModalState(!modalState.modalState));
-    };
+  const openModal = () => {
+    dispatch(setModalState(!modalState.modalState));
+  };
 
-    useEffect(() => {
-        if( modalState.modalState === true && isModal === false){
-          openModal()
-        }
-    },[isModal])
+  useEffect(() => {
+      if( modalState.modalState === true && isModal === false){
+        openModal()
+      }
+  },[isModal])
 
   const debouncedFetchReactionList = debounce(fetchReactionList, 300);
   const debouncedFetchReactionCount = debounce(fetchReactionCount, 300);
@@ -181,6 +210,65 @@ const Card = ({
     return tempDiv.innerText || tempDiv.textContent ||'';
   }
 
+  const handleShaerTwitter = () => {
+    const twitterShareUrl: string = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent('https://naver.com')}`;
+    shareCountApi(id);
+    setIsActive(false);
+    window.open(twitterShareUrl, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleShareInstagram = () => {
+    const instagramShareUrl : string = `https://www.instagram.com/direct/inbox/?url=${encodeURIComponent(domain)}&text=${encodeURIComponent('여기에 내용 넣으면 됨')}`;
+    navigator.clipboard.writeText(domain);
+    shareCountApi(id);
+    setIsActive(false);
+    window.open(instagramShareUrl, '_blank', 'noopener,noreferrer');
+  }
+
+  const handelShareFaceBook = () => {
+    const facebookShareUrl : string = `https:///www.facebook.com/sharer/sharer.php?u=naver.com`
+    shareCountApi(id);
+    setIsActive(false);
+    window.open(facebookShareUrl, '_blank', 'noopener,noreferrer')
+  }
+
+  const handleCopyClipBoard = (url : any) => {
+    navigator.clipboard.writeText(url);
+    shareCountApi(id);
+    setIsActive(false);
+    alert("링크가 복사되었습니다.");
+  }
+
+  const handleShareKakao = () => {
+    if (window.Kakao && window.Kakao.isInitialized()) {
+      shareCountApi(id);
+      setIsActive(false);
+      window.Kakao.Share.sendDefault({
+        objectType: 'feed',
+        content: {
+          title: `${title}`,
+          description: `${content}`,
+          imageUrl: 'https://i.postimg.cc/jd4cY735/3.png',
+          link: {
+            mobileWebUrl: 'https://naver.com',
+            webUrl: 'https://naver.com',
+          },
+        },
+        buttons: [
+          {
+            title: '웹으로 보기',
+            link: {
+              mobileWebUrl: 'https://naver.com',
+              webUrl: 'https://naver.com',
+            },
+          },
+        ],
+      });
+    } else {
+      console.error('Kakao SDK가 초기화되지 않았습니다.');
+    }
+}
+
   return (
     <>
       <CardContainer
@@ -188,14 +276,15 @@ const Card = ({
         onMouseLeave={() => setIsCardHovered(false)}
         onClick={boardClickTracking}
         isHovered = {isCardHovered}
+        modalState={modalState.modalState}
       >
         {/* Card Image */}
-        <ImageWrapper>
+        <ImageContainer>
           <LogoImg src = {logo}/>
           <NicknameWrapper onClick={() => navigate(`/users/inquiry?nickname=${nickname}`)}>
             {nickname}
           </NicknameWrapper>
-        </ImageWrapper>
+        </ImageContainer>
         
         {/* Card Content */}
         <ContentContainer>
@@ -244,7 +333,8 @@ const Card = ({
           )}
         </ContentContainer>
       </CardContainer>
-      <ButtonContainer>
+
+      <ButtonContainer modalState = {modalState.modalState}>
         <ReactionWrapper>
           <LikeButton
           isLiked={isReaction === 'LIKE'}
@@ -278,24 +368,31 @@ const Card = ({
             댓글
           </CommentButton>
         </CommentWrapper>
-        <ShareWrapper>
+
+        {/* 공유 */}
+        <ShareWrapper ref={dropdownRef}>
+          <DropdownContainer>
           <ShareButton
           isHovered={isCardShareHovered}
           onMouseEnter={() => setIsCardShareHovered(true)}
           onMouseLeave={() => setIsCardShareHovered(false)}
-          onClick={() => {setIsModal(true);openModal();}}
+          onClick={() => {setIsActive((prev) => !prev)}}
           >
           <ShareImage src="https://img.icons8.com/ios/50/forward-arrow.png" alt="Share Icon" />
-          <ShareCount>0</ShareCount>
+          <ShareCount>{shareCount}</ShareCount>
           </ShareButton>
-          <ShareModal 
-          isModal = {isModal}
-          setIsModal = {setIsModal}
-          content = {shareContent}
-          title = {title}
-          />
+          {active && ( 
+            <DropdownMenu>
+              <DropdownItem href="#" onClick = {() => {handleShareKakao()}}><ShareIcon src = {kakao}/>카카오톡</DropdownItem>
+              <DropdownItem href="#" onClick = {() => {handleShareInstagram()}}><ShareIcon src = {instagram}/>인스타그램</DropdownItem>
+              <DropdownItem href="#" onClick = {() => {handelShareFaceBook()}}><ShareIcon src = {facebook}/>페이스북</DropdownItem>
+              <DropdownItem href="#" onClick = {() => {handleShaerTwitter()}}><ShareIcon src = {twitter}/>트위터</DropdownItem>
+              <DropdownItem href="#" onClick = {() => {handleCopyClipBoard(domain)}}><ShareIcon src = {copy}/>링크 복사</DropdownItem>
+            </DropdownMenu>)}
+          </DropdownContainer>
         </ShareWrapper>
-        {/* 추후 삭제될 수 있는 기능이라 변환 x*/}
+
+        {/* 추후 삭제될 수 있는 기능이라 생각해 styled 컴포넌트로 변환하지않음*/}
         <div
           style={{
             marginLeft : '-7px',
@@ -348,7 +445,35 @@ const Card = ({
   );
 };
 
-const CardContainer = styled.div<{ isHovered: boolean }>`
+const DropdownContainer = styled.div`
+  position: relative;
+  display: inline-block;
+`;
+
+const DropdownMenu = styled.div`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-width: 160px;
+`;
+
+const DropdownItem = styled.a`
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  color: black;
+  text-decoration: none;
+  font-size: 14px;
+  &:hover {
+    background-color: #f1f1f1;
+  }
+`;
+
+const CardContainer = styled.div<{ isHovered: boolean, modalState: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -360,9 +485,10 @@ const CardContainer = styled.div<{ isHovered: boolean }>`
   border-radius: 10px;
   cursor: pointer;
   background-color: ${(props) => (props.isHovered ? "#f0f0f0" : "white")};
+  z-index: ${(props) => (props.modalState ? -10 : 999)}
 `;
 
-const ImageWrapper = styled.div`
+const ImageContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -406,10 +532,10 @@ const ImagePreview = styled.img`
   height: 400px;
   width: 100%;
   border-radius: 20px;
+  
 `;
 
 const MediaContainer = styled.div`
-  z-index: 1001;
   width: 85%;
 `;
 
@@ -420,12 +546,13 @@ const VideoContainer = styled.div`
   overflow: hidden; // 추가된 부분
 `;
 
-const ButtonContainer = styled.div`
+const ButtonContainer = styled.div<{modalState: boolean}>`
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
   width: 100%;
   max-width: 800px;
+  z-index: ${(props) => (props.modalState ? -10 : 1000)}
 `;
 
 const ReactionWrapper = styled.div`
@@ -489,6 +616,14 @@ const ShareWrapper = styled.div`
   align-items: center;
 `;
 
+const ShareIcon = styled.img`
+  width : 30px !important;
+  height : 30px !important;
+  object-fit: contain !important;
+  border-radius : 45% !important;
+  margin-right: 10px;
+`
+
 const ShareButton = styled.button<{isHovered: boolean}>`
   display: flex;
   align-items: center;
@@ -496,8 +631,8 @@ const ShareButton = styled.button<{isHovered: boolean}>`
   gap: 8px;
   background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
   border: 1px solid gray;
-  height: 100%;
-  width: 80%;
+  height: 50px;
+  width: 80px;
   border-radius: 30px;
   margin-left: -7px;
   cursor: pointer;

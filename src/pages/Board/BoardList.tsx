@@ -141,6 +141,7 @@ const BoardList = () => {
                     createdAt={el.created_at}
                     content={el.content}
                     type={el.type}
+                    shareCount={el.share_count}
                   />
                 </React.Fragment>
               );
