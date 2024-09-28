@@ -10,9 +10,10 @@ import {
   UsersKakaoOAuthLoginAPI,
   UsersNaverOAuthSignUpAPI,
 } from "../api/OAuthApi";
+type modalType = 'login' | 'signup' | 'recovery';
 
 interface Props {
-  readonly onSwitchView: () => void;
+  readonly onSwitchView: (view: modalType) => void;
   readonly modalIsOpen: (state: boolean) => void;
 }
 type OAuthReturnType = "NEW_USER" | "EXITING_USER";
@@ -302,7 +303,7 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
           />
           {errorMessage && <div style={styles.errorText}>{errorMessage}</div>}
           <div style={styles.forgotPasswordContainer}>
-            <a href="/forgot-password" style={styles.forgotPasswordLink}>
+            <a onClick={() => {onSwitchView('recovery')}} style={styles.forgotPasswordLink}>
               비밀번호를 잊으셨나요?
             </a>
           </div>
@@ -324,7 +325,7 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
             marginTop: "0px",
           }}
         >
-          <button onClick={onSwitchView} style={styles.switchButton}>
+          <button onClick={() => {onSwitchView('signup')}} style={styles.switchButton}>
             회원가입
           </button>
         </div>
@@ -345,7 +346,7 @@ const styles = {
     flexDirection: "column" as "column",
     justifyContent: "space-between",
     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-    height: "736px", // 높이를 회원가입과 맞춤
+    height: "736px", // 높이를 회원가입과 맞춤,
   },
   header: {
     textAlign: "center" as "center",

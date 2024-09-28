@@ -132,6 +132,7 @@ const BoardList = () => {
             list.map((el: CardType, index) => {
               return (
                 <React.Fragment key={el.id}>
+
                   <Card
                     // 고유한 키 추가
                     id={el.id}
