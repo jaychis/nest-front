@@ -15,7 +15,6 @@ import CommunityCreatePage1 from "./pages/Board/CommunityCreate/CommunityCreateP
 import CommunityCreatePage3 from "./pages/Board/CommunityCreate/CommunityCreatePage3";
 import CommunityCreatePage4 from "./pages/Board/CommunityCreate/CommunityCreatePage4";
 import { CommunityProvider } from "./contexts/CommunityContext";
-import SubmitInquiry from "./pages/User/SubmitInquiry";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -39,10 +38,9 @@ const styles = {
   mainContent: {
     flex: 1,
     padding: "20px",
-    marginLeft : '11%',
-    marginTop : '80px',
+    marginLeft: "11%",
+    marginTop: "80px",
   },
-  
 };
 function App() {
   return (
@@ -88,14 +86,7 @@ function App() {
             />
             {/* 문의하기 게시판*/}
 
-
-
-            <Route
-              path="/users/inquiry"
-              element={
-                  <UsersInquiry />
-              }
-            />
+            <Route path="/users/inquiry" element={<UsersInquiry />} />
             {/* 커뮤니티 만들기*/}
             <Route
               path="/community/create1"
@@ -139,7 +130,6 @@ function App() {
               }
             />
             {/* 새 라우터 */}
-
           </Routes>
         </CommunityProvider>
       </Router>
