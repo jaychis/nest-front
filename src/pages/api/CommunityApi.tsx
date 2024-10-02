@@ -31,10 +31,15 @@ export interface CommunitySubmitParams {
 }
 
 export const CommunitySubmitAPI = async (params: CommunitySubmitParams) => {
+  const accessToken:string = localStorage.getItem('access_token') as string
   try {
     const URL: string = `${COMMUNITY_URL}`;
 
-    const res = await client.post(URL, params);
+    const res = await client.post(URL, params,
+      {headers : {
+        Authorization: `Bearer ${accessToken}`
+    }}
+    );
 
     return res;
   } catch (e: any) {
