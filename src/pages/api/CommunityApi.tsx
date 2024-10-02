@@ -15,19 +15,19 @@ export const GetCommunitiesNameAPI = async ({
     const URL: string = `${COMMUNITY_URL}/get/communities/name/${name}`;
 
     const res = await client.get(URL);
-
+    console.log(res)
     return res;
   } catch (e: any) {
     ErrorHandling({ text: "GetSearchCommunitiesNameAPI", error: e });
   }
 };
-{/* banner, icon타입 File임의로 줬는데 프론트단에서 호스팅 시켜서 넘겨줘야 하는거 일 수 있음 */}
+
 export interface CommunitySubmitParams {
   readonly name: string;
   readonly description: string;
   readonly visibility?: CommunityVisibilityType;
-  readonly banner?: string | null | File;
-  readonly icon?: string | null | File;
+  readonly banner?: string | null ;
+  readonly icon?: string | null ;
 }
 
 export const CommunitySubmitAPI = async (params: CommunitySubmitParams) => {

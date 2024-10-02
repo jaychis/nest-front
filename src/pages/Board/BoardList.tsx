@@ -65,6 +65,7 @@ const BoardList = () => {
   const [Id, setId] = useState<IdType>(null);
   const [lastInView, setLastInView] = useState<boolean>(false);
   const [allDataLoaded, setAllDataLoaded] = useState<boolean>(false);
+  const [retry, setRetry] = useState<number>(0);
   
 
   useEffect(() => {
@@ -75,8 +76,15 @@ const BoardList = () => {
   }, [inView]);
 
   useEffect(() => {
-    ListApi(Id);
-  }, []);
+    setId(null);
+    setList([]);
+    setAllDataLoaded(false);
+    if(Id === null){
+      ListApi(Id);
+    }else{
+      setRetry((prev) => prev + 1)
+    }
+  }, [buttonType,retry]);
 
   const ListApi = async (id: IdType) => {
     if (allDataLoaded) return;
@@ -121,7 +129,7 @@ const BoardList = () => {
   };
 
   if (!list[0]) {
-    return <div>로딩중..</div>;
+    return <div><EmptyState /></div>;
   }
 
   return (

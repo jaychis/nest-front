@@ -13,8 +13,8 @@ export const ListAPI = ({ take, lastId, category }: ListParams) => {
 
   if (lastId) URL += `&lastId=${lastId}`;
   if (category) URL += `&category=${category}`;
-
   const res = client.get(URL);
+  
   return res;
 };
 
