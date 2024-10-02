@@ -15,7 +15,7 @@ export const GetCommunitiesNameAPI = async ({
     const URL: string = `${COMMUNITY_URL}/get/communities/name/${name}`;
 
     const res = await client.get(URL);
-
+    console.log(res)
     return res;
   } catch (e: any) {
     ErrorHandling({ text: "GetSearchCommunitiesNameAPI", error: e });
@@ -25,16 +25,21 @@ export const GetCommunitiesNameAPI = async ({
 export interface CommunitySubmitParams {
   readonly name: string;
   readonly description: string;
-  readonly visibility: CommunityVisibilityType;
-  readonly banner?: string | null;
-  readonly icon?: string | null;
+  readonly visibility?: CommunityVisibilityType;
+  readonly banner?: string | null ;
+  readonly icon?: string | null ;
 }
 
 export const CommunitySubmitAPI = async (params: CommunitySubmitParams) => {
+  const accessToken:string = localStorage.getItem('access_token') as string
   try {
-    const URL: string = `${COMMUNITY_URL}/`;
+    const URL: string = `${COMMUNITY_URL}`;
 
-    const res = await client.post(URL, params);
+    const res = await client.post(URL, params,
+      {headers : {
+        Authorization: `Bearer ${accessToken}`
+    }}
+    );
 
     return res;
   } catch (e: any) {

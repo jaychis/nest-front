@@ -92,8 +92,8 @@ const SubmitInquiry: React.FC<SubmitModalProps> = ({isopen, setIsopen,}) => {
             <form  ref={form} onSubmit={sendEmail}>
                 <InquiryContainer>    
                     <LogoTitleWrapper>
-                    <img src = {logo} style = {{height : '50px', width : '50px', display : 'flex', justifyContent : 'center', marginRight : '35%'}}/>
-                    <SectionTitle>1:1 문의</SectionTitle><br/>
+                        <img src = {logo} style = {{height : '50px', width : '50px', display : 'flex', justifyContent : 'center', marginRight : '35%'}}/>
+                        <SectionTitle>1:1 문의</SectionTitle><br/>
                     </LogoTitleWrapper>
                     
                     <TitleWrapper>

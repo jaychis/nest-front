@@ -6,7 +6,7 @@ import { AppDispatch } from "../../store/store";
 import { sideButtonSliceActions } from "../../reducers/mainListTypeSlice";
 import { RootState } from "../../store/store";
 import { UserModalState} from "../../reducers/modalStateSlice";
-
+import { ListAPI } from "../api/BoardApi";
 
 import logo from "../../assets/img/panda_logo.png";
 import { CommunityListAPI } from "../api/CommunityApi";

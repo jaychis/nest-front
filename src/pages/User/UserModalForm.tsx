@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import Modal from "../../components/Modal";
 import Login from "./Login";
 import Signup from "./Signup";
+import PassWordReset from "../../components/PasswordReset";
 
 
-  
-type modalType = "login" | "signup";
+type modalType = "login" | "signup" | "recovery";
   const UserModalForm = () => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [activeView, setActiveView] = useState<modalType>("login");
@@ -21,8 +21,8 @@ type modalType = "login" | "signup";
       <div
         className = 'modalContainer'
         style={{
-          marginRight: "5px",
-          marginLeft: "5px",
+          marginRight: "30px",
+          // marginLeft: "5px",
           width: "70px",
           height: "50px",
           display: "flex",
@@ -61,17 +61,28 @@ type modalType = "login" | "signup";
         }}
         // onSubmit={handleSubmit}
       >
-        {activeView === "login" ? (
+
+        {activeView === "login" && (
           <Login
-            onSwitchView={() => switchView("signup")}
+            onSwitchView={switchView}
             modalIsOpen={setModalIsOpen}
           />
-        ) : (
+        )}
+
+        {activeView === "signup" && (
           <Signup
             onSwitchView={() => switchView("login")}
             modalIsOpen={setModalIsOpen}
           />
         )}
+
+        {activeView === "recovery" && (
+          <PassWordReset
+            onSwitchView={() => switchView("login")}
+            modalIsOpen={setModalIsOpen}
+          />
+        )}
+
       </Modal>
     </>
   );
