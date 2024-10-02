@@ -304,7 +304,7 @@ const GlobalBar = () => {
                   height: "50px",
                   background: bellHover ? "#D3D3D3" : "transparent",
                   cursor: "pointer",
-                  marginRight: "10px",
+                  marginRight: "30px",
                 }}
                 onMouseEnter={() => setBellHover(true)}
                 onMouseLeave={() => setBellHover(false)}
