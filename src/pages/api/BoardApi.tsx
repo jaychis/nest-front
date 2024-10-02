@@ -13,8 +13,8 @@ export const ListAPI = ({ take, lastId, category }: ListParams) => {
 
   if (lastId) URL += `&lastId=${lastId}`;
   if (category) URL += `&category=${category}`;
-
   const res = client.get(URL);
+  
   return res;
 };
 
@@ -39,8 +39,8 @@ export const PopularListAPI = ({ take, lastId, category }: ListParams) => {
 };
 
 interface ReadParams {
-  readonly id: string;
-  readonly title: string;
+  readonly id: string | null;
+  readonly title: string | null;
 }
 export const ReadAPI = (params: ReadParams) => {
   try {
@@ -69,9 +69,13 @@ export interface SubmitParams {
 }
 
 export const SubmitAPI = async (params: SubmitParams) => {
+  const accessToken:string = localStorage.getItem('access_token') as string
   const URL: string = `boards/`;
 
-  const res = await client.post(URL, params);
+  const res = await client.post(URL, params,{
+    headers : {
+      Authorization: `Bearer ${accessToken}`
+    }});
   return res;
 };
 

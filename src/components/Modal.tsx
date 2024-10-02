@@ -1,3 +1,5 @@
+import styled from 'styled-components';
+
 interface Props {
   readonly children: React.ReactNode;
   readonly isOpen: boolean;
@@ -10,92 +12,72 @@ const Modal = ({ children, isOpen, onClose, buttonLabel}: Props) => {
   if (!isOpen) return null;
   
   return (
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.30)',
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <div>
-          <div
-            style={{
-              backgroundColor: "#fff",
-              borderRadius: "25px",
-              padding: "25px",
-              minWidth: "55vh",
-              minHeight: "65vh",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              maxWidth: "90%",
-              maxHeight: "90%",
-              overflow: "auto",
-            }}
-          >
+      <ModalContainer>
+          <ModalBody>
             <div style={{ display: "flex", height: "20%" }}>
-              <button
-                style={{
-                  alignSelf: "flex-end",
-                  padding: "20px",
-                  background: "red",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "35px",
-                  cursor: "pointer",
-                  marginLeft: "auto",
-                  marginRight: "10px",
-                }}
-                
-                onClick = {() => {onClose()}}
-              >
+              <CloseButton onClick={onClose}>
                 Close
-              </button>
+              </CloseButton>
             </div>
-            <div 
-              style={{ 
-                flex: 1, 
-                display: "flex", 
-                justifyContent: "center", 
-                alignItems: "center" 
-              }}>
-
               {children}
-            </div>
-            <div
-              style={{
-                display: "flex",
-                height: "20%",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              {/* <button
-                type="submit"
-                style={{
-                  padding: "20px",
-                  width: "40vh",
-                  borderRadius: "35px",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-                // onClick={() => onSubmit()}
-              >
-                {buttonLabel}
-              </button> */}
-            </div>
-          </div>
-        </div>
-      </div>
+          </ModalBody>
+      </ModalContainer>
     
   );
 };
 
 export default Modal;
+
+const ModalContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.30);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const ModalBody = styled.div`
+  background-color: #fff;
+  border-radius: 25px;
+  padding: 25px;
+  min-width: 450px; 
+  max-width: 400px;
+  max-height: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: auto;
+  
+`;
+
+const CloseButton = styled.button`
+  align-self: flex-end;
+  padding: 20px;
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 35px;
+  cursor: pointer;
+  margin-left: auto;
+  margin-right: 10px;
+`;
+
+const ContentWrapper = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: black;
+  width: 80%;
+`;
+
+const ActionButtonContainer = styled.div`
+  display: flex;
+  height: 20%;
+  justify-content: center;
+  align-items: center;
+`;

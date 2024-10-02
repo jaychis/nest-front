@@ -13,6 +13,7 @@ import {
 import BoardComment, { CommentType } from "./BoardComment";
 import BoardReply, { ReplyType } from "./BoardReply";
 import RightSideBar from "../Global/RightSideBar";
+import { useLocation } from 'react-router-dom';
 
 const BoardRead = () => {
   const BOARD_ID: string = sessionStorage.getItem("boardId") as string;
@@ -35,14 +36,20 @@ const BoardRead = () => {
   });
   const [isCommentState, setIsCommentState] = useState<CommentType[]>([]);
 
+  const useQuery = () => {
+    const { search } = useLocation();
+    return React.useMemo(() => new URLSearchParams(search), [search]);
+  }
+
+  const query = useQuery();
+  const id = query.get('id');
+  const title = query.get('title');
+  const content = query.get('content');
+
   useEffect(() => {
-    const ID: string = BOARD_ID;
-    const TITLE: string = BOARD_TITLE;
-    console.log("ID: ", ID);
-    console.log("TITLE: ", TITLE);
 
     const readBoard = async (): Promise<void> => {
-      const commentRes = await CommentListAPI({ boardId: ID });
+      const commentRes = await CommentListAPI({ boardId: id });
 
       if (!commentRes) return;
       const commentResponse = commentRes.data.response;
@@ -50,8 +57,8 @@ const BoardRead = () => {
       setIsCommentState([...commentResponse]);
 
       const res = await ReadAPI({
-        id: ID,
-        title: TITLE,
+        id: id,
+        title: title,
       });
 
       if (!res) return;
