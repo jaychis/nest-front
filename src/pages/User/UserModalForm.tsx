@@ -4,14 +4,12 @@ import Modal from "../../components/Modal";
 import Login from "./Login";
 import Signup from "./Signup";
 
-
-  
 type modalType = "login" | "signup";
-  const UserModalForm = () => {
+const UserModalForm = () => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [activeView, setActiveView] = useState<modalType>("login");
   const [isLoginHovered, setIsLoginHovered] = useState<boolean>(false);
-  
+
   const switchView = (view: modalType) => {
     setActiveView(view);
   };
@@ -19,10 +17,10 @@ type modalType = "login" | "signup";
   return (
     <>
       <div
-        className = 'modalContainer'
+        className="modalContainer"
         style={{
-          marginRight: "5px",
-          marginLeft: "5px",
+          marginRight: "30px",
+          // marginLeft: "5px",
           width: "70px",
           height: "50px",
           display: "flex",
