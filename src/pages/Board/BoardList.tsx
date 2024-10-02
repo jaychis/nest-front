@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import EmptyState from "../../components/EmptyState";
 import { useInView } from "react-intersection-observer";
-import { UserModalState, setModalState} from "../../reducers/modalStateSlice";
+import { UserModalState, setModalState } from "../../reducers/modalStateSlice";
 
 interface ContainerProps {
   children?: React.ReactNode;
@@ -33,7 +33,9 @@ const MainContainer = ({ children }: ContainerProps) => {
 
 // const CardsContainer: React.FC<ContainerProps> = ({ children }) => {
 const CardsContainer = ({ children }: ContainerProps) => {
-  const modalState : UserModalState = useSelector((state: RootState) => state.modalState);
+  const modalState: UserModalState = useSelector(
+    (state: RootState) => state.modalState,
+  );
   return (
     <div
       style={{
@@ -44,7 +46,6 @@ const CardsContainer = ({ children }: ContainerProps) => {
         maxWidth: "800px", // 적절한 최대 너비 설정
         boxSizing: "border-box",
         padding: "0 20px", // 좌우 패딩 추가
-        
       }}
     >
       {children}
@@ -66,7 +67,6 @@ const BoardList = () => {
   const [lastInView, setLastInView] = useState<boolean>(false);
   const [allDataLoaded, setAllDataLoaded] = useState<boolean>(false);
   const [retry, setRetry] = useState<number>(0);
-  
 
   useEffect(() => {
     if (inView && !lastInView) {
@@ -79,12 +79,12 @@ const BoardList = () => {
     setId(null);
     setList([]);
     setAllDataLoaded(false);
-    if(Id === null){
+    if (Id === null) {
       ListApi(Id);
-    }else{
-      setRetry((prev) => prev + 1)
+    } else {
+      setRetry((prev) => prev + 1);
     }
-  }, [buttonType,retry]);
+  }, [buttonType, retry]);
 
   const ListApi = async (id: IdType) => {
     if (allDataLoaded) return;
@@ -101,7 +101,15 @@ const BoardList = () => {
             category: null,
           });
           break;
-        case "ALL":
+        // 리스트 API 작업 ljh
+        case "TAGMATCH":
+          response = await AllListAPI({
+            take: TAKE,
+            lastId: id,
+            category: null,
+          });
+          break;
+        case "FREQUENTSHARE":
           response = await AllListAPI({
             take: TAKE,
             lastId: id,
@@ -129,7 +137,11 @@ const BoardList = () => {
   };
 
   if (!list[0]) {
-    return <div><EmptyState /></div>;
+    return (
+      <div>
+        <EmptyState />
+      </div>
+    );
   }
 
   return (
@@ -140,7 +152,6 @@ const BoardList = () => {
             list.map((el: CardType, index) => {
               return (
                 <React.Fragment key={el.id}>
-
                   <Card
                     // 고유한 키 추가
                     id={el.id}
