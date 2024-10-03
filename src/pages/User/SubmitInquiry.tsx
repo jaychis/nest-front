@@ -51,9 +51,11 @@ const SubmitInquiry: React.FC<SubmitModalProps> = ({isopen, setIsopen,}) => {
     const checkForm = () => {
         if(title.trim() === '' || content.trim() === '') alert('제목과 내용은 필수 입력 항목입니다.')
         else {
-            postContactApi({title,nickname, content})}
+            postContactApi({title,nickname, content})
             setIsopen((prev) => !prev)
             alert('접수되었습니다.')
+        }
+            
     }
 
     const modules = {

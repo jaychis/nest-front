@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
-import GlobalBar from "../Global/GlobalBar";
-import GlobalSideBar from "../Global/GlobalSideBar";
-import Card from "../../components/Card";
 import { useSearchParams } from "react-router-dom";
-import { UsersInquiryAPI } from "../api/UserApi";
 import EmptyState from "../../components/EmptyState";
 import { getContactAllListAPi } from "../api/InquiryApi";
 import { InquiryType } from "../../_common/CollectionTypes";
@@ -73,18 +69,6 @@ const UsersInquiry = () => {
   const userId:string = localStorage.getItem('id') as string;
   const [comment, setComment] = useState<string | null>();
   const [count, setCount] = useState<number>(0);
-
-  const checkComment = (number:number):number => {
-    setComment('Hello World');
-    return 0;
-  }
-
-  getContactAllListAPi({ take: TAKE, page: 1, nickname: nickname }).then(
-    (res) => {
-      const status = res?.data.response.current_list;
-      setList(status);
-    },
-  );
 
   const getAllList = () => {
     return getContactAllListAPi({take :TAKE, page : 1, nickname : nickname})
