@@ -10,6 +10,7 @@ import { ListAPI } from "../api/BoardApi";
 
 import logo from "../../assets/img/panda_logo.png";
 import { CommunityListAPI } from "../api/CommunityApi";
+import Tooltip from "../../components/Tooltip";
 
 const GlobalSideBar = () => {
   const navigate = useNavigate();
@@ -145,6 +146,7 @@ const GlobalSideBar = () => {
           style={{ marginLeft: "6px", cursor: "pointer", fontSize: "16px" }}
         >
           홈
+          <Tooltip content={"게시글 점수가 높은 랭킹입니다."} />
         </span>
       </div>
       <div
@@ -173,6 +175,7 @@ const GlobalSideBar = () => {
           style={{ marginLeft: "6px", cursor: "pointer", fontSize: "16px" }}
         >
           실시간
+          <Tooltip content={"사용자들이 댓글을 많이 단 랭킹입니다."} />
         </span>
       </div>
       <div
@@ -202,6 +205,7 @@ const GlobalSideBar = () => {
           style={{ marginLeft: "6px", cursor: "pointer", fontSize: "16px" }}
         >
           퍼주기
+          <Tooltip content={"사용자들이 많이 공유한 랭킹입니다."} />
         </span>
       </div>
       <div
@@ -227,9 +231,14 @@ const GlobalSideBar = () => {
         </span>
         <span
           onClick={() => handleClick("TAGMATCH")}
-          style={{ marginLeft: "6px", cursor: "pointer", fontSize: "16px" }}
+          style={{
+            marginLeft: "6px",
+            cursor: "pointer",
+            fontSize: "16px",
+          }}
         >
           내가 좋아할 글
+          <Tooltip content={"사용자가 좋아할 만한 태그를 가진 랭킹입니다."} />
         </span>
       </div>
       <div
