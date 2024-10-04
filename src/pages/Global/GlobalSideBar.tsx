@@ -265,9 +265,16 @@ const GlobalSideBar = () => {
       >
         소통해요!
       </div>
-      <div style={{ padding: "5px 0 10px 10px" }}>
+      <div style={{ padding: "3px 5px 0" }}>
         <div
-          style={{ display: "flex", alignItems: "center", marginBottom: "6px" }}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            backgroundColor: isSideHovered === "FAQ" ? "#f0f0f0" : "white",
+            borderRadius: "10px",
+            margin: "5px",
+            cursor: "pointer",
+          }}
           onMouseEnter={() => setIsSideHovered("FAQ")}
           onMouseLeave={() => setIsSideHovered(null)}
           onClick={handleFAQClick}
