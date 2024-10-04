@@ -19,7 +19,7 @@ const GlobalSideBar = () => {
     (state: RootState) => state.modalState,
   );
   const [isSideHovered, setIsSideHovered] = useState<
-    MainListTypes | "CREATE_COMMUNITY" | null
+    MainListTypes | "CREATE_COMMUNITY" | "FAQ" | null
   >(null);
   const [selectedButton, setSelectedButton] = useState<MainListTypes>("HOME");
   const [page, setPage] = useState(1);
@@ -88,6 +88,10 @@ const GlobalSideBar = () => {
 
   const handleLoadMore = () => {
     setDisplayCount((prevCount) => prevCount + 5);
+  };
+
+  const handleFAQClick = () => {
+    navigate("/faq/list");
   };
 
   const handleCreateCommunityClick = () => {
@@ -241,6 +245,7 @@ const GlobalSideBar = () => {
           <Tooltip content={"사용자가 좋아할 만한 태그를 가진 랭킹입니다."} />
         </span>
       </div>
+      {/*  */}
       <div
         style={{ fontWeight: "bold", paddingLeft: "10px", fontSize: "14px" }}
       >
@@ -254,6 +259,24 @@ const GlobalSideBar = () => {
           <span style={{ marginLeft: "6px", fontSize: "14px" }}>r/korea</span>
         </div>
       </div>
+      {/*  */}
+      <div
+        style={{ fontWeight: "bold", paddingLeft: "10px", fontSize: "14px" }}
+      >
+        소통해요!
+      </div>
+      <div style={{ padding: "5px 0 10px 10px" }}>
+        <div
+          style={{ display: "flex", alignItems: "center", marginBottom: "6px" }}
+          onMouseEnter={() => setIsSideHovered("FAQ")}
+          onMouseLeave={() => setIsSideHovered(null)}
+          onClick={handleFAQClick}
+        >
+          <span style={{ fontSize: "20px" }}>🇰🇷</span>
+          <span style={{ marginLeft: "6px", fontSize: "14px" }}>FAQ</span>
+        </div>
+      </div>
+      {/*  */}
       <div
         style={{ fontWeight: "bold", paddingLeft: "10px", fontSize: "14px" }}
       >
