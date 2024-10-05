@@ -214,9 +214,9 @@ const BoardComment = (co: BoardCommentProps) => {
           ></ReplyTextarea>
           <ReplyButtonContainer>
             <CancelButton onClick={() => setIsCommentReplyButton(false)}>
-              Cancel
+              취소
             </CancelButton>
-            <SubmitButton onClick={replyWrite}>Comment</SubmitButton>
+            <SubmitButton onClick={replyWrite}>답글</SubmitButton>
           </ReplyButtonContainer>
         </ReplyContainer>
       )}
@@ -256,7 +256,6 @@ const Nickname = styled.div`
 
 const CommentContent = styled.div<{ isHovered: boolean }>`
   background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
-  border-radius: 10px;
   padding: 8px;
   width: 85%;
   text-align: justify;
@@ -266,7 +265,7 @@ const CommentContent = styled.div<{ isHovered: boolean }>`
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: center;
   width: 1100px;
   margin-bottom: 10px;
 `;
@@ -280,7 +279,6 @@ const ReactionWrapper = styled.div<{ isCommentReaction: ReactionStateTypes }>`
         : '#84d7fb'};
   padding: 10px;
   margin-right: 10px;
-  border-radius: 20px;
   margin-left: -10px;
   display: flex;
   align-items: center;
@@ -316,8 +314,7 @@ const ReplyContainer = styled.div`
   flex-direction: column;
   width: 80%;
   margin: 10px;
-  border: 3px solid #ccc;
-  border-radius: 30px;
+  border: 1px solid #ccc;
   padding: 10px;
 `;
 
