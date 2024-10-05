@@ -14,6 +14,7 @@ import {
 import logo from '../../assets/img/panda_logo.png';
 import { ReplyType } from './BoardReply';
 import { ReplySubmitAPI, ReplySubmitParams } from '../api/ReplyApi';
+import { ThumbsDown, ThumbsUp } from 'lucide-react';
 
 export interface CommentType {
   readonly id: string;
@@ -69,11 +70,20 @@ const BoardComment = (co: BoardCommentProps) => {
 
           const type = res.data.response?.type;
           console.log('type : ', type);
-          if (type === undefined) setCommentIsReaction(null);
-          if (type === 'LIKE') setCommentIsReaction('LIKE');
-          if (type === 'DISLIKE') setCommentIsReaction('DISLIKE');
+          if (type === undefined) {
+            setCommentIsReaction(null);
+          } else if (type === 'LIKE') {
+            setCommentIsReaction('LIKE');
+          } else if (type === 'DISLIKE') {
+            setCommentIsReaction('DISLIKE');
+          }
         })
-        .catch((err) => console.error(err));
+        .catch((err) => {
+          console.error('Error in ReactionAPI:', err);
+          alert(
+            'An error occurred while processing your reaction. Please try again later.'
+          );
+        });
     }
   };
 
@@ -113,7 +123,12 @@ const BoardComment = (co: BoardCommentProps) => {
           content: '',
         });
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error('Error in ReplySubmitAPI:', err);
+        alert(
+          'An error occurred while submitting your reply. Please try again later.'
+        );
+      });
   };
 
   useEffect(() => {
@@ -127,9 +142,12 @@ const BoardComment = (co: BoardCommentProps) => {
           }
         });
       })
-      .catch((err) =>
-        console.error('BoardComment ReactionListAPI err : ', err)
-      );
+      .catch((err) => {
+        console.error('BoardComment ReactionListAPI error:', err);
+        alert(
+          'An error occurred while fetching reactions. Please try again later.'
+        );
+      });
 
     ReactionCountAPI({ boardId: ID })
       .then((res): void => {
@@ -138,9 +156,12 @@ const BoardComment = (co: BoardCommentProps) => {
 
         setIsCardCommentCount(resCount.count);
       })
-      .catch((err) =>
-        console.error('BoardComment ReactionCountAPI err : ', err)
-      );
+      .catch((err) => {
+        console.error('BoardComment ReactionCountAPI error:', err);
+        alert(
+          'An error occurred while fetching the reaction count. Please try again later.'
+        );
+      });
   }, [isCommentReaction]);
 
   return (
@@ -165,7 +186,7 @@ const BoardComment = (co: BoardCommentProps) => {
             hovered={isCardCommentUpHovered}
             onClick={() => reactionCommentButton('LIKE')}
           >
-            좋아요
+            <ThumbsUp />
           </ReactionButton>
           <ReactionCount>{isCardCommentCount}</ReactionCount>
           <ReactionButton
@@ -174,7 +195,7 @@ const BoardComment = (co: BoardCommentProps) => {
             hovered={isCardCommentDownHovered}
             onClick={() => reactionCommentButton('DISLIKE')}
           >
-            싫어요
+            <ThumbsDown />
           </ReactionButton>
         </ReactionWrapper>
         <ActionButton
@@ -213,7 +234,12 @@ const BoardComment = (co: BoardCommentProps) => {
             }
           ></ReplyTextarea>
           <ReplyButtonContainer>
-            <CancelButton onClick={() => setIsCommentReplyButton(false)}>
+            <CancelButton
+              onClick={() => {
+                setIsCommentReplyButton(false);
+                setIsReplyState({ ...isReplyState, content: '' });
+              }}
+            >
               취소
             </CancelButton>
             <SubmitButton onClick={replyWrite}>답글</SubmitButton>
