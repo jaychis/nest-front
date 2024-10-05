@@ -10,9 +10,10 @@ import {
   UsersKakaoOAuthLoginAPI,
   UsersNaverOAuthSignUpAPI,
 } from "../api/OAuthApi";
+type modalType = 'login' | 'signup' | 'recovery';
 
 interface Props {
-  readonly onSwitchView: () => void;
+  readonly onSwitchView: (view: modalType) => void;
   readonly modalIsOpen: (state: boolean) => void;
 }
 type OAuthReturnType = "NEW_USER" | "EXITING_USER";
@@ -213,7 +214,7 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
               access_token: parsedUser.access_token,
               refresh_token: parsedUser.refresh_token,
             });
-            console.log(parsedUser)
+            console.log(parsedUser);
           } else {
             // TODO : 회원가입 로직을 진행하도록 변경하기
           }
@@ -241,24 +242,24 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
           <h2>로그인</h2>
         </div>
         <div style={styles.socialButtonsContainer}>
-          <button
-            style={styles.socialButton}
-            onClick={() => alert("Continue with Google")}
-          >
-            <FaGoogle style={styles.socialLogo} />
-            구글로 로그인
-          </button>
-          <button
-            style={styles.socialButton}
-            onClick={() => alert("Continue with Apple")}
-          >
-            <FaApple style={styles.socialLogo} />
-            애플로 로그인
-          </button>
-          <button style={styles.socialButton} onClick={naverOauthLogin}>
-            <SiNaver style={styles.socialLogo} />
-            네이버로 로그인
-          </button>
+          {/*<button*/}
+          {/*  style={styles.socialButton}*/}
+          {/*  onClick={() => alert("Continue with Google")}*/}
+          {/*>*/}
+          {/*  <FaGoogle style={styles.socialLogo} />*/}
+          {/*  구글로 로그인*/}
+          {/*</button>*/}
+          {/*<button*/}
+          {/*  style={styles.socialButton}*/}
+          {/*  onClick={() => alert("Continue with Apple")}*/}
+          {/*>*/}
+          {/*  <FaApple style={styles.socialLogo} />*/}
+          {/*  애플로 로그인*/}
+          {/*</button>*/}
+          {/*<button style={styles.socialButton} onClick={naverOauthLogin}>*/}
+          {/*  <SiNaver style={styles.socialLogo} />*/}
+          {/*  네이버로 로그인*/}
+          {/*</button>*/}
           <button style={styles.socialButton} onClick={kakaoOauthLogin}>
             <FaComment style={styles.socialLogo} />
             카카오로 로그인
@@ -302,7 +303,7 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
           />
           {errorMessage && <div style={styles.errorText}>{errorMessage}</div>}
           <div style={styles.forgotPasswordContainer}>
-            <a href="/forgot-password" style={styles.forgotPasswordLink}>
+            <a onClick={() => {onSwitchView('recovery')}} style={styles.forgotPasswordLink}>
               비밀번호를 잊으셨나요?
             </a>
           </div>
@@ -324,7 +325,7 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
             marginTop: "0px",
           }}
         >
-          <button onClick={onSwitchView} style={styles.switchButton}>
+          <button onClick={() => {onSwitchView('signup')}} style={styles.switchButton}>
             회원가입
           </button>
         </div>
@@ -345,7 +346,7 @@ const styles = {
     flexDirection: "column" as "column",
     justifyContent: "space-between",
     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-    height: "736px", // 높이를 회원가입과 맞춤
+    height: "400px", // 높이를 회원가입과 맞춤
   },
   header: {
     textAlign: "center" as "center",

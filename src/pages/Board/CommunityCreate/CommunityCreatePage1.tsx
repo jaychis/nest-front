@@ -10,10 +10,6 @@ import {
 import styled from 'styled-components';
 import MultiStepNav from '../../../components/Buttons/MultiStepNav';
 import Button from '../../../components/Buttons/Button';
-import { CommunitySubmitParams } from '../../api/CommunityApi';
-import { useDispatch, useSelector } from "react-redux";
-import { RootState, AppDispatch } from '../../../store/store';
-import { community } from '../../../reducers/communitySlice';
 
 const CommunityCreatePage1: FC = () => {
   const navigate = useNavigate();
@@ -30,14 +26,9 @@ const CommunityCreatePage1: FC = () => {
   const [textareaHeight, setTextareaHeight] = useState('120px');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [profilePreview, setProfilePreview] = useState<string | null>(null);
-  const [backgroundPreview, setBackgroundPreview] = useState<string | null>(null);
-  const communityState:CommunitySubmitParams = useSelector((state: RootState) => state.community);
-  const dispatch = useDispatch<AppDispatch>();
-
-  const handleUpdateCommunity = () => {
-    dispatch(community({ name: 'test',description: 'test', visibility: 'PUBLIC', }));
-    console.log(communityState.name);
-  };
+  const [backgroundPreview, setBackgroundPreview] = useState<string | null>(
+    null
+  );
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -113,7 +104,6 @@ const CommunityCreatePage1: FC = () => {
 
   return (
     <Container textareaHeight={textareaHeight}>
-      <button onClick = {() => {handleUpdateCommunity()}}>test</button>
       <Heading>커뮤니티 만들기</Heading>
       <Form onSubmit={(e) => e.preventDefault()}>
         <BackgroundUploader>

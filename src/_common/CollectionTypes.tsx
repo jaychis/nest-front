@@ -3,7 +3,7 @@ export interface CollectionTypes {
   readonly value: string;
 }
 
-export type MainListTypes = "HOME" | "POPULAR" | "ALL" | string;
+export type MainListTypes = "HOME" | "POPULAR" | "TAGMATCH" | "FREQUENTSHARE";
 
 export type ReactionStateTypes = "LIKE" | "DISLIKE" | null;
 

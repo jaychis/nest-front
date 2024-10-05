@@ -11,11 +11,10 @@ import { searchQuery } from "../../reducers/searchSlice";
 import { RootState, AppDispatch } from "../../store/store";
 import debounce from "lodash.debounce";
 import modalStateReducer from "../../reducers/modalStateSlice";
-import { UserModalState, setModalState} from "../../reducers/modalStateSlice";
-import 'react-tooltip/dist/react-tooltip.css' 
-import { Tooltip } from 'react-tooltip'
-import './GlobalBar.module.css' ;
-
+import { UserModalState, setModalState } from "../../reducers/modalStateSlice";
+import "react-tooltip/dist/react-tooltip.css";
+import { Tooltip } from "react-tooltip";
+import "./GlobalBar.module.css";
 
 const GlobalBar = () => {
   const navigate = useNavigate();
@@ -34,7 +33,8 @@ const GlobalBar = () => {
   const [plusHover, setPlusHover] = useState<boolean>(false);
   const [inquiryHover, setInquiryHover] = useState<boolean>(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false);
-  const [isNotificationModalOpen, setIsNotificationModalOpen] = useState<boolean>(false);
+  const [isNotificationModalOpen, setIsNotificationModalOpen] =
+    useState<boolean>(false);
   const userButtonRef = useRef<HTMLDivElement>(null);
   const bellButtonRef = useRef<HTMLDivElement>(null);
 
@@ -93,14 +93,14 @@ const GlobalBar = () => {
     if (isProfileModalOpen === false && modalState.modalState === true) {
       openModal();
     }
-  },[isProfileModalOpen])
+  }, [isProfileModalOpen]);
 
   useEffect(() => {
-    if(isNotificationModalOpen === false && modalState.modalState === true){
-      openModal()
+    if (isNotificationModalOpen === false && modalState.modalState === true) {
+      openModal();
     }
-  },[isNotificationModalOpen])
-  
+  }, [isNotificationModalOpen]);
+
   return (
     <div>
       <nav
@@ -113,7 +113,7 @@ const GlobalBar = () => {
           padding: "10px",
           border: "2px solid #D3D3D3",
           width: "100%",
-          zIndex : modalState.modalState ? -1 : 2000
+          zIndex: modalState.modalState ? -1 : 2000,
         }}
       >
         {/* Logo and Site Name */}
@@ -180,156 +180,164 @@ const GlobalBar = () => {
           )}
         </div>
 
-      {/* Navigation Icons */}
-      <div style={{ display: "flex", alignItems: "center" }}>
-        {localStorage.getItem("access_token") ? (
-          <>
-            <div
-              ref={userButtonRef}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                borderRadius: "50%",
-                width: "40px",
-                height: "40px",
-                background: userHover ? "#D3D3D3" : "transparent",
-                cursor: "pointer",
-                position: "relative", // 추가
-              }}
-              onMouseEnter={() => setUserHover(true)}
-              onMouseLeave={() => setUserHover(false)}
-              onClick={toggleProfileModal}
-            >
-              <img
-                src={logo}
-                alt="Profile"
-                onClick = {openModal}
-                style={{
-                  width: "40px",
-                  height: "40px",
-                  borderRadius: "50%",
-                  zIndex: 2,
-                }}
-              />
-            </div>
-            <ProfileModal
-              isOpen={isProfileModalOpen}
-              onRequestClose={toggleProfileModal}
-              buttonRef={userButtonRef}
-            />
-            <div 
-                style = {{
-                display: "flex",
-                alignItems: "center",
-                justifyContent : "center",
-                cursor: "pointer",
-                fontSize: "16px",
-                borderRadius: "25px",
-                marginLeft : '5px',
-                background : plusHover ? '#D3D3D3' : 'white'
-                }}
-                onMouseEnter = {() => {setPlusHover(true)}}
-                onMouseLeave = {() => {setPlusHover(false)}}
-                >
-            <button
-              style={{
-                border: "none",
-                background : plusHover ? '#D3D3D3' : 'white',
-              }}
-              onClick={postSubmit}
-              
-            ><Tooltip
-            id = 'tooltip'
-            place="top"
-            arrowColor='transparent'
-            />
-              <FaPlus 
-              data-tooltip-content='글쓰기' 
-              data-tooltip-id='tooltip'
-              style = {{height : '30px', width : '15px'}}
-              />
-            </button>
-            </div>
-            {/* Plus/Create Icon */}
-            <div
-              style = {{
-                display: "flex",
-                alignItems: "center",
-                justifyContent : "center",
-                cursor: "pointer",
-                fontSize: "16px",
-                borderRadius: "25px",
-                background : inquiryHover ? '#D3D3D3' : 'white',
-                }}
-                onMouseEnter = {() => {setInquiryHover(true)}}
-                onMouseLeave = {() => {setInquiryHover(false)}}
-            >
-              <button 
-                onClick = {() => {navigate('/users/inquiry')}}
+        {/* Navigation Icons */}
+        <div style={{ display: "flex", alignItems: "center" }}>
+          {localStorage.getItem("access_token") ? (
+            <>
+              <div
+                ref={userButtonRef}
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  justifyContent : "center",
-                  border: "none",
+                  justifyContent: "center",
+                  borderRadius: "50%",
+                  width: "40px",
+                  height: "40px",
+                  background: userHover ? "#D3D3D3" : "transparent",
+                  cursor: "pointer",
+                  position: "relative", // 추가
+                }}
+                onMouseEnter={() => setUserHover(true)}
+                onMouseLeave={() => setUserHover(false)}
+                onClick={toggleProfileModal}
+              >
+                <img
+                  src={logo}
+                  alt="Profile"
+                  onClick={openModal}
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    borderRadius: "50%",
+                    zIndex: 2,
+                  }}
+                />
+              </div>
+              <ProfileModal
+                isOpen={isProfileModalOpen}
+                onRequestClose={toggleProfileModal}
+                buttonRef={userButtonRef}
+              />
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
                   fontSize: "16px",
                   borderRadius: "25px",
-                  background : inquiryHover ? '#D3D3D3' : 'white'
-                }}> 
-              <Tooltip
-                id = 'tooltip2'
-                place="top"
-                arrowColor='transparent'
-              />
-              <img 
-                data-tooltip-content='문의하기' 
-                data-tooltip-id='tooltip2'
-                height = "55%" width = '55%' 
-                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAB7klEQVR4nO3Yz4uNURzH8df4kfyakowsLGQU2diIiMjKhkiilJ3ZmRr/gFhYs5iFslMWSikLWSkZUjY2QpRQfqc0fvPoqe/iaRjm3rn3Pj867zrdOs/5fp9z7nnO5/v9HhKJRCJREllDmsYtpK5kjV3IoPox+LeFvMMW9WEDXk122L/ggOqzB+OTHfbR+P2JEdVlJOZYnPMfh324MOgsZqkOM3Em5vYLx/+nWnvxKfquYqHymY/Lhc//4FTldyNeR/8dLFUei3GzIEhbW40jK/Egnj3BGuXI68OYw2Osbjcg5v/GjXj+Htv0jk14E+++jYHpRvY5uBBjvuKQ7rMPn+OdlzCvUylKX6jERMXoBsMF5TyNGd3ItY7ge4w/h9k6K6+j4fsHjnY7adxdiKrX0G/6LMCV8Jl/Uvt7lf2ux8uwu4fl2mcZ7oavt9jc6zR+Be6H7Qusa8PHWjwNH4+wqqx6ZBGuh/1H7GzBdgc+hO0YlpRdWOXyfD585EIwNAWbw/gWNhcxtyoVYh9OFeT5RKjQRPK+kzEmC5vctnKl7lBBnvP8aFdE5IFQu7EWd67Umn07nv/jtuNZjKnF5UM/jkWONB7tVhRFnS4LssbeotSVLC2kYmRpRypGlnakYmSN3ZGs5k1jFpJIJBIJveY3S2K8l4EjqFIAAAAASUVORK5CYII="></img> </button>
-            </div>
-            
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                borderRadius: "50%",
-                width: "50px",
-                height: "50px",
-                background: bellHover ? "#D3D3D3" : "transparent",
-                cursor: "pointer",
-                marginRight: "10px",
-              }}
-              onMouseEnter={() => setBellHover(true)}
-              onMouseLeave={() => setBellHover(false)}
-              onClick = {() => {toggleNotificationModal(); openModal()}}
-            >
-              <FaBell
-                style={{
-                  color: bellHover ? "white" : "black",
-                  width: "20px",
-                  height: "20px",
+                  marginLeft: "5px",
+                  background: plusHover ? "#D3D3D3" : "white",
                 }}
+                onMouseEnter={() => {
+                  setPlusHover(true);
+                }}
+                onMouseLeave={() => {
+                  setPlusHover(false);
+                }}
+              >
+                <button
+                  style={{
+                    border: "none",
+                    background: plusHover ? "#D3D3D3" : "white",
+                  }}
+                  onClick={postSubmit}
+                >
+                  <Tooltip id="tooltip" place="top" arrowColor="transparent" />
+                  <FaPlus
+                    data-tooltip-content="글쓰기"
+                    data-tooltip-id="tooltip"
+                    style={{ height: "30px", width: "15px" }}
+                  />
+                </button>
+              </div>
+              {/* Plus/Create Icon */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  fontSize: "16px",
+                  borderRadius: "25px",
+                  background: inquiryHover ? "#D3D3D3" : "white",
+                }}
+                onMouseEnter={() => {
+                  setInquiryHover(true);
+                }}
+                onMouseLeave={() => {
+                  setInquiryHover(false);
+                }}
+              >
+                <button
+                  onClick={() => {
+                    navigate("/users/inquiry");
+                  }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    border: "none",
+                    fontSize: "16px",
+                    borderRadius: "25px",
+                    background: inquiryHover ? "#D3D3D3" : "white",
+                  }}
+                >
+                  <Tooltip id="tooltip2" place="top" arrowColor="transparent" />
+                  <img
+                    data-tooltip-content="문의하기"
+                    data-tooltip-id="tooltip2"
+                    height="55%"
+                    width="55%"
+                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAB7klEQVR4nO3Yz4uNURzH8df4kfyakowsLGQU2diIiMjKhkiilJ3ZmRr/gFhYs5iFslMWSikLWSkZUjY2QpRQfqc0fvPoqe/iaRjm3rn3Pj867zrdOs/5fp9z7nnO5/v9HhKJRCJREllDmsYtpK5kjV3IoPox+LeFvMMW9WEDXk122L/ggOqzB+OTHfbR+P2JEdVlJOZYnPMfh324MOgsZqkOM3Em5vYLx/+nWnvxKfquYqHymY/Lhc//4FTldyNeR/8dLFUei3GzIEhbW40jK/Egnj3BGuXI68OYw2Osbjcg5v/GjXj+Htv0jk14E+++jYHpRvY5uBBjvuKQ7rMPn+OdlzCvUylKX6jERMXoBsMF5TyNGd3ItY7ge4w/h9k6K6+j4fsHjnY7adxdiKrX0G/6LMCV8Jl/Uvt7lf2ux8uwu4fl2mcZ7oavt9jc6zR+Be6H7Qusa8PHWjwNH4+wqqx6ZBGuh/1H7GzBdgc+hO0YlpRdWOXyfD585EIwNAWbw/gWNhcxtyoVYh9OFeT5RKjQRPK+kzEmC5vctnKl7lBBnvP8aFdE5IFQu7EWd67Umn07nv/jtuNZjKnF5UM/jkWONB7tVhRFnS4LssbeotSVLC2kYmRpRypGlnakYmSN3ZGs5k1jFpJIJBIJveY3S2K8l4EjqFIAAAAASUVORK5CYII="
+                  ></img>{" "}
+                </button>
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: "50%",
+                  width: "50px",
+                  height: "50px",
+                  background: bellHover ? "#D3D3D3" : "transparent",
+                  cursor: "pointer",
+                  marginRight: "30px",
+                }}
+                onMouseEnter={() => setBellHover(true)}
+                onMouseLeave={() => setBellHover(false)}
+                onClick={() => {
+                  toggleNotificationModal();
+                  openModal();
+                }}
+              >
+                <FaBell
+                  style={{
+                    color: bellHover ? "white" : "black",
+                    width: "20px",
+                    height: "20px",
+                  }}
+                />
+              </div>
+              <NotificationModal
+                isOpen={isNotificationModalOpen}
+                onRequestClose={toggleNotificationModal}
+                buttonRef={bellButtonRef}
               />
+              {/* Notification Icon */}
+            </>
+          ) : (
+            <div>
+              <UserModalForm />
             </div>
-            <NotificationModal
-              isOpen={isNotificationModalOpen}
-              onRequestClose={toggleNotificationModal}
-              buttonRef={bellButtonRef}
-            />
-            {/* Notification Icon */}
-          </>
-        ) : (
-          <div>
-            <UserModalForm />
-          </div>
-        )}
-      </div>
-    </nav>
+          )}
+        </div>
+      </nav>
     </div>
   );
 };
-
 
 const styles = {
   searchResults: {
