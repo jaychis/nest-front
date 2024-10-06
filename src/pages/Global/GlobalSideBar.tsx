@@ -19,7 +19,7 @@ const GlobalSideBar = () => {
     (state: RootState) => state.modalState,
   );
   const [isSideHovered, setIsSideHovered] = useState<
-    MainListTypes | "CREATE_COMMUNITY" | null
+    MainListTypes | "CREATE_COMMUNITY" | "FAQ" | null
   >(null);
   const [selectedButton, setSelectedButton] = useState<MainListTypes>("HOME");
   const [page, setPage] = useState(1);
@@ -85,6 +85,8 @@ const GlobalSideBar = () => {
   const handleCommunityClick = ({ button }: CommunityClickType) => {
     dispatch(sideButtonSliceActions.setButtonType(button));
   };
+
+  const handleFAQClick = () => navigate("/faq/list");
 
   const handleLoadMore = () => {
     setDisplayCount((prevCount) => prevCount + 5);
@@ -241,6 +243,7 @@ const GlobalSideBar = () => {
           <Tooltip content={"사용자가 좋아할 만한 태그를 가진 랭킹입니다."} />
         </span>
       </div>
+      {/*  */}
       <div
         style={{ fontWeight: "bold", paddingLeft: "10px", fontSize: "14px" }}
       >
@@ -254,6 +257,32 @@ const GlobalSideBar = () => {
           <span style={{ marginLeft: "6px", fontSize: "14px" }}>r/korea</span>
         </div>
       </div>
+      {/*  */}
+      <div
+        style={{ fontWeight: "bold", paddingLeft: "10px", fontSize: "14px" }}
+      >
+        소통해요!
+      </div>
+      <div style={{ padding: "3px 5px 0" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            backgroundColor: isSideHovered === "FAQ" ? "#f0f0f0" : "white",
+            borderRadius: "10px",
+            margin: "5px",
+            cursor: "pointer",
+          }}
+          onMouseEnter={() => setIsSideHovered("FAQ")}
+          onMouseLeave={() => setIsSideHovered(null)}
+          onClick={handleFAQClick}
+        >
+          <span style={{ fontSize: "20px" }}>🇰🇷</span>
+          <span style={{ marginLeft: "6px", fontSize: "14px" }}>FAQ</span>
+        </div>
+      </div>
+      {/*  */}
+
       <div
         style={{ fontWeight: "bold", paddingLeft: "10px", fontSize: "14px" }}
       >
@@ -321,28 +350,32 @@ const GlobalSideBar = () => {
                 </div>
               ))
           : []}
-      </div>
-      {communityList.length > displayCount && (
-        <div
-          style={{ display: "flex", justifyContent: "center", margin: "10px" }}
-        >
-          <button
-            onClick={handleLoadMore}
-            disabled={loading}
+        {communityList.length > displayCount && (
+          <div
             style={{
-              padding: "8px 16px",
-              borderRadius: "5px",
-              backgroundColor: "#0079D3",
-              color: "white",
-              border: "none",
-              cursor: "pointer",
-              visibility: loading ? "hidden" : "visible",
+              display: "flex",
+              justifyContent: "center",
+              margin: "10px",
             }}
           >
-            {loading ? "로딩 중..." : "더 보기"}
-          </button>
-        </div>
-      )}
+            <button
+              onClick={handleLoadMore}
+              disabled={loading}
+              style={{
+                padding: "8px 16px",
+                borderRadius: "5px",
+                backgroundColor: "#0079D3",
+                color: "white",
+                border: "none",
+                cursor: "pointer",
+                visibility: loading ? "hidden" : "visible",
+              }}
+            >
+              {loading ? "로딩 중..." : "더 보기"}
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
