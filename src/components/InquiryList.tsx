@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import React from "react";
-
+import { CommentListAPI, CommentSubmitAPI, CommentInquiryAPI,CommentSubmitParams} from "../pages/api/CommentApi";
 
 interface InquiryProps{
     readonly content: string;
@@ -23,16 +23,48 @@ const InquiryList = ({
     update_at
 }:InquiryProps) => {
 
-    let navigate = useNavigate()
     const contentWrapperRef = React.useRef<HTMLDivElement>(null);
     const contentRef = React.useRef<HTMLDivElement>(null);
     const CommentWrapperRef = React.useRef<HTMLDivElement>(null);
     const CommentRef = React.useRef<HTMLDivElement>(null);
     const [isCollapse, setIsCollapse] = React.useState(false);
     const [textContent, setTextContent] = useState('');
-    const [comment, setComment] = useState<string>('Hello World');
+    const [comment, setComment] = useState<string>();
+    const [commentContent, setCommentContent] = useState<string>('');
+    
+    const submitComment = async () => {
+        if(commentContent.trim() === '' || commentContent.length === 0){
+            return alert('내용을 작성해주세요')
+        }
 
+        const param: CommentSubmitParams = {
+            boardId: id,
+            userId: localStorage.getItem('id') as string,
+            content: commentContent,
+            nickname: nickname as string,
+        };
+
+        const res = await CommentSubmitAPI(param);
+        if(!res) return;
+        alert('답변이 등록되었습니다.');
+        window.location.reload();
+    }
+
+    const getComment = async ():Promise<void> => {
+        const res = await CommentInquiryAPI(id)
+        if(res?.data.response[0]){
+            setComment(res?.data.response[0].content)
+        }
+        
+    }
+
+    const handleCommentChange = async (event:React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>):Promise<void> => {
+        const {value} = event.target;
+        setCommentContent(value)
+    }
+    
     useEffect(() => {
+        getComment()
         const pTagSlice = () => {
             if (content.startsWith('<p>') && content.endsWith('</p>')) {
                 setTextContent(content.slice(3, -4));
@@ -73,9 +105,7 @@ const InquiryList = ({
         </ContentWrapper>
         <hr style = {{border : '1px solid #f0f0f0', width : '95%',}}/>
         <CommentWrapper ref = {CommentWrapperRef}>
-            {comment && nickname === 'admin' ? <Comment ref={CommentRef}>댓글</Comment> : 
-            <Comment ref = {CommentRef}>hi</Comment>
-            /*<Comment ref={CommentRef}><div style={{
+            {comment === undefined && localStorage.getItem('nickname') === 'admin' ? <Comment ref={CommentRef}><div style={{
             display: "flex",
             flexDirection: "column",
             width: "95%",
@@ -95,8 +125,8 @@ const InquiryList = ({
             boxSizing: "border-box",
             outline: "none",
             }} 
-            value = {comment}
-            onChange={commentChange}
+            value = {commentContent}
+            onChange={handleCommentChange}
             name={"content"} ></textarea>
             <div style={{
             display: "flex",
@@ -116,6 +146,7 @@ const InquiryList = ({
                 Cancel
             </button>
             <button
+            onClick = {() => {submitComment()}}
             style={{
             padding: "6px 12px",
             marginLeft: "5px",
@@ -129,7 +160,8 @@ const InquiryList = ({
                 Comment
             </button>
             </div>
-        </div></Comment>*/}
+        </div></Comment>  : 
+            <Comment ref={CommentRef}>{comment}</Comment>}
         </CommentWrapper>
     </>
     )

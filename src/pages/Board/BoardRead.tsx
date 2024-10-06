@@ -47,9 +47,8 @@ const BoardRead = () => {
   const content = query.get('content');
 
   useEffect(() => {
-
     const readBoard = async (): Promise<void> => {
-      const commentRes = await CommentListAPI({ boardId: id });
+      const commentRes = await CommentListAPI(id);
 
       if (!commentRes) return;
       const commentResponse = commentRes.data.response;

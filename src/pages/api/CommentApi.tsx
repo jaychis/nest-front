@@ -20,9 +20,9 @@ export const CommentSubmitAPI = async (params: CommentSubmitParams) => {
 };
 
 export interface CommentListParam {
-  readonly boardId: string | null;
+  readonly boardId: string;
 }
-export const CommentListAPI = async (param: CommentListParam) => {
+export const CommentListAPI = async (param: string | null) => {
   try {
     const URL: string = `comments/list`;
 
@@ -38,7 +38,7 @@ export interface CommentInquiryParam {
   readonly userId: string;
 }
 
-export const CommentInquiryAPI = async ({ userId }: CommentInquiryParam) => {
+export const CommentInquiryAPI = async ( userId: string) => {
   try {
     const URL: string = `comments/${userId}`;
 
