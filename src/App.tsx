@@ -15,6 +15,7 @@ import CommunityCreatePage1 from "./pages/Board/CommunityCreate/CommunityCreateP
 import CommunityCreatePage3 from "./pages/Board/CommunityCreate/CommunityCreatePage3";
 import CommunityCreatePage4 from "./pages/Board/CommunityCreate/CommunityCreatePage4";
 import { CommunityProvider } from "./contexts/CommunityContext";
+import FrequentlyAskedQuestionsList from "./pages/FrequentlyAskedQuetions/FrequentlyAskedQuestionsList";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -126,6 +127,15 @@ function App() {
               element={
                 <Layout>
                   <SearchList />
+                </Layout>
+              }
+            />
+            {/* FAQ */}
+            <Route
+              path={"/faq/list"}
+              element={
+                <Layout>
+                  <FrequentlyAskedQuestionsList />
                 </Layout>
               }
             />
