@@ -321,28 +321,32 @@ const GlobalSideBar = () => {
                 </div>
               ))
           : []}
-      </div>
-      {communityList.length > displayCount && (
-        <div
-          style={{ display: "flex", justifyContent: "center", margin: "10px" }}
-        >
-          <button
-            onClick={handleLoadMore}
-            disabled={loading}
+        {communityList.length > displayCount && (
+          <div
             style={{
-              padding: "8px 16px",
-              borderRadius: "5px",
-              backgroundColor: "#0079D3",
-              color: "white",
-              border: "none",
-              cursor: "pointer",
-              visibility: loading ? "hidden" : "visible",
+              display: "flex",
+              justifyContent: "center",
+              margin: "10px",
             }}
           >
-            {loading ? "로딩 중..." : "더 보기"}
-          </button>
-        </div>
-      )}
+            <button
+              onClick={handleLoadMore}
+              disabled={loading}
+              style={{
+                padding: "8px 16px",
+                borderRadius: "5px",
+                backgroundColor: "#0079D3",
+                color: "white",
+                border: "none",
+                cursor: "pointer",
+                visibility: loading ? "hidden" : "visible",
+              }}
+            >
+              {loading ? "로딩 중..." : "더 보기"}
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
