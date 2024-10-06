@@ -243,6 +243,7 @@ const GlobalSideBar = () => {
           <Tooltip content={"사용자가 좋아할 만한 태그를 가진 랭킹입니다."} />
         </span>
       </div>
+      {/*  */}
       <div
         style={{ fontWeight: "bold", paddingLeft: "10px", fontSize: "14px" }}
       >
