@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { AllListAPI, ListAPI, PopularListAPI } from "../api/BoardApi";
-import Card from "../../components/Card";
-import { CardType } from "../../_common/CollectionTypes";
-import { MainListTypeState } from "../../reducers/mainListTypeSlice";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store/store";
-import EmptyState from "../../components/EmptyState";
-import { useInView } from "react-intersection-observer";
-import { UserModalState, setModalState } from "../../reducers/modalStateSlice";
+import React, { useEffect, useState } from 'react';
+import { AllListAPI, ListAPI, PopularListAPI } from '../api/BoardApi';
+import Card from '../../components/Card';
+import { CardType } from '../../_common/CollectionTypes';
+import { MainListTypeState } from '../../reducers/mainListTypeSlice';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
+import EmptyState from '../../components/EmptyState';
+import { useInView } from 'react-intersection-observer';
+import { UserModalState, setModalState } from '../../reducers/modalStateSlice';
 
 interface ContainerProps {
   children?: React.ReactNode;
@@ -17,13 +17,13 @@ const MainContainer = ({ children }: ContainerProps) => {
   return (
     <div
       style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "flex-start",
-        paddingTop: "20px",
-        width: "100%",
-        boxSizing: "border-box",
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        paddingTop: '20px',
+        width: '100%',
+        boxSizing: 'border-box',
       }}
     >
       {children}
@@ -39,13 +39,13 @@ const CardsContainer = ({ children }: ContainerProps) => {
   return (
     <div
       style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        width: "100%",
-        maxWidth: "800px", // 적절한 최대 너비 설정
-        boxSizing: "border-box",
-        padding: "0 20px", // 좌우 패딩 추가
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: '100%',
+        maxWidth: '800px', // 적절한 최대 너비 설정
+        boxSizing: 'border-box',
+        padding: '0 20px', // 좌우 패딩 추가
       }}
     >
       {children}
@@ -91,10 +91,10 @@ const BoardList = () => {
     try {
       let response;
       switch (buttonType) {
-        case "HOME":
+        case 'HOME':
           response = await ListAPI({ take: TAKE, lastId: id, category: null });
           break;
-        case "POPULAR":
+        case 'POPULAR':
           response = await PopularListAPI({
             take: TAKE,
             lastId: id,
@@ -102,14 +102,14 @@ const BoardList = () => {
           });
           break;
         // 리스트 API 작업 ljh
-        case "TAGMATCH":
+        case 'TAGMATCH':
           response = await AllListAPI({
             take: TAKE,
             lastId: id,
             category: null,
           });
           break;
-        case "FREQUENTSHARE":
+        case 'FREQUENTSHARE':
           response = await AllListAPI({
             take: TAKE,
             lastId: id,
@@ -132,7 +132,7 @@ const BoardList = () => {
         setAllDataLoaded(true);
       }
     } catch (err) {
-      console.error("API error: ", err);
+      console.error('API error: ', err);
     }
   };
 
@@ -171,7 +171,7 @@ const BoardList = () => {
           )}
         </CardsContainer>
       </MainContainer>
-      <div style={{ opacity: "0" }} ref={ref}>
+      <div style={{ opacity: '0' }} ref={ref}>
         d
       </div>
     </>
