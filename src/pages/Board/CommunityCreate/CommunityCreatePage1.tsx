@@ -90,7 +90,7 @@ const CommunityCreatePage1: FC = () => {
       setBackgroundPicture(backgroundRes.imageUrls[0]);
     }
 
-    navigate('/community/create3', { state: { communityName, description } });
+    navigate('/community/create2', { state: { communityName, description } });
   };
 
   const handleCancel = () => navigate('/');
