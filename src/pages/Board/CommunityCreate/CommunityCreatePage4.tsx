@@ -137,6 +137,7 @@ const CommunityCreatePage4: FC = () => {
               </div>
             </OptionContent>
           </Label>
+          <UserSearchInput/>
         </FormGroup>
 
         <MultiStepNav>
@@ -209,3 +210,10 @@ const OptionDescription = styled.div`
   font-size: 12px;
   color: #888;
 `;
+
+const UserSearchInput = styled.input`
+  border-radius: 25px;
+  height: 25px;
+  width: 90%;
+  margin: 5px 0 0 30px;
+`
