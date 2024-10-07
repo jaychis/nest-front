@@ -40,7 +40,7 @@ const Profile = () => {
 
     if (activeSection === "COMMENTS") {
       const commentInquiry = async (): Promise<void> => {
-        const res = await CommentInquiryAPI({ userId: ID });
+        const res = await CommentInquiryAPI(ID);
         if (!res) return;
 
         const response = res.data.response;

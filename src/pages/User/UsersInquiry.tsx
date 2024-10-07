@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
-import GlobalBar from "../Global/GlobalBar";
-import GlobalSideBar from "../Global/GlobalSideBar";
-import Card from "../../components/Card";
 import { useSearchParams } from "react-router-dom";
-import { UsersInquiryAPI } from "../api/UserApi";
 import EmptyState from "../../components/EmptyState";
 import { getContactAllListAPi } from "../api/InquiryApi";
 import { InquiryType } from "../../_common/CollectionTypes";
@@ -71,41 +67,31 @@ const UsersInquiry = () => {
   const nickname: string = localStorage.getItem("nickname") as string;
   const [isopen, setIsopen] = useState<boolean>(false);
   const userId:string = localStorage.getItem('id') as string;
-  const [comment, setComment] = useState<string | null>();
-  const [count, setCount] = useState<number>(0);
-
-  const checkComment = (number:number):number => {
-    setComment('Hello World');
-    return 0;
-  }
-
-  getContactAllListAPi({ take: TAKE, page: 1, nickname: nickname }).then(
-    (res) => {
-      const status = res?.data.response.current_list;
-      setList(status);
-    },
-  );
+  const [retry, setRetry] = useState<number>(0);
 
   const getAllList = () => {
-    return getContactAllListAPi({take :TAKE, page : 1, nickname : nickname})
+    getContactAllListAPi({take :TAKE, page : 1, nickname : nickname})
     .then((res) => {
       const status = res?.data.response.current_list
       setList(status)
-      console.log(status)
     })
     .catch((error) => {
       console.error(error)
-      setCount((prev) => prev + 1)
+      setRetry((prev) => prev + 1)
+      console.log(`재시도 ${retry}`)
     })
   }
 
   useEffect(() => {
-    if(count < 10) getAllList()
-  },[count])
+    if(retry < 10){
+      getAllList();
+    }
+  },[retry])
 
   if(!list){
     return(
-    <div>로딩중..</div>)
+      <><EmptyState/></>
+    )
   }
 
   return (

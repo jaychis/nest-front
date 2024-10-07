@@ -71,7 +71,7 @@ export interface InquiryType {
   readonly content: string;
   readonly created_at: Date;
   readonly deleted_at: Date;
-  readonly id: string;
+  readonly id: string
   readonly nickname: string;
   readonly title: string;
   readonly update_at: Date;
