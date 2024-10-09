@@ -11,7 +11,6 @@ import Button from '../../../components/Buttons/Button';
 import { GetSearchPeopleAPI } from '../../api/SearchApi';
 import vCheck from '../../../assets/img/v-check.png';
 
-
 const CommunityCreatePage4: FC = () => {
   interface User {
     nickname: string;
@@ -77,7 +76,7 @@ const CommunityCreatePage4: FC = () => {
     icon: icon,
     visibility: 'PUBLIC',
     topics: [],
-    id: [],
+    id: [localStorage.getItem('id') as string],
   });
 
   const handleSubmit = async (): Promise<void> => {
@@ -87,6 +86,7 @@ const CommunityCreatePage4: FC = () => {
       banner: isCommunity.banner,
       icon: isCommunity.icon,
       visibility: isCommunity.visibility,
+      userIds: isCommunity.id,
     });
 
     if (!coRes) return;
@@ -163,7 +163,7 @@ const CommunityCreatePage4: FC = () => {
           </Label>
         </FormGroup>
 
-        <FormGroup>
+        <FormGroup onClick = {() => {}}>
           <Label>
             <Radio
               type='radio'
