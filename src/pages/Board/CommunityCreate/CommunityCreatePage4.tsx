@@ -8,16 +8,52 @@ import { FaGlobe, FaLock, FaUsers } from 'react-icons/fa'; // Importing icons fr
 import styled from 'styled-components';
 import MultiStepNav from '../../../components/Buttons/MultiStepNav';
 import Button from '../../../components/Buttons/Button';
+import { GetSearchPeopleAPI } from '../../api/SearchApi';
+import vCheck from '../../../assets/img/v-check.png';
+
 
 const CommunityCreatePage4: FC = () => {
+  interface User {
+    nickname: string;
+    id: string;
+  }
+  
   const navigate = useNavigate();
   const { communityName, description, banner, icon, topics } = useCommunity();
   const [visibility, setVisibility] =
     useState<CommunityVisibilityType>('PUBLIC');
+  const [searchNickname, setSearchNickname] = useState<string>('')
+  const [searchResultList, setSearchResultList] = useState<User[]>([]);
+
 
   useEffect(() => {
     console.log('topics : ', topics);
   }, [topics]);
+  
+  const handleUserSearchChange = async(event:React.ChangeEvent<HTMLInputElement>) => {
+    const {value} = event.target;
+    setSearchNickname(value)
+    try{
+      if(value){
+        const res = await GetSearchPeopleAPI({query: value})
+        if(res && res.data && res.data.response){
+          setSearchResultList(res.data.response.map((user: any) => ({
+            nickname: user.nickname,
+            id: user.id
+          })));
+          console.log(res.data.response)
+        }
+      }
+    }catch(error){
+      console.log(error)
+    }
+  }
+
+  const handleUserSelect = (userId:string) => {
+    setIsCommunity({...isCommunity, id: userId})
+    
+    console.log(isCommunity)
+  }
 
   const [isCommunity, setIsCommunity] = useState<{
     readonly name: string;
@@ -26,6 +62,7 @@ const CommunityCreatePage4: FC = () => {
     readonly icon?: string | null;
     readonly visibility: CommunityVisibilityType;
     readonly topics: string[];
+    readonly id?: string;
   }>({
     name: communityName,
     description: description,
@@ -137,7 +174,27 @@ const CommunityCreatePage4: FC = () => {
               </div>
             </OptionContent>
           </Label>
-          <UserSearchInput/>
+          {visibility === 'PRIVATE' && (
+            <UserSearchInput 
+            placeholder="초대할 유저의 닉네임을 입력해주세요" 
+            onChange = {handleUserSearchChange}
+            />)} 
+          {searchResultList.length > 0 && (
+        <SearchResultList>
+          {searchResultList.map((result, index) => (
+            <>
+            <SearchResultItem
+              key={index}
+              index={index}
+              onClick={() => handleUserSelect(result.id)}
+            >
+              {result.nickname}
+              {isCommunity.id === result.id ? <VCheckImg src = {vCheck}/> : null}
+            </SearchResultItem>
+            </>
+          ))}
+        </SearchResultList>
+      )}
         </FormGroup>
 
         <MultiStepNav>
@@ -215,5 +272,25 @@ const UserSearchInput = styled.input`
   border-radius: 25px;
   height: 25px;
   width: 90%;
-  margin: 5px 0 0 30px;
+  margin: 5px 0 0 0;
 `
+
+const SearchResultList = styled.ul`
+  list-style-type: none;
+  padding: 0;
+`;
+
+const SearchResultItem = styled.li<{index: number}>`
+  display: flex;              
+  align-items: center;        
+  cursor: pointer;
+  padding: 8px;
+  background-color: ${(props) => (props.index % 2 === 0 ? '#f9f9f9' : '#fff')};
+  width: 90%;
+`;
+
+const VCheckImg = styled.img`
+  height: 20px;
+  width: 20px;
+  margin-left: auto;
+`;
