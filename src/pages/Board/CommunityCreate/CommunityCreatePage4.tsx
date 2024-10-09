@@ -15,7 +15,7 @@ import vCheck from '../../../assets/img/v-check.png';
 const CommunityCreatePage4: FC = () => {
   interface User {
     nickname: string;
-    id: string;
+    id: string[];
   }
   
   const navigate = useNavigate();
@@ -24,7 +24,6 @@ const CommunityCreatePage4: FC = () => {
     useState<CommunityVisibilityType>('PUBLIC');
   const [searchNickname, setSearchNickname] = useState<string>('')
   const [searchResultList, setSearchResultList] = useState<User[]>([]);
-
 
   useEffect(() => {
     console.log('topics : ', topics);
@@ -49,11 +48,19 @@ const CommunityCreatePage4: FC = () => {
     }
   }
 
-  const handleUserSelect = (userId:string) => {
-    setIsCommunity({...isCommunity, id: userId})
-    
+  const handleUserSelect = (userId: string) => {
+    if(isCommunity.id?.includes(userId)){
+      const deleteId = isCommunity.id.filter((prevState) => prevState !== userId)
+      setIsCommunity((prevState) => ({...prevState,id: deleteId}))
+    }
+    else{
+      setIsCommunity(prevState => ({
+        ...prevState,
+        id: [...(prevState.id || []), userId] // undefined 상태를 빈 배열로 처리
+    }));
+    }
     console.log(isCommunity)
-  }
+}
 
   const [isCommunity, setIsCommunity] = useState<{
     readonly name: string;
@@ -62,7 +69,7 @@ const CommunityCreatePage4: FC = () => {
     readonly icon?: string | null;
     readonly visibility: CommunityVisibilityType;
     readonly topics: string[];
-    readonly id?: string;
+    readonly id?: string[];
   }>({
     name: communityName,
     description: description,
@@ -70,6 +77,7 @@ const CommunityCreatePage4: FC = () => {
     icon: icon,
     visibility: 'PUBLIC',
     topics: [],
+    id: [],
   });
 
   const handleSubmit = async (): Promise<void> => {
@@ -186,10 +194,10 @@ const CommunityCreatePage4: FC = () => {
             <SearchResultItem
               key={index}
               index={index}
-              onClick={() => handleUserSelect(result.id)}
+              onClick={() => handleUserSelect(result.id.toLocaleString())}
             >
               {result.nickname}
-              {isCommunity.id === result.id ? <VCheckImg src = {vCheck}/> : null}
+              {isCommunity.id?.includes(result.id.toLocaleString()) ? <VCheckImg src = {vCheck}/> : null}
             </SearchResultItem>
             </>
           ))}
