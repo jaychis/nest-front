@@ -6,6 +6,7 @@ interface CommunityContextType {
   banner: string | null;
   icon: string | null;
   topics: string[];
+  id?: string;
   setCommunityName: (name: string) => void;
   setDescription: (description: string) => void;
   setBanner: (banner: string | null) => void;
