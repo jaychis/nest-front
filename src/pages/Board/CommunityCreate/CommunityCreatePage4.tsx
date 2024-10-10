@@ -25,8 +25,8 @@ const CommunityCreatePage4: FC = () => {
   const [searchResultList, setSearchResultList] = useState<User[]>([]);
 
   useEffect(() => {
-    console.log('topics : ', topics);
-  }, [topics]);
+    setIsCommunity((prevState) => ({...prevState, id : [], visibility: visibility}))
+  }, [visibility]);
   
   const handleUserSearchChange = async(event:React.ChangeEvent<HTMLInputElement>) => {
     const {value} = event.target;
@@ -74,7 +74,7 @@ const CommunityCreatePage4: FC = () => {
     description: description,
     banner: banner,
     icon: icon,
-    visibility: 'PUBLIC',
+    visibility: visibility,
     topics: [],
     id: [localStorage.getItem('id') as string],
   });
@@ -161,6 +161,28 @@ const CommunityCreatePage4: FC = () => {
               </div>
             </OptionContent>
           </Label>
+          {visibility === 'RESTRICTED' && (
+            <UserSearchInput 
+            placeholder="초대할 유저의 닉네임을 입력해주세요" 
+            onChange = {handleUserSearchChange}
+            />)} 
+          {searchResultList.length > 0 && (
+        <SearchResultList>
+          {searchResultList.map((result, index) => (
+            <>
+            {visibility === 'RESTRICTED' && searchResultList.length > 0 && (
+            <SearchResultItem
+              key={index}
+              index={index}
+              onClick={() => handleUserSelect(result.id.toLocaleString())}
+            >
+              {result.nickname}
+              {isCommunity.id?.includes(result.id.toLocaleString()) ? <VCheckImg src = {vCheck}/> : null}
+            </SearchResultItem>)}
+            </>
+          ))}
+        </SearchResultList>
+      )}
         </FormGroup>
 
         <FormGroup onClick = {() => {}}>
@@ -191,6 +213,7 @@ const CommunityCreatePage4: FC = () => {
         <SearchResultList>
           {searchResultList.map((result, index) => (
             <>
+            {visibility === 'PRIVATE' && searchResultList.length > 0 && (
             <SearchResultItem
               key={index}
               index={index}
@@ -198,7 +221,7 @@ const CommunityCreatePage4: FC = () => {
             >
               {result.nickname}
               {isCommunity.id?.includes(result.id.toLocaleString()) ? <VCheckImg src = {vCheck}/> : null}
-            </SearchResultItem>
+            </SearchResultItem>)}
             </>
           ))}
         </SearchResultList>
@@ -280,7 +303,7 @@ const UserSearchInput = styled.input`
   border-radius: 25px;
   height: 25px;
   width: 90%;
-  margin: 5px 0 0 0;
+  margin: 10px 0 0 4%;
 `
 
 const SearchResultList = styled.ul`

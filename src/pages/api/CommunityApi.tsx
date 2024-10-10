@@ -51,8 +51,10 @@ export const CommunitySubmitAPI = async (params: CommunitySubmitParams) => {
 export interface CommunityListParams {
   readonly page: number;
   readonly take: number;
+  readonly id?: string;
 }
-export const CommunityListAPI = async ({ page, take }: CommunityListParams) => {
+
+export const CommunityListAPI = async ({ page, take,id }: CommunityListParams) => {
   try {
     const URL: string = `${COMMUNITY_URL}?take=${take}&page=${page}`;
 
