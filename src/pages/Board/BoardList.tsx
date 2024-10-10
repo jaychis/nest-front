@@ -143,13 +143,14 @@ const BoardList = () => {
       </div>
     );
   }
-
+  
   return (
     <>
       <MainContainer>
         <CardsContainer>
           {list.length ? (
             list.map((el: CardType, index) => {
+              {console.log(el.id)}
               return (
                 <React.Fragment key={el.id}>
                   <Card

@@ -277,6 +277,8 @@ const BoardSubmit = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
     arrows: true,
+    width: 500,
+    height: 600
   };
 
   useEffect(() => {
@@ -421,9 +423,8 @@ const BoardSubmit = () => {
                       {previewUrls.length > 0 ? (
                         <>
                           <button onClick={imageUrlListDelete}>휴지통</button>
-                          <Slider {...sliderSetting}>
                             {previewUrls.map((image, index) => (
-                              <div key={index}>
+                              <div key={index} >
                                 <img
                                   src={image}
                                   alt={`Preview image ${index}`}
@@ -431,7 +432,6 @@ const BoardSubmit = () => {
                                 />
                               </div>
                             ))}
-                          </Slider>
                         </>
                       ) : (
                         <>
