@@ -28,7 +28,13 @@ const TooltipContainer = styled.span`
   align-items: center;
 `;
 
-const ContainerWrapper = styled.div``;
+const ContainerWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin-left: 25px;
+`;
 
 const ImageContainer = styled.span`
   margin-right: 5px;
@@ -37,17 +43,14 @@ const ImageContainer = styled.span`
 `;
 
 const TitleContainer = styled.button`
-  //background-color: #d6d5d7;
   border: none;
-  //color: black;
   font-size: 16px;
-  margin-left: 6px;
+  margin-left: 3px;
   cursor: pointer;
-  //margin: 0;
-  //outline: none;
   padding: 3px 5px;
   border-radius: 10px;
   display: inline-flex;
   justify-content: center;
   align-items: center;
+  background-color: transparent;
 `;

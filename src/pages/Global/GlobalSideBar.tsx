@@ -121,35 +121,17 @@ const GlobalSideBar = () => {
     >
       <div
         style={{
-          display: 'flex',
-          justifyContent: 'center',
           padding: '6px 0',
           backgroundColor:
             selectedButton === 'HOME' || isSideHovered === 'HOME'
               ? '#f0f0f0'
               : 'white',
           borderRadius: '5px',
-          margin: '1px',
         }}
         onMouseEnter={() => setIsSideHovered('HOME')}
         onMouseLeave={() => setIsSideHovered(null)}
         onClick={() => handleClick('HOME')}
       >
-        {/*<span*/}
-        {/*  onClick={() => handleClick('HOME')}*/}
-        {/*  style={{*/}
-        {/*    fontSize: '16px',*/}
-        {/*    cursor: 'pointer',*/}
-        {/*  }}*/}
-        {/*>*/}
-        {/*  🏠*/}
-        {/*</span>*/}
-        {/*<span*/}
-        {/*  onClick={() => handleClick('HOME')}*/}
-        {/*  style={{ marginLeft: '6px', cursor: 'pointer', fontSize: '16px' }}*/}
-        {/*>*/}
-        {/*  홈*/}
-        {/*</span>*/}
         <Tooltip
           image={'🏠'}
           title={'홈'}
@@ -158,8 +140,6 @@ const GlobalSideBar = () => {
       </div>
       <div
         style={{
-          display: 'flex',
-          justifyContent: 'center',
           padding: '6px 0',
           backgroundColor:
             selectedButton === 'POPULAR' || isSideHovered === 'POPULAR'
@@ -172,18 +152,6 @@ const GlobalSideBar = () => {
         onMouseLeave={() => setIsSideHovered(null)}
         onClick={() => handleClick('POPULAR')}
       >
-        {/*<span*/}
-        {/*  onClick={() => handleClick('POPULAR')}*/}
-        {/*  style={{ fontSize: '16px', cursor: 'pointer' }}*/}
-        {/*>*/}
-        {/*  🔥*/}
-        {/*</span>*/}
-        {/*<span*/}
-        {/*  onClick={() => handleClick('POPULAR')}*/}
-        {/*  style={{ marginLeft: '6px', cursor: 'pointer', fontSize: '16px' }}*/}
-        {/*>*/}
-        {/*  실시간*/}
-        {/*</span>*/}
         <Tooltip
           image={'🔥'}
           title={'실시간'}
@@ -192,8 +160,6 @@ const GlobalSideBar = () => {
       </div>
       <div
         style={{
-          display: 'flex',
-          justifyContent: 'center',
           padding: '6px 0',
           backgroundColor:
             selectedButton === 'FREQUENTSHARE' ||
@@ -207,18 +173,6 @@ const GlobalSideBar = () => {
         onMouseLeave={() => setIsSideHovered(null)}
         onClick={() => handleClick('FREQUENTSHARE')}
       >
-        {/*<span*/}
-        {/*  onClick={() => handleClick('FREQUENTSHARE')}*/}
-        {/*  style={{ fontSize: '16px', cursor: 'pointer' }}*/}
-        {/*>*/}
-        {/*  🌐*/}
-        {/*</span>*/}
-        {/*<span*/}
-        {/*  onClick={() => handleClick('FREQUENTSHARE')}*/}
-        {/*  style={{ marginLeft: '6px', cursor: 'pointer', fontSize: '16px' }}*/}
-        {/*>*/}
-        {/*  퍼주기*/}
-        {/*</span>*/}
         <Tooltip
           image={'🌐'}
           title={'퍼주기'}
@@ -227,8 +181,6 @@ const GlobalSideBar = () => {
       </div>
       <div
         style={{
-          display: 'flex',
-          justifyContent: 'center',
           padding: '6px 0',
           backgroundColor:
             selectedButton === 'TAGMATCH' || isSideHovered === 'TAGMATCH'
@@ -241,22 +193,6 @@ const GlobalSideBar = () => {
         onMouseLeave={() => setIsSideHovered(null)}
         onClick={() => handleClick('TAGMATCH')}
       >
-        {/*<span*/}
-        {/*  onClick={() => handleClick('TAGMATCH')}*/}
-        {/*  style={{ fontSize: '16px', cursor: 'pointer' }}*/}
-        {/*>*/}
-        {/*  */}
-        {/*</span>*/}
-        {/*<span*/}
-        {/*  onClick={() => handleClick('TAGMATCH')}*/}
-        {/*  style={{*/}
-        {/*    marginLeft: '6px',*/}
-        {/*    cursor: 'pointer',*/}
-        {/*    fontSize: '16px',*/}
-        {/*  }}*/}
-        {/*>*/}
-
-        {/*</span>*/}
         <Tooltip
           image={'🌐'}
           title={'내가 좋아할 글'}
