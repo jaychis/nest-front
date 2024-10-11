@@ -428,7 +428,7 @@ const BoardSubmit = () => {
                                 <img
                                   src={image}
                                   alt={`Preview image ${index}`}
-                                  style={{ height: "400px", width: "400px" }}
+                                  style={{ height: "400px", width: "400px", }}
                                 />
                               </div>
                             ))}

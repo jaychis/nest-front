@@ -485,7 +485,7 @@ const CardContainer = styled.div<{ isHovered: boolean, modalState: boolean }>`
   border-radius: 10px;
   cursor: pointer;
   background-color: ${(props) => (props.isHovered ? "#f0f0f0" : "white")};
-  z-index: ${(props) => (props.modalState ? -10 : 999)}
+  z-index: ${(props) => (props.modalState ? -10 : 999)};
 `;
 
 const ImageContainer = styled.div`
@@ -533,10 +533,14 @@ const ImagePreview = styled.img`
   max-height: 500px;
   border-radius: 20px;
   object-fit: contain; 
+  margin-top: 10px;
 `;
 
 const MediaContainer = styled.div`
   width: 85%;
+  background: #606060;
+  text-align: center;
+  border: 2px solid darkgray;
 `;
 
 const VideoContainer = styled.div`
