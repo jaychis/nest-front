@@ -6,8 +6,6 @@ import { AppDispatch } from '../../store/store';
 import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
 import { RootState } from '../../store/store';
 import { UserModalState } from '../../reducers/modalStateSlice';
-import { ListAPI } from '../api/BoardApi';
-
 import logo from '../../assets/img/panda_logo.png';
 import { CommunityListAPI } from '../api/CommunityApi';
 import Tooltip from '../../components/Tooltip';
@@ -19,7 +17,7 @@ const GlobalSideBar = () => {
     (state: RootState) => state.modalState,
   );
   const [isSideHovered, setIsSideHovered] = useState<
-    MainListTypes | 'CREATE_COMMUNITY' | 'FAQ' | null
+    MainListTypes | 'CREATE_COMMUNITY' | null
   >(null);
   const [selectedButton, setSelectedButton] = useState<MainListTypes>('HOME');
   const [page, setPage] = useState(1);
@@ -87,8 +85,6 @@ const GlobalSideBar = () => {
   const handleCommunityClick = ({ button }: CommunityClickType) => {
     dispatch(sideButtonSliceActions.setButtonType(button));
   };
-
-  const handleFAQClick = () => navigate('/faq/list');
 
   const handleLoadMore = () => {
     setDisplayCount((prevCount) => prevCount + 5);
@@ -213,30 +209,6 @@ const GlobalSideBar = () => {
         >
           <span style={{ fontSize: '20px' }}>🇰🇷</span>
           <span style={{ marginLeft: '6px', fontSize: '14px' }}>r/korea</span>
-        </div>
-      </div>
-      {/*  */}
-      <div
-        style={{ fontWeight: 'bold', paddingLeft: '10px', fontSize: '14px' }}
-      >
-        소통해요!
-      </div>
-      <div style={{ padding: '3px 5px 0' }}>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            backgroundColor: isSideHovered === 'FAQ' ? '#f0f0f0' : 'white',
-            borderRadius: '10px',
-            margin: '5px',
-            cursor: 'pointer',
-          }}
-          onMouseEnter={() => setIsSideHovered('FAQ')}
-          onMouseLeave={() => setIsSideHovered(null)}
-          onClick={handleFAQClick}
-        >
-          <span style={{ fontSize: '20px' }}>🇰🇷</span>
-          <span style={{ marginLeft: '6px', fontSize: '14px' }}>FAQ</span>
         </div>
       </div>
       {/*  */}

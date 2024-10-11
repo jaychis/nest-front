@@ -1,21 +1,20 @@
-import React from "react";
-import "./App.css";
-import GlobalBar from "./pages/Global/GlobalBar";
-import GlobalSideBar from "./pages/Global/GlobalSideBar";
-import BoardList from "./pages/Board/BoardList";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import BoardSubmit from "./pages/Board/BoardSubmit";
-import BoardRead from "./pages/Board/BoardRead";
-import Profile from "./pages/User/Profile";
-import UsersInquiry from "./pages/User/UsersInquiry";
-import ScrollToTop from "./components/ScrollToTop";
-import RightSideBar from "./pages/Global/RightSideBar";
-import SearchList from "./pages/Search/SearchList";
-import CommunityCreatePage1 from "./pages/Board/CommunityCreate/CommunityCreatePage1";
-import CommunityCreatePage3 from "./pages/Board/CommunityCreate/CommunityCreatePage3";
-import CommunityCreatePage4 from "./pages/Board/CommunityCreate/CommunityCreatePage4";
-import { CommunityProvider } from "./contexts/CommunityContext";
-import FrequentlyAskedQuestionsList from "./pages/FrequentlyAskedQuetions/FrequentlyAskedQuestionsList";
+import React from 'react';
+import './App.css';
+import GlobalBar from './pages/Global/GlobalBar';
+import GlobalSideBar from './pages/Global/GlobalSideBar';
+import BoardList from './pages/Board/BoardList';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import BoardSubmit from './pages/Board/BoardSubmit';
+import BoardRead from './pages/Board/BoardRead';
+import Profile from './pages/User/Profile';
+import UsersInquiry from './pages/User/UsersInquiry';
+import ScrollToTop from './components/ScrollToTop';
+import RightSideBar from './pages/Global/RightSideBar';
+import SearchList from './pages/Search/SearchList';
+import CommunityCreatePage1 from './pages/Board/CommunityCreate/CommunityCreatePage1';
+import CommunityCreatePage3 from './pages/Board/CommunityCreate/CommunityCreatePage3';
+import CommunityCreatePage4 from './pages/Board/CommunityCreate/CommunityCreatePage4';
+import { CommunityProvider } from './contexts/CommunityContext';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -32,15 +31,15 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
 const styles = {
   layoutContainer: {
-    display: "flex",
-    width: "100%",
-    height: "100vh",
+    display: 'flex',
+    width: '100%',
+    height: '100vh',
   },
   mainContent: {
     flex: 1,
-    padding: "20px",
-    marginLeft: "11%",
-    marginTop: "80px",
+    padding: '20px',
+    marginLeft: '11%',
+    marginTop: '80px',
   },
 };
 function App() {
@@ -123,19 +122,10 @@ function App() {
             />
             {/*서치*/}
             <Route
-              path={"/search/list"}
+              path={'/search/list'}
               element={
                 <Layout>
                   <SearchList />
-                </Layout>
-              }
-            />
-            {/* FAQ */}
-            <Route
-              path={"/faq/list"}
-              element={
-                <Layout>
-                  <FrequentlyAskedQuestionsList />
                 </Layout>
               }
             />
