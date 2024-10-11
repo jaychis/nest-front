@@ -12,6 +12,7 @@ interface InquiryProps{
     readonly nickname?: string;
     readonly title: string;
     readonly update_at: Date;
+    readonly active?: string;
   }
 
 const InquiryList = ({
@@ -20,7 +21,8 @@ const InquiryList = ({
     id,
     nickname,
     title,
-    update_at
+    update_at,
+    active
 }:InquiryProps) => {
 
     const contentWrapperRef = React.useRef<HTMLDivElement>(null);
@@ -96,7 +98,7 @@ const InquiryList = ({
     <>
         <InquiryListContainer onClick = {(event) => {handleButtonClick(event)}}>
             <TitleButton>
-                <TitleWrapper> [Q&A] {title.slice(0,25)} </TitleWrapper>
+                <TitleWrapper> [{active}] {title.slice(0,25)} </TitleWrapper>
             </TitleButton>
             <ArrowImage src="https://img.icons8.com/ios/50/expand-arrow--v1.png" />
         </InquiryListContainer>
