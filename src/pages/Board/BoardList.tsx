@@ -7,13 +7,19 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import EmptyState from '../../components/EmptyState';
 import { useInView } from 'react-intersection-observer';
+<<<<<<< Updated upstream
 import { UserModalState, setModalState } from '../../reducers/modalStateSlice';
+=======
+import { UserModalState } from '../../reducers/modalStateSlice';
+import styled from 'styled-components';
+>>>>>>> Stashed changes
 
 interface ContainerProps {
   children?: React.ReactNode;
 }
 
 const MainContainer = ({ children }: ContainerProps) => {
+<<<<<<< Updated upstream
   return (
     <div
       style={{
@@ -29,11 +35,14 @@ const MainContainer = ({ children }: ContainerProps) => {
       {children}
     </div>
   );
+=======
+  return <StyledMainContainer>{children}</StyledMainContainer>;
+>>>>>>> Stashed changes
 };
 
-// const CardsContainer: React.FC<ContainerProps> = ({ children }) => {
 const CardsContainer = ({ children }: ContainerProps) => {
   const modalState: UserModalState = useSelector(
+<<<<<<< Updated upstream
     (state: RootState) => state.modalState,
   );
   return (
@@ -50,17 +59,21 @@ const CardsContainer = ({ children }: ContainerProps) => {
     >
       {children}
     </div>
+=======
+    (state: RootState) => state.modalState
+>>>>>>> Stashed changes
   );
+  return <StyledCardsContainer>{children}</StyledCardsContainer>;
 };
 
 const BoardList = () => {
   type IdType = null | string;
 
   const [list, setList] = useState<CardType[]>([]);
-  const [loading, setLoading] = useState<boolean>(false); // Move useState inside the component
+  const [loading, setLoading] = useState<boolean>(false);
   const TAKE: number = 5;
   const { buttonType }: MainListTypeState = useSelector(
-    (state: RootState) => state.sideBarButton,
+    (state: RootState) => state.sideBarButton
   );
   const [ref, inView] = useInView();
   const [Id, setId] = useState<IdType>(null);
@@ -101,7 +114,10 @@ const BoardList = () => {
             category: null,
           });
           break;
+<<<<<<< Updated upstream
         // 리스트 API 작업 ljh
+=======
+>>>>>>> Stashed changes
         case 'TAGMATCH':
           response = await AllListAPI({
             take: TAKE,
@@ -149,12 +165,15 @@ const BoardList = () => {
       <MainContainer>
         <CardsContainer>
           {list.length ? (
+<<<<<<< Updated upstream
             list.map((el: CardType, index) => {
               {console.log(el.id)}
+=======
+            list.map((el: CardType) => {
+>>>>>>> Stashed changes
               return (
                 <React.Fragment key={el.id}>
                   <Card
-                    // 고유한 키 추가
                     id={el.id}
                     category={el.category}
                     title={el.title}
@@ -168,15 +187,44 @@ const BoardList = () => {
               );
             })
           ) : (
-            <EmptyState /> // Use the EmptyState component
+            <EmptyState />
           )}
         </CardsContainer>
       </MainContainer>
+<<<<<<< Updated upstream
       <div style={{ opacity: '0' }} ref={ref}>
         d
       </div>
+=======
+      <StyledInvisibleDiv ref={ref}>d</StyledInvisibleDiv>
+>>>>>>> Stashed changes
     </>
   );
 };
 
 export default BoardList;
+
+/* 스타일드 컴포넌트 */
+const StyledMainContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 20px;
+  width: 100%;
+  box-sizing: border-box;
+`;
+
+const StyledCardsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 800px; /* 적절한 최대 너비 설정 */
+  box-sizing: border-box;
+  padding: 0 20px; /* 좌우 패딩 추가 */
+`;
+
+const StyledInvisibleDiv = styled.div`
+  opacity: 0;
+`;
