@@ -7,61 +7,20 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import EmptyState from '../../components/EmptyState';
 import { useInView } from 'react-intersection-observer';
-<<<<<<< Updated upstream
-import { UserModalState, setModalState } from '../../reducers/modalStateSlice';
-=======
 import { UserModalState } from '../../reducers/modalStateSlice';
 import styled from 'styled-components';
->>>>>>> Stashed changes
 
 interface ContainerProps {
   children?: React.ReactNode;
 }
 
 const MainContainer = ({ children }: ContainerProps) => {
-<<<<<<< Updated upstream
-  return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        paddingTop: '20px',
-        width: '100%',
-        boxSizing: 'border-box',
-      }}
-    >
-      {children}
-    </div>
-  );
-=======
   return <StyledMainContainer>{children}</StyledMainContainer>;
->>>>>>> Stashed changes
 };
 
 const CardsContainer = ({ children }: ContainerProps) => {
   const modalState: UserModalState = useSelector(
-<<<<<<< Updated upstream
     (state: RootState) => state.modalState,
-  );
-  return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        width: '100%',
-        maxWidth: '800px', // 적절한 최대 너비 설정
-        boxSizing: 'border-box',
-        padding: '0 20px', // 좌우 패딩 추가
-      }}
-    >
-      {children}
-    </div>
-=======
-    (state: RootState) => state.modalState
->>>>>>> Stashed changes
   );
   return <StyledCardsContainer>{children}</StyledCardsContainer>;
 };
@@ -73,7 +32,7 @@ const BoardList = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const TAKE: number = 5;
   const { buttonType }: MainListTypeState = useSelector(
-    (state: RootState) => state.sideBarButton
+    (state: RootState) => state.sideBarButton,
   );
   const [ref, inView] = useInView();
   const [Id, setId] = useState<IdType>(null);
@@ -114,10 +73,6 @@ const BoardList = () => {
             category: null,
           });
           break;
-<<<<<<< Updated upstream
-        // 리스트 API 작업 ljh
-=======
->>>>>>> Stashed changes
         case 'TAGMATCH':
           response = await AllListAPI({
             take: TAKE,
@@ -159,18 +114,13 @@ const BoardList = () => {
       </div>
     );
   }
-  
+
   return (
     <>
       <MainContainer>
         <CardsContainer>
           {list.length ? (
-<<<<<<< Updated upstream
-            list.map((el: CardType, index) => {
-              {console.log(el.id)}
-=======
             list.map((el: CardType) => {
->>>>>>> Stashed changes
               return (
                 <React.Fragment key={el.id}>
                   <Card
@@ -191,13 +141,7 @@ const BoardList = () => {
           )}
         </CardsContainer>
       </MainContainer>
-<<<<<<< Updated upstream
-      <div style={{ opacity: '0' }} ref={ref}>
-        d
-      </div>
-=======
       <StyledInvisibleDiv ref={ref}>d</StyledInvisibleDiv>
->>>>>>> Stashed changes
     </>
   );
 };
