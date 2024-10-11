@@ -39,13 +39,13 @@ const BoardRead = () => {
   };
 
   const query = useQuery();
-  const id = query.get('id');
+  const id = query.get('id') as string;
   const title = query.get('title');
   const content = query.get('content');
 
   useEffect(() => {
     const readBoard = async (): Promise<void> => {
-      const commentRes = await CommentListAPI({ boardId: id });
+      const commentRes = await CommentListAPI({boardId : id} );
 
       if (!commentRes) return;
       const commentResponse = commentRes.data.response;

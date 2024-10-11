@@ -529,10 +529,10 @@ const TextContainer = styled.div`
 `;
 
 const ImagePreview = styled.img`
-  height: 400px;
-  width: 100%;
+  max-width: 760px;
+  max-height: 500px;
   border-radius: 20px;
-  
+  object-fit: contain; 
 `;
 
 const MediaContainer = styled.div`

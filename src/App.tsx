@@ -50,7 +50,7 @@ function App() {
         <CommunityProvider>
           <Routes>
             <Route
-              path='/'
+              path="/"
               element={
                 <Layout>
                   <BoardList />
@@ -60,7 +60,7 @@ function App() {
 
             {/*게시판*/}
             <Route
-              path='/boards/submit'
+              path="/boards/submit"
               element={
                 <Layout>
                   <BoardSubmit />
@@ -68,7 +68,7 @@ function App() {
               }
             />
             <Route
-              path='/boards/read'
+              path="/boards/read"
               element={
                 <Layout>
                   <BoardRead />
@@ -77,7 +77,7 @@ function App() {
             />
             {/*유저*/}
             <Route
-              path='/users/profile'
+              path="/users/profile"
               element={
                 <Layout>
                   <Profile />
@@ -86,10 +86,10 @@ function App() {
             />
             {/* 문의하기 게시판*/}
 
-            <Route path='/users/inquiry' element={<UsersInquiry />} />
+            <Route path="/users/inquiry" element={<UsersInquiry />} />
             {/* 커뮤니티 만들기*/}
             <Route
-              path='/community/create1'
+              path="/community/create1"
               element={
                 <Layout>
                   <CommunityCreatePage1 />
@@ -105,7 +105,7 @@ function App() {
               }
             /> */}
             <Route
-              path='/community/create3'
+              path="/community/create3"
               element={
                 <Layout>
                   <CommunityCreatePage3 />
@@ -113,7 +113,7 @@ function App() {
               }
             />
             <Route
-              path='/community/create4'
+              path="/community/create4"
               element={
                 <Layout>
                   <CommunityCreatePage4 />
