@@ -23,9 +23,10 @@ const CommunityCreatePage4: FC = () => {
     useState<CommunityVisibilityType>('PUBLIC');
   const [searchNickname, setSearchNickname] = useState<string>('')
   const [searchResultList, setSearchResultList] = useState<User[]>([]);
+  const userId = localStorage.getItem('id') as string;
 
   useEffect(() => {
-    setIsCommunity((prevState) => ({...prevState, id : [], visibility: visibility}))
+    setIsCommunity((prevState) => ({...prevState, id : [userId], visibility: visibility}))
   }, [visibility]);
   
   const handleUserSearchChange = async(event:React.ChangeEvent<HTMLInputElement>) => {
@@ -58,7 +59,7 @@ const CommunityCreatePage4: FC = () => {
         id: [...(prevState.id || []), userId] // undefined 상태를 빈 배열로 처리
     }));
     }
-    console.log(isCommunity)
+    console.log(isCommunity.id)
 }
 
   const [isCommunity, setIsCommunity] = useState<{
@@ -76,7 +77,7 @@ const CommunityCreatePage4: FC = () => {
     icon: icon,
     visibility: visibility,
     topics: [],
-    id: [localStorage.getItem('id') as string],
+    id: [],
   });
 
   const handleSubmit = async (): Promise<void> => {
@@ -111,7 +112,7 @@ const CommunityCreatePage4: FC = () => {
 
     navigate('/');
   };
-
+  
   const handleBack = () => {
     navigate('/community/create3');
   };
