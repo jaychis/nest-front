@@ -81,7 +81,7 @@ const BoardComment = (co: BoardCommentProps) => {
         .catch((err) => {
           console.error('Error in ReactionAPI:', err);
           alert(
-            'An error occurred while processing your reaction. Please try again later.'
+            'An error occurred while processing your reaction. Please try again later.',
           );
         });
     }
@@ -106,13 +106,14 @@ const BoardComment = (co: BoardCommentProps) => {
     });
   };
   const replyWrite = () => {
-    const param: ReplySubmitParams = {
+    const params: ReplySubmitParams = {
       commentId: isReplyState.comment_id,
       content: isReplyState.content,
       nickname: isReplyState.nickname,
     };
+    console.log('replyWrite params : ', params);
 
-    ReplySubmitAPI(param)
+    ReplySubmitAPI(params)
       .then((res) => {
         const response: ReplyType = res.data.response;
         console.log('ReplySubmitAPI response : ', response);
@@ -126,7 +127,7 @@ const BoardComment = (co: BoardCommentProps) => {
       .catch((err) => {
         console.error('Error in ReplySubmitAPI:', err);
         alert(
-          'An error occurred while submitting your reply. Please try again later.'
+          'An error occurred while submitting your reply. Please try again later.',
         );
       });
   };
@@ -145,7 +146,7 @@ const BoardComment = (co: BoardCommentProps) => {
       .catch((err) => {
         console.error('BoardComment ReactionListAPI error:', err);
         alert(
-          'An error occurred while fetching reactions. Please try again later.'
+          'An error occurred while fetching reactions. Please try again later.',
         );
       });
 
@@ -159,7 +160,7 @@ const BoardComment = (co: BoardCommentProps) => {
       .catch((err) => {
         console.error('BoardComment ReactionCountAPI error:', err);
         alert(
-          'An error occurred while fetching the reaction count. Please try again later.'
+          'An error occurred while fetching the reaction count. Please try again later.',
         );
       });
   }, [isCommentReaction]);

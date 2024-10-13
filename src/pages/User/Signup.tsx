@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useEffect, useState } from "react";
+import React, { MouseEventHandler, useEffect, useState } from 'react';
 import {
   ExistingEmailAPI,
   ExistingNicknameAPI,
@@ -6,19 +6,18 @@ import {
   SignupAPI,
   SignupParams,
   LoginAPI,
-  LoginParams
-} from "../api/UserApi";
-import { CollectionTypes } from "../../_common/CollectionTypes";
+  LoginParams,
+} from '../api/UserApi';
+import { CollectionTypes } from '../../_common/CollectionTypes';
 import {
   isValidPasswordFormat,
   isValidPhoneNumber,
-} from "../../_common/PasswordRegex";
-import { FaGoogle, FaApple, FaComment } from "react-icons/fa";
-import { SiNaver } from "react-icons/si";
-import vLogo from "../../assets/img/v-check.png";
-import xLogo from "../../assets/img/x-check.png";
-import Alert from "../../components/Alert";
-
+} from '../../_common/PasswordRegex';
+import { FaGoogle, FaApple, FaComment } from 'react-icons/fa';
+import { SiNaver } from 'react-icons/si';
+import vLogo from '../../assets/img/v-check.png';
+import xLogo from '../../assets/img/x-check.png';
+import Alert from '../../components/Alert';
 
 interface Props {
   readonly onSwitchView: () => void;
@@ -35,11 +34,11 @@ interface ValidSignupType {
 
 const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
   const [signup, setSignup] = useState<SignupParams>({
-    email: "",
-    nickname: "",
-    password: "",
-    confirmPassword: "",
-    phone: "",
+    email: '',
+    nickname: '',
+    password: '',
+    confirmPassword: '',
+    phone: '',
   });
 
   const [validSignup, setValidSignup] = useState<ValidSignupType>({
@@ -60,10 +59,10 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
     readonly refresh_token: string;
   }) => {
     modalIsOpen(false);
-    localStorage.setItem("access_token", access_token);
-    localStorage.setItem("refresh_token", refresh_token);
-    localStorage.setItem("id", id);
-    localStorage.setItem("nickname", nickname);
+    localStorage.setItem('access_token', access_token);
+    localStorage.setItem('refresh_token', refresh_token);
+    localStorage.setItem('id', id);
+    localStorage.setItem('nickname', nickname);
     setShowAlert(true); // 알람 표시
     setShowAlert(false); // 알람 숨기기
     window.location.reload();
@@ -151,7 +150,7 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
 
   const processLogin = async () => {
     try {
-      const login = { email: signup.email, password: signup.password }
+      const login = { email: signup.email, password: signup.password };
       const res = await LoginAPI(login);
       const response = res.data.response;
       const { id, nickname, access_token, refresh_token } = response;
@@ -165,9 +164,9 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
         });
       }
     } catch (err) {
-      console.error(err)
+      console.error(err);
     }
-  }
+  };
 
   const handleSubmit: MouseEventHandler<HTMLButtonElement> = (event) => {
     if (event) event.preventDefault();
@@ -179,11 +178,11 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
       !signup.confirmPassword ||
       !signup.phone
     ) {
-      return alert("모든 정보를 입력해주세요");
+      return alert('모든 정보를 입력해주세요');
     }
 
     if (!isValidPhoneNumber(signup.phone))
-      return alert("핸드폰 번호를 확인 해주세요");
+      return alert('핸드폰 번호를 확인 해주세요');
 
     const isPasswordValid: boolean = isValidPasswordFormat(signup.password);
     const isConfirmPasswordValid: boolean = isValidPasswordFormat(
@@ -203,22 +202,22 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
         .catch((err): void => console.error(err));
     } else {
       alert(
-        "비밀번호는 최소 8자, 하나 이상의 문자, 하나의 숫자 및 하나의 특수문자입니다.",
+        '비밀번호는 최소 8자, 하나 이상의 문자, 하나의 숫자 및 하나의 특수문자입니다.',
       );
     }
   };
   const KAKAO_CLIENT_ID = (() => {
     switch (process.env.REACT_APP_NODE_ENV) {
-      case "production":
+      case 'production':
         return process.env.REACT_APP_KAKAO_CLIENT_ID; // production 환경의 Client ID
       default:
         return process.env.REACT_APP_KAKAO_TEST_CLIENT_ID; // 기본값 또는 undefined 방지
     }
   })();
   const REDIRECT_URI =
-    process.env.REACT_APP_NODE_ENV === "production"
+    process.env.REACT_APP_NODE_ENV === 'production'
       ? process.env.REACT_APP_KAKAO_REDIRECT_URL
-      : process.env.REACT_APP_NODE_ENV === "stage"
+      : process.env.REACT_APP_NODE_ENV === 'stage'
         ? process.env.REACT_APP_KAKAO_STAGE_REDIRECT_URL
         : process.env.REACT_APP_KAKAO_TEST_REDIRECT_URL;
 
@@ -228,12 +227,12 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
 
     const popup = window.open(
       KAKAO_AUTH_URL,
-      "PopupWin",
-      "width=500,height=600",
+      'PopupWin',
+      'width=500,height=600',
     );
     // 이벤트 리스너를 통해 팝업에서 인증 후 리디렉트된 URL의 코드를 받아 처리
     window.addEventListener(
-      "message",
+      'message',
       async (event) => {
         try {
           const { user } = event.data; // 카카오로부터 받은 사용자 정보
@@ -244,20 +243,20 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
           // 이메일, 닉네임, 전화번호를 기입할 수 있도록 상태 업데이트
           setSignup((prevSignup) => ({
             ...prevSignup,
-            email: parsedUser.email || "",
-            nickname: parsedUser.nickname || "",
-            phone: parsedUser.phone || "",
+            email: parsedUser.email || '',
+            nickname: parsedUser.nickname || '',
+            phone: parsedUser.phone || '',
           }));
 
           // 팝업이 열려 있으면 닫기
           if (popup) popup.close();
         } catch (error) {
           console.error(
-            "카카오로부터 사용자 정보를 받아오는 데 실패했습니다.",
+            '카카오로부터 사용자 정보를 받아오는 데 실패했습니다.',
             error,
           );
           alert(
-            "카카오로부터 사용자 정보를 받아오는 데 실패했습니다. 다시 시도해주세요.",
+            '카카오로부터 사용자 정보를 받아오는 데 실패했습니다. 다시 시도해주세요.',
           );
         }
       },
@@ -268,16 +267,16 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
   return (
     <div
       style={{
-        backgroundColor: "#fff",
-        borderRadius: "25px",
-        padding: "25px",
-        minWidth: "400px",
-        maxWidth: "600px",
-        width: "80%",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+        backgroundColor: '#fff',
+        borderRadius: '25px',
+        padding: '25px',
+        minWidth: '400px',
+        maxWidth: '600px',
+        width: '80%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
       }}
     >
       {showAlert && (
@@ -287,32 +286,32 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
           type="success"
         />
       )}
-      <div style={{ textAlign: "center", marginBottom: "20px" }}>
+      <div style={{ textAlign: 'center', marginBottom: '20px' }}>
         <h2>회원가입</h2>
       </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-        <button
-          style={styles.socialButton}
-          onClick={() => alert("Continue with Google")}
-        >
-          <FaGoogle style={styles.socialLogo} />
-          구글로 가입
-        </button>
-        <button
-          style={styles.socialButton}
-          onClick={() => alert("Continue with Apple")}
-        >
-          <FaApple style={styles.socialLogo} />
-          애플로 가입
-        </button>
-        <button
-          style={styles.socialButton}
-          onClick={() => alert("Continue with Naver")}
-        >
-          <SiNaver style={styles.socialLogo} />
-          네이버로 가입
-        </button>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        {/*<button*/}
+        {/*  style={styles.socialButton}*/}
+        {/*  onClick={() => alert("Continue with Google")}*/}
+        {/*>*/}
+        {/*  <FaGoogle style={styles.socialLogo} />*/}
+        {/*  구글로 가입*/}
+        {/*</button>*/}
+        {/*<button*/}
+        {/*  style={styles.socialButton}*/}
+        {/*  onClick={() => alert("Continue with Apple")}*/}
+        {/*>*/}
+        {/*  <FaApple style={styles.socialLogo} />*/}
+        {/*  애플로 가입*/}
+        {/*</button>*/}
+        {/*<button*/}
+        {/*  style={styles.socialButton}*/}
+        {/*  onClick={() => alert("Continue with Naver")}*/}
+        {/*>*/}
+        {/*  <SiNaver style={styles.socialLogo} />*/}
+        {/*  네이버로 가입*/}
+        {/*</button>*/}
         <button style={styles.socialButton} onClick={() => kakaoOauthSignUp()}>
           <FaComment style={styles.socialLogo} />
           카카오로 가입
@@ -321,24 +320,24 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
 
       <div
         style={{
-          display: "flex",
-          alignItems: "center",
-          textAlign: "center",
-          color: "#aaa",
-          margin: "20px 0",
+          display: 'flex',
+          alignItems: 'center',
+          textAlign: 'center',
+          color: '#aaa',
+          margin: '20px 0',
         }}
       >
-        <div style={{ flex: 1, height: "1px", background: "#aaa" }}></div>
-        <div style={{ margin: "0 10px" }}>OR</div>
-        <div style={{ flex: 1, height: "1px", background: "#aaa" }}></div>
+        <div style={{ flex: 1, height: '1px', background: '#aaa' }}></div>
+        <div style={{ margin: '0 10px' }}>OR</div>
+        <div style={{ flex: 1, height: '1px', background: '#aaa' }}></div>
       </div>
 
       <form>
         <div
           style={{
-            position: "relative",
-            width: "100%",
-            marginBottom: "10px",
+            position: 'relative',
+            width: '100%',
+            marginBottom: '10px',
           }}
         >
           <input
@@ -359,27 +358,27 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
           {validSignup.email === null ? null : validSignup.email === true ? (
             <img
               src={vLogo}
-              alt={"v logo"}
+              alt={'v logo'}
               style={{
-                width: "20px",
-                height: "20px",
-                position: "absolute",
-                right: "10px",
-                top: "50%",
-                transform: "translateY(-50%)",
+                width: '20px',
+                height: '20px',
+                position: 'absolute',
+                right: '10px',
+                top: '50%',
+                transform: 'translateY(-50%)',
               }}
             />
           ) : (
             <img
               src={xLogo}
-              alt={"x logo"}
+              alt={'x logo'}
               style={{
-                width: "20px",
-                height: "20px",
-                position: "absolute",
-                right: "10px",
-                top: "50%",
-                transform: "translateY(-50%)",
+                width: '20px',
+                height: '20px',
+                position: 'absolute',
+                right: '10px',
+                top: '50%',
+                transform: 'translateY(-50%)',
               }}
             />
           )}
@@ -387,9 +386,9 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
 
         <div
           style={{
-            position: "relative",
-            width: "100%",
-            marginBottom: "10px",
+            position: 'relative',
+            width: '100%',
+            marginBottom: '10px',
           }}
         >
           <input
@@ -411,27 +410,27 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
             true ? (
             <img
               src={vLogo}
-              alt={"v logo"}
+              alt={'v logo'}
               style={{
-                width: "20px",
-                height: "20px",
-                position: "absolute",
-                right: "10px",
-                top: "50%",
-                transform: "translateY(-50%)",
+                width: '20px',
+                height: '20px',
+                position: 'absolute',
+                right: '10px',
+                top: '50%',
+                transform: 'translateY(-50%)',
               }}
             />
           ) : (
             <img
               src={xLogo}
-              alt={"x logo"}
+              alt={'x logo'}
               style={{
-                width: "20px",
-                height: "20px",
-                position: "absolute",
-                right: "10px",
-                top: "50%",
-                transform: "translateY(-50%)",
+                width: '20px',
+                height: '20px',
+                position: 'absolute',
+                right: '10px',
+                top: '50%',
+                transform: 'translateY(-50%)',
               }}
             />
           )}
@@ -439,9 +438,9 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
 
         <div
           style={{
-            position: "relative",
-            width: "100%",
-            marginBottom: "10px",
+            position: 'relative',
+            width: '100%',
+            marginBottom: '10px',
           }}
         >
           <input
@@ -463,9 +462,9 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
 
         <div
           style={{
-            position: "relative",
-            width: "100%",
-            marginBottom: "10px",
+            position: 'relative',
+            width: '100%',
+            marginBottom: '10px',
           }}
         >
           <input
@@ -486,14 +485,14 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
           {validPassword ? (
             <img
               src={vLogo}
-              alt={"v logo"}
+              alt={'v logo'}
               style={{
-                width: "20px",
-                height: "20px",
-                position: "absolute",
-                right: "10px",
-                top: "50%",
-                transform: "translateY(-50%)",
+                width: '20px',
+                height: '20px',
+                position: 'absolute',
+                right: '10px',
+                top: '50%',
+                transform: 'translateY(-50%)',
               }}
             />
           ) : null}
@@ -501,9 +500,9 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
 
         <div
           style={{
-            position: "relative",
-            width: "100%",
-            marginBottom: "10px",
+            position: 'relative',
+            width: '100%',
+            marginBottom: '10px',
           }}
         >
           <input
@@ -524,27 +523,27 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
           {validSignup.phone === null ? null : validSignup.phone === true ? (
             <img
               src={vLogo}
-              alt={"v logo"}
+              alt={'v logo'}
               style={{
-                width: "20px",
-                height: "20px",
-                position: "absolute",
-                right: "10px",
-                top: "50%",
-                transform: "translateY(-50%)",
+                width: '20px',
+                height: '20px',
+                position: 'absolute',
+                right: '10px',
+                top: '50%',
+                transform: 'translateY(-50%)',
               }}
             />
           ) : (
             <img
               src={xLogo}
-              alt={"x logo"}
+              alt={'x logo'}
               style={{
-                width: "20px",
-                height: "20px",
-                position: "absolute",
-                right: "10px",
-                top: "50%",
-                transform: "translateY(-50%)",
+                width: '20px',
+                height: '20px',
+                position: 'absolute',
+                right: '10px',
+                top: '50%',
+                transform: 'translateY(-50%)',
               }}
             />
           )}
@@ -552,7 +551,7 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
       </form>
 
       <div
-        style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}
+        style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}
       >
         <button
           type="submit"
@@ -562,7 +561,7 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
           회원가입
         </button>
       </div>
-      <div style={{ width: "100%", padding: "10px 0", textAlign: "center" }}>
+      <div style={{ width: '100%', padding: '10px 0', textAlign: 'center' }}>
         <button onClick={onSwitchView} style={styles.switchButton}>
           로그인으로 전환
         </button>
@@ -573,47 +572,47 @@ const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
 
 const styles = {
   socialButton: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: "10px",
-    border: "1px solid #ccc",
-    backgroundColor: "white",
-    borderRadius: "10px",
-    cursor: "pointer",
-    height: "40px",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '10px',
+    border: '1px solid #ccc',
+    backgroundColor: 'white',
+    borderRadius: '10px',
+    cursor: 'pointer',
+    height: '40px',
   },
   socialLogo: {
-    width: "20px",
-    height: "20px",
-    marginRight: "10px",
+    width: '20px',
+    height: '20px',
+    marginRight: '10px',
   },
   input: {
-    padding: "10px",
-    border: "1px solid #ddd",
-    borderRadius: "4px",
-    marginBottom: "10px",
-    boxSizing: "border-box" as "border-box",
-    width: "100%",
-    height: "40px",
+    padding: '10px',
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+    marginBottom: '10px',
+    boxSizing: 'border-box' as 'border-box',
+    width: '100%',
+    height: '40px',
   },
   submitButton: {
-    padding: "10px 20px",
-    width: "200px",
-    borderRadius: "25px",
-    border: "none",
-    backgroundColor: "#84d7fb",
-    color: "white",
-    cursor: "pointer",
+    padding: '10px 20px',
+    width: '200px',
+    borderRadius: '25px',
+    border: 'none',
+    backgroundColor: '#84d7fb',
+    color: 'white',
+    cursor: 'pointer',
   },
   switchButton: {
-    padding: "10px 20px",
-    width: "200px",
-    borderRadius: "25px",
-    border: "none",
-    backgroundColor: "#000",
-    color: "white",
-    cursor: "pointer",
+    padding: '10px 20px',
+    width: '200px',
+    borderRadius: '25px',
+    border: 'none',
+    backgroundColor: '#000',
+    color: 'white',
+    cursor: 'pointer',
   },
 };
 

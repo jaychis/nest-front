@@ -16,6 +16,8 @@ import {
 } from "../../_common/CollectionTypes";
 import BoardReply, { ReplyType } from "../Board/BoardReply";
 import EmptyState from "../../components/EmptyState";
+import styled from "styled-components";
+import vCheck from '../../assets/img/v-check.png'
 
 type SearchListTypes =
   | "BOARDS"
@@ -25,6 +27,7 @@ type SearchListTypes =
   | "PEOPLE"
   | "TAGS";
 
+type sortTypes = 'POPULAR' | 'BY_COMMENT' | 'LATEST'; 
 const SearchList = () => {
   const [searchCardList, setSearchCardList] = useState<CardType[]>([]);
   const [searchCommunityList, setSearchCommunityList] = useState<
@@ -37,6 +40,7 @@ const SearchList = () => {
   const [params, setParams] = useSearchParams();
   const [searchType, setSearchType] = useState<SearchListTypes>("BOARDS");
   const QUERY: string = params.get("query") as string;
+  const [sortType, setSortType] = useState<sortTypes>('LATEST');
 
   useEffect(() => {
     if (searchType === "BOARDS") {
@@ -131,6 +135,10 @@ const SearchList = () => {
   }, [searchType, QUERY]); // QUERY를 의존성 배열에 추가하여 쿼리 변경 시 재실행
 
   useEffect(() => console.log("searchType : ", searchType), [searchType]);
+
+  const handleChangeSortType = (sortType: sortTypes) => {
+    setSortType(sortType);
+  }
 
   const NavBarStateChange = async ({
     type,
@@ -227,6 +235,10 @@ const SearchList = () => {
   return (
     <>
       <NavBar />
+      <SortButtonContainer>
+                  <NavItem onClick = {() => {handleChangeSortType('LATEST')}} style={{background: sortType === 'LATEST' ? "#f0f0f0" : 'white'}}>최신순</NavItem>
+                  <NavItem onClick = {() => {handleChangeSortType('BY_COMMENT')}} style={{background: sortType === 'BY_COMMENT' ? "#f0f0f0" : 'white'}}>댓글순</NavItem>
+                </SortButtonContainer>
       {searchCardList.length > 0 ? (
         searchType === "BOARDS" ||
         searchType === "IMAGE&VIDEO" ||
@@ -235,6 +247,8 @@ const SearchList = () => {
             searchCardList.map((ca: CardType) => {
               return (
                 <>
+                
+                
                   <Card
                     id={ca.id}
                     category={ca.category}
@@ -310,5 +324,27 @@ const SearchList = () => {
     </>
   );
 };
+
+const SortButtonContainer = styled.div`
+    display: flex;
+    max-width: 200px;
+    margin: 10px;
+`
+
+const NavContainer = styled.div`
+  display: flex;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 10px;
+`;
+
+const NavItem = styled.div`
+  margin-right: 20px;
+  padding: 20px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #000;
+  border-radius: 40px;
+`;
+
 
 export default SearchList;

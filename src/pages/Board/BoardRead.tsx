@@ -158,7 +158,11 @@ const BoardRead = () => {
     setIsCommentState((prevState: CommentType[]) => {
       const updatedComments = prevState.map((comment: CommentType) => {
         if (comment.id === reply.comment_id) {
-          return { ...comment, replies: [...comment.replies, reply] };
+          const replyList = comment?.replies
+            ? [...comment.replies, reply]
+            : [reply];
+
+          return { ...comment, replies: replyList };
         } else {
           return comment;
         }
