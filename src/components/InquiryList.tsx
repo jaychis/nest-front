@@ -33,6 +33,12 @@ const InquiryList = ({
     const [textContent, setTextContent] = useState('');
     const [comment, setComment] = useState<string>();
     const [commentContent, setCommentContent] = useState<string>('');
+    {/* comment는 CommentInquiryAPI를 통해 받아온 데이터를 저장 
+        이후 comment값 존재 여부에 따라 댓글입력창이 보일지 댓글 내용이 보일지 여부가 결정되는데
+        textarea에서 onChange와 setComment로 comment의 값을 넣어주는 순간 
+        comment != null 로 판단돼 댓글입력창이 사라져버려서 comment와 commentContent로 구분
+        textarea에서 입력하는 값을 감지하여 최종 제출하기 위한 변수가 commentContent 
+        문의내역에 답변이 달렸는지 판단해 주기 위한 변수가 comment */}
     
     const submitComment = async () => {
         if(commentContent.trim() === '' || commentContent.length === 0){
@@ -71,6 +77,7 @@ const InquiryList = ({
             if (content.startsWith('<p>') && content.endsWith('</p>')) {
                 setTextContent(content.slice(3, -4));
             }
+            else(setTextContent(content))
     };
     pTagSlice();
     },[content])
