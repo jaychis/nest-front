@@ -1,59 +1,51 @@
-import React, { useEffect, useState } from "react";
-import GlobalBar from "../Global/GlobalBar";
-import GlobalSideBar from "../Global/GlobalSideBar";
-import Card from "../../components/Card";
-import { ReadAPI } from "../api/BoardApi";
-import { useSearchParams } from "react-router-dom";
-import { CardType, CollectionTypes } from "../../_common/CollectionTypes";
+import React, { useEffect, useState } from 'react';
+import Card from '../../components/Card';
+import { ReadAPI } from '../api/BoardApi';
+import { CardType, CollectionTypes } from '../../_common/CollectionTypes';
 import {
   CommentListAPI,
   CommentSubmitAPI,
   CommentSubmitParams,
-} from "../api/CommentApi";
-import BoardComment, { CommentType } from "./BoardComment";
-import BoardReply, { ReplyType } from "./BoardReply";
-import RightSideBar from "../Global/RightSideBar";
+} from '../api/CommentApi';
+import BoardComment, { CommentType } from './BoardComment';
+import BoardReply, { ReplyType } from './BoardReply';
 import { useLocation } from 'react-router-dom';
 
 const BoardRead = () => {
-  const BOARD_ID: string = sessionStorage.getItem("boardId") as string;
-  const BOARD_TITLE: string = sessionStorage.getItem("boardTitle") as string;
-  useEffect(() => {
-    console.log("BOARD_ID : ", BOARD_ID);
-  }, [BOARD_ID]);
+  const BOARD_ID: string = sessionStorage.getItem('boardId') as string;
+  const BOARD_TITLE: string = sessionStorage.getItem('boardTitle') as string;
+
   const [isBoardState, setIsBoardStateBoard] = useState<CardType>({
     id: BOARD_ID,
-    identifier_id: "",
-    category: "",
+    identifier_id: '',
+    category: '',
     content: [],
     title: BOARD_TITLE,
-    nickname: "",
+    nickname: '',
     created_at: new Date(),
     updated_at: new Date(),
     deleted_at: null,
-    type: "TEXT",
-    share_count: 0
+    type: 'TEXT',
+    share_count: 0,
   });
   const [isCommentState, setIsCommentState] = useState<CommentType[]>([]);
 
   const useQuery = () => {
     const { search } = useLocation();
     return React.useMemo(() => new URLSearchParams(search), [search]);
-  }
+  };
 
   const query = useQuery();
   const id = query.get('id') as string;
   const title = query.get('title');
-  const content = query.get('content');
 
   useEffect(() => {
-
     const readBoard = async (): Promise<void> => {
-      const commentRes = await CommentListAPI({boardId : id} );
+      const commentRes = await CommentListAPI({ boardId: id });
 
       if (!commentRes) return;
       const commentResponse = commentRes.data.response;
-      console.log("commentResponse : ", commentResponse);
+      console.log('commentResponse : ', commentResponse);
       setIsCommentState([...commentResponse]);
 
       const res = await ReadAPI({
@@ -63,7 +55,7 @@ const BoardRead = () => {
 
       if (!res) return;
       const response = res.data.response;
-      console.log("response : ", response);
+      console.log('response : ', response);
 
       setIsBoardStateBoard(response);
     };
@@ -72,9 +64,9 @@ const BoardRead = () => {
 
   const [writeComment, setWriteComment] = useState<CommentSubmitParams>({
     boardId: BOARD_ID,
-    content: "",
-    nickname: (localStorage.getItem("nickname") as string) || "",
-    userId: (localStorage.getItem("id") as string) || "",
+    content: '',
+    nickname: (localStorage.getItem('nickname') as string) || '',
+    userId: (localStorage.getItem('id') as string) || '',
   });
   const commentHandleChange = (event: CollectionTypes) => {
     const { name, value } = event;
@@ -86,7 +78,7 @@ const BoardRead = () => {
   };
   const commentWrite = () => {
     if (!writeComment.content) {
-      alert("댓글을 내용을 입력해주세요");
+      alert('댓글을 내용을 입력해주세요');
       return;
     } else {
       const param: CommentSubmitParams = {
@@ -105,7 +97,7 @@ const BoardRead = () => {
 
         setWriteComment((prev) => ({
           ...prev,
-          content: "",
+          content: '',
         }));
       };
       commentSubmit();
@@ -150,7 +142,7 @@ const BoardRead = () => {
               deleted_at={co.deleted_at}
               onReplySubmit={handleReplySubmit}
             />
-            <div style={{ marginLeft: "40px" }}>
+            <div style={{ marginLeft: '40px' }}>
               {co.replies?.length > 0 ? renderReplies(co.replies) : []}
             </div>
           </div>
@@ -163,7 +155,11 @@ const BoardRead = () => {
     setIsCommentState((prevState: CommentType[]) => {
       const updatedComments = prevState.map((comment: CommentType) => {
         if (comment.id === reply.comment_id) {
-          return { ...comment, replies: [...comment.replies, reply] };
+          const replyList = comment?.replies
+            ? [...comment.replies, reply]
+            : [reply];
+
+          return { ...comment, replies: replyList };
         } else {
           return comment;
         }
@@ -173,92 +169,105 @@ const BoardRead = () => {
     });
   };
 
-  useEffect(() => {
-    console.log("isBoardState : ", isBoardState);
-  }, [isBoardState]);
   return (
     <>
       {/*<GlobalBar />*/}
-      <div style={{ display: "flex", justifyContent: "center", height: "100vh", width: "100%",}}>
-  <div style={{ display: "flex", width: "90%" }}>
-    <div style={{ flex: 2 }}>
-      {!isBoardState?.id ? null : (
-        <Card
-          id={isBoardState.id}
-          category={isBoardState.category}
-          title={isBoardState.title}
-          nickname={isBoardState.nickname}
-          createdAt={isBoardState.created_at}
-          content={isBoardState.content}
-          type={isBoardState.type}
-          shareCount={isBoardState.share_count}
-        />
-      )}
-      <div style={{
-        display: "flex",
-        flexDirection: "column",
-        width: "80%",
-        margin: "10px",
-        border: "3px solid #ccc",
-        borderRadius: "30px",
-        padding: "10px",
-        marginLeft : '-0.5%',
-      }}>
-        <textarea
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          height: '100vh',
+          width: '100%',
+        }}
+      >
+        <div style={{ display: 'flex', width: '90%' }}>
+          <div style={{ flex: 2 }}>
+            {!isBoardState?.id ? null : (
+              <Card
+                id={isBoardState.id}
+                category={isBoardState.category}
+                title={isBoardState.title}
+                nickname={isBoardState.nickname}
+                createdAt={isBoardState.created_at}
+                content={isBoardState.content}
+                type={isBoardState.type}
+                shareCount={isBoardState.share_count}
+              />
+            )}
+            <div
               style={{
-                width: "100%",
-                border: "none",
-                borderRadius: "14px",
-                resize: "vertical",
-                boxSizing: "border-box",
-                outline: "none",
+                display: 'flex',
+                flexDirection: 'column',
+                width: '80%',
+                margin: '10px',
+                border: '3px solid #ccc',
+                borderRadius: '30px',
+                padding: '10px',
+                marginLeft: '-0.5%',
               }}
-              name={"content"}
-              value={writeComment.content}
-              onChange={(value) =>
-                commentHandleChange({
-                  name: value.target.name,
-                  value: value.target.value,
-                })
-              }
-            ></textarea>
-        <div style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          marginTop: "10px",
-        }}>
-          <button style={{
-            padding: "6px 12px",
-            marginLeft: "5px",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
-            fontSize: "14px",
-            backgroundColor: "#f5f5f5",
-            color: "#333",
-          }}>
-            Cancel
-          </button>
-          <button
-            onClick = {() => {commentWrite()}}
-            style={{
-            padding: "6px 12px",
-            marginLeft: "5px",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
-            fontSize: "14px",
-            backgroundColor: "#84d7fb",
-            color: "white",
-          }} >
-            Comment
-          </button>
+            >
+              <textarea
+                style={{
+                  width: '100%',
+                  border: 'none',
+                  borderRadius: '14px',
+                  resize: 'vertical',
+                  boxSizing: 'border-box',
+                  outline: 'none',
+                }}
+                name={'content'}
+                value={writeComment.content}
+                onChange={(value) =>
+                  commentHandleChange({
+                    name: value.target.name,
+                    value: value.target.value,
+                  })
+                }
+              ></textarea>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  marginTop: '10px',
+                }}
+              >
+                <button
+                  style={{
+                    padding: '6px 12px',
+                    marginLeft: '5px',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    backgroundColor: '#f5f5f5',
+                    color: '#333',
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    commentWrite();
+                  }}
+                  style={{
+                    padding: '6px 12px',
+                    marginLeft: '5px',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    backgroundColor: '#84d7fb',
+                    color: 'white',
+                  }}
+                >
+                  Comment
+                </button>
+              </div>
+            </div>
+            {isCommentState?.length > 0 ? renderComments(isCommentState) : []}
+          </div>
         </div>
       </div>
-      {isCommentState?.length > 0 ? renderComments(isCommentState) : []}
-    </div>
-  </div>
-</div>
     </>
   );
 };
