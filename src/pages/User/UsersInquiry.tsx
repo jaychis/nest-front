@@ -154,7 +154,6 @@ const UsersInquiry = () => {
                     content={'FAQ 답변입니다.'}
                     created_at={el.created_at}
                     id={el.id}
-                    nickname={el.nickname}
                     title={'FAQ 문의 내용'}
                     update_at={el.update_at}
                     active={"FAQ"}

@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import React from "react";
-import { CommentListAPI, CommentSubmitAPI, CommentInquiryAPI,CommentSubmitParams} from "../pages/api/CommentApi";
+import { CommentListAPI, CommentSubmitAPI, CommentInquiryAPI} from "../pages/api/CommentApi";
+import { submitCommentContactApi,CommentSubmitParams,commentContactListApi } from "../pages/api/InquiryApi";
 
 interface InquiryProps{
     readonly content: string;
@@ -19,7 +20,6 @@ const InquiryList = ({
     content,
     created_at,
     id,
-    nickname,
     title,
     update_at,
     active
@@ -33,6 +33,7 @@ const InquiryList = ({
     const [textContent, setTextContent] = useState('');
     const [comment, setComment] = useState<string>();
     const [commentContent, setCommentContent] = useState<string>('');
+    const nickname = localStorage.getItem('nickname') as string;
     {/* comment는 CommentInquiryAPI를 통해 받아온 데이터를 저장 
         이후 comment값 존재 여부에 따라 댓글입력창이 보일지 댓글 내용이 보일지 여부가 결정되는데
         textarea에서 onChange와 setComment로 comment의 값을 넣어주는 순간 
@@ -44,26 +45,25 @@ const InquiryList = ({
         if(commentContent.trim() === '' || commentContent.length === 0){
             return alert('내용을 작성해주세요')
         }
+            const contactUsId = id 
+            const userId= localStorage.getItem('id') as string
+            const content= commentContent
 
-        const param: CommentSubmitParams = {
-            boardId: id,
-            userId: localStorage.getItem('id') as string,
-            content: commentContent,
-            nickname: nickname as string,
-        };
-
-        const res = await CommentSubmitAPI(param);
+        const res = await submitCommentContactApi({contactUsId, userId, content, nickname });
         if(!res) return;
         alert('답변이 등록되었습니다.');
         window.location.reload();
     }
 
     const getComment = async ():Promise<void> => {
-        const res = await CommentInquiryAPI(id)
-        if(res?.data.response[0]){
+        try{
+            const res = await commentContactListApi(id)
+            if(res?.data.response[0]){
             setComment(res?.data.response[0].content)
+        }}
+        catch(error){
+            console.error(error)
         }
-        
     }
 
     const handleCommentChange = async (event:React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>):Promise<void> => {
@@ -100,7 +100,7 @@ const InquiryList = ({
         }
         setIsCollapse((prev) => !prev);
       }, []);
-
+      
     return(
     <>
         <InquiryListContainer onClick = {(event) => {handleButtonClick(event)}}>
@@ -170,7 +170,9 @@ const InquiryList = ({
             </button>
             </div>
         </div></Comment>  : 
-            <Comment ref={CommentRef}>{comment}</Comment>}
+            <Comment ref={CommentRef}>
+                {comment}
+            </Comment>}
         </CommentWrapper>
     </>
     )
