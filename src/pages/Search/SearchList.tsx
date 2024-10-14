@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   GetSearchBoardsAPI,
   GetSearchCommentsAPI,
@@ -6,28 +6,29 @@ import {
   GetSearchMediaAPI,
   GetSearchPeopleAPI,
   GetSearchTagsAPI,
-} from "../api/SearchApi";
-import { useSearchParams } from "react-router-dom";
-import Card from "../../components/Card";
+} from '../api/SearchApi';
+import { useSearchParams } from 'react-router-dom';
+import Card from '../../components/Card';
 import {
   CardType,
   CommunityType,
   UserType,
-} from "../../_common/CollectionTypes";
-import BoardReply, { ReplyType } from "../Board/BoardReply";
-import EmptyState from "../../components/EmptyState";
-import styled from "styled-components";
-import vCheck from '../../assets/img/v-check.png'
+} from '../../_common/CollectionTypes';
+import BoardReply, { ReplyType } from '../Board/BoardReply';
+import EmptyState from '../../components/EmptyState';
+import styled from 'styled-components';
+import vCheck from '../../assets/img/v-check.png';
+import UserSearchCard from '../../components/UserSearchCard';
 
 type SearchListTypes =
-  | "BOARDS"
-  | "COMMUNITIES"
-  | "COMMENTS"
-  | "IMAGE&VIDEO"
-  | "PEOPLE"
-  | "TAGS";
+  | 'BOARDS'
+  | 'COMMUNITIES'
+  | 'COMMENTS'
+  | 'IMAGE&VIDEO'
+  | 'PEOPLE'
+  | 'TAGS';
 
-type sortTypes = 'POPULAR' | 'BY_COMMENT' | 'LATEST'; 
+type sortTypes = 'POPULAR' | 'BY_COMMENT' | 'LATEST';
 const SearchList = () => {
   const [searchCardList, setSearchCardList] = useState<CardType[]>([]);
   const [searchCommunityList, setSearchCommunityList] = useState<
@@ -38,85 +39,85 @@ const SearchList = () => {
   const [searchTagList, setSearchTagsList] = useState([]);
 
   const [params, setParams] = useSearchParams();
-  const [searchType, setSearchType] = useState<SearchListTypes>("BOARDS");
-  const QUERY: string = params.get("query") as string;
+  const [searchType, setSearchType] = useState<SearchListTypes>('BOARDS');
+  const QUERY: string = params.get('query') as string;
   const [sortType, setSortType] = useState<sortTypes>('LATEST');
 
   useEffect(() => {
-    if (searchType === "BOARDS") {
+    if (searchType === 'BOARDS') {
       GetSearchBoardsAPI({ query: QUERY })
         .then((res): void => {
           if (!res) return;
           const response = res.data.response;
-          console.log("BOARDS response : ", response);
+          console.log('BOARDS response : ', response);
 
           setSearchCardList(response);
         })
         .catch((err) =>
-          console.error("SearchList GetSearchBoardsAPI error : ", err),
+          console.error('SearchList GetSearchBoardsAPI error : ', err),
         );
     }
 
-    if (searchType === "COMMUNITIES") {
+    if (searchType === 'COMMUNITIES') {
       GetSearchCommunitiesAPI({ query: QUERY })
         .then((res): void => {
           if (!res) return;
           const response = res.data.response;
-          console.log("community response : ", response);
+          console.log('community response : ', response);
 
           setSearchCommunityList(response);
         })
         .catch((err) =>
-          console.error("SearchList GetSearchCommunitiesAPI error : ", err),
+          console.error('SearchList GetSearchCommunitiesAPI error : ', err),
         );
     }
 
-    if (searchType === "COMMENTS") {
+    if (searchType === 'COMMENTS') {
       GetSearchCommentsAPI({ query: QUERY })
         .then((res): void => {
           if (!res) return;
 
           const response = res.data.response;
-          console.log("COMMENTS response : ", response);
+          console.log('COMMENTS response : ', response);
 
           setSearchReplyList(response);
         })
         .catch((err) =>
-          console.error("SearchList GetSearchCommentsAPI error : ", err),
+          console.error('SearchList GetSearchCommentsAPI error : ', err),
         );
     }
 
-    if (searchType === "IMAGE&VIDEO") {
+    if (searchType === 'IMAGE&VIDEO') {
       GetSearchMediaAPI({ query: QUERY })
         .then((res): void => {
           if (!res) return;
 
           const response = res.data.response;
-          console.log("IMAGE&VIDEO response : ", response);
+          console.log('IMAGE&VIDEO response : ', response);
 
           setSearchCardList(response);
         })
         .catch((err) =>
-          console.error("SearchList GetSearchMediaAPI error : ", err),
+          console.error('SearchList GetSearchMediaAPI error : ', err),
         );
     }
 
-    if (searchType === "PEOPLE") {
+    if (searchType === 'PEOPLE') {
       GetSearchPeopleAPI({ query: QUERY })
         .then((res): void => {
           if (!res) return;
 
           const response = res.data.response;
-          console.log("PEOPLE response : ", response);
+          console.log('PEOPLE response : ', response);
 
           setSearchUserList(response);
         })
         .catch((err) =>
-          console.error("SearchList GetSearchPeopleAPI error : ", err),
+          console.error('SearchList GetSearchPeopleAPI error : ', err),
         );
     }
 
-    if (searchType === "TAGS") {
+    if (searchType === 'TAGS') {
       GetSearchTagsAPI({ query: QUERY })
         .then((res): void => {
           if (!res) return;
@@ -124,48 +125,48 @@ const SearchList = () => {
           const response = res.data.response[0].communities.map(
             (tag: { community: CommunityType }) => tag.community,
           );
-          console.log("TAGS response : ", response);
+          console.log('TAGS response : ', response);
 
           setSearchTagsList(response);
         })
         .catch((err) =>
-          console.error("SearchList GetSearchTagsAPI error : ", err),
+          console.error('SearchList GetSearchTagsAPI error : ', err),
         );
     }
   }, [searchType, QUERY]); // QUERY를 의존성 배열에 추가하여 쿼리 변경 시 재실행
 
-  useEffect(() => console.log("searchType : ", searchType), [searchType]);
+  useEffect(() => console.log('searchType : ', searchType), [searchType]);
 
   const handleChangeSortType = (sortType: sortTypes) => {
     setSortType(sortType);
-  }
+  };
 
   const NavBarStateChange = async ({
     type,
   }: {
     readonly type: string;
   }): Promise<void> => {
-    console.log("NavBarStateChange type : ", type);
-    if (type === "BOARDS") setSearchType("BOARDS");
-    if (type === "COMMUNITIES") setSearchType("COMMUNITIES");
-    if (type === "COMMENTS") setSearchType("COMMENTS");
-    if (type === "IMAGE&VIDEO") setSearchType("IMAGE&VIDEO");
-    if (type === "PEOPLE") setSearchType("PEOPLE");
-    if (type === "TAGS") setSearchType("TAGS");
+    console.log('NavBarStateChange type : ', type);
+    if (type === 'BOARDS') setSearchType('BOARDS');
+    if (type === 'COMMUNITIES') setSearchType('COMMUNITIES');
+    if (type === 'COMMENTS') setSearchType('COMMENTS');
+    if (type === 'IMAGE&VIDEO') setSearchType('IMAGE&VIDEO');
+    if (type === 'PEOPLE') setSearchType('PEOPLE');
+    if (type === 'TAGS') setSearchType('TAGS');
   };
   const styles = {
     navContainer: {
-      display: "flex",
-      borderBottom: "1px solid #e0e0e0",
-      padding: "10px",
+      display: 'flex',
+      borderBottom: '1px solid #e0e0e0',
+      padding: '10px',
     },
     navItem: {
-      marginRight: "20px",
-      padding: "20px",
-      cursor: "pointer",
-      fontSize: "16px",
-      color: "#000",
-      borderRadius: "40px",
+      marginRight: '20px',
+      padding: '20px',
+      cursor: 'pointer',
+      fontSize: '16px',
+      color: '#000',
+      borderRadius: '40px',
     },
   };
   const NavBar = () => {
@@ -174,36 +175,36 @@ const SearchList = () => {
         <div
           style={{
             ...styles.navItem,
-            backgroundColor: searchType === "BOARDS" ? "#f0f0f0" : "white",
+            backgroundColor: searchType === 'BOARDS' ? '#f0f0f0' : 'white',
           }}
-          onClick={() => NavBarStateChange({ type: "BOARDS" })}
+          onClick={() => NavBarStateChange({ type: 'BOARDS' })}
         >
           게시판
         </div>
         <div
           style={{
             ...styles.navItem,
-            backgroundColor: searchType === "COMMUNITIES" ? "#f0f0f0" : "white",
+            backgroundColor: searchType === 'COMMUNITIES' ? '#f0f0f0' : 'white',
           }}
-          onClick={() => NavBarStateChange({ type: "COMMUNITIES" })}
+          onClick={() => NavBarStateChange({ type: 'COMMUNITIES' })}
         >
           커뮤니티
         </div>
         <div
           style={{
             ...styles.navItem,
-            backgroundColor: searchType === "COMMENTS" ? "#f0f0f0" : "white",
+            backgroundColor: searchType === 'COMMENTS' ? '#f0f0f0' : 'white',
           }}
-          onClick={() => NavBarStateChange({ type: "COMMENTS" })}
+          onClick={() => NavBarStateChange({ type: 'COMMENTS' })}
         >
           댓글
         </div>
         <div
           style={{
             ...styles.navItem,
-            backgroundColor: searchType === "IMAGE&VIDEO" ? "#f0f0f0" : "white",
+            backgroundColor: searchType === 'IMAGE&VIDEO' ? '#f0f0f0' : 'white',
           }}
-          onClick={() => NavBarStateChange({ type: "IMAGE&VIDEO" })}
+          onClick={() => NavBarStateChange({ type: 'IMAGE&VIDEO' })}
         >
           사진 & 영상
         </div>
@@ -211,9 +212,9 @@ const SearchList = () => {
         <div
           style={{
             ...styles.navItem,
-            backgroundColor: searchType === "PEOPLE" ? "#f0f0f0" : "white",
+            backgroundColor: searchType === 'PEOPLE' ? '#f0f0f0' : 'white',
           }}
-          onClick={() => NavBarStateChange({ type: "PEOPLE" })}
+          onClick={() => NavBarStateChange({ type: 'PEOPLE' })}
         >
           사람
         </div>
@@ -221,9 +222,9 @@ const SearchList = () => {
         <div
           style={{
             ...styles.navItem,
-            backgroundColor: searchType === "TAGS" ? "#f0f0f0" : "white",
+            backgroundColor: searchType === 'TAGS' ? '#f0f0f0' : 'white',
           }}
-          onClick={() => NavBarStateChange({ type: "TAGS" })}
+          onClick={() => NavBarStateChange({ type: 'TAGS' })}
         >
           태그
         </div>
@@ -236,19 +237,34 @@ const SearchList = () => {
     <>
       <NavBar />
       <SortButtonContainer>
-                  <NavItem onClick = {() => {handleChangeSortType('LATEST')}} style={{background: sortType === 'LATEST' ? "#f0f0f0" : 'white'}}>최신순</NavItem>
-                  <NavItem onClick = {() => {handleChangeSortType('BY_COMMENT')}} style={{background: sortType === 'BY_COMMENT' ? "#f0f0f0" : 'white'}}>댓글순</NavItem>
-                </SortButtonContainer>
+        <NavItem
+          onClick={() => {
+            handleChangeSortType('LATEST');
+          }}
+          style={{ background: sortType === 'LATEST' ? '#f0f0f0' : 'white' }}
+        >
+          최신순
+        </NavItem>
+        <NavItem
+          onClick={() => {
+            handleChangeSortType('BY_COMMENT');
+          }}
+          style={{
+            background: sortType === 'BY_COMMENT' ? '#f0f0f0' : 'white',
+          }}
+        >
+          댓글순
+        </NavItem>
+      </SortButtonContainer>
+
       {searchCardList.length > 0 ? (
-        searchType === "BOARDS" ||
-        searchType === "IMAGE&VIDEO" ||
-        searchType === "TAGS" ? (
+        searchType === 'BOARDS' ||
+        searchType === 'IMAGE&VIDEO' ||
+        searchType === 'TAGS' ? (
           searchCardList.length > 0 ? (
             searchCardList.map((ca: CardType) => {
               return (
                 <>
-                
-                
                   <Card
                     id={ca.id}
                     category={ca.category}
@@ -265,7 +281,7 @@ const SearchList = () => {
           ) : (
             <EmptyList />
           )
-        ) : searchType === "COMMUNITIES" ? (
+        ) : searchType === 'COMMUNITIES' ? (
           searchCommunityList.length > 0 ? (
             searchCommunityList.map((ca: CommunityType) => {
               return (
@@ -284,7 +300,7 @@ const SearchList = () => {
           ) : (
             <EmptyList />
           )
-        ) : searchType === "COMMENTS" ? (
+        ) : searchType === 'COMMENTS' ? (
           searchReplyList.length > 0 ? (
             searchReplyList.map((re: ReplyType) => {
               return (
@@ -306,12 +322,14 @@ const SearchList = () => {
             <EmptyList />
           )
         ) : searUserList.length > 0 ? (
-          searUserList.map((el: UserType) => {
+          searUserList.map((user: UserType) => {
             return (
               <>
-                <div>{el.id}</div>
-                <div>{el.nickname}</div>
-                <div>{el.email}</div>
+                <UserSearchCard
+                  nickname={user.nickname}
+                  email={user.email}
+                  profileImage={''}
+                />
               </>
             );
           })
@@ -326,15 +344,11 @@ const SearchList = () => {
 };
 
 const SortButtonContainer = styled.div`
-    display: flex;
-    max-width: 200px;
-    margin: 10px;
-`
-
-const NavContainer = styled.div`
   display: flex;
-  border-bottom: 1px solid #e0e0e0;
-  padding: 10px;
+  justify-content: center;
+  align-items: center;
+  max-width: 200px;
+  margin: 10px;
 `;
 
 const NavItem = styled.div`
@@ -345,6 +359,5 @@ const NavItem = styled.div`
   color: #000;
   border-radius: 40px;
 `;
-
 
 export default SearchList;
