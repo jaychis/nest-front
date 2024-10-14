@@ -135,7 +135,7 @@ const BoardList = () => {
       console.error('API error: ', err);
     }
   };
-
+  console.log(localStorage.getItem('id'))
   if (!list[0]) {
     return (
       <div>
@@ -150,7 +150,6 @@ const BoardList = () => {
         <CardsContainer>
           {list.length ? (
             list.map((el: CardType, index) => {
-              {console.log(el.id)}
               return (
                 <React.Fragment key={el.id}>
                   <Card
