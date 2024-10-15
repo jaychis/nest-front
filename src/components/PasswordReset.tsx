@@ -1,31 +1,30 @@
 import styled from "styled-components"
+import { SendEmail } from "../pages/api/UserApi"
 
+type modalType = "login" | "signup" | "recovery" | "verity";
 interface Props {
     readonly modalIsOpen: (state: boolean) => void,
-    readonly onSwitchView:() => void
+    readonly onSwitchView: (view: modalType) => void;
+    readonly body: React.ReactNode;
+    readonly footer?: React.ReactNode;
 }
 
-const PassWordReset = ({onSwitchView, modalIsOpen}:Props) => {
+const PassWordReset = ({body,footer,onSwitchView, modalIsOpen}:Props) => {
+
     return(
         <Container>
             <HeaderTitleWrapper>
                 <Title>비밀번호 변경</Title>
             </HeaderTitleWrapper>
+
             <UserRecoveryContainer>
                 <UserRecoveryForm>
-                    <Input 
-                    placeholder="이메일 *"
-                    type="email"
-                    id="email"
-                    name="email"
-                    />
-
+                    {body}
                 </UserRecoveryForm>
             </UserRecoveryContainer>
             
             <FooterWrapper>
-                <SubmitButton>비밀번호 찾기</SubmitButton>
-                <SwitchButton onClick = {onSwitchView}>로그인으로 전환</SwitchButton>
+                {footer}
             </FooterWrapper>
         </Container>
     )
@@ -62,33 +61,9 @@ const UserRecoveryContainer = styled.div`
     width: 100%;
 `
 
-const Input = styled.input`
-    min-width: 400px;
-    width: 100%;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-bottom: 10px;
-    box-sizing: border-box;
-    height: 40px;
-`
-
 const UserRecoveryForm = styled.form`
     
 `
-
-const SubmitButton = styled.button`
-    padding: 10px 20px;
-    width: 200px;
-    border-radius: 25px;
-    border: none;
-    background-color: #84d7fb;
-    color: white;
-    cursor: pointer;
-    margin-bottom: 10px;
-  &:hover {
-    background-color: #72c2e9; // 예시: 호버 시 색상 변경
-  }
-`;
 
 const FooterWrapper = styled.div`
     width: 100%;
@@ -98,17 +73,4 @@ const FooterWrapper = styled.div`
     justify-content: center;
     flex-direction: column;
     margin-top: auto;
-`;
-
-const SwitchButton = styled.button`
-    padding: 10px 20px;
-    width: 200px;
-    border-radius: 25px;
-    border: none;
-    background-color: #000;
-    color: white;
-    cursor: pointer;
-
-    &:hover {
-        background-color: #333; //
 `;

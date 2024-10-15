@@ -10,7 +10,7 @@ import {
   UsersKakaoOAuthLoginAPI,
   UsersNaverOAuthSignUpAPI,
 } from "../api/OAuthApi";
-type modalType = 'login' | 'signup' | 'recovery';
+type modalType = "login" | "signup" | "recovery" | "verity";
 
 interface Props {
   readonly onSwitchView: (view: modalType) => void;
