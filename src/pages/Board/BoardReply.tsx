@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import {
   ReactionStateTypes,
   ReactionType,
-} from "../../_common/CollectionTypes";
+} from '../../_common/CollectionTypes';
 import {
   ReactionAPI,
   ReactionCountAPI,
   ReactionListAPI,
   ReactionParams,
-} from "../api/ReactionApi";
-import logo from "../../assets/img/panda_logo.png";
+} from '../api/ReactionApi';
+import logo from '../../assets/img/panda_logo.png';
 
 export interface ReplyType {
   readonly id: string;
@@ -29,8 +30,6 @@ const BoardReply = (re: ReplyType) => {
     useState<boolean>(false);
   const [isCardReplyDownHovered, setIsCardReplyDownHovered] =
     useState<boolean>(false);
-  const [isCardReplyReplyHovered, setIsCardReplyReplyHovered] =
-    useState<boolean>(false);
   const [isCardReplyShareHovered, setIsCardReplyShareHovered] =
     useState<boolean>(false);
   const [isCardReplySendHovered, setIsCardReplySendHovered] =
@@ -41,7 +40,7 @@ const BoardReply = (re: ReplyType) => {
   const [isReplyReplyButton, setIsReplyReplyButton] = useState<boolean>(false);
 
   const ID: string = re.id;
-  const USER_ID: string = localStorage.getItem("id") as string;
+  const USER_ID: string = localStorage.getItem('id') as string;
 
   const reactionReplyButton = async (type: ReactionStateTypes) => {
     if (type !== null) {
@@ -49,20 +48,20 @@ const BoardReply = (re: ReplyType) => {
         boardId: ID,
         userId: USER_ID,
         type,
-        reactionTarget: "REPLY",
+        reactionTarget: 'REPLY',
       };
 
-      console.log("reply reaction param : ", param);
+      console.log('reply reaction param : ', param);
       ReactionAPI(param)
         .then((res) => {
           const status: number = res.status;
-          console.log("status : ", status);
+          console.log('status : ', status);
 
           const type = res.data.response?.type;
-          console.log("type : ", type);
+          console.log('type : ', type);
           if (type === undefined) setReplyIsReaction(null);
-          if (type === "LIKE") setReplyIsReaction("LIKE");
-          if (type === "DISLIKE") setReplyIsReaction("DISLIKE");
+          if (type === 'LIKE') setReplyIsReaction('LIKE');
+          if (type === 'DISLIKE') setReplyIsReaction('DISLIKE');
         })
         .catch((err) => console.error(err));
     }
@@ -79,7 +78,7 @@ const BoardReply = (re: ReplyType) => {
           }
         });
       })
-      .catch((err) => console.error("BoardReply ReactionListAPI err : ", err));
+      .catch((err) => console.error('BoardReply ReactionListAPI err : ', err));
 
     ReactionCountAPI({ boardId: ID })
       .then((res): void => {
@@ -87,217 +86,218 @@ const BoardReply = (re: ReplyType) => {
 
         setIsCardReplyCount(resCount.count);
       })
-      .catch((err) => console.error("BoardReply ReactionCountAPI err : ", err));
+      .catch((err) => console.error('BoardReply ReactionCountAPI err : ', err));
   }, [isReplyReaction]);
 
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-
-          fontFamily: "Arial, sans-serif",
-          marginBottom: "10px",
-        }}
-      >
-        <div style={{ display: "flex" }}>
-          <div style={{ marginRight: "18px" }}>
-            <img
-              src={logo}
-              alt={`${re.nickname}'s avatar`}
-              style={{
-                width: "40px",
-                height: "40px",
-                borderRadius: "30%",
-              }}
-            />
-          </div>
-          <div style={{ fontWeight: "bold", color: "#333" }}>{re.nickname}</div>
-        </div>
-        <div
-          style={{
-            backgroundColor: isHovered ? "#f0f0f0" : "white",
-            borderRadius: "10px",
-            padding: "8px",
-            width: "100%",
-          }}
+      <OuterContainer>
+        <FlexContainer>
+          <AvatarContainer>
+            <AvatarImage src={logo} alt={`${re.nickname}'s avatar`} />
+          </AvatarContainer>
+          <NicknameText>{re.nickname}</NicknameText>
+        </FlexContainer>
+        <ContentContainer
+          isHovered={isHovered}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          <div style={{ marginTop: "4px" }}>{re.content}</div>
-        </div>
-      </div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-start",
-          alignItems: "flex-start",
-          width: "1100px",
-          marginBottom: "10px",
-        }}
-      >
-        <div
-          style={{
-            backgroundColor:
-              isReplyReaction === null
-                ? "white"
-                : isReplyReaction === "LIKE"
-                  ? "red"
-                  : "blue",
-            padding: "10px",
-            marginRight: "10px",
-            borderRadius: "20px",
-          }}
-        >
-          <button
+          <ContentText>{re.content}</ContentText>
+        </ContentContainer>
+      </OuterContainer>
+      <ButtonContainer>
+        <ReactionButtonGroup isReplyReaction={isReplyReaction}>
+          <ReactionButton
+            isHovered={isCardReplyUpHovered}
+            hoverColor="red"
             onMouseEnter={() => setIsCardReplyUpHovered(true)}
             onMouseLeave={() => setIsCardReplyUpHovered(false)}
-            style={{
-              borderColor: isCardReplyUpHovered ? "red" : "#e0e0e0",
-              backgroundColor: isCardReplyUpHovered ? "#c9c6c5" : "#f5f5f5",
-              border: "none",
-              width: "65px",
-              height: "30px",
-              borderRadius: "30px",
-            }}
-            onClick={() => reactionReplyButton("LIKE")}
+            onClick={() => reactionReplyButton('LIKE')}
           >
             좋아요
-          </button>
-          <span style={{ margin: "10px", width: "10px", height: "10px" }}>
-            {isCardReplyCount}
-          </span>
-          <button
+          </ReactionButton>
+          <ReactionCount>{isCardReplyCount}</ReactionCount>
+          <ReactionButton
+            isHovered={isCardReplyDownHovered}
+            hoverColor="blue"
             onMouseEnter={() => setIsCardReplyDownHovered(true)}
             onMouseLeave={() => setIsCardReplyDownHovered(false)}
-            style={{
-              borderColor: isCardReplyDownHovered ? "blue" : "#e0e0e0",
-              backgroundColor: isCardReplyDownHovered ? "#c9c6c5" : "#f5f5f5",
-              border: "none",
-              width: "65px",
-              height: "30px",
-              borderRadius: "30px",
-            }}
-            onClick={() => reactionReplyButton("DISLIKE")}
+            onClick={() => reactionReplyButton('DISLIKE')}
           >
             싫어요
-          </button>
-        </div>
-        <div
-          style={{
-            marginRight: "10px",
-            borderRadius: "30px",
-            width: "75px",
-            height: "50px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <button
+          </ReactionButton>
+        </ReactionButtonGroup>
+        <ActionButtonContainer>
+          <ActionButton
+            isHovered={isCardReplyShareHovered}
             onMouseEnter={() => setIsCardReplyShareHovered(true)}
             onMouseLeave={() => setIsCardReplyShareHovered(false)}
-            style={{
-              backgroundColor: isCardReplyShareHovered ? "#c9c6c5" : "#f5f5f5",
-              border: "none",
-              width: "65px",
-              height: "30px",
-              borderRadius: "30px",
-            }}
           >
             공유
-          </button>
-        </div>
-        <div
-          style={{
-            marginRight: "10px",
-            borderRadius: "30px",
-            width: "75px",
-            height: "50px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <button
+          </ActionButton>
+        </ActionButtonContainer>
+        <ActionButtonContainer>
+          <ActionButton
+            isHovered={isCardReplySendHovered}
             onMouseEnter={() => setIsCardReplySendHovered(true)}
             onMouseLeave={() => setIsCardReplySendHovered(false)}
-            style={{
-              backgroundColor: isCardReplySendHovered ? "#c9c6c5" : "#f5f5f5",
-              border: "none",
-              width: "65px",
-              height: "30px",
-              borderRadius: "30px",
-            }}
-            onClick={() => alert("BoardReply Button Click")}
+            onClick={() => alert('BoardReply Button Click')}
           >
             보내기
-          </button>
-        </div>
-      </div>
+          </ActionButton>
+        </ActionButtonContainer>
+      </ButtonContainer>
       {isReplyReplyButton ? (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            width: "100%",
-            margin: "10px",
-            border: "3px solid #ccc",
-            borderRadius: "30px",
-            padding: "10px",
-          }}
-        >
-          <textarea
-            style={{
-              width: "100%",
-              border: "none",
-              borderRadius: "14px",
-              resize: "vertical",
-              boxSizing: "border-box",
-              outline: "none",
-            }}
-          ></textarea>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              marginTop: "10px",
-            }}
-          >
-            <button
-              style={{
-                padding: "6px 12px",
-                marginLeft: "5px",
-                border: "none",
-                borderRadius: "4px",
-                cursor: "pointer",
-                fontSize: "14px",
-                backgroundColor: "#f5f5f5",
-                color: "#333",
-              }}
+        <ReplyFormContainer>
+          <ReplyTextArea></ReplyTextArea>
+          <ReplyFormButtons>
+            <FormButton
+              bgColor="#f5f5f5"
+              textColor="#333"
               onClick={() => setIsReplyReplyButton(false)}
             >
               Cancel
-            </button>
-            <button
-              style={{
-                padding: "6px 12px",
-                marginLeft: "5px",
-                border: "none",
-                borderRadius: "4px",
-                cursor: "pointer",
-                fontSize: "14px",
-                backgroundColor: "#007BFF",
-                color: "white",
-              }}
-            >
+            </FormButton>
+            <FormButton bgColor="#007BFF" textColor="white">
               Comment
-            </button>
-          </div>
-        </div>
+            </FormButton>
+          </ReplyFormButtons>
+        </ReplyFormContainer>
       ) : null}
     </>
   );
 };
+
 export default BoardReply;
+
+// Styled Components
+const OuterContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, sans-serif;
+  margin-bottom: 10px;
+`;
+
+const FlexContainer = styled.div`
+  display: flex;
+`;
+
+const AvatarContainer = styled.div`
+  margin-right: 18px;
+`;
+
+const AvatarImage = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 30%;
+`;
+
+const NicknameText = styled.div`
+  font-weight: bold;
+  color: #333;
+`;
+
+const ContentContainer = styled.div<{ isHovered: boolean }>`
+  background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
+  border-radius: 10px;
+  padding: 8px;
+  width: 100%;
+`;
+
+const ContentText = styled.div`
+  margin-top: 4px;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 1100px;
+  margin-bottom: 10px;
+`;
+
+const ReactionButtonGroup = styled.div<{ isReplyReaction: ReactionStateTypes }>`
+  background-color: ${(props) =>
+    props.isReplyReaction === null
+      ? 'white'
+      : props.isReplyReaction === 'LIKE'
+        ? 'red'
+        : 'blue'};
+  padding: 10px;
+  margin-right: 10px;
+  border-radius: 20px;
+`;
+
+const ReactionButton = styled.button<{
+  isHovered: boolean;
+  hoverColor: string;
+}>`
+  border-color: ${(props) => (props.isHovered ? props.hoverColor : '#e0e0e0')};
+  background-color: ${(props) => (props.isHovered ? '#c9c6c5' : '#f5f5f5')};
+  border: none;
+  width: 65px;
+  height: 30px;
+  border-radius: 30px;
+  margin-right: 5px;
+`;
+
+const ReactionCount = styled.span`
+  margin: 10px;
+  width: 10px;
+  height: 10px;
+`;
+
+const ActionButtonContainer = styled.div`
+  margin-right: 10px;
+  border-radius: 30px;
+  width: 75px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ActionButton = styled.button<{ isHovered: boolean }>`
+  background-color: ${(props) => (props.isHovered ? '#c9c6c5' : '#f5f5f5')};
+  border: none;
+  width: 65px;
+  height: 30px;
+  border-radius: 30px;
+`;
+
+const ReplyFormContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 10px;
+  border: 3px solid #ccc;
+  border-radius: 30px;
+  padding: 10px;
+`;
+
+const ReplyTextArea = styled.textarea`
+  width: 100%;
+  border: none;
+  border-radius: 14px;
+  resize: vertical;
+  box-sizing: border-box;
+  outline: none;
+`;
+
+const ReplyFormButtons = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+`;
+
+const FormButton = styled.button<{ bgColor: string; textColor: string }>`
+  padding: 6px 12px;
+  margin-left: 5px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  background-color: ${(props) => props.bgColor};
+  color: ${(props) => props.textColor};
+`;
