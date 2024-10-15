@@ -24,9 +24,9 @@ type modalType = "login" | "signup" | "recovery" | "verity" | "reset";
     if(email.trim() === '') return alert('메일을 입력해주세요')
 
     const res = await SendEmail(email);
-    if(res && res.data){
+    if(res && res.data && res.status === 200){
         switchView('verity')
-        return alert('메일로 인증번호가 발송되었습니다.')
+        alert('메일로 인증번호가 발송되었습니다.')
     }
     else{
         alert('존재하지 않는 이메일 입니다.')
@@ -37,7 +37,7 @@ type modalType = "login" | "signup" | "recovery" | "verity" | "reset";
     if(verificationCode.trim() === '') return alert('메일을 입력해주세요')
 
     const res = await VerifyEmail({email,verificationCode})
-    console.log(res)
+    
     if(res && res.data && res.data.response.verification){
       switchView('reset')
     }
