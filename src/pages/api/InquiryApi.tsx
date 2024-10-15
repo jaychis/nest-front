@@ -12,7 +12,7 @@ interface ListParams {
     readonly take: number;
     readonly page: number;
     readonly nickname: string;
-    readonly lastId?: string | null;
+    readonly requestedUserId?: string | null;
     readonly category?: string | null;
   } 
 
@@ -35,11 +35,11 @@ export const postContactApi = ({title, nickname, content} : InquiryParam) => {
     catch(err){console.error(err)}
 }
 
-export const getContactAllListAPi = async ({take,page,lastId, nickname}:ListParams) => {
+export const getContactAllListAPi = async ({take,page,requestedUserId, nickname}:ListParams) => {
     const accessToken:string = localStorage.getItem('access_token') as string
     try{
-        let URL: string = `contact/us/list?page=${page}&take=${take}&nickname=${nickname}`;
-        if(lastId) URL += `&lastId=${lastId}`;
+        let URL: string = `contact/us/list?page=${page}&take=${take}&nickname=${nickname}&status=${'INQUIRING'}`;
+        if(requestedUserId) URL += `&requestedUserId=${requestedUserId}`;
 
         const res = await client.get(URL,{
             headers : {
@@ -50,3 +50,30 @@ export const getContactAllListAPi = async ({take,page,lastId, nickname}:ListPara
     catch(err){ console.error(err)}
 }
 
+export interface CommentSubmitParams {
+    readonly contactUsId: string;
+    readonly userId: string;
+    readonly content: string;
+    readonly nickname: string;
+  }
+
+export const submitCommentContactApi = async({contactUsId, userId, content, nickname}: CommentSubmitParams) => {
+    try{
+        let URL = 'comments/contact-us'
+        const res = await client.post(URL, {contactUsId, userId, content, nickname})
+        return res;
+    }
+    catch(error){
+        console.error(error)
+    }
+}
+
+export const commentContactListApi = async(contactUsId: string) => {
+    try{
+        let URL = 'comments/contact-us/list'
+        const res = await client.post(URL,{contactUsId})
+        return res;
+    }catch(error){
+
+    }
+}
