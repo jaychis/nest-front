@@ -17,6 +17,8 @@ const UserSearchCard = ({
   profileImage,
 }: UserSearchCardParams) => {
   const [profilePreview, setProfilePreview] = useState<string | null>(null);
+  const [isCardHovered, setIsCardHovered] = useState<boolean>(false);
+
   const handleProfilePictureChange = async (
     e: ChangeEvent<HTMLInputElement>,
   ) => {
@@ -27,8 +29,14 @@ const UserSearchCard = ({
     setProfilePreview(urls.previewUrls[0]);
     // setProfilePicture(urls.fileList[0]);
   };
+
   return (
-    <CardContainer>
+    <CardContainer
+      onMouseEnter={() => setIsCardHovered(true)}
+      onMouseLeave={() => setIsCardHovered(false)}
+      isHovered={isCardHovered}
+      modalState={true}
+    >
       <UserInfo>
         <ImageUploadWrapper>
           <HiddenFileInput
@@ -48,16 +56,18 @@ const UserSearchCard = ({
           </ImagePreviewWrapper>
         </ImageUploadWrapper>
 
-        <Username>{nickname}</Username>
+        <InformationContainer>
+          <Username>{nickname}</Username>
+          <EmailInfo>{email}</EmailInfo>
+        </InformationContainer>
       </UserInfo>
-      <EmailInfo>{email}</EmailInfo>
     </CardContainer>
   );
 };
 
 export default UserSearchCard;
 
-const CardContainer = styled.div`
+const CardContainer = styled.div<{ isHovered: boolean; modalState: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -65,13 +75,21 @@ const CardContainer = styled.div`
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  max-width: 800px;
+  max-width: 600px;
   font-family: Arial, sans-serif;
+  background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
+  z-index: ${(props) => (props.modalState ? -10 : 999)};
 `;
 
 const UserInfo = styled.div`
   display: flex;
   align-items: center;
+`;
+
+const InformationContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 `;
 
 const Username = styled.h3`
@@ -86,7 +104,6 @@ const EmailInfo = styled.a`
   text-decoration: none;
   margin-top: 10px;
   word-break: break-all;
-  margin-left: 110px;
 
   &:hover {
     text-decoration: underline;
