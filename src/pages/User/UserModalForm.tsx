@@ -5,7 +5,7 @@ import Login from "./Login";
 import Signup from "./Signup";
 import PassWordReset from "../../components/PasswordReset";
 import styled from "styled-components";
-import { SendEmail,VerifyEmail } from "../api/UserApi";
+import { SendEmail,VerifyEmail,PasswordReset,PasswordResetParsms } from "../api/UserApi";
 
 
 type modalType = "login" | "signup" | "recovery" | "verity" | "reset";
@@ -15,6 +15,8 @@ type modalType = "login" | "signup" | "recovery" | "verity" | "reset";
   const [isLoginHovered, setIsLoginHovered] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
   const [verificationCode, setVerificationCode] = useState<string>('')
+  const [password, setPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('')
   
   const switchView = (view: modalType) => {
     setActiveView(view);
@@ -24,7 +26,7 @@ type modalType = "login" | "signup" | "recovery" | "verity" | "reset";
     if(email.trim() === '') return alert('메일을 입력해주세요')
 
     const res = await SendEmail(email);
-    if(res && res.data && res.status === 200){
+    if(res && res.data && res.status === 201){
         switchView('verity')
         alert('메일로 인증번호가 발송되었습니다.')
     }
@@ -42,6 +44,19 @@ type modalType = "login" | "signup" | "recovery" | "verity" | "reset";
       switchView('reset')
     }
     else{alert('인증에 실패 하였습니다.')}
+  }
+
+  const handlePasswordReset = () => {
+    if(password.trim() === '' || confirmPassword.trim() === '') return alert('비밀번호를 입력해 주세요')
+    if(password === confirmPassword){
+      const res = PasswordReset({email, password})
+      console.log(res)
+      alert('비밀번호가 변경되었습니다. 다시 로그인 해주세요')
+      switchView('login')
+    }
+    else{
+      return alert('비밀번호가 일치하지 않습니다.')
+    }
   }
 
   return (
@@ -106,9 +121,10 @@ type modalType = "login" | "signup" | "recovery" | "verity" | "reset";
 
         {activeView === "recovery" && (
           <PassWordReset
+            title={'비밀번호 찾기'}
             onSwitchView={switchView}
             modalIsOpen={setModalIsOpen}
-            body={<EmailInput
+            body={<SubmitInput
                   placeholder="이메일 *"
                   onChange={(event) => {setEmail(event.target.value)}}
                   type="email"
@@ -122,9 +138,10 @@ type modalType = "login" | "signup" | "recovery" | "verity" | "reset";
 
         {activeView === 'verity' && (
           <PassWordReset
+            title={'비밀번호 찾기'}
             onSwitchView={switchView}
             modalIsOpen={setModalIsOpen}
-            body={<VerifyInput
+            body={<SubmitInput
                 onChange={(event) => {setVerificationCode(event.target.value)}}
                 placeholder="인증번호"
                 type='text'
@@ -134,6 +151,32 @@ type modalType = "login" | "signup" | "recovery" | "verity" | "reset";
             footer={<SubmitButton onClick = {() => {handleSubmitVerify()}}>확인</SubmitButton>}
           />)}
 
+        {activeView === 'reset' && (
+          <PassWordReset
+            title={'비밀번호 재설정'}
+            onSwitchView={switchView}
+            modalIsOpen={setModalIsOpen}
+            body={
+              <>
+                <SubmitInput
+                onChange={(event) => {setPassword(event.target.value)}}
+                placeholder="비밀번호"
+                type='password'
+                id='password'
+                name='password'/>
+
+                <SubmitInput
+                onChange={(event) => {setConfirmPassword(event.target.value)}}
+                placeholder="비밀번호 확인"
+                type='password'
+                id='confirmPassword'
+                name='confirmPassword'
+                />
+              </>
+              }
+            footer={<SubmitButton onClick = {() => {handlePasswordReset()}}>확인</SubmitButton>}
+          />)}
+
       </Modal>
     </>
   );
@@ -141,17 +184,7 @@ type modalType = "login" | "signup" | "recovery" | "verity" | "reset";
 
 export default UserModalForm;
 
-const EmailInput = styled.input`
-    min-width: 400px;
-    width: 100%;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-bottom: 10px;
-    box-sizing: border-box;
-    height: 40px;
-`
-
-const VerifyInput = styled.input`
+const SubmitInput = styled.input`
     min-width: 400px;
     width: 100%;
     border: 1px solid #ddd;

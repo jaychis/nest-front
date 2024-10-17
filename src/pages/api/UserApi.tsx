@@ -143,6 +143,7 @@ export const SendEmail = async(email: string) => {
     return res;
   }catch(error){
     console.error(error)
+    return null;
   }
 }
 
@@ -156,6 +157,23 @@ export const VerifyEmail = async({email,verificationCode}:VerifyParams) => {
   try{
     const res = await client.post(URL,{email,verificationCode})
     return res;
+  }catch(error){
+    console.error(error)
+  }
+}
+
+export interface PasswordResetParsms {
+  email: string;
+  password: string;
+  confirmPassword?: string;
+}
+
+export const PasswordReset = async({email, password}:PasswordResetParsms) => {
+
+  let URL = 'users/password/reset'
+  try{
+    const res = await client.post(URL, {email, password})
+    return res
   }catch(error){
     console.error(error)
   }
