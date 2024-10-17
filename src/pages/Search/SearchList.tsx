@@ -236,7 +236,7 @@ const SearchList = () => {
   return (
     <>
       <NavBar />
-      <SortButtonContainer>
+      {searchType === 'BOARDS' && (<SortButtonContainer>
         <NavItem
           onClick={() => {
             handleChangeSortType('LATEST');
@@ -255,7 +255,8 @@ const SearchList = () => {
         >
           댓글순
         </NavItem>
-      </SortButtonContainer>
+      </SortButtonContainer>)}
+      
 
       {searchCardList.length > 0 ? (
         searchType === 'BOARDS' ||
