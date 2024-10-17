@@ -3,18 +3,19 @@ import { SendEmail } from "../pages/api/UserApi"
 
 type modalType = "login" | "signup" | "recovery" | "verity";
 interface Props {
-    readonly modalIsOpen: (state: boolean) => void,
+    readonly title:string;
+    readonly modalIsOpen: (state: boolean) => void;
     readonly onSwitchView: (view: modalType) => void;
     readonly body: React.ReactNode;
     readonly footer?: React.ReactNode;
 }
 
-const PassWordReset = ({body,footer,onSwitchView, modalIsOpen}:Props) => {
+const PassWordReset = ({title,body,footer,onSwitchView, modalIsOpen}:Props) => {
 
     return(
         <Container>
             <HeaderTitleWrapper>
-                <Title>비밀번호 변경</Title>
+                <Title>{title}</Title>
             </HeaderTitleWrapper>
 
             <UserRecoveryContainer>
