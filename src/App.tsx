@@ -12,8 +12,8 @@ import ScrollToTop from './components/ScrollToTop';
 import RightSideBar from './pages/Global/RightSideBar';
 import SearchList from './pages/Search/SearchList';
 import CommunityCreatePage1 from './pages/Board/CommunityCreate/CommunityCreatePage1';
-import CommunityCreatePage3 from './pages/Board/CommunityCreate/CommunityCreatePage3';
-import CommunityCreatePage4 from './pages/Board/CommunityCreate/CommunityCreatePage4';
+import CommunityCreatePage3 from './pages/Board/CommunityCreate/CommunityCreatePage2';
+import CommunityCreatePage4 from './pages/Board/CommunityCreate/CommunityCreatePage3';
 import { CommunityProvider } from './contexts/CommunityContext';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {

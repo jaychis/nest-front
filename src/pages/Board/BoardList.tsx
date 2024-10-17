@@ -7,57 +7,29 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import EmptyState from '../../components/EmptyState';
 import { useInView } from 'react-intersection-observer';
-import { UserModalState, setModalState } from '../../reducers/modalStateSlice';
+import { UserModalState } from '../../reducers/modalStateSlice';
+import styled from 'styled-components';
 
 interface ContainerProps {
   children?: React.ReactNode;
 }
 
 const MainContainer = ({ children }: ContainerProps) => {
-  return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        paddingTop: '20px',
-        width: '100%',
-        boxSizing: 'border-box',
-      }}
-    >
-      {children}
-    </div>
-  );
+  return <StyledMainContainer>{children}</StyledMainContainer>;
 };
 
-// const CardsContainer: React.FC<ContainerProps> = ({ children }) => {
 const CardsContainer = ({ children }: ContainerProps) => {
   const modalState: UserModalState = useSelector(
     (state: RootState) => state.modalState,
   );
-  return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        width: '100%',
-        maxWidth: '800px', // 적절한 최대 너비 설정
-        boxSizing: 'border-box',
-        padding: '0 20px', // 좌우 패딩 추가
-      }}
-    >
-      {children}
-    </div>
-  );
+  return <StyledCardsContainer>{children}</StyledCardsContainer>;
 };
 
 const BoardList = () => {
   type IdType = null | string;
 
   const [list, setList] = useState<CardType[]>([]);
-  const [loading, setLoading] = useState<boolean>(false); // Move useState inside the component
+  const [loading, setLoading] = useState<boolean>(false);
   const TAKE: number = 5;
   const { buttonType }: MainListTypeState = useSelector(
     (state: RootState) => state.sideBarButton,
@@ -101,7 +73,6 @@ const BoardList = () => {
             category: null,
           });
           break;
-        // 리스트 API 작업 ljh
         case 'TAGMATCH':
           response = await AllListAPI({
             take: TAKE,
@@ -135,7 +106,7 @@ const BoardList = () => {
       console.error('API error: ', err);
     }
   };
-  console.log(localStorage.getItem('id'))
+  console.log(localStorage.getItem('id'));
   if (!list[0]) {
     return (
       <div>
@@ -143,17 +114,16 @@ const BoardList = () => {
       </div>
     );
   }
-  
+
   return (
     <>
       <MainContainer>
         <CardsContainer>
           {list.length ? (
-            list.map((el: CardType, index) => {
+            list.map((el: CardType) => {
               return (
                 <React.Fragment key={el.id}>
                   <Card
-                    // 고유한 키 추가
                     id={el.id}
                     category={el.category}
                     title={el.title}
@@ -167,15 +137,38 @@ const BoardList = () => {
               );
             })
           ) : (
-            <EmptyState /> // Use the EmptyState component
+            <EmptyState />
           )}
         </CardsContainer>
       </MainContainer>
-      <div style={{ opacity: '0' }} ref={ref}>
-        d
-      </div>
+      <StyledInvisibleDiv ref={ref}>d</StyledInvisibleDiv>
     </>
   );
 };
 
 export default BoardList;
+
+/* 스타일드 컴포넌트 */
+const StyledMainContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 20px;
+  width: 100%;
+  box-sizing: border-box;
+`;
+
+const StyledCardsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 800px; /* 적절한 최대 너비 설정 */
+  box-sizing: border-box;
+  padding: 0 20px; /* 좌우 패딩 추가 */
+`;
+
+const StyledInvisibleDiv = styled.div`
+  opacity: 0;
+`;
