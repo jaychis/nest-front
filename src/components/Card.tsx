@@ -20,8 +20,8 @@ import {
 import YouTube from "react-youtube";
 import sanitizeHtml from "sanitize-html";
 import debounce from "lodash.debounce";
-import {  UserModalState, modalState, setModalState } from "../reducers/modalStateSlice";
-import { useDispatch, useSelector } from "react-redux";
+import {  UserModalState} from "../reducers/modalStateSlice";
+import { useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../store/store";
 import styled from "styled-components";
 import { shareCountApi } from "../pages/api/BoardApi";
@@ -57,11 +57,9 @@ const Card = ({
   const [isCardCommentHovered, setIsCardCommentHovered] =useState<boolean>(false);
   const [isCardShareHovered, setIsCardShareHovered] = useState<boolean>(false);
   const [isCardSendHovered, setIsCardSendHovered] = useState<boolean>(false);
-  const [isModal, setIsModal] = useState<boolean>(false);
   const [viewCount, setViewCount] = useState<number>(0); // 조회수 상태 추가
   const [isReaction, setIsReaction] = useState<ReactionStateTypes>(null);
   const [shareContent, setShareContent] = useState<string>('')
-  const dispatch = useDispatch<AppDispatch>();
   const modalState : UserModalState = useSelector((state: RootState) => state.modalState);
   const [active, setIsActive] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -162,16 +160,6 @@ const Card = ({
       console.error(err);
     }
   };
-
-  const openModal = () => {
-    dispatch(setModalState(!modalState.modalState));
-  };
-
-  useEffect(() => {
-      if( modalState.modalState === true && isModal === false){
-        openModal()
-      }
-  },[isModal])
 
   const debouncedFetchReactionList = debounce(fetchReactionList, 300);
   const debouncedFetchReactionCount = debounce(fetchReactionCount, 300);
