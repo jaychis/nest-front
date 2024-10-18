@@ -19,7 +19,6 @@ import {
 } from "../_common/CollectionTypes";
 import YouTube from "react-youtube";
 import sanitizeHtml from "sanitize-html";
-import { LogViewedBoardAPI } from "../pages/api/ViewedBoardsApi";
 import debounce from "lodash.debounce";
 import {  UserModalState, modalState, setModalState } from "../reducers/modalStateSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -189,20 +188,6 @@ const Card = ({
       setLocalCount(0)
     }
   },[localCount])
-  
-  const boardClickTracking = async () => {
-    try {
-      const boardTracking = await LogViewedBoardAPI({
-        boardId: id,
-        userId: localStorage.getItem("id") as string,
-      });
-
-      if (!boardTracking) return;
-      console.log("boardTracking : ", boardTracking);
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   const extractTextFromHTML = (htmlString : string):string => {
     const tempDiv = document.createElement('div');
@@ -274,7 +259,6 @@ const Card = ({
       <CardContainer
         onMouseEnter={() => setIsCardHovered(true)}
         onMouseLeave={() => setIsCardHovered(false)}
-        onClick={boardClickTracking}
         isHovered = {isCardHovered}
         modalState={modalState.modalState}
       >
