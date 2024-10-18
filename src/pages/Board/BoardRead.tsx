@@ -10,13 +10,15 @@ import {
 import BoardComment, { CommentType } from './BoardComment';
 import BoardReply, { ReplyType } from './BoardReply';
 import { useLocation } from 'react-router-dom';
+import { LogViewedBoardAPI } from '../api/ViewedBoardsApi';
 
 const BoardRead = () => {
-  const BOARD_ID: string = sessionStorage.getItem('boardId') as string;
+  const boardId: string = sessionStorage.getItem('boardId') as string;
   const BOARD_TITLE: string = sessionStorage.getItem('boardTitle') as string;
+  const userId = localStorage.getItem('id') as string;
 
   const [isBoardState, setIsBoardStateBoard] = useState<CardType>({
-    id: BOARD_ID,
+    id: boardId,
     identifier_id: '',
     category: '',
     content: [],
@@ -58,15 +60,16 @@ const BoardRead = () => {
       console.log('response : ', response);
 
       setIsBoardStateBoard(response);
+      LogViewedBoardAPI({userId, boardId})
     };
     readBoard();
   }, []);
 
   const [writeComment, setWriteComment] = useState<CommentSubmitParams>({
-    boardId: BOARD_ID,
+    boardId: boardId,
     content: '',
     nickname: (localStorage.getItem('nickname') as string) || '',
-    userId: (localStorage.getItem('id') as string) || '',
+    userId: (userId) || '',
   });
   const commentHandleChange = (event: CollectionTypes) => {
     const { name, value } = event;
