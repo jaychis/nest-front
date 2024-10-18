@@ -7,7 +7,6 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import EmptyState from '../../components/EmptyState';
 import { useInView } from 'react-intersection-observer';
-import { UserModalState, setModalState } from '../../reducers/modalStateSlice';
 
 interface ContainerProps {
   children?: React.ReactNode;
@@ -33,9 +32,7 @@ const MainContainer = ({ children }: ContainerProps) => {
 
 // const CardsContainer: React.FC<ContainerProps> = ({ children }) => {
 const CardsContainer = ({ children }: ContainerProps) => {
-  const modalState: UserModalState = useSelector(
-    (state: RootState) => state.modalState,
-  );
+  
   return (
     <div
       style={{
@@ -124,8 +121,11 @@ const BoardList = () => {
           });
           break;
       }
+
       const newCards = response.data.response.current_list;
+
       setList((prevList) => [...prevList, ...newCards]);
+
       if (newCards.length > 0) {
         setId(newCards[newCards.length - 1].id);
       } else {
@@ -135,7 +135,7 @@ const BoardList = () => {
       console.error('API error: ', err);
     }
   };
-  console.log(localStorage.getItem('id'))
+ 
   if (!list[0]) {
     return (
       <div>
