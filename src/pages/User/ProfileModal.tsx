@@ -21,7 +21,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onRequestClose, but
       const leftPosition = rect.left + window.scrollX - (modalWidth - rect.width) / 2;
 
       setModalStyle({
-        top: `${rect.top + rect.height + window.scrollY}px`,
+        top: `${rect.top + rect.height}px`,
         left: `${leftPosition}px`,
         transform: 'none',
         width: `${modalWidth}px`,
