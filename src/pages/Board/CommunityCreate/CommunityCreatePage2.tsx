@@ -1,226 +1,219 @@
-// import React, { useState } from "react";
-// import { useNavigate } from "react-router-dom";
-// import { useCommunity } from "../../../contexts/CommunityContext";
-// import {
-//   AwsImageUploadFunctionality,
-//   AwsImageUploadFunctionalityReturnType,
-//   ImageLocalPreviewUrls,
-//   ImageLocalPreviewUrlsDelete,
-//   ImageLocalPreviewUrlsDeleteType,
-//   ImageLocalPreviewUrlsReturnType,
-// } from "../../../_common/ImageUploadFuntionality";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useCommunity } from '../../../contexts/CommunityContext';
+import { TagListAPI } from '../../api/TagApi';
+import styled from 'styled-components';
+import Button from '../../../components/Buttons/Button';
+import MultiStepNav from '../../../components/Buttons/MultiStepNav';
+import DeleteButton from '../../../components/Buttons/DeleteButton';
 
-// const CommunityCreatePage2: React.FC = () => {
-//   const navigate = useNavigate();
-//   const { communityName, description, banner, setBanner, icon, setIcon } =
-//     useCommunity();
+const CommunityCreatePage2: React.FC = () => {
+  const navigate = useNavigate();
+  const { topics, setTopics } = useCommunity();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [suggestions, setSuggestions] = useState<string[]>([]);
 
-//   const handleBack = () => {
-//     navigate("/community/create1");
-//   };
+  const handleAddTopic = (topic: string) => {
+    const formattedTopic = topic.startsWith('#') ? topic : `#${topic}`;
+    if (topics.length < 3 && !topics.includes(formattedTopic)) {
+      setTopics([...topics, formattedTopic]);
+      setSearchTerm('');
+    }
+  };
 
-//   const [bannerPreviewUrls, setBannerPreviewUrls] = useState<string[]>([]);
-//   const [bannerFileList, setBannerFileList] = useState<File[]>([]);
+  useEffect(() => {
+    console.log('topics : ', topics);
+    console.log('searchTerm : ', searchTerm);
+  }, [topics, searchTerm]);
 
-//   const [primaryColor, setPrimaryColor] = useState<string>("#0079D3");
+  const handleRemoveTopic = (index: number) => {
+    const newTopics = topics.filter((_, i) => i !== index);
+    setTopics(newTopics);
+  };
 
-//   const handleBannerChange = async (
-//     event: React.ChangeEvent<HTMLInputElement>,
-//   ): Promise<void> => {
-//     const urls: ImageLocalPreviewUrlsReturnType = await ImageLocalPreviewUrls({
-//       event,
-//     });
-//     if (!urls) return;
-//     setBannerPreviewUrls(urls.previewUrls);
-//     setBannerFileList(urls.fileList);
-//   };
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
 
-//   const [iconPreviewUrls, setIconPreviewUrls] = useState<string[]>([]);
-//   const [iconFileList, setIconFileList] = useState<File[]>([]);
+  useEffect(() => {
+    if (searchTerm) {
+      TagListAPI()
+        .then((res) => {
+          if (!res) return;
+          interface TagListReturnType {
+            readonly id: string;
+            readonly name: string;
+          }
+          console.log('TagListAPI response:', res.data);
+          const response: TagListReturnType[] = res.data.response;
 
-//   const handleIconChange = async (
-//     event: React.ChangeEvent<HTMLInputElement>,
-//   ): Promise<void> => {
-//     const urls: ImageLocalPreviewUrlsReturnType = await ImageLocalPreviewUrls({
-//       event,
-//     });
-//     if (!urls) return;
-//     setIconPreviewUrls(urls.previewUrls);
-//     setIconFileList(urls.fileList);
-//   };
+          const tagNameList: string[] = response.map(
+            (el: TagListReturnType) => el.name,
+          );
+          console.log('tagNameList:', tagNameList);
 
-//   type ImageUrlListDeleteType = {
-//     readonly name: "banner" | "icon";
-//   };
-//   const imageUrlListDelete = async ({
-//     name,
-//   }: ImageUrlListDeleteType): Promise<void> => {
-//     if (name === "banner") {
-//       const res: ImageLocalPreviewUrlsDeleteType =
-//         await ImageLocalPreviewUrlsDelete({ urls: bannerPreviewUrls });
-//       if (!res) return;
+          const filteredTopics = tagNameList.filter((topic: string) =>
+            topic.toLowerCase().includes(searchTerm.toLowerCase()),
+          );
+          setSuggestions(filteredTopics);
+        })
+        .catch((err) => console.log('TagListAPI error:', err));
+    } else {
+      setSuggestions([]);
+    }
+  }, [searchTerm]);
 
-//       setBannerPreviewUrls(res);
-//     }
+  return (
+    <Container>
+      <Heading>태그 추가</Heading>
+      <Form onSubmit={(e) => e.preventDefault()}>
+        <div style={{ marginBottom: '20px' }}>
+          <Label htmlFor="topicSearch">태그 검색</Label>
+          <TopicSearchInput
+            type="text"
+            id="topicSearch"
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
+          {suggestions.length > 0 && (
+            <Suggestions>
+              {suggestions.map((suggestion, index) => (
+                <Suggestion
+                  key={index}
+                  onClick={() => handleAddTopic(suggestion)}
+                >
+                  {suggestion}
+                </Suggestion>
+              ))}
+            </Suggestions>
+          )}
+          {searchTerm && suggestions.length === 0 && (
+            <NoSuggestionWrapper>
+              <p>
+                등록된 태그가 없습니다. "{searchTerm}"로 새 태그를 추가할 수
+                있습니다.
+              </p>
+              <AddButton onClick={() => handleAddTopic(searchTerm)}>
+                "{searchTerm}" 추가
+              </AddButton>
+            </NoSuggestionWrapper>
+          )}
+        </div>
+        <SelectedTopicWrapper>
+          {topics.map((topic, index) => {
+            return (
+              <TopicItem key={index}>
+                <TopicText>{topic}</TopicText>
+                <DeleteButton onClick={() => handleRemoveTopic(index)} />
+              </TopicItem>
+            );
+          })}
+        </SelectedTopicWrapper>
+        <MultiStepNav>
+          <Button
+            type="button"
+            bgColor="cancel"
+            onClick={() => navigate('/community/create1')}
+          >
+            이전
+          </Button>
+          <Button
+            type="button"
+            bgColor="next"
+            onClick={() => navigate('/community/create3')}
+          >
+            다음
+          </Button>
+        </MultiStepNav>
+      </Form>
+    </Container>
+  );
+};
 
-//     if (name === "icon") {
-//       const res: ImageLocalPreviewUrlsDeleteType =
-//         await ImageLocalPreviewUrlsDelete({ urls: iconPreviewUrls });
-//       if (!res) return;
+const Container = styled.div`
+  background-color: #ffffff;
+  padding: 20px;
+  max-width: 600px;
+  height: auto;
+  margin: 50px auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  border: 1px solid #ededed;
+`;
+const Heading = styled.h2`
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+  text-align: center;
+`;
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+`;
+const SelectedTopicWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+`;
+const TopicItem = styled.div`
+  display: flex;
+  align-items: center;
+  background-color: #f0f0f0;
+  border-radius: 20px;
+  padding: 8px 12px;
+`;
+const TopicText = styled.span`
+  font-size: 14px;
+  margin-right: 10px;
+`;
+const Label = styled.label`
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #555;
+  font-weight: bold;
+`;
+const TopicSearchInput = styled.input`
+  width: 100%;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  background-color: #f7f7f7;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+`;
+const Suggestions = styled.ul`
+  list-style-type: none;
+  padding: 0;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+`;
+const Suggestion = styled.li`
+  padding: 10px;
+  cursor: pointer;
+`;
+const NoSuggestionWrapper = styled.div`
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  text-align: center;
+`;
+const AddButton = styled.button`
+  margin-top: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background-color: #0079d3;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+`;
 
-//       setIconPreviewUrls(res);
-//     }
-//   };
-
-//   const handleNext = async () => {
-//     // 페이지 2의 데이터를 페이지 3로 전달
-
-//     const bannerRes: AwsImageUploadFunctionalityReturnType =
-//       await AwsImageUploadFunctionality({ fileList: bannerFileList });
-//     if (!bannerRes) return;
-//     setBanner(bannerRes.imageUrls[0]);
-
-//     const iconRes: AwsImageUploadFunctionalityReturnType =
-//       await AwsImageUploadFunctionality({ fileList: iconFileList });
-//     if (!iconRes) return;
-//     setIcon(iconRes.imageUrls[0]);
-
-//     navigate("/community/create3", {
-//       state: { communityName, description, banner, icon },
-//     });
-//   };
-
-//   return (
-//     <div style={styles.container}>
-//       <h2 style={styles.heading}>배너와 아이콘 업로드</h2>
-//       <form onSubmit={(e) => e.preventDefault()} style={styles.form}>
-//         <div style={styles.formGroup}>
-//           <label htmlFor="banner" style={styles.label}>
-//             배너 업로드
-//           </label>
-//           <input
-//             type="file"
-//             id="banner"
-//             // onChange={(e) => setBanner(e.target.files?.[0] || null)}
-//             onChange={handleBannerChange}
-//             required
-//             style={styles.input}
-//           />
-//           <button onClick={() => imageUrlListDelete({ name: "banner" })}>
-//             휴지통
-//           </button>
-//           <img
-//             src={bannerPreviewUrls[0]}
-//             alt={`Banner Preview image`}
-//             style={{ height: "400px", width: "400px" }}
-//           />
-//         </div>
-//         <div style={styles.formGroup}>
-//           <label htmlFor="icon" style={styles.label}>
-//             아이콘 업로드
-//           </label>
-//           <input
-//             type="file"
-//             id="icon"
-//             // onChange={(e) => setIcon(e.target.files?.[0] || null)}
-//             onChange={handleIconChange}
-//             required
-//             style={styles.input}
-//           />
-//           <button onClick={() => imageUrlListDelete({ name: "icon" })}>
-//             휴지통
-//           </button>
-//           <img
-//             src={iconPreviewUrls[0]}
-//             alt={`Icon Preview image`}
-//             style={{ height: "400px", width: "400px" }}
-//           />
-//         </div>
-//         <div style={styles.buttonGroup}>
-//           <button
-//             type="button"
-//             onClick={handleBack}
-//             style={styles.cancelButton}
-//           >
-//             이전
-//           </button>
-//           <button type="button" onClick={handleNext} style={styles.nextButton}>
-//             다음
-//           </button>
-//         </div>
-//       </form>
-//     </div>
-//   );
-// };
-
-// const styles = {
-//   container: {
-//     backgroundColor: "#FFFFFF",
-//     padding: "20px",
-//     maxWidth: "600px",
-//     height: "400px",
-//     margin: "50px auto",
-//     boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-//     borderRadius: "8px",
-//     border: "1px solid #EDEDED",
-//   },
-//   heading: {
-//     fontSize: "24px",
-//     marginBottom: "20px",
-//     color: "#333",
-//     textAlign: "center" as "center",
-//   },
-//   form: {
-//     display: "flex",
-//     flexDirection: "column" as "column",
-//   },
-//   formGroup: {
-//     marginBottom: "20px",
-//   },
-//   label: {
-//     marginBottom: "8px",
-//     fontSize: "14px",
-//     color: "#555",
-//     fontWeight: "bold" as "bold",
-//   },
-//   input: {
-//     width: "100%",
-//     padding: "10px",
-//     borderRadius: "12px",
-//     border: "1px solid #CCC",
-//     fontSize: "14px",
-//     backgroundColor: "#F7F7F7",
-//     boxSizing: "border-box" as "border-box", // box-sizing 추가
-//   },
-//   buttonGroup: {
-//     display: "flex",
-//     justifyContent: "space-between",
-//     marginTop: "20px",
-//   },
-//   cancelButton: {
-//     padding: "12px 20px",
-//     borderRadius: "20px",
-//     border: "none",
-//     backgroundColor: "#CCC",
-//     color: "white",
-//     cursor: "pointer",
-//     fontSize: "16px",
-//     fontWeight: "bold" as "bold",
-//     transition: "background-color 0.3s ease",
-//   },
-//   nextButton: {
-//     padding: "12px 20px",
-//     borderRadius: "20px",
-//     border: "none",
-//     backgroundColor: "#0079D3",
-//     color: "white",
-//     cursor: "pointer",
-//     fontSize: "16px",
-//     fontWeight: "bold" as "bold",
-//     transition: "background-color 0.3s ease",
-//   },
-// };
-
-// export default CommunityCreatePage2;
-// Add this line to ensure it's recognized as a module
-export {};
+export default CommunityCreatePage2;

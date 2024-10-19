@@ -24,9 +24,7 @@ const CommunityCreatePage4: FC = () => {
   const [searchNickname, setSearchNickname] = useState<string>('')
   const [searchResultList, setSearchResultList] = useState<User[]>([]);
   const userId = localStorage.getItem('id') as string;
-  console.log(communityName);
-  console.log(backgroundPicture);
-  console.log(icon)
+
   useEffect(() => {
     setIsCommunity((prevState) => ({...prevState, id : [userId], visibility: visibility}))
   }, [visibility]);

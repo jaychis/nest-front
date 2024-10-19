@@ -1,126 +1,264 @@
-import React, { useState, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCommunity } from '../../../contexts/CommunityContext';
-import { TagListAPI } from '../../api/TagApi';
+import { CommunitySubmitAPI } from '../../api/CommunityApi';
+import { CommunityVisibilityType } from '../../../_common/CollectionTypes';
+import { CommunityTagsSubmitAPI } from '../../api/CommunityTagsAPI';
+import { FaGlobe, FaLock, FaUsers } from 'react-icons/fa'; // Importing icons from react-icons
 import styled from 'styled-components';
-import Button from '../../../components/Buttons/Button';
 import MultiStepNav from '../../../components/Buttons/MultiStepNav';
-import DeleteButton from '../../../components/Buttons/DeleteButton';
+import Button from '../../../components/Buttons/Button';
+import { GetSearchPeopleAPI } from '../../api/SearchApi';
+import vCheck from '../../../assets/img/v-check.png';
 
-const CommunityCreatePage3: React.FC = () => {
+const CommunityCreatePage3: FC = () => {
+  interface User {
+    nickname: string;
+    id: string[];
+  }
+
   const navigate = useNavigate();
-  const { topics, setTopics } = useCommunity();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const { communityName, description, banner, icon, topics } = useCommunity();
+  const [visibility, setVisibility] =
+    useState<CommunityVisibilityType>('PUBLIC');
+  const [searchNickname, setSearchNickname] = useState<string>('');
+  const [searchResultList, setSearchResultList] = useState<User[]>([]);
+  const userId = localStorage.getItem('id') as string;
 
-  const handleAddTopic = (topic: string) => {
-    const formattedTopic = topic.startsWith('#') ? topic : `#${topic}`;
-    if (topics.length < 3 && !topics.includes(formattedTopic)) {
-      setTopics([...topics, formattedTopic]);
-      setSearchTerm('');
+  useEffect(() => {
+    setIsCommunity((prevState) => ({
+      ...prevState,
+      id: [userId],
+      visibility: visibility,
+    }));
+  }, [visibility]);
+
+  const handleUserSearchChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const { value } = event.target;
+    setSearchNickname(value);
+    try {
+      if (value) {
+        const res = await GetSearchPeopleAPI({ query: value });
+        if (res && res.data && res.data.response) {
+          setSearchResultList(
+            res.data.response.map((user: any) => ({
+              nickname: user.nickname,
+              id: user.id,
+            })),
+          );
+          console.log(res.data.response);
+        }
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
-  useEffect(() => {
-    console.log('topics : ', topics);
-    console.log('searchTerm : ', searchTerm);
-  }, [topics, searchTerm]);
-
-  const handleRemoveTopic = (index: number) => {
-    const newTopics = topics.filter((_, i) => i !== index);
-    setTopics(newTopics);
-  };
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-  };
-
-  useEffect(() => {
-    if (searchTerm) {
-      TagListAPI()
-        .then((res) => {
-          if (!res) return;
-          interface TagListReturnType {
-            readonly id: string;
-            readonly name: string;
-          }
-          console.log('TagListAPI response:', res.data);
-          const response: TagListReturnType[] = res.data.response;
-
-          const tagNameList: string[] = response.map(
-            (el: TagListReturnType) => el.name
-          );
-          console.log('tagNameList:', tagNameList);
-
-          const filteredTopics = tagNameList.filter((topic: string) =>
-            topic.toLowerCase().includes(searchTerm.toLowerCase())
-          );
-          setSuggestions(filteredTopics);
-        })
-        .catch((err) => console.log('TagListAPI error:', err));
+  const handleUserSelect = (userId: string) => {
+    if (isCommunity.id?.includes(userId)) {
+      const deleteId = isCommunity.id.filter(
+        (prevState) => prevState !== userId,
+      );
+      setIsCommunity((prevState) => ({ ...prevState, id: deleteId }));
     } else {
-      setSuggestions([]);
+      setIsCommunity((prevState) => ({
+        ...prevState,
+        id: [...(prevState.id || []), userId], // undefined 상태를 빈 배열로 처리
+      }));
     }
-  }, [searchTerm]);
+    console.log(isCommunity.id);
+  };
+
+  const [isCommunity, setIsCommunity] = useState<{
+    readonly name: string;
+    readonly description: string;
+    readonly banner?: string | null;
+    readonly icon?: string | null;
+    readonly visibility: CommunityVisibilityType;
+    readonly topics: string[];
+    readonly id?: string[];
+  }>({
+    name: communityName,
+    description: description,
+    banner: banner,
+    icon: icon,
+    visibility: visibility,
+    topics: [],
+    id: [],
+  });
+
+  const handleSubmit = async (): Promise<void> => {
+    const coRes = await CommunitySubmitAPI({
+      name: isCommunity.name,
+      description: isCommunity.description,
+      banner: isCommunity.banner,
+      icon: isCommunity.icon,
+      visibility: isCommunity.visibility,
+      userIds: isCommunity.id,
+    });
+
+    if (!coRes) return;
+    const coResponse = await coRes.data.response;
+    console.log('community Submit coResponse : ', coResponse);
+
+    const tagResponse = [];
+    if (topics.length > 0) {
+      const tagRes = await CommunityTagsSubmitAPI({
+        tags: topics,
+        communityId: coResponse.id,
+      });
+      if (!tagRes) return;
+      console.log('tagRes : ', tagRes);
+      tagResponse.push(tagRes.data.response);
+    }
+    console.log('tagResponse : ', tagResponse);
+    setIsCommunity({
+      ...coResponse,
+      topic: tagResponse,
+    });
+
+    navigate('/');
+  };
+
+  const handleBack = () => {
+    navigate('/community/create3');
+  };
 
   return (
     <Container>
-      <Heading>토픽 추가</Heading>
+      <Heading>커뮤니티 공개 설정</Heading>
       <Form onSubmit={(e) => e.preventDefault()}>
-        <div style={{ marginBottom: '20px' }}>
-          <Label htmlFor='topicSearch'>토픽 검색</Label>
-          <TopicSearchInput
-            type='text'
-            id='topicSearch'
-            value={searchTerm}
-            onChange={handleSearchChange}
-          />
-          {suggestions.length > 0 && (
-            <Suggestions>
-              {suggestions.map((suggestion, index) => (
-                <Suggestion
-                  key={index}
-                  onClick={() => handleAddTopic(suggestion)}
-                >
-                  {suggestion}
-                </Suggestion>
+        <FormGroup>
+          <Label>
+            <Radio
+              type="radio"
+              name="visibility"
+              value="public"
+              checked={visibility === 'PUBLIC'}
+              onChange={() => setVisibility('PUBLIC')}
+            />
+            <OptionContent>
+              <FaGlobe />
+              <div>
+                <OptionTitle>공개</OptionTitle>
+                <OptionDescription>
+                  모든 사용자가 이 커뮤니티를 볼 수 있습니다.
+                </OptionDescription>
+              </div>
+            </OptionContent>
+          </Label>
+        </FormGroup>
+
+        <FormGroup>
+          <Label>
+            <Radio
+              type="radio"
+              name="visibility"
+              value="restricted"
+              checked={visibility === 'RESTRICTED'}
+              onChange={() => setVisibility('RESTRICTED')}
+            />
+            <OptionContent>
+              <FaUsers />
+              <div>
+                <OptionTitle>제한</OptionTitle>
+                <OptionDescription>
+                  모든 사용자가 이 커뮤니티를 볼 수 있지만, 참여하려면 승인이
+                  필요합니다.
+                </OptionDescription>
+              </div>
+            </OptionContent>
+          </Label>
+          {visibility === 'RESTRICTED' && (
+            <UserSearchInput
+              placeholder="초대할 유저의 닉네임을 입력해주세요"
+              onChange={handleUserSearchChange}
+            />
+          )}
+          {searchResultList.length > 0 && (
+            <SearchResultList>
+              {searchResultList.map((result, index) => (
+                <>
+                  {visibility === 'RESTRICTED' &&
+                    searchResultList.length > 0 && (
+                      <SearchResultItem
+                        key={index}
+                        index={index}
+                        onClick={() =>
+                          handleUserSelect(result.id.toLocaleString())
+                        }
+                      >
+                        {result.nickname}
+                        {isCommunity.id?.includes(
+                          result.id.toLocaleString(),
+                        ) ? (
+                          <VCheckImg src={vCheck} />
+                        ) : null}
+                      </SearchResultItem>
+                    )}
+                </>
               ))}
-            </Suggestions>
+            </SearchResultList>
           )}
-          {searchTerm && suggestions.length === 0 && (
-            <NoSuggestionWrapper>
-              <p>
-                등록된 토픽이 없습니다. "{searchTerm}"로 새 토픽을 추가할 수
-                있습니다.
-              </p>
-              <AddButton onClick={() => handleAddTopic(searchTerm)}>
-                "{searchTerm}" 추가
-              </AddButton>
-            </NoSuggestionWrapper>
+        </FormGroup>
+
+        <FormGroup onClick={() => {}}>
+          <Label>
+            <Radio
+              type="radio"
+              name="visibility"
+              value="private"
+              checked={visibility === 'PRIVATE'}
+              onChange={() => setVisibility('PRIVATE')}
+            />
+            <OptionContent>
+              <FaLock />
+              <div>
+                <OptionTitle>비공개</OptionTitle>
+                <OptionDescription>
+                  초대된 사용자만 이 커뮤니티를 볼 수 있습니다.
+                </OptionDescription>
+              </div>
+            </OptionContent>
+          </Label>
+          {visibility === 'PRIVATE' && (
+            <UserSearchInput
+              placeholder="초대할 유저의 닉네임을 입력해주세요"
+              onChange={handleUserSearchChange}
+            />
           )}
-        </div>
-        <SelectedTopicWrapper>
-          {topics.map((topic, index) => (
-            <TopicItem key={index}>
-              <TopicText>{topic}</TopicText>
-              <DeleteButton onClick={() => handleRemoveTopic(index)} />
-            </TopicItem>
-          ))}
-        </SelectedTopicWrapper>
+          {searchResultList.length > 0 && (
+            <SearchResultList>
+              {searchResultList.map((result, index) => (
+                <>
+                  {visibility === 'PRIVATE' && searchResultList.length > 0 && (
+                    <SearchResultItem
+                      key={index}
+                      index={index}
+                      onClick={() =>
+                        handleUserSelect(result.id.toLocaleString())
+                      }
+                    >
+                      {result.nickname}
+                      {isCommunity.id?.includes(result.id.toLocaleString()) ? (
+                        <VCheckImg src={vCheck} />
+                      ) : null}
+                    </SearchResultItem>
+                  )}
+                </>
+              ))}
+            </SearchResultList>
+          )}
+        </FormGroup>
+
         <MultiStepNav>
-          <Button
-            type='button'
-            bgColor='cancel'
-            onClick={() => navigate('/community/create1')}
-          >
+          <Button type="button" onClick={handleBack} bgColor="cancel">
             이전
           </Button>
-          <Button
-            type='button'
-            bgColor='next'
-            onClick={() => navigate('/community/create4')}
-          >
-            다음
+          <Button type="button" onClick={handleSubmit} bgColor="next">
+            완료
           </Button>
         </MultiStepNav>
       </Form>
@@ -128,6 +266,9 @@ const CommunityCreatePage3: React.FC = () => {
   );
 };
 
+export default CommunityCreatePage3;
+
+// Styled Components
 const Container = styled.div`
   background-color: #ffffff;
   padding: 20px;
@@ -138,80 +279,74 @@ const Container = styled.div`
   border-radius: 8px;
   border: 1px solid #ededed;
 `;
+
 const Heading = styled.h2`
   font-size: 24px;
   margin-bottom: 20px;
   color: #333;
   text-align: center;
 `;
+
 const Form = styled.form`
   display: flex;
   flex-direction: column;
 `;
-const SelectedTopicWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+
+const FormGroup = styled.div`
   margin-bottom: 20px;
 `;
-const TopicItem = styled.div`
+
+const Label = styled.label`
   display: flex;
   align-items: center;
-  background-color: #f0f0f0;
-  border-radius: 20px;
-  padding: 8px 12px;
-`;
-const TopicText = styled.span`
-  font-size: 14px;
-  margin-right: 10px;
-`;
-const Label = styled.label`
-  margin-bottom: 8px;
   font-size: 14px;
   color: #555;
   font-weight: bold;
-`;
-const TopicSearchInput = styled.input`
-  width: 100%;
-  padding: 10px;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-  background-color: #f7f7f7;
-  box-sizing: border-box;
-  margin-bottom: 20px;
-`;
-const Suggestions = styled.ul`
-  list-style-type: none;
-  padding: 0;
-  margin-top: 10px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background-color: #fff;
-`;
-const Suggestion = styled.li`
-  padding: 10px;
   cursor: pointer;
-`;
-const NoSuggestionWrapper = styled.div`
-  margin-top: 10px;
-  padding: 10px;
-  background-color: #f8f8f8;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  text-align: center;
-`;
-const AddButton = styled.button`
-  margin-top: 10px;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  background-color: #0079d3;
-  color: white;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
 `;
 
-export default CommunityCreatePage3;
+const Radio = styled.input`
+  margin-right: 10px;
+`;
+
+const OptionContent = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const OptionTitle = styled.div`
+  font-size: 14px;
+  font-weight: bold;
+`;
+
+const OptionDescription = styled.div`
+  font-size: 12px;
+  color: #888;
+`;
+
+const UserSearchInput = styled.input`
+  border-radius: 25px;
+  height: 25px;
+  width: 90%;
+  margin: 10px 0 0 4%;
+`;
+
+const SearchResultList = styled.ul`
+  list-style-type: none;
+  padding: 0;
+`;
+
+const SearchResultItem = styled.li<{ index: number }>`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 8px;
+  background-color: ${(props) => (props.index % 2 === 0 ? '#f9f9f9' : '#fff')};
+  width: 90%;
+`;
+
+const VCheckImg = styled.img`
+  height: 20px;
+  width: 20px;
+  margin-left: auto;
+`;
