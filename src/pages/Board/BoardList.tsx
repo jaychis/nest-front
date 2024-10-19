@@ -51,6 +51,10 @@ const CardsContainer = ({ children }: ContainerProps) => {
 };
 
 const BoardList = () => {
+  interface AllListParams {
+    readonly id: IdType;
+    readonly allDataLoaded: boolean;
+  }
   type IdType = null | string;
 
   const [list, setList] = useState<CardType[]>([]);
@@ -60,30 +64,34 @@ const BoardList = () => {
     (state: RootState) => state.sideBarButton,
   );
   const [ref, inView] = useInView();
-  const [Id, setId] = useState<IdType>(null);
   const [lastInView, setLastInView] = useState<boolean>(false);
+  const [id, setId] = useState<IdType>(null);
   const [allDataLoaded, setAllDataLoaded] = useState<boolean>(false);
   const [retry, setRetry] = useState<number>(0);
 
   useEffect(() => {
+    
     if (inView && !lastInView) {
-      ListApi(Id);
+      ListApi({id, allDataLoaded});
     }
     setLastInView(inView);
   }, [inView]);
 
   useEffect(() => {
+    let allDataLoaded:boolean = false;
     setId(null);
     setList([]);
-    setAllDataLoaded(false);
-    if (Id === null) {
-      ListApi(Id);
+    setLastInView(false)
+    setAllDataLoaded(false)
+    
+    if (id === null) {
+      ListApi({id,allDataLoaded});
     } else {
       setRetry((prev) => prev + 1);
     }
   }, [buttonType, retry]);
 
-  const ListApi = async (id: IdType) => {
+  const ListApi = async ({id, allDataLoaded}:AllListParams) => {
     if (allDataLoaded) return;
     try {
       let response;
@@ -121,9 +129,8 @@ const BoardList = () => {
           });
           break;
       }
-
+      
       const newCards = response.data.response.current_list;
-
       setList((prevList) => [...prevList, ...newCards]);
 
       if (newCards.length > 0) {
