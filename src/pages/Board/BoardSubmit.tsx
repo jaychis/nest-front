@@ -1,13 +1,12 @@
-import React, { FormEvent, useEffect, useState, useRef } from "react";
-import { SubmitAPI, SubmitParams } from "../api/BoardApi";
-import { useNavigate } from "react-router-dom";
-import "react-quill/dist/quill.snow.css"; // import styles
-import ReactQuill from "react-quill";
-import "react-markdown-editor-lite/lib/index.css";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import { BoardType } from "../../_common/CollectionTypes";
+import React, { FormEvent, useEffect, useState, useRef } from 'react';
+import { SubmitAPI, SubmitParams } from '../api/BoardApi';
+import { useNavigate } from 'react-router-dom';
+import 'react-quill/dist/quill.snow.css'; // import styles
+import ReactQuill from 'react-quill';
+import 'react-markdown-editor-lite/lib/index.css';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import { BoardType } from '../../_common/CollectionTypes';
 import {
   AwsImageUploadFunctionality,
   AwsImageUploadFunctionalityReturnType,
@@ -15,20 +14,76 @@ import {
   ImageLocalPreviewUrlsDelete,
   ImageLocalPreviewUrlsDeleteType,
   ImageLocalPreviewUrlsReturnType,
-} from "../../_common/ImageUploadFuntionality";
-import { GetCommunitiesNameAPI } from "../api/CommunityApi";
-import ErrorModal from "../../_common/ErrorModal";
+} from '../../_common/ImageUploadFuntionality';
+import { GetCommunitiesNameAPI } from '../api/CommunityApi';
+import ErrorModal from '../../_common/ErrorModal';
+import { useCommunity } from '../../contexts/CommunityContext';
+import { TagListAPI } from '../api/TagApi';
+import DeleteButton from '../../components/Buttons/DeleteButton';
+import styled from 'styled-components';
+import { BoardTagsListAPI } from '../api/BoardTagsApi';
 
 const BoardSubmit = () => {
   const navigate = useNavigate();
-  const [inputType, setInputType] = useState<BoardType>("TEXT");
+  const [inputType, setInputType] = useState<BoardType>('TEXT');
   const editorRef = useRef<any>(null);
   const [editorHeight, setEditorHeight] = useState(200);
   const [errorModalVisible, setErrorModalVisible] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  const ID: string = localStorage.getItem("id") as string;
-  const NICKNAME: string = localStorage.getItem("nickname") as string;
-  const [textTitle, setTextTitle] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const ID: string = localStorage.getItem('id') as string;
+  const NICKNAME: string = localStorage.getItem('nickname') as string;
+  const [textTitle, setTextTitle] = useState<string>('');
+
+  const { topics, setTopics } = useCommunity();
+  const [tagSearchTerm, setTagSearchTerm] = useState('');
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (tagSearchTerm) {
+      const boardTagsResponse = async () => {
+        const response = await BoardTagsListAPI();
+        if (!response) {
+          alert('게시판 태그 리스트 조회를 실패하였습니다.');
+          return;
+        }
+
+        interface BoardTagListReturnType {
+          readonly id: string;
+          readonly name: string;
+        }
+        const res: BoardTagListReturnType[] = response.data.response;
+        console.log('TagListAPI res:', res);
+        const tagNameList: string[] = res.map(
+          (el: BoardTagListReturnType) => el.name,
+        );
+        console.log('tagNameList:', tagNameList);
+        const filteredTopics = tagNameList.filter((topic: string) =>
+          topic.toLowerCase().includes(searchTerm.toLowerCase()),
+        );
+        setSuggestions(filteredTopics);
+      };
+
+      boardTagsResponse();
+    } else {
+      setSuggestions([]);
+    }
+  }, [tagSearchTerm]);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+  const handleRemoveTopic = (index: number) => {
+    const newTopics = topics.filter((_, i) => i !== index);
+    setTopics(newTopics);
+  };
+  const handleAddTopic = (topic: string) => {
+    const formattedTopic = topic.startsWith('#') ? topic : `#${topic}`;
+    if (topics.length < 3 && !topics.includes(formattedTopic)) {
+      setTopics([...topics, formattedTopic]);
+      setSearchTerm('');
+    }
+  };
+
   const handleTextTitleChange = async (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ): Promise<void> => {
@@ -36,7 +91,7 @@ const BoardSubmit = () => {
     setTextTitle(value);
   };
 
-  const [mediaTitle, setMediaTitle] = useState<string>("");
+  const [mediaTitle, setMediaTitle] = useState<string>('');
   const handleMediaTitleChange = async (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ): Promise<void> => {
@@ -44,7 +99,7 @@ const BoardSubmit = () => {
     setMediaTitle(value);
   };
 
-  const [linkTitle, setLinkTitle] = useState<string>("");
+  const [linkTitle, setLinkTitle] = useState<string>('');
   const handleLinkTitleChange = async (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ): Promise<void> => {
@@ -52,7 +107,7 @@ const BoardSubmit = () => {
     setLinkTitle(value);
   };
 
-  const [textContent, setTextContent] = useState<string>("");
+  const [textContent, setTextContent] = useState<string>('');
   const handleEditorChange = (content: string) => {
     setTextContent(content);
   };
@@ -64,11 +119,11 @@ const BoardSubmit = () => {
     setTextContent(textarea.value);
 
     // Adjust textarea height to fit content
-    textarea.style.height = "auto";
+    textarea.style.height = 'auto';
     textarea.style.height = `${textarea.scrollHeight}px`;
   };
 
-  useEffect(() => console.log("textContent : ", textContent), [textContent]);
+  useEffect(() => console.log('textContent : ', textContent), [textContent]);
 
   const adjustEditorHeight = () => {
     if (editorRef.current) {
@@ -105,7 +160,7 @@ const BoardSubmit = () => {
     setPreviewUrls(res);
   };
 
-  const [linkContent, setLinkContent] = useState<string>("");
+  const [linkContent, setLinkContent] = useState<string>('');
   const handleLinkContentChange = async (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ): Promise<void> => {
@@ -113,8 +168,8 @@ const BoardSubmit = () => {
     setLinkContent(value);
   };
 
-  const [selectedCommunity, setSelectedCommunity] = useState<string>("jaychis");
-  const [searchTerm, setSearchTerm] = useState<string>("jaychis");
+  const [selectedCommunity, setSelectedCommunity] = useState<string>('jaychis');
+  const [searchTerm, setSearchTerm] = useState<string>('jaychis');
   const [searchResults, setSearchResults] = useState<string[]>([]);
 
   const handleCommunitySearchChange = async (
@@ -127,7 +182,7 @@ const BoardSubmit = () => {
       try {
         const res = await GetCommunitiesNameAPI({ name: value });
         if (res && res.data && res.data.response) {
-          console.log("Search results:", res.data.response);
+          console.log('Search results:', res.data.response);
           setSearchResults(
             res.data.response.map((community: any) => community.name),
           );
@@ -135,7 +190,7 @@ const BoardSubmit = () => {
           setSearchResults([]);
         }
       } catch (error) {
-        console.error("Error fetching communities:", error);
+        console.error('Error fetching communities:', error);
         setSearchResults([]);
       }
     } else {
@@ -145,7 +200,7 @@ const BoardSubmit = () => {
 
   const handleCommunitySelect = (community: string) => {
     setSelectedCommunity(community);
-    setSearchTerm("");
+    setSearchTerm('');
     setSearchResults([]);
   };
 
@@ -162,12 +217,14 @@ const BoardSubmit = () => {
     event.preventDefault();
 
     let content: string[] = [];
-    let title = "";
+    let title = '';
 
     try {
-      if (inputType === "TEXT") {
+      if (inputType === 'TEXT') {
         if (!textTitle || !textContent) {
-          setErrorMessage("텍스트 게시물의 제목과 내용을 모두 입력해야 합니다.");
+          setErrorMessage(
+            '텍스트 게시물의 제목과 내용을 모두 입력해야 합니다.',
+          );
           setErrorModalVisible(true);
           return;
         }
@@ -175,23 +232,25 @@ const BoardSubmit = () => {
         content = [textContent];
       }
 
-      if (inputType === "MEDIA") {
+      if (inputType === 'MEDIA') {
         if (!mediaTitle || fileList.length === 0) {
-          setErrorMessage("미디어 게시물의 제목과 파일을 모두 제공해야 합니다.");
+          setErrorMessage(
+            '미디어 게시물의 제목과 파일을 모두 제공해야 합니다.',
+          );
           setErrorModalVisible(true);
           return;
         }
         const res: AwsImageUploadFunctionalityReturnType =
           await AwsImageUploadFunctionality({ fileList });
         if (!res) return;
-  
+
         content = res.imageUrls;
         title = mediaTitle;
       }
-  
-      if (inputType === "LINK") {
+
+      if (inputType === 'LINK') {
         if (!linkTitle || !linkContent) {
-          setErrorMessage("링크 게시물의 제목과 링크를 모두 입력해야 합니다.");
+          setErrorMessage('링크 게시물의 제목과 링크를 모두 입력해야 합니다.');
           setErrorModalVisible(true);
           return;
         }
@@ -211,63 +270,63 @@ const BoardSubmit = () => {
       SubmitAPI(paramObj)
         .then((res) => {
           const response = res.data.response;
+
           if (res.status === 201) {
             navigate(`/boards/read?id=${response.id}&title=${response.title}`);
           }
         })
         .catch((err) => console.error(err));
     } catch (error) {
-      console.error("Error : ", error);
+      console.error('Error : ', error);
     }
   };
 
   const inputStyle = {
-    width: "100%",
-    height: "30px",
-    marginBottom: "10px",
-    marginTop: "10px",
-    paddingTop: "10px",
-    paddingBottom: "10px",
-    border: "1px solid #ddd",
-    borderRadius: "4px",
+    width: '100%',
+    height: '30px',
+    marginBottom: '10px',
+    marginTop: '10px',
+    paddingTop: '10px',
+    paddingBottom: '10px',
+    border: '1px solid #ddd',
+    borderRadius: '4px',
   };
 
   const textareaStyle = {
     ...inputStyle,
-    minHeight: "50px",
-    maxHeight: "700px",
-    overflowY: "auto" as "auto",
-    resize: "none",
+    minHeight: '50px',
+    maxHeight: '700px',
+    overflowY: 'auto' as 'auto',
+    resize: 'none',
   };
 
   const submitButtonStyle = {
-    padding: "10px 20px",
-    backgroundColor: "#84d7fb",
-    color: "white",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-    fontWeight: "bold",
-    marginTop: "45px",
+    padding: '10px 20px',
+    backgroundColor: '#84d7fb',
+    color: 'white',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontWeight: 'bold',
   };
 
   const buttonStyle = {
-    padding: "10px 20px",
-    margin: "0 0",
-    border: "1px solid #fff",
-    borderRadius: "4px",
-    cursor: "pointer",
-    backgroundColor: "white",
-    color: "#0079D3",
-    fontWeight: "bold",
-    transition: "background-color 0.3s, color 0.3s",
+    padding: '10px 20px',
+    margin: '0 0',
+    border: '1px solid #fff',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    backgroundColor: 'white',
+    color: '#0079D3',
+    fontWeight: 'bold',
+    transition: 'background-color 0.3s, color 0.3s',
   };
 
   const activeButtonStyle = {
     ...buttonStyle,
-    backgroundColor: "#84d7fb",
-    color: "white",
-    border: "#84d7fb",
+    backgroundColor: '#84d7fb',
+    color: 'white',
+    border: '#84d7fb',
   };
 
   const sliderSetting = {
@@ -278,11 +337,11 @@ const BoardSubmit = () => {
     slidesToScroll: 1,
     arrows: true,
     width: 500,
-    height: 600
+    height: 600,
   };
 
   useEffect(() => {
-    console.log("inputType : ", inputType);
+    console.log('inputType : ', inputType);
   }, [inputType]);
 
   useEffect(() => {
@@ -298,7 +357,7 @@ const BoardSubmit = () => {
             setSearchResults([]);
           }
         } catch (error) {
-          console.error("Error fetching communities:", error);
+          console.error('Error fetching communities:', error);
           setSearchResults([]);
         }
       }
@@ -309,52 +368,52 @@ const BoardSubmit = () => {
 
   return (
     <>
-      <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+      <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
         <div style={{ flex: 2 }}>
-          <div style={{ backgroundColor: "#fff", minHeight: "100vh" }}>
+          <div style={{ backgroundColor: '#fff', minHeight: '100vh' }}>
             <div
               style={{
-                display: "flex",
-                justifyContent: "center",
-                width: "100%",
+                display: 'flex',
+                justifyContent: 'center',
+                width: '100%',
               }}
             >
               <div style={{ flex: 2 }}>
                 <div
                   style={{
-                    width: "100%",
-                    height: "auto",
-                    padding: "10px",
-                    background: "#fff",
+                    width: '100%',
+                    height: 'auto',
+                    padding: '10px',
+                    background: '#fff',
                   }}
                 >
                   <div
                     style={{
-                      marginBottom: "20px",
-                      display: "flex",
-                      justifyContent: "flex-start",
+                      marginBottom: '20px',
+                      display: 'flex',
+                      justifyContent: 'flex-start',
                     }}
                   >
                     <button
-                      onClick={() => setInputType("TEXT")}
+                      onClick={() => setInputType('TEXT')}
                       style={
-                        inputType === "TEXT" ? activeButtonStyle : buttonStyle
+                        inputType === 'TEXT' ? activeButtonStyle : buttonStyle
                       }
                     >
                       텍스트
                     </button>
                     <button
-                      onClick={() => setInputType("MEDIA")}
+                      onClick={() => setInputType('MEDIA')}
                       style={
-                        inputType === "MEDIA" ? activeButtonStyle : buttonStyle
+                        inputType === 'MEDIA' ? activeButtonStyle : buttonStyle
                       }
                     >
                       이미지 & 비디오
                     </button>
                     <button
-                      onClick={() => setInputType("LINK")}
+                      onClick={() => setInputType('LINK')}
                       style={
-                        inputType === "LINK" ? activeButtonStyle : buttonStyle
+                        inputType === 'LINK' ? activeButtonStyle : buttonStyle
                       }
                     >
                       링크
@@ -367,19 +426,19 @@ const BoardSubmit = () => {
                     onChange={handleCommunitySearchChange}
                     placeholder="커뮤니티 검색"
                     style={inputStyle}
-                   // Disable input if a community is selected
+                    // Disable input if a community is selected
                   />
                   {searchResults.length > 0 && (
-                    <ul style={{ listStyleType: "none", padding: 0 }}>
+                    <ul style={{ listStyleType: 'none', padding: 0 }}>
                       {searchResults.map((result, index) => (
                         <li
                           key={index}
                           onClick={() => handleCommunitySelect(result)}
                           style={{
-                            cursor: "pointer",
-                            padding: "8px",
+                            cursor: 'pointer',
+                            padding: '8px',
                             backgroundColor:
-                              index % 2 === 0 ? "#f9f9f9" : "#fff",
+                              index % 2 === 0 ? '#f9f9f9' : '#fff',
                           }}
                         >
                           {result}
@@ -394,7 +453,7 @@ const BoardSubmit = () => {
                     <div>선택된 커뮤니티: {selectedCommunity}</div>
                   )}
 
-                  {inputType === "TEXT" && (
+                  {inputType === 'TEXT' && (
                     <>
                       <input
                         name="title"
@@ -406,11 +465,11 @@ const BoardSubmit = () => {
                       <ReactQuill
                         value={textContent}
                         onChange={handleEditorChange}
-                        style={{ height: "400px" }}
+                        style={{ height: '400px' }}
                       />
                     </>
                   )}
-                  {inputType === "MEDIA" && (
+                  {inputType === 'MEDIA' && (
                     <>
                       <input
                         name="title"
@@ -423,20 +482,20 @@ const BoardSubmit = () => {
                       {previewUrls.length > 0 ? (
                         <>
                           <button onClick={imageUrlListDelete}>휴지통</button>
-                            {previewUrls.map((image, index) => (
-                              <div key={index} >
-                                <img
-                                  src={image}
-                                  alt={`Preview image ${index}`}
-                                  style={{ height: "400px", width: "400px", }}
-                                />
-                              </div>
-                            ))}
+                          {previewUrls.map((image, index) => (
+                            <div key={index}>
+                              <img
+                                src={image}
+                                alt={`Preview image ${index}`}
+                                style={{ height: '400px', width: '400px' }}
+                              />
+                            </div>
+                          ))}
                         </>
                       ) : (
                         <>
                           <input
-                            type={"file"}
+                            type={'file'}
                             multiple
                             onChange={handleFileChange}
                             style={inputStyle}
@@ -445,7 +504,7 @@ const BoardSubmit = () => {
                       )}
                     </>
                   )}
-                  {inputType === "LINK" && (
+                  {inputType === 'LINK' && (
                     <>
                       <input
                         name="title"
@@ -462,6 +521,56 @@ const BoardSubmit = () => {
                       />
                     </>
                   )}
+                  <Container>
+                    <Form onSubmit={(e) => e.preventDefault()}>
+                      <div style={{ marginBottom: '20px' }}>
+                        <Label htmlFor="topicSearch">태그 검색</Label>
+                        <TopicSearchInput
+                          type="text"
+                          id="topicSearch"
+                          value={tagSearchTerm}
+                          onChange={handleSearchChange}
+                        />
+                        {suggestions.length > 0 && (
+                          <Suggestions>
+                            {suggestions.map((suggestion, index) => (
+                              <Suggestion
+                                key={index}
+                                onClick={() => handleAddTopic(suggestion)}
+                              >
+                                {suggestion}
+                              </Suggestion>
+                            ))}
+                          </Suggestions>
+                        )}
+                        {tagSearchTerm && suggestions.length === 0 && (
+                          <NoSuggestionWrapper>
+                            <p>
+                              등록된 태그가 없습니다. "{tagSearchTerm}"로 새
+                              태그를 추가할 수 있습니다.
+                            </p>
+                            <AddButton
+                              onClick={() => handleAddTopic(tagSearchTerm)}
+                            >
+                              "{tagSearchTerm}" 추가
+                            </AddButton>
+                          </NoSuggestionWrapper>
+                        )}
+                      </div>
+                      <SelectedTopicWrapper>
+                        {topics.map((topic, index) => {
+                          return (
+                            <TopicItem key={index}>
+                              <TopicText>{topic}</TopicText>
+                              <DeleteButton
+                                onClick={() => handleRemoveTopic(index)}
+                              />
+                            </TopicItem>
+                          );
+                        })}
+                      </SelectedTopicWrapper>
+                    </Form>
+                  </Container>
                   <button
                     type="submit"
                     style={submitButtonStyle}
@@ -483,5 +592,84 @@ const BoardSubmit = () => {
     </>
   );
 };
+
+const Container = styled.div`
+  background-color: #ffffff;
+  padding: 20px;
+  max-width: 1180px;
+  height: auto;
+  margin: 45px auto 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  border: 1px solid #ededed;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+`;
+const SelectedTopicWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+`;
+const TopicItem = styled.div`
+  display: flex;
+  align-items: center;
+  background-color: #f0f0f0;
+  border-radius: 20px;
+  padding: 8px 12px;
+`;
+const TopicText = styled.span`
+  font-size: 14px;
+  margin-right: 10px;
+`;
+const Label = styled.label`
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #555;
+  font-weight: bold;
+`;
+const TopicSearchInput = styled.input`
+  width: 100%;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  background-color: #f7f7f7;
+  box-sizing: border-box;
+`;
+const Suggestions = styled.ul`
+  list-style-type: none;
+  padding: 0;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+`;
+const Suggestion = styled.li`
+  padding: 10px;
+  cursor: pointer;
+`;
+const NoSuggestionWrapper = styled.div`
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  text-align: center;
+`;
+const AddButton = styled.button`
+  margin-top: 10px;
+  padding: 10px 10px;
+  border: none;
+  border-radius: 8px;
+  background-color: #0079d3;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+`;
 
 export default BoardSubmit;
