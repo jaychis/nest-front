@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface CommunityContextType {
   communityName: string;
@@ -18,14 +18,12 @@ interface CommunityContextType {
   setBackgroundPicture: (file: File | string | null) => void;
 }
 
-const CommunityContext = createContext<CommunityContextType | undefined>(
-  undefined,
-);
+const CommunityContext = createContext<CommunityContextType | null>(null);
 
 export const useCommunity = () => {
   const context = useContext(CommunityContext);
   if (!context) {
-    throw new Error("useCommunity must be used within a CommunityProvider");
+    throw new Error('useCommunity must be used within a CommunityProvider');
   }
   return context;
 };
@@ -37,14 +35,18 @@ interface CommunityProviderProps {
 export const CommunityProvider: React.FC<CommunityProviderProps> = ({
   children,
 }) => {
-  const [communityName, setCommunityName] = useState("");
-  const [description, setDescription] = useState("");
+  const [communityName, setCommunityName] = useState('');
+  const [description, setDescription] = useState('');
   const [banner, setBanner] = useState<string | null>(null);
   const [icon, setIcon] = useState<string | null>(null);
-  const [topics, setTopics] = useState<string[]>([""]);
-  const [profilePicture, setProfilePicture] = useState<File | string | null>(null);
-  const [backgroundPicture, setBackgroundPicture] = useState<File | string | null>(null);
-  
+  const [topics, setTopics] = useState<string[]>([]);
+  const [profilePicture, setProfilePicture] = useState<File | string | null>(
+    null,
+  );
+  const [backgroundPicture, setBackgroundPicture] = useState<
+    File | string | null
+  >(null);
+
   return (
     <CommunityContext.Provider
       value={{
