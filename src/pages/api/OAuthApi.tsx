@@ -1,7 +1,7 @@
-import { client } from "./Client";
-import { ErrorHandling } from "../../_common/ErrorHandling";
+import { client } from './Client';
+import { errorHandling } from '../../_common/ErrorHandling';
 
-const OAUTH_URL: string = "oauth";
+const OAUTH_URL: string = 'oauth';
 
 export const UsersKakaoOAuthLoginAPI = async () => {
   try {
@@ -9,11 +9,11 @@ export const UsersKakaoOAuthLoginAPI = async () => {
     const URL: string = `${OAUTH_URL}/kakao/login`;
 
     const res = await client.get(URL);
-    console.log("UsersKakaoOAuthRedirectAPI res : ", res);
+    console.log('UsersKakaoOAuthRedirectAPI res : ', res);
 
     return res;
   } catch (e: any) {
-    ErrorHandling({ text: "UsersKakaoOAuthRedirectAPI", error: e });
+    errorHandling({ text: 'UsersKakaoOAuthRedirectAPI', error: e });
   }
 };
 
@@ -22,11 +22,11 @@ export const UsersKakaoOAuthSignUpAPI = async () => {
     const URL: string = `${OAUTH_URL}/kakao`;
 
     const res = await client.get(URL);
-    console.log("UsersKakaoAuthSignUpAPI res : ", res);
+    console.log('UsersKakaoAuthSignUpAPI res : ', res);
 
     return res;
   } catch (e: any) {
-    ErrorHandling({ text: "UsersKakaoAuthSignUpAPI", error: e });
+    errorHandling({ text: 'UsersKakaoAuthSignUpAPI', error: e });
   }
 };
 
@@ -35,10 +35,10 @@ export const UsersNaverOAuthSignUpAPI = async () => {
     const URL: string = `${OAUTH_URL}/naver`;
 
     const res = await client.get(URL);
-    console.log("UsersNaverOAuthSignUpAPI res : ", res);
+    console.log('UsersNaverOAuthSignUpAPI res : ', res);
 
     return res;
   } catch (e: any) {
-    ErrorHandling({ text: "UsersNaverOAuthSignUpAPI", error: e });
+    errorHandling({ text: 'UsersNaverOAuthSignUpAPI', error: e });
   }
 };
