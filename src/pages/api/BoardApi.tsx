@@ -1,6 +1,6 @@
-import { client } from "./Client";
-import { BoardType } from "../../_common/CollectionTypes";
-import { ErrorHandling } from "../../_common/ErrorHandling";
+import { client } from './Client';
+import { BoardType } from '../../_common/CollectionTypes';
+import { errorHandling } from '../../_common/ErrorHandling';
 
 interface ListParams {
   readonly take: number;
@@ -14,7 +14,7 @@ export const ListAPI = ({ take, lastId, category }: ListParams) => {
   if (lastId) URL += `&lastId=${lastId}`;
   if (category) URL += `&category=${category}`;
   const res = client.get(URL);
-  
+
   return res;
 };
 
@@ -47,11 +47,11 @@ export const ReadAPI = (params: ReadParams) => {
     const URL: string = `boards/read`;
 
     const res = client.post(URL, params);
-    console.log("READ API res : ", res);
+    console.log('READ API res : ', res);
 
     return res;
   } catch (e: any) {
-    ErrorHandling({ text: "BoardReadAPI", error: e });
+    errorHandling({ text: 'BoardReadAPI', error: e });
   }
 };
 
@@ -69,13 +69,14 @@ export interface SubmitParams {
 }
 
 export const SubmitAPI = async (params: SubmitParams) => {
-  const accessToken:string = localStorage.getItem('access_token') as string
+  const accessToken: string = localStorage.getItem('access_token') as string;
   const URL: string = `boards/`;
 
-  const res = await client.post(URL, params,{
-    headers : {
-      Authorization: `Bearer ${accessToken}`
-    }});
+  const res = await client.post(URL, params, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
   return res;
 };
 
@@ -91,13 +92,12 @@ export const BoardInquiryAPI = async (param: BoardInquiryParam) => {
   return res;
 };
 
-export const shareCountApi = async(id: string) => {
-  try{
-      const URL: string = `boards/${id}/share-count`
-      const res = await client.patch(URL)
-      return res
+export const shareCountApi = async (id: string) => {
+  try {
+    const URL: string = `boards/${id}/share-count`;
+    const res = await client.patch(URL);
+    return res;
+  } catch (err) {
+    console.error(err);
   }
-  catch(err){
-      console.error(err)
-  }
-}
+};

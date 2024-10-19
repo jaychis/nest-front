@@ -1,8 +1,8 @@
-import { client } from "./Client";
-import { ErrorHandling } from "../../_common/ErrorHandling";
-import { CommunityVisibilityType } from "../../_common/CollectionTypes";
+import { client } from './Client';
+import { errorHandling } from '../../_common/ErrorHandling';
+import { CommunityVisibilityType } from '../../_common/CollectionTypes';
 
-const COMMUNITY_URL: string = "communities";
+const COMMUNITY_URL: string = 'communities';
 
 interface GetCommunitiesNameParam {
   readonly name: string;
@@ -15,10 +15,10 @@ export const GetCommunitiesNameAPI = async ({
     const URL: string = `${COMMUNITY_URL}/get/communities/name/${name}`;
 
     const res = await client.get(URL);
-    console.log(res)
+    console.log(res);
     return res;
   } catch (e: any) {
-    ErrorHandling({ text: "GetSearchCommunitiesNameAPI", error: e });
+    errorHandling({ text: 'GetSearchCommunitiesNameAPI', error: e });
   }
 };
 
@@ -26,25 +26,25 @@ export interface CommunitySubmitParams {
   readonly name: string;
   readonly description: string;
   readonly visibility?: CommunityVisibilityType;
-  readonly banner?: string | null ;
-  readonly icon?: string | null ;
+  readonly banner?: string | null;
+  readonly icon?: string | null;
   readonly userIds?: string[];
 }
 
 export const CommunitySubmitAPI = async (params: CommunitySubmitParams) => {
-  const accessToken:string = localStorage.getItem('access_token') as string
+  const accessToken: string = localStorage.getItem('access_token') as string;
   try {
     const URL: string = `${COMMUNITY_URL}`;
 
-    const res = await client.post(URL, params,
-      {headers : {
-        Authorization: `Bearer ${accessToken}`
-    }}
-    );
+    const res = await client.post(URL, params, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
 
     return res;
   } catch (e: any) {
-    ErrorHandling({ text: "CommunitySubmitAPI", error: e });
+    errorHandling({ text: 'CommunitySubmitAPI', error: e });
   }
 };
 
@@ -54,7 +54,11 @@ export interface CommunityListParams {
   readonly id?: string;
 }
 
-export const CommunityListAPI = async ({ page, take,id }: CommunityListParams) => {
+export const CommunityListAPI = async ({
+  page,
+  take,
+  id,
+}: CommunityListParams) => {
   try {
     const URL: string = `${COMMUNITY_URL}?take=${take}&page=${page}`;
 
@@ -62,7 +66,7 @@ export const CommunityListAPI = async ({ page, take,id }: CommunityListParams) =
 
     return res;
   } catch (e: any) {
-    ErrorHandling({ text: "CommunityListAPI", error: e });
+    errorHandling({ text: 'CommunityListAPI', error: e });
   }
 };
 
@@ -78,7 +82,7 @@ export const CommunityReadAPI = async ({ id }: CommunityReadParam) => {
 
     return res;
   } catch (e: any) {
-    ErrorHandling({ text: "CommunityReadAPI", error: e });
+    errorHandling({ text: 'CommunityReadAPI', error: e });
   }
 };
 
@@ -94,7 +98,7 @@ export const CommunityDeleteAPI = async (param: CommunityDeleteParam) => {
 
     return res;
   } catch (e: any) {
-    ErrorHandling({ text: "CommunityDeleteAPI", error: e });
+    errorHandling({ text: 'CommunityDeleteAPI', error: e });
   }
 };
 
@@ -114,6 +118,6 @@ export const CommunityUpdateAPI = async (params: CommunityUpdateParams) => {
 
     return res;
   } catch (e: any) {
-    ErrorHandling({ text: "CommunityUpdateAPI", error: e });
+    errorHandling({ text: 'CommunityUpdateAPI', error: e });
   }
 };

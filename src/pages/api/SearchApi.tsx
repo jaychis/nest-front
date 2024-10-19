@@ -1,7 +1,7 @@
-import { client } from "./Client";
-import { ErrorHandling } from "../../_common/ErrorHandling";
+import { client } from './Client';
+import { errorHandling } from '../../_common/ErrorHandling';
 
-const SearchesURL: string = "searches";
+const SearchesURL: string = 'searches';
 export interface SearchParam {
   readonly query: string;
 }
@@ -18,7 +18,7 @@ export const GetSearchPeopleAPI = async (param: SearchParam) => {
     cache[URL] = res; // Cache the response
     return res;
   } catch (e: any) {
-    ErrorHandling({ text: "GetSearchPeopleAPI", error: e });
+    errorHandling({ text: 'GetSearchPeopleAPI', error: e });
   }
 };
 
@@ -30,7 +30,7 @@ export const GetSearchMediaAPI = async (param: SearchParam) => {
 
     return res;
   } catch (e: any) {
-    ErrorHandling({ text: "GetSearchMediaAPI", error: e });
+    errorHandling({ text: 'GetSearchMediaAPI', error: e });
   }
 };
 
@@ -42,7 +42,7 @@ export const GetSearchCommentsAPI = async (param: SearchParam) => {
 
     return res;
   } catch (e: any) {
-    ErrorHandling({ text: "GetSearchCommentsAPI", error: e });
+    errorHandling({ text: 'GetSearchCommentsAPI', error: e });
   }
 };
 
@@ -54,7 +54,7 @@ export const GetSearchCommunitiesAPI = async (param: SearchParam) => {
 
     return res;
   } catch (e: any) {
-    ErrorHandling({ text: "GetSearchCommunitiesAPI", error: e });
+    errorHandling({ text: 'GetSearchCommunitiesAPI', error: e });
   }
 };
 
@@ -66,7 +66,7 @@ export const GetSearchBoardsAPI = async (param: SearchParam) => {
 
     return res;
   } catch (e: any) {
-    ErrorHandling({ text: "GetSearchBoardsAPI", error: e });
+    errorHandling({ text: 'GetSearchBoardsAPI', error: e });
   }
 };
 
@@ -78,7 +78,7 @@ export const GetSearchTagsAPI = async (param: SearchParam) => {
 
     return res;
   } catch (e: any) {
-    ErrorHandling({ text: "GetSearchTagsAPI", error: e });
+    errorHandling({ text: 'GetSearchTagsAPI', error: e });
   }
 };
 
@@ -90,7 +90,7 @@ export const AddSearchAPI = async (param: SearchParam) => {
 
     return res;
   } catch (e: any) {
-    ErrorHandling({ text: "AddSearchAPI", error: e });
+    errorHandling({ text: 'AddSearchAPI', error: e });
   }
 };
 
@@ -102,6 +102,6 @@ export const GetTopTenSearchesAPI = async () => {
 
     return res;
   } catch (e: any) {
-    ErrorHandling({ text: "GetTopTenSearchesAPI", error: e });
+    errorHandling({ text: 'GetTopTenSearchesAPI', error: e });
   }
 };
