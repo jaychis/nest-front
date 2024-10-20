@@ -165,7 +165,7 @@ const GlobalBar = () => {
             onClick={clickSearch}
           />
           {/* Search Icon */}
-          {searchTerm.length > 0 && searchResults.length > 0 && (
+          {/*{searchTerm.length > 0 && searchResults.length > 0 && (
             <div style={styles.searchResults as React.CSSProperties}>
               {searchResults.map((result, index) => (
                 <div
@@ -177,7 +177,8 @@ const GlobalBar = () => {
                 </div>
               ))}
             </div>
-          )}
+          )} */}
+          
         </div>
 
         {/* Navigation Icons */}
@@ -342,7 +343,8 @@ const GlobalBar = () => {
 const styles = {
   searchResults: {
     position: "absolute" as "absolute",
-    top: "60px",
+    top: "2.5rem",
+    left: '25rem',
     backgroundColor: "#fff",
     border: "1px solid #ccc",
     borderRadius: "8px",
