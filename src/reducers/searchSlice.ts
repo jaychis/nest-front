@@ -18,15 +18,18 @@ const searchSlice = createSlice({
     topSearches: [] as string[],
     searchResults: [] as string[],
   },
-  reducers: {},
+  reducers: {
+    // 동기적으로 searchResults를 설정하는 리듀서
+    setSearchResults: (state, action) => {
+      state.searchResults = action.payload;
+    }
+  },
   extraReducers: (builder) => {
-    // builder.addCase(getTopSearches.fulfilled, (state, action) => {
-    //   state.topSearches = action.payload;
-    // });
     builder.addCase(searchQuery.fulfilled, (state, action) => {
       state.searchResults = action.payload;
     });
   },
 });
 
+export const { setSearchResults } = searchSlice.actions;
 export default searchSlice.reducer;
