@@ -5,7 +5,9 @@ import debounce from "lodash.debounce";
 import { useDispatch,useSelector } from "react-redux";
 import { GetRecentViewedBoardsAPI } from "../api/ViewedBoardsApi";
 import { RootState } from "../../store/store";
-import { UserModalState, setModalState} from "../../reducers/modalStateSlice";
+import { UserModalState} from "../../reducers/modalStateSlice";
+import { searchQuery } from "../../reducers/searchSlice";
+
 
 type SelectTapTypes = "topSearches" | "recentBoards";
 
@@ -16,6 +18,7 @@ type RecentViewedPost = {
 
 const RightSideBar = () => {
   const modalState : UserModalState = useSelector((state: RootState) => state.modalState);
+  const searchResults = useSelector((state: RootState) => state.search.searchResults,);
   const [isTopTenList, setIsTopTenList] = useState([]);
   const [recentViewedList, setRecentViewedList] = useState<RecentViewedPost[]>([],);
   const [selectedTab, setSelectedTab] = useState<SelectTapTypes>("topSearches");
@@ -27,6 +30,7 @@ const RightSideBar = () => {
   const navigate = useNavigate();
   const isLoggedIn = !!localStorage.getItem("access_token");
   // Debounced fetch function
+ 
   const debouncedFetchTopTenList = debounce(async () => {
     try {
       const res = await GetTopTenSearchesAPI();
@@ -47,7 +51,7 @@ const RightSideBar = () => {
 
   useEffect(() => {
     debouncedFetchTopTenList();
-  }, []);
+  }, [searchResults]);
 
   useEffect(() => {
     if (selectedTab === "topSearches") {
@@ -86,7 +90,7 @@ const RightSideBar = () => {
     }
     setSelectedTab(tab);
   };
-
+  
   return (
     <div style = {{
       width: '250px', 

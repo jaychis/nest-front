@@ -7,7 +7,7 @@ import logo from "../../assets/img/panda_logo.png";
 import ProfileModal from "../User/ProfileModal";
 import { AddSearchAPI } from "../api/SearchApi";
 import NotificationModal from "../User/NotificationModal";
-import { searchQuery } from "../../reducers/searchSlice";
+import { searchQuery,setSearchResults } from "../../reducers/searchSlice";
 import { RootState, AppDispatch } from "../../store/store";
 import debounce from "lodash.debounce";
 import modalStateReducer from "../../reducers/modalStateSlice";
@@ -48,7 +48,7 @@ const GlobalBar = () => {
 
   const debouncedSearch = debounce((value: string) => {
     if (value.length > 2) {
-      dispatch(searchQuery(value));
+      dispatch(setSearchResults([value]));
     }
   }, 300); // 300ms 디바운싱
 
