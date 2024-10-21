@@ -72,12 +72,16 @@ export const SubmitAPI = async (params: SubmitParams) => {
   const accessToken: string = localStorage.getItem('access_token') as string;
   const URL: string = `boards/`;
 
-  const res = await client.post(URL, params, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-  return res;
+  try {
+    const res = await client.post(URL, params, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return res;
+  } catch (e: any) {
+    errorHandling({ text: 'SubmitAPI error', error: e });
+  }
 };
 
 export interface BoardInquiryParam {

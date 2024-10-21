@@ -17,11 +17,11 @@ import {
 } from '../../_common/ImageUploadFuntionality';
 import { GetCommunitiesNameAPI } from '../api/CommunityApi';
 import ErrorModal from '../../_common/ErrorModal';
-import { useCommunity } from '../../contexts/CommunityContext';
-import { TagListAPI } from '../api/TagApi';
 import DeleteButton from '../../components/Buttons/DeleteButton';
 import styled from 'styled-components';
-import { BoardTagsListAPI } from '../api/BoardTagsApi';
+import { BoardTagsListAPI, BoardTagsRegisterAPI } from '../api/BoardTagsApi';
+import { TagListAPI } from '../api/TagApi';
+import { CommunityTagsSubmitAPI } from '../api/CommunityTagsAPI';
 
 const BoardSubmit = () => {
   const navigate = useNavigate();
@@ -34,32 +34,40 @@ const BoardSubmit = () => {
   const NICKNAME: string = localStorage.getItem('nickname') as string;
   const [textTitle, setTextTitle] = useState<string>('');
 
-  const { topics, setTopics } = useCommunity();
+  // const { topics, setTopics } = useCommunity();
+  const [topics, setTopics] = useState<string[]>([]);
   const [tagSearchTerm, setTagSearchTerm] = useState('');
   const [suggestions, setSuggestions] = useState<string[]>([]);
+
+  const handleRemoveTopic = (index: number) => {
+    const newTopics = topics.filter((_, i) => i !== index);
+    setTopics(newTopics);
+  };
 
   useEffect(() => {
     if (tagSearchTerm) {
       const boardTagsResponse = async () => {
-        const response = await BoardTagsListAPI();
-        if (!response) {
+        const res = await TagListAPI();
+        if (!res) {
           alert('게시판 태그 리스트 조회를 실패하였습니다.');
           return;
         }
 
-        interface BoardTagListReturnType {
+        interface TagListReturnType {
           readonly id: string;
           readonly name: string;
         }
-        const res: BoardTagListReturnType[] = response.data.response;
-        console.log('TagListAPI res:', res);
-        const tagNameList: string[] = res.map(
-          (el: BoardTagListReturnType) => el.name,
+        const response: TagListReturnType[] = res.data.response;
+
+        const tagNameList: string[] = response.map(
+          (el: TagListReturnType) => el.name,
         );
-        console.log('tagNameList:', tagNameList);
-        const filteredTopics = tagNameList.filter((topic: string) =>
-          topic.toLowerCase().includes(searchTerm.toLowerCase()),
-        );
+
+        const filteredTopics = tagNameList.filter((topic: string) => {
+          const res = topic.toLowerCase().includes(tagSearchTerm.toLowerCase());
+
+          return res;
+        });
         setSuggestions(filteredTopics);
       };
 
@@ -70,17 +78,15 @@ const BoardSubmit = () => {
   }, [tagSearchTerm]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
+    setTagSearchTerm(e.target.value);
   };
-  const handleRemoveTopic = (index: number) => {
-    const newTopics = topics.filter((_, i) => i !== index);
-    setTopics(newTopics);
-  };
+
   const handleAddTopic = (topic: string) => {
     const formattedTopic = topic.startsWith('#') ? topic : `#${topic}`;
+
     if (topics.length < 3 && !topics.includes(formattedTopic)) {
       setTopics([...topics, formattedTopic]);
-      setSearchTerm('');
+      setTagSearchTerm('');
     }
   };
 
@@ -110,17 +116,6 @@ const BoardSubmit = () => {
   const [textContent, setTextContent] = useState<string>('');
   const handleEditorChange = (content: string) => {
     setTextContent(content);
-  };
-
-  const handleTextContentChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>,
-  ) => {
-    const textarea = event.target;
-    setTextContent(textarea.value);
-
-    // Adjust textarea height to fit content
-    textarea.style.height = 'auto';
-    textarea.style.height = `${textarea.scrollHeight}px`;
   };
 
   useEffect(() => console.log('textContent : ', textContent), [textContent]);
@@ -204,13 +199,6 @@ const BoardSubmit = () => {
     setSearchResults([]);
   };
 
-  const handleCommunityChange = async (
-    event: React.ChangeEvent<HTMLSelectElement>,
-  ): Promise<void> => {
-    const { value } = event.target;
-    setSelectedCommunity(value);
-  };
-
   const handleSubmit = async (
     event: FormEvent<HTMLFormElement | HTMLButtonElement>,
   ) => {
@@ -267,15 +255,26 @@ const BoardSubmit = () => {
         type: inputType,
       };
 
-      SubmitAPI(paramObj)
-        .then((res) => {
-          const response = res.data.response;
+      const submitRes = await SubmitAPI(paramObj);
+      if (!submitRes) return;
 
-          if (res.status === 201) {
+      const response = submitRes.data.response;
+
+      if (submitRes.status === 201) {
+        if (topics.length > 0) {
+          const tagRes = await BoardTagsRegisterAPI({
+            tags: topics,
+            boardId: response.id,
+          });
+          if (!tagRes) return;
+
+          if (tagRes.status === 201) {
             navigate(`/boards/read?id=${response.id}&title=${response.title}`);
           }
-        })
-        .catch((err) => console.error(err));
+        } else {
+          alert('태그가 1개이상 필요합니다.');
+        }
+      }
     } catch (error) {
       console.error('Error : ', error);
     }
@@ -290,14 +289,6 @@ const BoardSubmit = () => {
     paddingBottom: '10px',
     border: '1px solid #ddd',
     borderRadius: '4px',
-  };
-
-  const textareaStyle = {
-    ...inputStyle,
-    minHeight: '50px',
-    maxHeight: '700px',
-    overflowY: 'auto' as 'auto',
-    resize: 'none',
   };
 
   const submitButtonStyle = {
@@ -328,21 +319,6 @@ const BoardSubmit = () => {
     color: 'white',
     border: '#84d7fb',
   };
-
-  const sliderSetting = {
-    dots: true,
-    infinite: previewUrls.length > 1,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    arrows: true,
-    width: 500,
-    height: 600,
-  };
-
-  useEffect(() => {
-    console.log('inputType : ', inputType);
-  }, [inputType]);
 
   useEffect(() => {
     const fetchDefaultCommunities = async () => {
