@@ -1,14 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import DeleteButton from '../../../components/Buttons/DeleteButton';
+import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useCommunity } from '../../../contexts/CommunityContext';
 import { TagListAPI } from '../../api/TagApi';
-import styled from 'styled-components';
-import Button from '../../../components/Buttons/Button';
-import MultiStepNav from '../../../components/Buttons/MultiStepNav';
-import DeleteButton from '../../../components/Buttons/DeleteButton';
 
-const CommunityCreatePage2: React.FC = () => {
-  const navigate = useNavigate();
+const BoardTags = () => {
   const { topics, setTopics } = useCommunity();
   const [searchTerm, setSearchTerm] = useState('');
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -65,7 +62,6 @@ const CommunityCreatePage2: React.FC = () => {
 
   return (
     <Container>
-      <Heading>태그 추가</Heading>
       <Form onSubmit={(e) => e.preventDefault()}>
         <div style={{ marginBottom: '20px' }}>
           <Label htmlFor="topicSearch">태그 검색</Label>
@@ -109,22 +105,6 @@ const CommunityCreatePage2: React.FC = () => {
             );
           })}
         </SelectedTopicWrapper>
-        <MultiStepNav>
-          <Button
-            type="button"
-            bgColor="cancel"
-            onClick={() => navigate('/community/create1')}
-          >
-            이전
-          </Button>
-          <Button
-            type="button"
-            bgColor="next"
-            onClick={() => navigate('/community/create3')}
-          >
-            다음
-          </Button>
-        </MultiStepNav>
       </Form>
     </Container>
   );
@@ -133,19 +113,14 @@ const CommunityCreatePage2: React.FC = () => {
 const Container = styled.div`
   background-color: #ffffff;
   padding: 20px;
-  max-width: 600px;
+  max-width: 1180px;
   height: auto;
-  margin: 50px auto;
+  margin: 45px auto 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   border-radius: 8px;
   border: 1px solid #ededed;
 `;
-const Heading = styled.h2`
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: #333;
-  text-align: center;
-`;
+
 const Form = styled.form`
   display: flex;
   flex-direction: column;
@@ -154,7 +129,6 @@ const SelectedTopicWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-bottom: 20px;
 `;
 const TopicItem = styled.div`
   display: flex;
@@ -181,7 +155,6 @@ const TopicSearchInput = styled.input`
   font-size: 14px;
   background-color: #f7f7f7;
   box-sizing: border-box;
-  margin-bottom: 20px;
 `;
 const Suggestions = styled.ul`
   list-style-type: none;
@@ -205,7 +178,7 @@ const NoSuggestionWrapper = styled.div`
 `;
 const AddButton = styled.button`
   margin-top: 10px;
-  padding: 10px 20px;
+  padding: 10px 10px;
   border: none;
   border-radius: 8px;
   background-color: #0079d3;
@@ -215,5 +188,4 @@ const AddButton = styled.button`
   font-weight: bold;
   transition: background-color 0.3s ease;
 `;
-
-export default CommunityCreatePage2;
+export default BoardTags;

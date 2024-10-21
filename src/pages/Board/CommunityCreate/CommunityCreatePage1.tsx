@@ -27,7 +27,7 @@ const CommunityCreatePage1: FC = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [profilePreview, setProfilePreview] = useState<string | null>(null);
   const [backgroundPreview, setBackgroundPreview] = useState<string | null>(
-    null
+    null,
   );
 
   useEffect(() => {
@@ -75,13 +75,13 @@ const CommunityCreatePage1: FC = () => {
       setBackgroundPicture(backgroundRes.imageUrls[0]);
     }
 
-    navigate('/community/create3', { state: { communityName, description } });
+    navigate('/community/create2', { state: { communityName, description } });
   };
 
   const handleCancel = () => navigate('/');
 
   const handleProfilePictureChange = async (
-    e: ChangeEvent<HTMLInputElement>
+    e: ChangeEvent<HTMLInputElement>,
   ) => {
     const urls: ImageLocalPreviewUrlsReturnType = await ImageLocalPreviewUrls({
       event: e,
@@ -92,7 +92,7 @@ const CommunityCreatePage1: FC = () => {
   };
 
   const handleBackgroundPictureChange = async (
-    e: ChangeEvent<HTMLInputElement>
+    e: ChangeEvent<HTMLInputElement>,
   ) => {
     const urls: ImageLocalPreviewUrlsReturnType = await ImageLocalPreviewUrls({
       event: e,
@@ -108,9 +108,9 @@ const CommunityCreatePage1: FC = () => {
       <Form onSubmit={(e) => e.preventDefault()}>
         <BackgroundUploader>
           <HiddenFileInput
-            type='file'
-            id='backgroundPicture'
-            accept='image/*'
+            type="file"
+            id="backgroundPicture"
+            accept="image/*"
             onChange={handleBackgroundPictureChange}
           />
           <BackgroundImagePreviewWrapper
@@ -121,7 +121,7 @@ const CommunityCreatePage1: FC = () => {
             {backgroundPreview ? (
               <BackgroundImagePreview
                 src={backgroundPreview}
-                alt='Background Preview'
+                alt="Background Preview"
               />
             ) : (
               <Placeholder>배경 사진</Placeholder>
@@ -132,16 +132,16 @@ const CommunityCreatePage1: FC = () => {
         <Row>
           <ImageUploadWrapper>
             <HiddenFileInput
-              type='file'
-              id='profilePicture'
-              accept='image/*'
+              type="file"
+              id="profilePicture"
+              accept="image/*"
               onChange={handleProfilePictureChange}
             />
             <ImagePreviewWrapper
               onClick={() => document.getElementById('profilePicture')?.click()}
             >
               {profilePreview ? (
-                <ImagePreview src={profilePreview} alt='Profile Preview' />
+                <ImagePreview src={profilePreview} alt="Profile Preview" />
               ) : (
                 <Placeholder>프로필</Placeholder>
               )}
@@ -150,19 +150,19 @@ const CommunityCreatePage1: FC = () => {
 
           <CommunityNameInput
             required
-            type='text'
-            id='communityName'
+            type="text"
+            id="communityName"
             value={communityName}
-            placeholder='커뮤니티 이름'
+            placeholder="커뮤니티 이름"
             onChange={(e) => setCommunityName(e.target.value)}
           />
         </Row>
 
         <DescriptionWrapper>
-          <Label htmlFor='description'>설명</Label>
+          <Label htmlFor="description">설명</Label>
           <DescriptionTextArea
             required
-            id='description'
+            id="description"
             ref={textareaRef}
             value={description}
             height={textareaHeight}
@@ -171,10 +171,10 @@ const CommunityCreatePage1: FC = () => {
         </DescriptionWrapper>
 
         <MultiStepNav>
-          <Button bgColor='cancel' onClick={handleCancel} type='button'>
+          <Button bgColor="cancel" onClick={handleCancel} type="button">
             취소
           </Button>
-          <Button bgColor='next' onClick={handleNext} type='button'>
+          <Button bgColor="next" onClick={handleNext} type="button">
             다음
           </Button>
         </MultiStepNav>

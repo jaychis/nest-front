@@ -1,7 +1,7 @@
-import { client } from "./Client";
-import { ErrorHandling } from "../../_common/ErrorHandling";
+import { client } from './Client';
+import { errorHandling } from '../../_common/ErrorHandling';
 
-const ViewedBoardsURL: string = "viewed/boards";
+const ViewedBoardsURL: string = 'viewed/boards';
 
 export interface LogViewedBoardParams {
   readonly userId: string;
@@ -16,7 +16,7 @@ export const LogViewedBoardAPI = async (params: LogViewedBoardParams) => {
 
     return res;
   } catch (e: any) {
-    ErrorHandling({ text: "LogViewedBoardAPI", error: e });
+    errorHandling({ text: 'LogViewedBoardAPI', error: e });
   }
 };
 
@@ -34,6 +34,6 @@ export const GetRecentViewedBoardsAPI = async ({
 
     return res;
   } catch (e: any) {
-    ErrorHandling({ text: "GetRecentViewedBoardsAPI", error: e });
+    errorHandling({ text: 'GetRecentViewedBoardsAPI', error: e });
   }
 };

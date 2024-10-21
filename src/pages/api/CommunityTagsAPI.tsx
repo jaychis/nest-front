@@ -1,7 +1,7 @@
-import { ErrorHandling } from "../../_common/ErrorHandling";
-import { client } from "./Client";
+import { errorHandling } from '../../_common/ErrorHandling';
+import { client } from './Client';
 
-const CommunityTagsURL: string = "community/tags";
+const CommunityTagsURL: string = 'community/tags';
 export interface CommunityTagsSubmitParams {
   readonly tags: string[];
   readonly communityId: string;
@@ -16,7 +16,7 @@ export const CommunityTagsSubmitAPI = async (
     const res = await client.post(URL, params);
     return res;
   } catch (e: any) {
-    ErrorHandling({ text: "CommunityTagsSubmitAPI", error: e });
+    errorHandling({ text: 'CommunityTagsSubmitAPI', error: e });
   }
 };
 
@@ -35,7 +35,7 @@ export const CommunityTagsReadAPI = async ({
     const res = await client.get(URL);
     return res;
   } catch (e: any) {
-    ErrorHandling({ text: "CommunityTagsReadAPI", error: e });
+    errorHandling({ text: 'CommunityTagsReadAPI', error: e });
   }
 };
 
@@ -51,11 +51,11 @@ export const CommunityTagsDeleteAPI = async (
     const URL: string = `${CommunityTagsURL}/`;
 
     const config = {
-      method: "delete",
+      method: 'delete',
       url: URL,
       data: params,
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     };
 
@@ -63,6 +63,6 @@ export const CommunityTagsDeleteAPI = async (
 
     return res;
   } catch (e: any) {
-    ErrorHandling({ text: "CommunityTagsDeleteAPI", error: e });
+    errorHandling({ text: 'CommunityTagsDeleteAPI', error: e });
   }
 };

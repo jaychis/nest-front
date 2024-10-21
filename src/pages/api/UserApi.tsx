@@ -1,10 +1,10 @@
-import { client } from "./Client";
-import { createAsyncThunk, isRejectedWithValue } from "@reduxjs/toolkit";
-import { Simulate } from "react-dom/test-utils";
+import { client } from './Client';
+import { createAsyncThunk, isRejectedWithValue } from '@reduxjs/toolkit';
+import { Simulate } from 'react-dom/test-utils';
 import error = Simulate.error;
-import { ErrorHandling } from "../../_common/ErrorHandling";
+import { errorHandling } from '../../_common/ErrorHandling';
 
-const USERS_URL: string = "users";
+const USERS_URL: string = 'users';
 
 export interface UsersInquiryParams {
   readonly nickname: string;
@@ -52,7 +52,7 @@ export const ProfileAPI = async ({ id }: ProfileParams) =>
   await client.get(`${USERS_URL}/profile/${id}`);
 
 export const ReduxProfileAPI = createAsyncThunk(
-  "ReduxProfileAPI",
+  'ReduxProfileAPI',
   async ({ id }: ProfileParams, thunkAPI) => {
     try {
       const URL: string = `${USERS_URL}/profile/${id}`;
@@ -98,12 +98,12 @@ export const LoginAPI = async (params: LoginParams) => {
 };
 
 export const RefreshTokenAPI = async () => {
-  const refreshToken = localStorage.getItem("refresh_token");
-  if (!refreshToken) throw new Error("No refresh token found");
+  const refreshToken = localStorage.getItem('refresh_token');
+  if (!refreshToken) throw new Error('No refresh token found');
 
   try {
     const res = await client.get(`${USERS_URL}/refresh/token`, {
-      headers: { 'Authorization': `Bearer ${refreshToken}` }
+      headers: { Authorization: `Bearer ${refreshToken}` },
     });
 
     return res;
@@ -111,7 +111,10 @@ export const RefreshTokenAPI = async () => {
     if (e.response) {
       const { status, data } = e.response;
       if (status === 400) {
-        if (data.message === 'nicknameRequired' || data.message === 'emailRequired') {
+        if (
+          data.message === 'nicknameRequired' ||
+          data.message === 'emailRequired'
+        ) {
           throw new Error(data.message);
         }
       } else if (status === 500) {
@@ -136,31 +139,34 @@ export const SignupAPI = async (params: SignupParams) => {
   return res;
 };
 
-export const SendEmail = async(email: string) => {
-  let URL = 'users/send-email'
-  try{
-    const res = await client.post(URL,{email})
+export const SendEmail = async (email: string) => {
+  let URL = 'users/send-email';
+  try {
+    const res = await client.post(URL, { email });
     return res;
-  }catch(error){
-    console.error(error)
+  } catch (error) {
+    console.error(error);
     return null;
   }
-}
+};
 
 export interface VerifyParams {
   readonly email: string;
   readonly verificationCode: string;
 }
 
-export const VerifyEmail = async({email,verificationCode}:VerifyParams) => {
+export const VerifyEmail = async ({
+  email,
+  verificationCode,
+}: VerifyParams) => {
   let URL = 'users/verify-email';
-  try{
-    const res = await client.post(URL,{email,verificationCode})
+  try {
+    const res = await client.post(URL, { email, verificationCode });
     return res;
-  }catch(error){
-    console.error(error)
+  } catch (error) {
+    console.error(error);
   }
-}
+};
 
 export interface PasswordResetParsms {
   email: string;
@@ -168,13 +174,15 @@ export interface PasswordResetParsms {
   confirmPassword?: string;
 }
 
-export const PasswordReset = async({email, password}:PasswordResetParsms) => {
-
-  let URL = 'users/password/reset'
-  try{
-    const res = await client.post(URL, {email, password})
-    return res
-  }catch(error){
-    console.error(error)
+export const PasswordReset = async ({
+  email,
+  password,
+}: PasswordResetParsms) => {
+  let URL = 'users/password/reset';
+  try {
+    const res = await client.post(URL, { email, password });
+    return res;
+  } catch (error) {
+    console.error(error);
   }
-}
+};
