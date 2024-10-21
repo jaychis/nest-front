@@ -1,12 +1,14 @@
 import { client } from './Client';
 import { errorHandling } from '../../_common/ErrorHandling';
 
+const BoardTagsURL: string = 'board/tags/';
+
 interface BoardTagsRegisterParams {
   readonly boardId: string;
   readonly tags: string[];
 }
 export const BoardTagsRegisterAPI = async (params: BoardTagsRegisterParams) => {
-  const URL: string = `board/tags/`;
+  const URL: string = BoardTagsURL;
 
   try {
     const res = await client.post(URL, params);
@@ -18,7 +20,7 @@ export const BoardTagsRegisterAPI = async (params: BoardTagsRegisterParams) => {
 };
 
 export const BoardTagsListAPI = () => {
-  const URL: string = `board/tags/list`;
+  const URL: string = BoardTagsURL;
 
   try {
     const res = client.get(URL);
