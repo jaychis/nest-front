@@ -22,6 +22,10 @@ const CommunityCreatePage1: FC = () => {
     setProfilePicture,
     backgroundPicture,
     setBackgroundPicture,
+    banner,
+    setBanner,
+    icon,
+    setIcon
   } = useCommunity();
   const [textareaHeight, setTextareaHeight] = useState('120px');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -66,6 +70,7 @@ const CommunityCreatePage1: FC = () => {
         await AwsImageUploadFunctionality({ fileList: [profilePicture] });
       if (!profileRes) return;
       setProfilePicture(profileRes.imageUrls[0]);
+      setIcon(profileRes.imageUrls[0])
     }
 
     if (backgroundPicture && typeof backgroundPicture !== 'string') {
@@ -73,6 +78,7 @@ const CommunityCreatePage1: FC = () => {
         await AwsImageUploadFunctionality({ fileList: [backgroundPicture] });
       if (!backgroundRes) return;
       setBackgroundPicture(backgroundRes.imageUrls[0]);
+      setBanner(backgroundRes.imageUrls[0]);
     }
 
     navigate('/community/create3', { state: { communityName, description } });
