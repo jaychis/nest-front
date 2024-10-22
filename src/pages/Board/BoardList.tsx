@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import EmptyState from '../../components/EmptyState';
 import { useInView } from 'react-intersection-observer';
+import styled from 'styled-components';
 
 interface ContainerProps {
   children?: React.ReactNode;
@@ -154,6 +155,7 @@ const BoardList = () => {
   return (
     <>
       <MainContainer>
+        {buttonType !== 'HOME' || 'POPULAR' ||  'TAGMATCH'}
         <CardsContainer>
           {list.length ? (
             list.map((el: CardType, index) => {
@@ -185,4 +187,11 @@ const BoardList = () => {
   );
 };
 
-export default BoardList;
+export default BoardList; 
+
+const BackgroundImageContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  max-height: 350px;
+
+`
