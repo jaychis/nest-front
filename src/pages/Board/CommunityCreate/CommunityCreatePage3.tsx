@@ -23,12 +23,12 @@ const CommunityCreatePage3: FC = () => {
     useState<CommunityVisibilityType>('PUBLIC');
   const [searchNickname, setSearchNickname] = useState<string>('');
   const [searchResultList, setSearchResultList] = useState<User[]>([]);
-  const userId = localStorage.getItem('id') as string;
+  const requestedUserId: string = localStorage.getItem('id') as string;
 
   useEffect(() => {
     setIsCommunity((prevState) => ({
       ...prevState,
-      id: [userId],
+      id: [requestedUserId],
       visibility: visibility,
     }));
   }, [visibility]);
@@ -48,7 +48,6 @@ const CommunityCreatePage3: FC = () => {
               id: user.id,
             })),
           );
-          console.log(res.data.response);
         }
       }
     } catch (error) {
@@ -68,7 +67,6 @@ const CommunityCreatePage3: FC = () => {
         id: [...(prevState.id || []), userId], // undefined 상태를 빈 배열로 처리
       }));
     }
-    console.log(isCommunity.id);
   };
 
   const [isCommunity, setIsCommunity] = useState<{
@@ -79,6 +77,7 @@ const CommunityCreatePage3: FC = () => {
     readonly visibility: CommunityVisibilityType;
     readonly topics: string[];
     readonly id?: string[];
+    readonly requestedUserId: string;
   }>({
     name: communityName,
     description: description,
@@ -87,6 +86,7 @@ const CommunityCreatePage3: FC = () => {
     visibility: visibility,
     topics: [],
     id: [],
+    requestedUserId: requestedUserId
   });
 
   const handleSubmit = async (): Promise<void> => {
@@ -97,6 +97,7 @@ const CommunityCreatePage3: FC = () => {
       icon: isCommunity.icon,
       visibility: isCommunity.visibility,
       userIds: isCommunity.id,
+      requestedUserId: isCommunity.requestedUserId
     });
 
     if (!coRes) return;

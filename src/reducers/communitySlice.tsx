@@ -7,6 +7,7 @@ const initialState:CommunitySubmitParams = {
     visibility: 'PUBLIC',
     banner: null,
     icon: null,
+    requestedUserId: ''
 }
 
 const communitySlice = createSlice({
@@ -19,6 +20,7 @@ const communitySlice = createSlice({
             state.visibility = action.payload.visibility;
             state.banner = action.payload.banner;
             state.icon = action.payload.icon;
+            state.requestedUserId = action.payload.requestedUserId;
         }
     }
 })
