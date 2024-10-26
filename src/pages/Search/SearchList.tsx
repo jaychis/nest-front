@@ -28,7 +28,7 @@ type SearchListTypes =
   | 'PEOPLE'
   | 'TAGS';
 
-type sortTypes = 'POPULAR' | 'BY_COMMENT' | 'LATEST';
+export type sortTypes = 'RECENT' | 'COMMENTS';
 const SearchList = () => {
   const [searchCardList, setSearchCardList] = useState<CardType[]>([]);
   const [searchCommunityList, setSearchCommunityList] = useState<
@@ -41,11 +41,11 @@ const SearchList = () => {
   const [params, setParams] = useSearchParams();
   const [searchType, setSearchType] = useState<SearchListTypes>('BOARDS');
   const QUERY: string = params.get('query') as string;
-  const [sortType, setSortType] = useState<sortTypes>('LATEST');
+  const [sortType, setSortType] = useState<sortTypes>('RECENT');
 
   useEffect(() => {
     if (searchType === 'BOARDS') {
-      GetSearchBoardsAPI({ query: QUERY })
+      GetSearchBoardsAPI({ query: QUERY, sortType: sortType })
         .then((res): void => {
           if (!res) return;
           const response = res.data.response;
@@ -88,7 +88,7 @@ const SearchList = () => {
     }
 
     if (searchType === 'IMAGE&VIDEO') {
-      GetSearchMediaAPI({ query: QUERY })
+      GetSearchMediaAPI({ query: QUERY, sortType: sortType })
         .then((res): void => {
           if (!res) return;
 
@@ -236,27 +236,28 @@ const SearchList = () => {
   return (
     <>
       <NavBar />
-      {searchType === 'BOARDS' && (<SortButtonContainer>
-        <NavItem
-          onClick={() => {
-            handleChangeSortType('LATEST');
-          }}
-          style={{ background: sortType === 'LATEST' ? '#f0f0f0' : 'white' }}
-        >
-          최신순
-        </NavItem>
-        <NavItem
-          onClick={() => {
-            handleChangeSortType('BY_COMMENT');
-          }}
-          style={{
-            background: sortType === 'BY_COMMENT' ? '#f0f0f0' : 'white',
-          }}
-        >
-          댓글순
-        </NavItem>
-      </SortButtonContainer>)}
-      
+      {searchType === 'BOARDS' && (
+        <SortButtonContainer>
+          <NavItem
+            onClick={() => {
+              handleChangeSortType('RECENT');
+            }}
+            style={{ background: sortType === 'RECENT' ? '#f0f0f0' : 'white' }}
+          >
+            최신순
+          </NavItem>
+          <NavItem
+            onClick={() => {
+              handleChangeSortType('COMMENTS');
+            }}
+            style={{
+              background: sortType === 'COMMENTS' ? '#f0f0f0' : 'white',
+            }}
+          >
+            댓글순
+          </NavItem>
+        </SortButtonContainer>
+      )}
 
       {searchCardList.length > 0 ? (
         searchType === 'BOARDS' ||

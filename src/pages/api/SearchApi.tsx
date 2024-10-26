@@ -1,9 +1,15 @@
 import { client } from './Client';
 import { errorHandling } from '../../_common/ErrorHandling';
+import { sortTypes } from '../Search/SearchList';
 
 const SearchesURL: string = 'searches';
 export interface SearchParam {
   readonly query: string;
+}
+
+export interface SearchQueryAndSortTypeParams {
+  readonly query: string;
+  readonly sortType: sortTypes;
 }
 
 // Cache to store fetched data
@@ -22,9 +28,11 @@ export const GetSearchPeopleAPI = async (param: SearchParam) => {
   }
 };
 
-export const GetSearchMediaAPI = async (param: SearchParam) => {
+export const GetSearchMediaAPI = async (
+  params: SearchQueryAndSortTypeParams,
+) => {
   try {
-    const URL: string = `${SearchesURL}/get/media/${param.query}`;
+    const URL: string = `${SearchesURL}/get/media?query=${params.query}&sortType=${params.sortType}`;
 
     const res = await client.get(URL);
 
@@ -58,9 +66,11 @@ export const GetSearchCommunitiesAPI = async (param: SearchParam) => {
   }
 };
 
-export const GetSearchBoardsAPI = async (param: SearchParam) => {
+export const GetSearchBoardsAPI = async (
+  params: SearchQueryAndSortTypeParams,
+) => {
   try {
-    const URL: string = `${SearchesURL}/get/boards/${param.query}`;
+    const URL: string = `${SearchesURL}/get/boards?query=${params.query}&sortType=${params.sortType}`;
 
     const res = await client.get(URL);
 
