@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { MainListTypes } from '../../_common/CollectionTypes';
 import { AppDispatch } from '../../store/store';
 import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
+import { community,SelectCommunityParams,setCommunity } from '../../reducers/communitySlice';
 import { RootState } from '../../store/store';
 import { UserModalState } from '../../reducers/modalStateSlice';
 import logo from '../../assets/img/panda_logo.png';
@@ -13,9 +14,7 @@ import Tooltip from '../../components/Tooltip';
 const GlobalSideBar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const modalState: UserModalState = useSelector(
-    (state: RootState) => state.modalState,
-  );
+  const modalState: UserModalState = useSelector((state: RootState) => state.modalState,);
   const [isSideHovered, setIsSideHovered] = useState<
     MainListTypes | 'CREATE_COMMUNITY' | null
   >(null);
@@ -24,14 +23,14 @@ const GlobalSideBar = () => {
   const [loading, setLoading] = useState(false);
   const isLoggedIn = !!localStorage.getItem('access_token');
 
-  type CommunityType = {
+  type SelectCommunityParams = {
     readonly name: string;
     readonly description: string;
     readonly banner: string | null;
     readonly icon: string | null;
   };
 
-  const [communityList, setCommunityList] = useState<CommunityType[]>([]);
+  const [communityList, setCommunityList] = useState<SelectCommunityParams[]>([]);
   const [communityNamesSet, setCommunityNamesSet] = useState<Set<string>>(
     new Set(),
   );
@@ -45,8 +44,8 @@ const GlobalSideBar = () => {
       const res = await CommunityListAPI({ take: 10, page });
       if (!res) return;
       const response = res.data.response.current_list;
-      console.log(response);
-      const uniqueCommunities = response.filter((community: CommunityType) => {
+      
+      const uniqueCommunities = response.filter((community: SelectCommunityParams) => {
         if (communityNamesSet.has(community.name)) {
           return false;
         } else {
@@ -54,15 +53,15 @@ const GlobalSideBar = () => {
           return true;
         }
       });
-
       setCommunityList((prevList) => [...prevList, ...uniqueCommunities]);
+      
     } catch (err) {
       console.log('CommunityListAPI error: ', err);
     } finally {
       setLoading(false);
     }
   };
-
+  
   useEffect(() => {
     fetchCommunities(page);
   }, [page]);
@@ -82,8 +81,9 @@ const GlobalSideBar = () => {
   interface CommunityClickType {
     button: MainListTypes;
   }
-  const handleCommunityClick = ({ button }: CommunityClickType) => {
+  const handleCommunityClick = ({ button }: CommunityClickType,index:number) => {
     dispatch(sideButtonSliceActions.setButtonType(button));
+    dispatch(setCommunity(communityList[index]));
   };
 
   const handleLoadMore = () => {
@@ -97,7 +97,7 @@ const GlobalSideBar = () => {
     }
     navigate('/community/create1');
   };
-
+  
   return (
     <div
       style={{
@@ -240,7 +240,7 @@ const GlobalSideBar = () => {
         {communityList.length > 0
           ? communityList
               .slice(0, displayCount)
-              .map((community: CommunityType, index) => (
+              .map((community: SelectCommunityParams, index) => (
                 <div
                   key={index}
                   style={{
@@ -260,7 +260,7 @@ const GlobalSideBar = () => {
                     onClick={() =>
                       handleCommunityClick({
                         button: community.name,
-                      } as CommunityClickType)
+                      } as CommunityClickType, index)
                     }
                   />
                   <span
@@ -272,7 +272,7 @@ const GlobalSideBar = () => {
                     onClick={() =>
                       handleCommunityClick({
                         button: community.name,
-                      } as CommunityClickType)
+                      } as CommunityClickType, index)
                     }
                   >
                     j/{community.name}

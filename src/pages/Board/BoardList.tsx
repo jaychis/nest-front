@@ -8,6 +8,7 @@ import { RootState } from '../../store/store';
 import EmptyState from '../../components/EmptyState';
 import { useInView } from 'react-intersection-observer';
 import styled from 'styled-components';
+import CommunityBanner from './CommunityBanner';
 
 interface ContainerProps {
   children?: React.ReactNode;
@@ -21,7 +22,6 @@ const MainContainer = ({ children }: ContainerProps) => {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        paddingTop: '20px',
         width: '100%',
         boxSizing: 'border-box',
       }}
@@ -133,7 +133,7 @@ const BoardList = () => {
       
       const newCards = response.data.response.current_list;
       setList((prevList) => [...prevList, ...newCards]);
-
+      
       if (newCards.length > 0) {
         setId(newCards[newCards.length - 1].id);
       } else {
@@ -143,19 +143,11 @@ const BoardList = () => {
       console.error('API error: ', err);
     }
   };
- 
-  if (!list[0]) {
-    return (
-      <div>
-        <EmptyState />
-      </div>
-    );
-  }
   
   return (
     <>
       <MainContainer>
-        {buttonType !== 'HOME' || 'POPULAR' ||  'TAGMATCH'}
+      {buttonType !== 'HOME' && buttonType !== 'POPULAR' && buttonType !== 'TAGMATCH' && (<><CommunityBanner/></>)}
         <CardsContainer>
           {list.length ? (
             list.map((el: CardType, index) => {

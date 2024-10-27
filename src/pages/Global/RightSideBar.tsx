@@ -90,7 +90,7 @@ const RightSideBar = () => {
     }
     setSelectedTab(tab);
   };
-  
+  console.log(isTopTenList)
   return (
     <div style = {{
       width: '250px', 
