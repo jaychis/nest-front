@@ -37,7 +37,6 @@ const styles = {
   },
   mainContent: {
     flex: 1,
-    padding: '20px',
     marginLeft: '11%',
     marginTop: '80px',
   },
