@@ -270,7 +270,7 @@ const Card = ({
                   // console.log("card content : ", co);
                   return (
                     <div
-                      key={id}
+                      key={`${id}-${index}`}
                       dangerouslySetInnerHTML={{ __html: sanitizeHtml(co) }}
                     />
                   );
@@ -279,7 +279,7 @@ const Card = ({
           ) : type === "MEDIA" ? (
               <MediaContainer>
               {content.map((image, index) => (
-                <div key={id}>
+                <div key={`${id}-${index}`}>
                   <ImagePreview src={image}alt={`Preview image ${index}`}/>
                 </div>
               ))}
@@ -287,7 +287,7 @@ const Card = ({
           ) : (
             <>
               {content.map((video: string, index: number) => (
-                <VideoContainer key={id}>
+                <VideoContainer key={`${id}-${index}`}>
                   {video && (
                     <YouTube
                       videoId={getYouTubeVideoId({ url: video })}
