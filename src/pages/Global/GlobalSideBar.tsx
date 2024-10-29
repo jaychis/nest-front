@@ -54,7 +54,6 @@ const GlobalSideBar = () => {
         }
       });
       setCommunityList((prevList) => [...prevList, ...uniqueCommunities]);
-      
     } catch (err) {
       console.log('CommunityListAPI error: ', err);
     } finally {
