@@ -38,7 +38,7 @@ const CommunityCreatePage3: FC = () => {
         id: [],
         visibility: visibility,
       }))
-    }console.log(isCommunity)
+    }
   }, [visibility]);
 
   const handleUserSearchChange = async (
@@ -132,7 +132,7 @@ const CommunityCreatePage3: FC = () => {
   };
 
   const handleBack = () => {
-    navigate('/community/create3');
+    navigate('/community/create2');
   };
 
   return (
