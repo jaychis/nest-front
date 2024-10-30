@@ -19,9 +19,8 @@ import { GetCommunitiesNameAPI } from '../api/CommunityApi';
 import ErrorModal from '../../_common/ErrorModal';
 import DeleteButton from '../../components/Buttons/DeleteButton';
 import styled from 'styled-components';
-import { BoardTagsListAPI, BoardTagsRegisterAPI } from '../api/BoardTagsApi';
 import { TagListAPI } from '../api/TagApi';
-import { CommunityTagsSubmitAPI } from '../api/CommunityTagsAPI';
+import { BoardTagsRegisterAPI } from '../api/BoardTagsApi';
 
 const BoardSubmit = () => {
   const navigate = useNavigate();
