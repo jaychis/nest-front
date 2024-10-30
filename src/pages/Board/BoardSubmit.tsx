@@ -343,7 +343,7 @@ const BoardSubmit = () => {
 
   return (
     <>
-      <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', width: '67vw', marginLeft: '5vh', marginTop: '2vh' }}>
         <div style={{ flex: 2 }}>
           <div style={{ backgroundColor: '#fff', minHeight: '100vh' }}>
             <div
