@@ -15,7 +15,7 @@ import { LogViewedBoardAPI } from '../api/ViewedBoardsApi';
 const BoardRead = () => {
   const boardId: string = sessionStorage.getItem('boardId') as string;
   const BOARD_TITLE: string = sessionStorage.getItem('boardTitle') as string;
-  const userId = localStorage.getItem('id') as string;
+  const userId:string = localStorage.getItem('id') as string;
 
   const [isBoardState, setIsBoardStateBoard] = useState<CardType>({
     id: boardId,
@@ -60,10 +60,10 @@ const BoardRead = () => {
       console.log('response : ', response);
 
       setIsBoardStateBoard(response);
-      LogViewedBoardAPI({userId, boardId})
+      await LogViewedBoardAPI({userId, boardId})
     };
     readBoard();
-  }, []);
+  }, [boardId,userId]);
 
   const [writeComment, setWriteComment] = useState<CommentSubmitParams>({
     boardId: boardId,
@@ -106,6 +106,14 @@ const BoardRead = () => {
       commentSubmit();
     }
   };
+
+  if(!userId || !boardId){
+    return(
+      <div>
+        로딩중..
+      </div>
+    )
+  }
 
   const renderReplies = (replies: ReplyType[]) => {
     return (
