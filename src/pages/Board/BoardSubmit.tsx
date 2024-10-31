@@ -1,5 +1,5 @@
 import React, { FormEvent, useEffect, useState, useRef } from 'react';
-import { SubmitAPI, SubmitParams } from '../api/BoardApi';
+import { BoardSubmitAPI, SubmitParams } from '../api/BoardApi';
 import { useNavigate } from 'react-router-dom';
 import 'react-quill/dist/quill.snow.css'; // import styles
 import ReactQuill from 'react-quill';
@@ -19,9 +19,7 @@ import { GetCommunitiesNameAPI } from '../api/CommunityApi';
 import ErrorModal from '../../_common/ErrorModal';
 import DeleteButton from '../../components/Buttons/DeleteButton';
 import styled from 'styled-components';
-import { BoardTagsListAPI, BoardTagsRegisterAPI } from '../api/BoardTagsApi';
 import { TagListAPI } from '../api/TagApi';
-import { CommunityTagsSubmitAPI } from '../api/CommunityTagsAPI';
 
 const BoardSubmit = () => {
   const navigate = useNavigate();
@@ -253,27 +251,19 @@ const BoardSubmit = () => {
         category: selectedCommunity,
         nickname: NICKNAME,
         type: inputType,
+        tags: topics,
       };
 
-      const submitRes = await SubmitAPI(paramObj);
-      if (!submitRes) return;
+      if (topics.length > 0) {
+        const submitRes = await BoardSubmitAPI(paramObj);
+        if (!submitRes) return;
 
-      const response = submitRes.data.response;
-
-      if (submitRes.status === 201) {
-        if (topics.length > 0) {
-          const tagRes = await BoardTagsRegisterAPI({
-            tags: topics,
-            boardId: response.id,
-          });
-          if (!tagRes) return;
-
-          if (tagRes.status === 201) {
-            navigate(`/boards/read?id=${response.id}&title=${response.title}`);
-          }
-        } else {
-          alert('태그가 1개이상 필요합니다.');
+        const response = submitRes.data.response;
+        if (response) {
+          navigate(`/boards/read?id=${response.id}&title=${response.title}`);
         }
+      } else {
+        alert('태그가 1개이상 필요합니다.');
       }
     } catch (error) {
       console.error('Error : ', error);
