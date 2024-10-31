@@ -20,6 +20,7 @@ import ErrorModal from '../../_common/ErrorModal';
 import DeleteButton from '../../components/Buttons/DeleteButton';
 import styled from 'styled-components';
 import { TagListAPI } from '../api/TagApi';
+import { BoardTagsRegisterAPI } from '../api/BoardTagsApi';
 
 const BoardSubmit = () => {
   const navigate = useNavigate();
@@ -334,7 +335,7 @@ const BoardSubmit = () => {
 
   return (
     <>
-      <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', width: '67vw', marginLeft: '5vh', marginTop: '2vh' }}>
         <div style={{ flex: 2 }}>
           <div style={{ backgroundColor: '#fff', minHeight: '100vh' }}>
             <div

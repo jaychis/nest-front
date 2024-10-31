@@ -26,11 +26,19 @@ const CommunityCreatePage3: FC = () => {
   const requestedUserId: string = localStorage.getItem('id') as string;
 
   useEffect(() => {
-    setIsCommunity((prevState) => ({
-      ...prevState,
-      id: [requestedUserId],
-      visibility: visibility,
-    }));
+    if(visibility === 'PRIVATE' || visibility === 'RESTRICTED'){
+      setIsCommunity((prevState) => ({
+        ...prevState,
+        id: [requestedUserId],
+        visibility: visibility,
+      }));
+    }else{
+      setIsCommunity((prevState) => ({
+        ...prevState,
+        id: [],
+        visibility: visibility,
+      }))
+    }
   }, [visibility]);
 
   const handleUserSearchChange = async (
@@ -124,7 +132,7 @@ const CommunityCreatePage3: FC = () => {
   };
 
   const handleBack = () => {
-    navigate('/community/create3');
+    navigate('/community/create2');
   };
 
   return (

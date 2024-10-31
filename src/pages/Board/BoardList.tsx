@@ -8,6 +8,7 @@ import { RootState } from '../../store/store';
 import EmptyState from '../../components/EmptyState';
 import { useInView } from 'react-intersection-observer';
 import styled from 'styled-components';
+import CommunityBanner from './CommunityBanner';
 
 interface ContainerProps {
   children?: React.ReactNode;
@@ -21,7 +22,6 @@ const MainContainer = ({ children }: ContainerProps) => {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        paddingTop: '20px',
         width: '100%',
         boxSizing: 'border-box',
       }}
@@ -69,9 +69,8 @@ const BoardList = () => {
   const [id, setId] = useState<IdType>(null);
   const [allDataLoaded, setAllDataLoaded] = useState<boolean>(false);
   const [retry, setRetry] = useState<number>(0);
-
+  console.log(localStorage.getItem('id'))
   useEffect(() => {
-    
     if (inView && !lastInView) {
       ListApi({id, allDataLoaded});
     }
@@ -133,7 +132,7 @@ const BoardList = () => {
       
       const newCards = response.data.response.current_list;
       setList((prevList) => [...prevList, ...newCards]);
-
+      
       if (newCards.length > 0) {
         setId(newCards[newCards.length - 1].id);
       } else {
@@ -143,24 +142,16 @@ const BoardList = () => {
       console.error('API error: ', err);
     }
   };
- 
-  if (!list[0]) {
-    return (
-      <div>
-        <EmptyState />
-      </div>
-    );
-  }
   
   return (
     <>
       <MainContainer>
-        {buttonType !== 'HOME' || 'POPULAR' ||  'TAGMATCH'}
+      {buttonType !== 'HOME' && buttonType !== 'POPULAR' && buttonType !== 'TAGMATCH' && (<><CommunityBanner/></>)}
         <CardsContainer>
           {list.length ? (
             list.map((el: CardType, index) => {
               return (
-                <React.Fragment key={el.id}>
+                <React.Fragment key={`${el.id}-${index}`}>
                   <Card
                     // 고유한 키 추가
                     id={el.id}
