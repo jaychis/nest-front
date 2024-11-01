@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import {
-  AllListAPI,
   BoardListAPI,
   BoardPopularListAPI,
+  BoardShareListAPI,
   BoardTagsListAPI,
 } from '../api/BoardApi';
 import Card from '../../components/Card';
@@ -124,14 +124,14 @@ const BoardList = () => {
           });
           break;
         case 'FREQUENTSHARE':
-          response = await AllListAPI({
+          response = await BoardShareListAPI({
             take: TAKE,
             lastId: id,
             category: null,
           });
           break;
         default:
-          response = await AllListAPI({
+          response = await BoardListAPI({
             take: TAKE,
             lastId: id,
             category: buttonType,

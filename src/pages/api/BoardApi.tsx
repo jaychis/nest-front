@@ -20,16 +20,6 @@ export const BoardListAPI = ({ take, lastId, category }: ListParams) => {
   return res;
 };
 
-export const AllListAPI = ({ take, lastId, category }: ListParams) => {
-  let URL: string = `${BOARD_URL}/list/all?take=${take}`;
-
-  if (lastId) URL += `&lastId=${lastId}`;
-  if (category) URL += `&category=${category}`;
-
-  const res = client.get(URL);
-  return res;
-};
-
 interface BoardTagsListParams {
   readonly take: number;
   readonly lastId?: string | null;
@@ -57,7 +47,7 @@ export const BoardTagsListAPI = ({
 };
 
 export const BoardPopularListAPI = ({ take, lastId, category }: ListParams) => {
-  let URL: string = `${BOARD_URL}/list/all?take=${take}`;
+  let URL: string = `${BOARD_URL}/list/popular?take=${take}`;
 
   if (lastId) URL += `&lastId=${lastId}`;
   if (category) URL += `&category=${category}`;
