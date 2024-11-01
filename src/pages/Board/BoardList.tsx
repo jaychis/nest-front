@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { AllListAPI, ListAPI, PopularListAPI } from '../api/BoardApi';
+import {
+  AllListAPI,
+  BoardListAPI,
+  BoardPopularListAPI,
+  BoardTagsListAPI,
+} from '../api/BoardApi';
 import Card from '../../components/Card';
 import { CardType } from '../../_common/CollectionTypes';
 import { MainListTypeState } from '../../reducers/mainListTypeSlice';
@@ -33,7 +38,6 @@ const MainContainer = ({ children }: ContainerProps) => {
 
 // const CardsContainer: React.FC<ContainerProps> = ({ children }) => {
 const CardsContainer = ({ children }: ContainerProps) => {
-  
   return (
     <div
       style={{
@@ -69,38 +73,42 @@ const BoardList = () => {
   const [id, setId] = useState<IdType>(null);
   const [allDataLoaded, setAllDataLoaded] = useState<boolean>(false);
   const [retry, setRetry] = useState<number>(0);
-  console.log(localStorage.getItem('id'))
+  console.log(localStorage.getItem('id'));
   useEffect(() => {
     if (inView && !lastInView) {
-      ListApi({id, allDataLoaded});
+      ListApi({ id, allDataLoaded });
     }
     setLastInView(inView);
   }, [inView]);
 
   useEffect(() => {
-    let allDataLoaded:boolean = false;
+    let allDataLoaded: boolean = false;
     setId(null);
     setList([]);
-    setLastInView(false)
-    setAllDataLoaded(false)
-    
+    setLastInView(false);
+    setAllDataLoaded(false);
+
     if (id === null) {
-      ListApi({id,allDataLoaded});
+      ListApi({ id, allDataLoaded });
     } else {
       setRetry((prev) => prev + 1);
     }
   }, [buttonType, retry]);
 
-  const ListApi = async ({id, allDataLoaded}:AllListParams) => {
+  const ListApi = async ({ id, allDataLoaded }: AllListParams) => {
     if (allDataLoaded) return;
     try {
       let response;
       switch (buttonType) {
         case 'HOME':
-          response = await ListAPI({ take: TAKE, lastId: id, category: null });
+          response = await BoardListAPI({
+            take: TAKE,
+            lastId: id,
+            category: null,
+          });
           break;
         case 'POPULAR':
-          response = await PopularListAPI({
+          response = await BoardPopularListAPI({
             take: TAKE,
             lastId: id,
             category: null,
@@ -108,10 +116,11 @@ const BoardList = () => {
           break;
         // 리스트 API 작업 ljh
         case 'TAGMATCH':
-          response = await AllListAPI({
+          response = await BoardTagsListAPI({
             take: TAKE,
             lastId: id,
             category: null,
+            userId: localStorage.getItem('id') as string,
           });
           break;
         case 'FREQUENTSHARE':
@@ -129,10 +138,12 @@ const BoardList = () => {
           });
           break;
       }
-      
-      const newCards = response.data.response.current_list;
+
+      const res = response?.data?.response;
+      if (!res) return;
+      const newCards = res.current_list;
       setList((prevList) => [...prevList, ...newCards]);
-      
+
       if (newCards.length > 0) {
         setId(newCards[newCards.length - 1].id);
       } else {
@@ -142,11 +153,17 @@ const BoardList = () => {
       console.error('API error: ', err);
     }
   };
-  
+
   return (
     <>
       <MainContainer>
-      {buttonType !== 'HOME' && buttonType !== 'POPULAR' && buttonType !== 'TAGMATCH' && (<><CommunityBanner/></>)}
+        {buttonType !== 'HOME' &&
+          buttonType !== 'POPULAR' &&
+          buttonType !== 'TAGMATCH' && (
+            <>
+              <CommunityBanner />
+            </>
+          )}
         <CardsContainer>
           {list.length ? (
             list.map((el: CardType, index) => {
@@ -178,11 +195,10 @@ const BoardList = () => {
   );
 };
 
-export default BoardList; 
+export default BoardList;
 
 const BackgroundImageContainer = styled.div`
   width: 100%;
   height: 100%;
   max-height: 350px;
-
-`
+`;

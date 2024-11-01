@@ -2,14 +2,16 @@ import { client } from './Client';
 import { BoardType } from '../../_common/CollectionTypes';
 import { errorHandling } from '../../_common/ErrorHandling';
 
+const BOARD_URL: string = 'boards';
+
 interface ListParams {
   readonly take: number;
   readonly lastId?: string | null;
   readonly category?: string | null;
 }
 
-export const ListAPI = ({ take, lastId, category }: ListParams) => {
-  let URL: string = `boards/list?take=${take}`;
+export const BoardListAPI = ({ take, lastId, category }: ListParams) => {
+  let URL: string = `${BOARD_URL}/list?take=${take}`;
 
   if (lastId) URL += `&lastId=${lastId}`;
   if (category) URL += `&category=${category}`;
@@ -19,7 +21,7 @@ export const ListAPI = ({ take, lastId, category }: ListParams) => {
 };
 
 export const AllListAPI = ({ take, lastId, category }: ListParams) => {
-  let URL: string = `boards/list/all?take=${take}`;
+  let URL: string = `${BOARD_URL}/list/all?take=${take}`;
 
   if (lastId) URL += `&lastId=${lastId}`;
   if (category) URL += `&category=${category}`;
@@ -28,14 +30,58 @@ export const AllListAPI = ({ take, lastId, category }: ListParams) => {
   return res;
 };
 
-export const PopularListAPI = ({ take, lastId, category }: ListParams) => {
-  let URL: string = `boards/list/all?take=${take}`;
+interface BoardTagsListParams {
+  readonly take: number;
+  readonly lastId?: string | null;
+  readonly category?: string | null;
+  readonly userId: string;
+}
+export const BoardTagsListAPI = ({
+  take,
+  lastId,
+  category,
+  userId,
+}: BoardTagsListParams) => {
+  let URL: string = `${BOARD_URL}/list/tags?take=${take}&userId=${userId}`;
+
+  if (lastId) URL += `$lastId=${lastId}`;
+  if (category) URL += `&category=${category}`;
+
+  try {
+    const res = client.get(URL);
+
+    return res;
+  } catch (e: any) {
+    errorHandling({ text: 'BoardTagsListAPI', error: e });
+  }
+};
+
+export const BoardPopularListAPI = ({ take, lastId, category }: ListParams) => {
+  let URL: string = `${BOARD_URL}/list/all?take=${take}`;
 
   if (lastId) URL += `&lastId=${lastId}`;
   if (category) URL += `&category=${category}`;
 
-  const res = client.get(URL);
-  return res;
+  try {
+    const res = client.get(URL);
+    return res;
+  } catch (e: any) {
+    errorHandling({ text: 'BoardPopularListAPI', error: e });
+  }
+};
+
+export const BoardShareListAPI = ({ take, lastId, category }: ListParams) => {
+  let URL: string = `${BOARD_URL}/list/share?take=${take}`;
+
+  if (lastId) URL += `&lastId=${lastId}`;
+  if (category) URL += `&category=${category}`;
+
+  try {
+    const res = client.get(URL);
+    return res;
+  } catch (e: any) {
+    errorHandling({ text: 'BoardShareListAPI', error: e });
+  }
 };
 
 interface ReadParams {
@@ -44,7 +90,7 @@ interface ReadParams {
 }
 export const ReadAPI = (params: ReadParams) => {
   try {
-    const URL: string = `boards/read`;
+    const URL: string = `${BOARD_URL}/read`;
 
     const res = client.post(URL, params);
     console.log('READ API res : ', res);
@@ -71,7 +117,7 @@ export interface SubmitParams {
 
 export const BoardSubmitAPI = async (params: SubmitParams) => {
   const accessToken: string = localStorage.getItem('access_token') as string;
-  const URL: string = `boards/`;
+  const URL: string = `${BOARD_URL}/`;
 
   try {
     const res = await client.post(URL, params, {
@@ -90,7 +136,7 @@ export interface BoardInquiryParam {
 }
 
 export const BoardInquiryAPI = async (param: BoardInquiryParam) => {
-  const URL: string = `boards/${param.id}`;
+  const URL: string = `${BOARD_URL}/${param.id}`;
 
   const res = await client.get(URL);
 
@@ -99,7 +145,7 @@ export const BoardInquiryAPI = async (param: BoardInquiryParam) => {
 
 export const shareCountApi = async (id: string) => {
   try {
-    const URL: string = `boards/${id}/share-count`;
+    const URL: string = `${BOARD_URL}/${id}/share-count`;
     const res = await client.patch(URL);
     return res;
   } catch (err) {

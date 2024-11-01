@@ -20,7 +20,6 @@ import ErrorModal from '../../_common/ErrorModal';
 import DeleteButton from '../../components/Buttons/DeleteButton';
 import styled from 'styled-components';
 import { TagListAPI } from '../api/TagApi';
-import { BoardTagsRegisterAPI } from '../api/BoardTagsApi';
 
 const BoardSubmit = () => {
   const navigate = useNavigate();
