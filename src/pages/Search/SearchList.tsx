@@ -19,6 +19,7 @@ import EmptyState from '../../components/EmptyState';
 import styled from 'styled-components';
 import vCheck from '../../assets/img/v-check.png';
 import UserSearchCard from '../../components/UserSearchCard';
+import { community } from '../../reducers/communitySlice';
 
 type SearchListTypes =
   | 'BOARDS'
@@ -42,7 +43,7 @@ const SearchList = () => {
   const [searchType, setSearchType] = useState<SearchListTypes>('BOARDS');
   const QUERY: string = params.get('query') as string;
   const [sortType, setSortType] = useState<sortTypes>('RECENT');
-
+  
   useEffect(() => {
     if (searchType === 'BOARDS') {
       GetSearchBoardsAPI({ query: QUERY, sortType: sortType })
@@ -140,6 +141,7 @@ const SearchList = () => {
   const handleChangeSortType = (sortType: sortTypes) => {
     setSortType(sortType);
   };
+
 
   const NavBarStateChange = async ({
     type,
@@ -259,51 +261,27 @@ const SearchList = () => {
         </SortButtonContainer>
       )}
 
-      {searchCardList.length > 0 ? (
-        searchType === 'BOARDS' ||
+      {searchType === 'BOARDS' ||
         searchType === 'IMAGE&VIDEO' ||
-        searchType === 'TAGS' ? (
-          searchCardList.length > 0 ? (
-            searchCardList.map((ca: CardType) => {
-              return (
-                <>
-                  <Card
-                    id={ca.id}
-                    category={ca.category}
-                    content={ca.content}
-                    nickname={ca.nickname}
-                    title={ca.title}
-                    createdAt={ca.created_at}
-                    type={ca.type}
-                    shareCount={ca.share_count}
-                  />
-                </>
-              );
-            })
-          ) : (
-            <EmptyList />
-          )
-        ) : searchType === 'COMMUNITIES' ? (
-          searchCommunityList.length > 0 ? (
-            searchCommunityList.map((ca: CommunityType) => {
-              return (
-                <>
-                  <div>
-                    <span>
-                      <h2>{ca.name}</h2>
-                    </span>
-                  </div>
-                  <div>
-                    <span>{ca.description}</span>
-                  </div>
-                </>
-              );
-            })
-          ) : (
-            <EmptyList />
-          )
-        ) : searchType === 'COMMENTS' ? (
-          searchReplyList.length > 0 ? (
+        searchType === 'TAGS' && (
+          searchCardList.map((ca: CardType) => {
+            return (
+              <>
+                <Card
+                  id={ca.id}
+                  category={ca.category}
+                  content={ca.content}
+                  nickname={ca.nickname}
+                  title={ca.title}
+                  createdAt={ca.created_at}
+                  type={ca.type}
+                  shareCount={ca.share_count}
+                />
+              </>
+        );
+      }))}
+
+      {searchType === 'COMMENTS' && ((
             searchReplyList.map((re: ReplyType) => {
               return (
                 <>
@@ -320,10 +298,10 @@ const SearchList = () => {
                 </>
               );
             })
-          ) : (
-            <EmptyList />
-          )
-        ) : searUserList.length > 0 ? (
+        ))
+      }
+
+      {searchType === 'PEOPLE' && (
           searUserList.map((user: UserType) => {
             return (
               <>
@@ -335,11 +313,18 @@ const SearchList = () => {
               </>
             );
           })
-        ) : (
-          <EmptyList />
         )
-      ) : (
-        <EmptyList />
+      }
+
+      {searchType === 'COMMUNITIES' && (
+        searchCommunityList.map((community: CommunityType) => {
+          return(
+            <>
+               <h2>{community.name}</h2>
+               <span>{community.description}</span>
+            </>
+          )
+        })
       )}
     </>
   );

@@ -73,7 +73,6 @@ const BoardList = () => {
   const [id, setId] = useState<IdType>(null);
   const [allDataLoaded, setAllDataLoaded] = useState<boolean>(false);
   const [retry, setRetry] = useState<number>(0);
-  console.log(localStorage.getItem('id'));
   useEffect(() => {
     if (inView && !lastInView) {
       ListApi({ id, allDataLoaded });
