@@ -321,8 +321,11 @@ const SearchList = () => {
         searchCommunityList.map((community: CommunityType) => {
           return(
             <>
-               <h2>{community.name}</h2>
-               <span>{community.description}</span>
+              <UserSearchCard
+                nickname={community.name}
+                profileImage={community.icon}
+                email={community.description}
+                />
             </>
           )
         })
