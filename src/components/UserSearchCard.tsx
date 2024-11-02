@@ -77,6 +77,7 @@ const CardContainer = styled.div<{ isHovered: boolean; modalState: boolean }>`
   background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
   z-index: ${(props) => (props.modalState ? -10 : 999)};
   width: 90%;
+  cursor: pointer;
 `;
 
 const UserInfo = styled.div`

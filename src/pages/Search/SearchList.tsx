@@ -7,7 +7,7 @@ import {
   GetSearchPeopleAPI,
   GetSearchTagsAPI,
 } from '../api/SearchApi';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import Card from '../../components/Card';
 import {
   CardType,
@@ -17,9 +17,14 @@ import {
 import BoardReply, { ReplyType } from '../Board/BoardReply';
 import EmptyState from '../../components/EmptyState';
 import styled from 'styled-components';
-import vCheck from '../../assets/img/v-check.png';
 import UserSearchCard from '../../components/UserSearchCard';
-import { community } from '../../reducers/communitySlice';
+import { community, setCommunity } from '../../reducers/communitySlice';
+import { Navigate } from 'react-router-dom';
+import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
+import { AppDispatch } from '../../store/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { MainListTypes } from '../../_common/CollectionTypes';
+
 
 type SearchListTypes =
   | 'BOARDS'
@@ -32,9 +37,7 @@ type SearchListTypes =
 export type sortTypes = 'RECENT' | 'COMMENTS';
 const SearchList = () => {
   const [searchCardList, setSearchCardList] = useState<CardType[]>([]);
-  const [searchCommunityList, setSearchCommunityList] = useState<
-    CommunityType[]
-  >([]);
+  const [searchCommunityList, setSearchCommunityList] = useState<CommunityType[]>([]);
   const [searchReplyList, setSearchReplyList] = useState<ReplyType[]>([]);
   const [searUserList, setSearchUserList] = useState<UserType[]>([]);
   const [searchTagList, setSearchTagsList] = useState([]);
@@ -43,7 +46,9 @@ const SearchList = () => {
   const [searchType, setSearchType] = useState<SearchListTypes>('BOARDS');
   const QUERY: string = params.get('query') as string;
   const [sortType, setSortType] = useState<sortTypes>('RECENT');
-  
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+
   useEffect(() => {
     if (searchType === 'BOARDS') {
       GetSearchBoardsAPI({ query: QUERY, sortType: sortType })
@@ -142,6 +147,10 @@ const SearchList = () => {
     setSortType(sortType);
   };
 
+  const navigateToCommunity = (communityName:MainListTypes) => {
+    dispatch(sideButtonSliceActions.setButtonType(communityName));
+    navigate('/');
+  }
 
   const NavBarStateChange = async ({
     type,
@@ -318,15 +327,15 @@ const SearchList = () => {
       }
 
       {searchType === 'COMMUNITIES' && (
-        searchCommunityList.map((community: CommunityType) => {
+        searchCommunityList.map((community: CommunityType,index) => {
           return(
-            <>
+            <div onClick = {() => {navigateToCommunity(community.name as MainListTypes)}}>
               <UserSearchCard
                 nickname={community.name}
                 profileImage={community.icon}
                 email={community.description}
                 />
-            </>
+            </div>
           )
         })
       )}
