@@ -10,11 +10,11 @@ import NotificationModal from "../User/NotificationModal";
 import { searchQuery,setSearchResults } from "../../reducers/searchSlice";
 import { RootState, AppDispatch } from "../../store/store";
 import debounce from "lodash.debounce";
-import modalStateReducer from "../../reducers/modalStateSlice";
 import { UserModalState, setModalState } from "../../reducers/modalStateSlice";
 import "react-tooltip/dist/react-tooltip.css";
 import { Tooltip } from "react-tooltip";
 import "./GlobalBar.module.css";
+import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
 
 const GlobalBar = () => {
   const navigate = useNavigate();
@@ -85,8 +85,8 @@ const GlobalBar = () => {
   };
 
   const handleLogoClick = () => {
-    console.log("Logo clicked");
     navigate("/");
+    dispatch(sideButtonSliceActions.setButtonType("HOME"));
   };
 
   useEffect(() => {
