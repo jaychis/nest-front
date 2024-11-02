@@ -7,7 +7,7 @@ import {
 
 interface UserSearchCardParams {
   readonly nickname: string;
-  readonly email: string;
+  readonly email?: string;
   readonly profileImage: null | string;
 }
 
@@ -45,9 +45,7 @@ const UserSearchCard = ({
             accept="image/*"
             onChange={handleProfilePictureChange}
           />
-          <ImagePreviewWrapper
-            onClick={() => document.getElementById('profilePicture')?.click()}
-          >
+          <ImagePreviewWrapper>
             {profilePreview ? (
               <ImagePreview src={profilePreview} alt="Profile Preview" />
             ) : (
@@ -75,10 +73,10 @@ const CardContainer = styled.div<{ isHovered: boolean; modalState: boolean }>`
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  max-width: 600px;
   font-family: Arial, sans-serif;
   background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
   z-index: ${(props) => (props.modalState ? -10 : 999)};
+  width: 90%;
 `;
 
 const UserInfo = styled.div`

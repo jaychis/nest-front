@@ -163,7 +163,7 @@ const SearchList = () => {
       padding: '10px',
     },
     navItem: {
-      marginRight: '20px',
+      margin: '1vh 0 0 1vw',
       padding: '20px',
       cursor: 'pointer',
       fontSize: '16px',
@@ -238,6 +238,7 @@ const SearchList = () => {
   return (
     <>
       <NavBar />
+      <MainContainer>
       {searchType === 'BOARDS' && (
         <SortButtonContainer>
           <NavItem
@@ -320,15 +321,23 @@ const SearchList = () => {
         searchCommunityList.map((community: CommunityType) => {
           return(
             <>
-               <h2>{community.name}</h2>
-               <span>{community.description}</span>
+              <UserSearchCard
+                nickname={community.name}
+                profileImage={community.icon}
+                email={community.description}
+                />
             </>
           )
         })
       )}
+    </MainContainer>
     </>
   );
 };
+
+const MainContainer = styled.div`
+  margin: 3vh 0 0 2vw;
+`
 
 const SortButtonContainer = styled.div`
   display: flex;
