@@ -113,7 +113,7 @@ const BoardList = () => {
             category: null,
           });
           break;
-        // 리스트 API 작업 ljh
+
         case 'TAGMATCH':
           response = await BoardTagsListAPI({
             take: TAKE,
@@ -158,7 +158,8 @@ const BoardList = () => {
       <MainContainer>
         {buttonType !== 'HOME' &&
           buttonType !== 'POPULAR' &&
-          buttonType !== 'TAGMATCH' && (
+          buttonType !== 'TAGMATCH' &&
+          buttonType !== 'FREQUENTSHARE' && (
             <>
               <CommunityBanner />
             </>

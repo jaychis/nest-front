@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { MainListTypes } from '../../_common/CollectionTypes';
 import { AppDispatch } from '../../store/store';
 import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
-import { community,SelectCommunityParams,setCommunity } from '../../reducers/communitySlice';
+import { setCommunity } from '../../reducers/communitySlice';
 import { RootState } from '../../store/store';
 import { UserModalState } from '../../reducers/modalStateSlice';
 import logo from '../../assets/img/panda_logo.png';
@@ -14,7 +14,9 @@ import Tooltip from '../../components/Tooltip';
 const GlobalSideBar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const modalState: UserModalState = useSelector((state: RootState) => state.modalState,);
+  const modalState: UserModalState = useSelector(
+    (state: RootState) => state.modalState,
+  );
   const [isSideHovered, setIsSideHovered] = useState<
     MainListTypes | 'CREATE_COMMUNITY' | null
   >(null);
@@ -30,29 +32,33 @@ const GlobalSideBar = () => {
     readonly icon: string | null;
   };
 
-  const [communityList, setCommunityList] = useState<SelectCommunityParams[]>([]);
+  const [communityList, setCommunityList] = useState<SelectCommunityParams[]>(
+    [],
+  );
   const [communityNamesSet, setCommunityNamesSet] = useState<Set<string>>(
     new Set(),
   );
   const [displayCount, setDisplayCount] = useState(5);
-  
+
   const fetchCommunities = async (page: number) => {
     setLoading(true);
     const id = localStorage.getItem('id') as string;
-    
+
     try {
       const res = await CommunityListAPI({ take: 10, page });
       if (!res) return;
       const response = res.data.response.current_list;
-      
-      const uniqueCommunities = response.filter((community: SelectCommunityParams) => {
-        if (communityNamesSet.has(community.name)) {
-          return false;
-        } else {
-          communityNamesSet.add(community.name);
-          return true;
-        }
-      });
+
+      const uniqueCommunities = response.filter(
+        (community: SelectCommunityParams) => {
+          if (communityNamesSet.has(community.name)) {
+            return false;
+          } else {
+            communityNamesSet.add(community.name);
+            return true;
+          }
+        },
+      );
       setCommunityList((prevList) => [...prevList, ...uniqueCommunities]);
     } catch (err) {
       console.log('CommunityListAPI error: ', err);
@@ -60,7 +66,7 @@ const GlobalSideBar = () => {
       setLoading(false);
     }
   };
-  
+
   useEffect(() => {
     fetchCommunities(page);
   }, [page]);
@@ -73,6 +79,12 @@ const GlobalSideBar = () => {
   }, [communityList]);
 
   const handleClick = (button: MainListTypes) => {
+    if (button === 'TAGMATCH' && !(localStorage.getItem('id') as string)) {
+      alert('회원가입 유저에게 제공되는 기능입니다.');
+
+      return;
+    }
+
     setSelectedButton(button);
     dispatch(sideButtonSliceActions.setButtonType(button));
   };
@@ -80,7 +92,10 @@ const GlobalSideBar = () => {
   interface CommunityClickType {
     button: MainListTypes;
   }
-  const handleCommunityClick = ({ button }: CommunityClickType,index:number) => {
+  const handleCommunityClick = (
+    { button }: CommunityClickType,
+    index: number,
+  ) => {
     dispatch(sideButtonSliceActions.setButtonType(button));
     dispatch(setCommunity(communityList[index]));
   };
@@ -96,7 +111,7 @@ const GlobalSideBar = () => {
     }
     navigate('/community/create1');
   };
-  
+
   return (
     <div
       style={{
@@ -257,9 +272,12 @@ const GlobalSideBar = () => {
                       cursor: 'pointer',
                     }}
                     onClick={() =>
-                      handleCommunityClick({
-                        button: community.name,
-                      } as CommunityClickType, index)
+                      handleCommunityClick(
+                        {
+                          button: community.name,
+                        } as CommunityClickType,
+                        index,
+                      )
                     }
                   />
                   <span
@@ -269,9 +287,12 @@ const GlobalSideBar = () => {
                       fontSize: '14px',
                     }}
                     onClick={() =>
-                      handleCommunityClick({
-                        button: community.name,
-                      } as CommunityClickType, index)
+                      handleCommunityClick(
+                        {
+                          button: community.name,
+                        } as CommunityClickType,
+                        index,
+                      )
                     }
                   >
                     j/{community.name}
