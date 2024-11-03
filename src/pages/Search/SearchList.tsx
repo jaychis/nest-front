@@ -151,7 +151,7 @@ const SearchList = () => {
     dispatch(sideButtonSliceActions.setButtonType(communityName));
     navigate('/');
   }
-
+  console.log(searchCardList)
   const NavBarStateChange = async ({
     type,
   }: {
@@ -271,9 +271,9 @@ const SearchList = () => {
         </SortButtonContainer>
       )}
 
-      {searchType === 'BOARDS' ||
+      {(searchType === 'BOARDS' ||
         searchType === 'IMAGE&VIDEO' ||
-        searchType === 'TAGS' && (
+        searchType === 'TAGS') && (
           searchCardList.map((ca: CardType) => {
             return (
               <>

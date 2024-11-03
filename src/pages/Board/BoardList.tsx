@@ -150,7 +150,7 @@ const BoardList = () => {
       console.error('API error: ', err);
     }
   };
-  console.log(list)
+  
   return (
     <>
       <MainContainer>
