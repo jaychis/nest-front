@@ -15,10 +15,12 @@ type modalType = "login" | "signup" | "recovery" | "verity";
 interface Props {
   readonly onSwitchView: (view: modalType) => void;
   readonly modalIsOpen: (state: boolean) => void;
+  readonly kakaoEmail: string;
+  readonly setKakaoEmail: (state:string) => void;
 }
 type OAuthReturnType = "NEW_USER" | "EXITING_USER";
 
-const Login = ({ onSwitchView, modalIsOpen }: Props) => {
+const Login = ({ onSwitchView, modalIsOpen,kakaoEmail, setKakaoEmail }: Props) => {
   const [login, setLogin] = useState<LoginParams>({
     email: "",
     password: "",
@@ -214,9 +216,10 @@ const Login = ({ onSwitchView, modalIsOpen }: Props) => {
               access_token: parsedUser.access_token,
               refresh_token: parsedUser.refresh_token,
             });
-            console.log(parsedUser);
           } else {
-            // TODO : 회원가입 로직을 진행하도록 변경하기
+            alert('먼저 카카오 계정과 같은 이메일로 회원가입을 진행해 주세요');
+            setKakaoEmail(parsedUser.email)
+            onSwitchView('signup')
           }
           if (popup) popup.close();
         } catch (error) {

@@ -251,7 +251,6 @@ const BoardSubmit = () => {
         category: selectedCommunity,
         nickname: NICKNAME,
         type: inputType,
-        tags: topics,
       };
 
       if (topics.length > 0) {
