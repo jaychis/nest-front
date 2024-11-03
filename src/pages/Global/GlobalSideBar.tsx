@@ -92,9 +92,7 @@ const GlobalSideBar = () => {
   interface CommunityClickType {
     button: MainListTypes;
   }
-  const handleCommunityClick = (
-    { button }: CommunityClickType,
-    index: number,
+  const handleCommunityClick = ({ button }: CommunityClickType,index: number,
   ) => {
     dispatch(sideButtonSliceActions.setButtonType(button));
     dispatch(setCommunity(communityList[index]));
