@@ -248,7 +248,7 @@ const SearchList = () => {
     <>
       <NavBar />
       <MainContainer>
-      {searchType === 'BOARDS' && (
+      {(searchType === 'BOARDS' || searchType === 'IMAGE&VIDEO') && (
         <SortButtonContainer>
           <NavItem
             onClick={() => {

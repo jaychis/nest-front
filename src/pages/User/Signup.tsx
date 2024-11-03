@@ -21,7 +21,8 @@ import Alert from '../../components/Alert';
 
 interface Props {
   readonly onSwitchView: () => void;
-  readonly modalIsOpen: (state: boolean) => void; // Optional prop, not required for independent usage
+  readonly modalIsOpen: (state: boolean) => void; 
+  readonly kakaoEmail: string;
 }
 
 interface ValidSignupType {
@@ -32,9 +33,9 @@ interface ValidSignupType {
   readonly confirmPassword?: false | boolean;
 }
 
-const Signup = ({ onSwitchView, modalIsOpen }: Props) => {
+const Signup = ({ onSwitchView, modalIsOpen,kakaoEmail }: Props) => {
   const [signup, setSignup] = useState<SignupParams>({
-    email: '',
+    email: kakaoEmail,
     nickname: '',
     password: '',
     confirmPassword: '',
