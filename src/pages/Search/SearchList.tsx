@@ -55,7 +55,7 @@ const SearchList = () => {
         .then((res): void => {
           if (!res) return;
           const response = res.data.response;
-          console.log('BOARDS response : ', response);
+          console.log('BOARDS response : ',sortType, response);
 
           setSearchCardList(response);
         })
@@ -139,7 +139,7 @@ const SearchList = () => {
           console.error('SearchList GetSearchTagsAPI error : ', err),
         );
     }
-  }, [searchType, QUERY]); // QUERY를 의존성 배열에 추가하여 쿼리 변경 시 재실행
+  }, [searchType, QUERY,sortType]); // QUERY를 의존성 배열에 추가하여 쿼리 변경 시 재실행
 
   useEffect(() => console.log('searchType : ', searchType), [searchType]);
 
@@ -151,7 +151,7 @@ const SearchList = () => {
     dispatch(sideButtonSliceActions.setButtonType(communityName));
     navigate('/');
   }
-
+  
   const NavBarStateChange = async ({
     type,
   }: {
@@ -271,9 +271,9 @@ const SearchList = () => {
         </SortButtonContainer>
       )}
 
-      {searchType === 'BOARDS' ||
+      {(searchType === 'BOARDS' ||
         searchType === 'IMAGE&VIDEO' ||
-        searchType === 'TAGS' && (
+        searchType === 'TAGS') && (
           searchCardList.map((ca: CardType) => {
             return (
               <>
