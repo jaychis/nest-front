@@ -1,4 +1,2 @@
-Back API url: 
-
-
-http://54.180.207.53:9898/docs
+Back Production API url: http://api.jaychis.com:9898/docs
+Back Stage API url:      http://stageapi.jaychis.com:9898/docs
