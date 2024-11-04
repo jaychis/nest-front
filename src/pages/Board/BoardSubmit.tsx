@@ -245,7 +245,7 @@ const BoardSubmit = () => {
       }
 
       const paramObj: SubmitParams = {
-        identifierId: ID,
+        usersId: ID,
         content: content,
         title: title,
         category: selectedCommunity,
@@ -334,7 +334,15 @@ const BoardSubmit = () => {
 
   return (
     <>
-      <div style={{ display: 'flex', justifyContent: 'center', width: '67vw', marginLeft: '5vh', marginTop: '2vh' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          width: '67vw',
+          marginLeft: '5vh',
+          marginTop: '2vh',
+        }}
+      >
         <div style={{ flex: 2 }}>
           <div style={{ backgroundColor: '#fff', minHeight: '100vh' }}>
             <div
