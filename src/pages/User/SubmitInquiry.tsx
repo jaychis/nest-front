@@ -15,9 +15,9 @@ interface SubmitModalProps {
 const SubmitInquiry: React.FC<SubmitModalProps> = ({isopen, setIsopen,}) => {
 
     const form = useRef<HTMLFormElement | null>(null);
-    const serviceId: string = 'service_y1seuv8';
-    const templateId: string = 'template_ws10r99';
-    const publicKey: string = 'vIug5xjBisxtUBSFM';
+    const serviceId: string = process.env.REACT_APP_SERVICE_ID || "";
+    const templateId: string = process.env.REACT_APP_TEMPLATE_ID || "";
+    const publicKey: string = process.env.REACT_APP_PUBLIC_KEY || "";
     const [content, setContent] = useState<string>('');  
     const [title, setTitle] = useState<string>('');
     const nickname = localStorage.getItem("nickname") as string;
