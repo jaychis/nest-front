@@ -17,7 +17,6 @@ import CommunityCreatePage3 from './pages/Board/CommunityCreate/CommunityCreateP
 import { CommunityProvider } from './contexts/CommunityContext';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  // test
   return (
     <>
       <GlobalBar />
