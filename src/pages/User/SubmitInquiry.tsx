@@ -23,8 +23,7 @@ const SubmitInquiry: React.FC<SubmitModalProps> = ({isopen, setIsopen,}) => {
     const nickname = localStorage.getItem("nickname") as string;
     const toDay = new Date();
 
-    const sendEmail = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const sendEmail = () => {
         if (form.current) {
             const templateParams = {
                 title : title,
@@ -32,14 +31,12 @@ const SubmitInquiry: React.FC<SubmitModalProps> = ({isopen, setIsopen,}) => {
                 from_name :nickname,
                 date : toDay
             };
-
         emailjs.send(serviceId, templateId, templateParams, publicKey)
         .then(
             () => {
                 console.log('SUCCESS!');
                 setContent('');
                 setIsopen(false);
-                alert('등록되었습니다.')
             },
             (error) => {
                 console.log('FAILED...', error.text);
@@ -52,6 +49,7 @@ const SubmitInquiry: React.FC<SubmitModalProps> = ({isopen, setIsopen,}) => {
         if(title.trim() === '' || content.trim() === '') alert('제목과 내용은 필수 입력 항목입니다.')
         else {
             postContactApi({title,nickname, content})
+            sendEmail()
             setIsopen((prev) => !prev)
             alert('접수되었습니다.')
         }
@@ -91,7 +89,7 @@ const SubmitInquiry: React.FC<SubmitModalProps> = ({isopen, setIsopen,}) => {
             },
         }}
         >
-            <form  ref={form} onSubmit={sendEmail}>
+            <form  ref={form}>
                 <InquiryContainer>    
                     <LogoTitleWrapper>
                         <img src = {logo} style = {{height : '50px', width : '50px', display : 'flex', justifyContent : 'center', marginRight : '35%'}}/>
@@ -118,7 +116,7 @@ const SubmitInquiry: React.FC<SubmitModalProps> = ({isopen, setIsopen,}) => {
                     </ReactQuillWrapper>
                 </InquiryContainer>
                 <SumbitWrapper>
-                    <button type="submit" style={submitButtonStyle} onClick={() => {checkForm()}}>
+                    <button type="button" style={submitButtonStyle} onClick={() => {checkForm()}}>
                         작성
                     </button>
                 </SumbitWrapper>
