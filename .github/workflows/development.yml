@@ -55,6 +55,37 @@ jobs:
             ${{ env.DOCKER_IMAGE }}:stage
             ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }}
 
+  deploy-stage:
+    if: github.ref == 'refs/heads/stage'
+    needs: build-stage
+    name: Deploy to Stage
+    runs-on: [self-hosted, label-go]
+    steps:
+      - name: Login to ghcr
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      - name: Docker run
+        run: |
+          docker stop nest-front-stage || true
+          docker rm nest-front-stage || true
+          docker rmi ${{ env.DOCKER_IMAGE }}:stage || true
+          docker pull ${{ env.DOCKER_IMAGE }}:stage
+          docker run -itd -p 80:80 \
+            -e AWSACCESSKEYID="${{ secrets.AWSACCESSKEYID }}" \
+            -e AWSSECRETACCESSKEY="${{ secrets.AWSSECRETACCESSKEY }}" \
+            -e AWSREGION="${{ secrets.AWSREGION }}" \
+            -e S3BUCKETNAME="${{ secrets.S3BUCKETNAME }}" \
+            -e KAKAO_CLIENT_ID="${{ secrets.KAKAO_CLIENT_ID }}" \
+            -e KAKAO_TEST_CLIENT_ID="${{ secrets.KAKAO_TEST_CLIENT_ID }}" \
+            -e KAKAO_TEST_CLIENT_SECRET="${{ secrets.KAKAO_TEST_CLIENT_SECRET }}" \
+            -e NAVER_CLIENT_ID="${{ secrets.NAVER_CLIENT_ID }}" \
+            -e NAVER_CLIENT_SECRET="${{ secrets.NAVER_CLIENT_SECRET }}" \
+            --name nest-front-stage --restart always ${{ env.DOCKER_IMAGE }}:stage
+
   build-prod:
     if: github.ref == 'refs/heads/prod'
     name: Build Prod
@@ -94,37 +125,6 @@ jobs:
           tags: |
             ${{ env.DOCKER_IMAGE }}:prod
             ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }}
-
-  deploy-stage:
-    if: github.ref == 'refs/heads/stage'
-    needs: build-stage
-    name: Deploy to Stage
-    runs-on: [self-hosted, label-go]
-    steps:
-      - name: Login to ghcr
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GHCR_TOKEN }}
-
-      - name: Docker run
-        run: |
-          docker stop nest-front-stage || true
-          docker rm nest-front-stage || true
-          docker rmi ${{ env.DOCKER_IMAGE }}:stage || true
-          docker pull ${{ env.DOCKER_IMAGE }}:stage
-          docker run -itd -p 80:80 \
-            -e AWSACCESSKEYID="${{ secrets.AWSACCESSKEYID }}" \
-            -e AWSSECRETACCESSKEY="${{ secrets.AWSSECRETACCESSKEY }}" \
-            -e AWSREGION="${{ secrets.AWSREGION }}" \
-            -e S3BUCKETNAME="${{ secrets.S3BUCKETNAME }}" \
-            -e KAKAO_CLIENT_ID="${{ secrets.KAKAO_CLIENT_ID }}" \
-            -e KAKAO_TEST_CLIENT_ID="${{ secrets.KAKAO_TEST_CLIENT_ID }}" \
-            -e KAKAO_TEST_CLIENT_SECRET="${{ secrets.KAKAO_TEST_CLIENT_SECRET }}" \
-            -e NAVER_CLIENT_ID="${{ secrets.NAVER_CLIENT_ID }}" \
-            -e NAVER_CLIENT_SECRET="${{ secrets.NAVER_CLIENT_SECRET }}" \
-            --name nest-front-stage --restart always ${{ env.DOCKER_IMAGE }}:stage
 
   deploy-prod:
     if: github.ref == 'refs/heads/prod'
