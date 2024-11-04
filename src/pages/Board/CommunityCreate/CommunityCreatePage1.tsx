@@ -10,6 +10,7 @@ import {
 import styled from 'styled-components';
 import MultiStepNav from '../../../components/Buttons/MultiStepNav';
 import Button from '../../../components/Buttons/Button';
+import { GetSearchCommunitiesAPI,SearchParam } from '../../api/SearchApi';
 
 const CommunityCreatePage1: FC = () => {
   const navigate = useNavigate();
@@ -30,9 +31,8 @@ const CommunityCreatePage1: FC = () => {
   const [textareaHeight, setTextareaHeight] = useState('120px');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [profilePreview, setProfilePreview] = useState<string | null>(null);
-  const [backgroundPreview, setBackgroundPreview] = useState<string | null>(
-    null,
-  );
+  const [backgroundPreview, setBackgroundPreview] = useState<string | null>(null,);
+  const [duplicateName, setDuplicateName] = useState<boolean>(false);
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -81,7 +81,11 @@ const CommunityCreatePage1: FC = () => {
       setBanner(backgroundRes.imageUrls[0]);
     }
 
-    navigate('/community/create2', { state: { communityName, description } });
+    if(duplicateName){
+      alert('커뮤니티 이름을 수정해주세요')
+    }else{
+      navigate('/community/create2', { state: { communityName, description } });
+    }
   };
 
   const handleCancel = () => navigate('/');
@@ -107,6 +111,26 @@ const CommunityCreatePage1: FC = () => {
     setBackgroundPreview(urls.previewUrls[0]);
     setBackgroundPicture(urls.fileList[0]);
   };
+
+  const searchCommunityName = async () => {
+    const searchParam: SearchParam = { query: communityName };
+    const communityList = await GetSearchCommunitiesAPI(searchParam)
+
+    if (communityList?.data?.response && Array.isArray(communityList.data.response)){
+      const isExactMatch = communityList.data.response.some(
+      (item:any) => item.name === searchParam.query);
+      setDuplicateName(isExactMatch)
+    }
+    else{
+      setDuplicateName(false)
+    }
+  }
+
+  useEffect(() => {
+    if(communityName.length >= 1){
+      searchCommunityName()
+    }
+  },[communityName])
 
   return (
     <Container textareaHeight={textareaHeight}>
@@ -161,9 +185,10 @@ const CommunityCreatePage1: FC = () => {
             value={communityName}
             placeholder="커뮤니티 이름"
             onChange={(e) => setCommunityName(e.target.value)}
-          />
+          />  
         </Row>
-
+        {duplicateName && (<NameValidationMessage>이미 사용중인 이름입니다.</NameValidationMessage>)}
+        
         <DescriptionWrapper>
           <Label htmlFor="description">설명</Label>
           <DescriptionTextArea
@@ -289,6 +314,14 @@ const CommunityNameInput = styled.input`
   border: 1px solid #ccc;
   font-size: 14px;
   background-color: #f7f7f7;
+`;
+
+const NameValidationMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: -3vh;
+  font-size: 1.2em;
+  color: #EF9A9A;
 `;
 
 const DescriptionWrapper = styled.div`

@@ -16,7 +16,8 @@ type modalType = "login" | "signup" | "recovery" | "verity" | "reset";
   const [email, setEmail] = useState<string>('');
   const [verificationCode, setVerificationCode] = useState<string>('')
   const [password, setPassword] = useState<string>('');
-  const [confirmPassword, setConfirmPassword] = useState<string>('')
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
+  const [kakaoEmail, setKakaoEmail] = useState<string>('');
   
   const switchView = (view: modalType) => {
     setActiveView(view);
@@ -109,6 +110,8 @@ type modalType = "login" | "signup" | "recovery" | "verity" | "reset";
           <Login
             onSwitchView={switchView}
             modalIsOpen={setModalIsOpen}
+            kakaoEmail={kakaoEmail}
+            setKakaoEmail={setKakaoEmail}
           />
         )}
 
@@ -116,6 +119,7 @@ type modalType = "login" | "signup" | "recovery" | "verity" | "reset";
           <Signup
             onSwitchView={() => switchView("login")}
             modalIsOpen={setModalIsOpen}
+            kakaoEmail={kakaoEmail}
           />
         )}
 

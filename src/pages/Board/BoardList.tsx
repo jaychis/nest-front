@@ -72,9 +72,9 @@ const BoardList = () => {
   const [lastInView, setLastInView] = useState<boolean>(false);
   const [id, setId] = useState<IdType>(null);
   const [allDataLoaded, setAllDataLoaded] = useState<boolean>(false);
-  const [retry, setRetry] = useState<number>(0);
+  
   useEffect(() => {
-    if (inView && !lastInView) {
+    if (list.length>0 && inView && !lastInView) {
       ListApi({ id, allDataLoaded });
     }
     setLastInView(inView);
@@ -89,10 +89,8 @@ const BoardList = () => {
 
     if (id === null) {
       ListApi({ id, allDataLoaded });
-    } else {
-      setRetry((prev) => prev + 1);
-    }
-  }, [buttonType, retry]);
+    } 
+  }, [buttonType]);
 
   const ListApi = async ({ id, allDataLoaded }: AllListParams) => {
     if (allDataLoaded) return;
@@ -152,7 +150,7 @@ const BoardList = () => {
       console.error('API error: ', err);
     }
   };
-
+  
   return (
     <>
       <MainContainer>
@@ -196,9 +194,3 @@ const BoardList = () => {
 };
 
 export default BoardList;
-
-const BackgroundImageContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  max-height: 350px;
-`;

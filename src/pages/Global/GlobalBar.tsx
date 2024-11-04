@@ -85,8 +85,7 @@ const GlobalBar = () => {
   };
 
   const handleLogoClick = () => {
-    navigate("/");
-    dispatch(sideButtonSliceActions.setButtonType("HOME"));
+    window.location.href = '/'
   };
 
   useEffect(() => {
