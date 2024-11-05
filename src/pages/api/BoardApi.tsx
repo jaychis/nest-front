@@ -95,7 +95,7 @@ export interface SubmitParams {
   readonly category: string;
   readonly title: string;
   readonly content: string[];
-  readonly usersId: string;
+  readonly identifierId: string;
   readonly nickname: string;
   readonly type: BoardType;
   // readonly images: File[]; // 이미지 파일 배열
