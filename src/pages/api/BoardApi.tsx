@@ -98,6 +98,7 @@ export interface SubmitParams {
   readonly usersId: string;
   readonly nickname: string;
   readonly type: BoardType;
+  readonly tags: string[];
   // readonly images: File[]; // 이미지 파일 배열
   // readonly videos: File[]; // 비디오 파일 배열
   // readonly links: string[]; // URL 배열
