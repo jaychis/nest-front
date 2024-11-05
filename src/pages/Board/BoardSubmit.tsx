@@ -245,12 +245,13 @@ const BoardSubmit = () => {
       }
 
       const paramObj: SubmitParams = {
-        identifierId: ID,
+        usersId: ID,
         content: content,
         title: title,
         category: selectedCommunity,
         nickname: NICKNAME,
         type: inputType,
+        tags: topics
       };
 
       if (topics.length > 0) {
