@@ -3,11 +3,11 @@ export interface CollectionTypes {
   readonly value: string;
 }
 
-export type MainListTypes = "HOME" | "POPULAR" | "TAGMATCH" | "FREQUENTSHARE";
+export type MainListTypes = 'HOME' | 'POPULAR' | 'TAGMATCH' | 'FREQUENTSHARE';
 
-export type ReactionStateTypes = "LIKE" | "DISLIKE" | null;
+export type ReactionStateTypes = 'LIKE' | 'DISLIKE' | null;
 
-export type BoardType = "TEXT" | "LINK" | "MEDIA" | "YOUTUBE";
+export type BoardType = 'TEXT' | 'LINK' | 'MEDIA' | 'YOUTUBE';
 
 export interface UserType {
   readonly id: string;
@@ -27,7 +27,7 @@ export interface CommunityType {
   readonly description: string;
   readonly banner: string;
   readonly icon: string;
-  readonly visibility: "PUBLIC";
+  readonly visibility: 'PUBLIC';
   readonly created_at: Date;
   readonly updated_at: Date;
   readonly deleted_at: null | Date;
@@ -35,7 +35,7 @@ export interface CommunityType {
 
 export interface CardType {
   readonly id: string;
-  readonly identifier_id: string;
+  readonly user_id: string;
   readonly category: string;
   readonly content: string[];
   readonly title: string;
@@ -71,10 +71,10 @@ export interface InquiryType {
   readonly content: string;
   readonly created_at: Date;
   readonly deleted_at: Date;
-  readonly id: string
+  readonly id: string;
   readonly nickname: string;
   readonly title: string;
   readonly update_at: Date;
 }
 
-export type CommunityVisibilityType = "PUBLIC" | "RESTRICTED" | "PRIVATE";
+export type CommunityVisibilityType = 'PUBLIC' | 'RESTRICTED' | 'PRIVATE';

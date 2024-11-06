@@ -15,11 +15,11 @@ import { LogViewedBoardAPI } from '../api/ViewedBoardsApi';
 const BoardRead = () => {
   const boardId: string = sessionStorage.getItem('boardId') as string;
   const BOARD_TITLE: string = sessionStorage.getItem('boardTitle') as string;
-  const userId:string = localStorage.getItem('id') as string;
+  const userId: string = localStorage.getItem('id') as string;
 
   const [isBoardState, setIsBoardStateBoard] = useState<CardType>({
     id: boardId,
-    identifier_id: '',
+    user_id: '',
     category: '',
     content: [],
     title: BOARD_TITLE,
@@ -60,16 +60,21 @@ const BoardRead = () => {
       console.log('response : ', response);
 
       setIsBoardStateBoard(response);
-      await LogViewedBoardAPI({userId, boardId})
+
+      const logViewedRes = await LogViewedBoardAPI({
+        userId: response.user_id,
+        boardId: response.id,
+      });
+      console.log('logViewedRes : ', logViewedRes);
     };
     readBoard();
-  }, [boardId,userId]);
+  }, [boardId, userId]);
 
   const [writeComment, setWriteComment] = useState<CommentSubmitParams>({
     boardId: boardId,
     content: '',
     nickname: (localStorage.getItem('nickname') as string) || '',
-    userId: (userId) || '',
+    userId: userId || '',
   });
   const commentHandleChange = (event: CollectionTypes) => {
     const { name, value } = event;
@@ -107,12 +112,8 @@ const BoardRead = () => {
     }
   };
 
-  if(!userId || !boardId){
-    return(
-      <div>
-        로딩중..
-      </div>
-    )
+  if (!userId || !boardId) {
+    return <div>로딩중..</div>;
   }
 
   const renderReplies = (replies: ReplyType[]) => {
