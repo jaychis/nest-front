@@ -245,7 +245,7 @@ const BoardSubmit = () => {
       }
 
       const paramObj: SubmitParams = {
-        usersId: ID,
+        userId: ID,
         content: content,
         title: title,
         category: selectedCommunity,

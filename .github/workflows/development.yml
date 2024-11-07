@@ -162,10 +162,13 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
+      - name: Create remote directory if it doesn't exist
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@54.180.163.127 "mkdir -p /home/ubuntu/nest-front/scripts/nginx-conf/prod/"
+
       - name: Copy Nginx config to EC2
         run: |
-          scp -r -o StrictHostKeyChecking=no scripts/nginx-conf/prod/* ubuntu@54.180.163.127:/home/ubuntu/nest-front/scripts/nginx-conf/prod/
-
+          scp -r -o StrictHostKeyChecking=no nest-front/scripts/nginx-conf/prod/* ubuntu@54.180.163.127:/home/ubuntu/nest-front/scripts/nginx-conf/prod/
 
       - name: SSH into EC2 and apply Nginx configuration
         run: |
