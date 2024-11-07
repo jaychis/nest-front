@@ -483,7 +483,8 @@ const Signup = ({ onSwitchView, modalIsOpen,kakaoEmail }: Props) => {
             }
             required
           />
-          {validPassword ? (
+
+          {validPassword && (
             <img
               src={vLogo}
               alt={'v logo'}
@@ -496,7 +497,24 @@ const Signup = ({ onSwitchView, modalIsOpen,kakaoEmail }: Props) => {
                 transform: 'translateY(-50%)',
               }}
             />
-          ) : null}
+          )}
+
+          {(!validPassword && signup.confirmPassword.length > 0) && (
+            <img
+              src={xLogo}
+              alt={'x logo'}
+              style={{
+                width: '20px',
+                height: '20px',
+                position: 'absolute',
+                right: '10px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+              }}
+            />
+          )}
+
+
         </div>
 
         <div
