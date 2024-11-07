@@ -157,30 +157,30 @@ jobs:
             -e NAVER_CLIENT_SECRET="${{ secrets.NAVER_CLIENT_SECRET }}" \
             --name nest-front --restart always ${{ env.DOCKER_IMAGE }}:prod
 
-      - name: Set up SSH for Nginx configuration deployment
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
-
-      - name: Show current directory and files for debugging
-        run: |
-          pwd
-          ls -al
-          ls -al scripts/nginx-conf/prod/
-
-
-      - name: Create remote directory if it doesn't exist
-        run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@54.180.163.127 "mkdir -p /home/ubuntu/nest-front/scripts/nginx-conf/prod/"
-
-      - name: Copy Nginx config to EC2
-        run: |
-          scp -r -o StrictHostKeyChecking=no scripts/nginx-conf/prod ubuntu@54.180.163.127:/home/ubuntu/nest-front/scripts/nginx-conf/prod/
-
-      - name: SSH into EC2 and apply Nginx configuration
-        run: |
-         ssh -o StrictHostKeyChecking=no ubuntu@your-ec2-ip << 'EOF'
-           sudo cp -r /home/ubuntu/nginx-config/nginx /etc/nginx/
-           sudo nginx -t
-           sudo systemctl restart nginx
-         EOF
+#      - name: Set up SSH for Nginx configuration deployment
+#        uses: webfactory/ssh-agent@v0.5.3
+#        with:
+#          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+#
+#      - name: Show current directory and files for debugging
+#        run: |
+#          pwd
+#          ls -al
+#          ls -al scripts/nginx-conf/prod/
+#
+#
+#      - name: Create remote directory if it doesn't exist
+#        run: |
+#          ssh -o StrictHostKeyChecking=no ubuntu@54.180.163.127 "mkdir -p /home/ubuntu/nest-front/scripts/nginx-conf/prod/"
+#
+#      - name: Copy Nginx config to EC2
+#        run: |
+#          scp -r -o StrictHostKeyChecking=no scripts/nginx-conf/prod ubuntu@54.180.163.127:/home/ubuntu/nest-front/scripts/nginx-conf/prod/
+#
+#      - name: SSH into EC2 and apply Nginx configuration
+#        run: |
+#         ssh -o StrictHostKeyChecking=no ubuntu@your-ec2-ip << 'EOF'
+#           sudo cp -r /home/ubuntu/nginx-config/nginx /etc/nginx/
+#           sudo nginx -t
+#           sudo systemctl restart nginx
+#         EOF
