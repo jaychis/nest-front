@@ -65,8 +65,9 @@ client.interceptors.response.use(
             "refresh_token",
             data.response.refresh_token,
           );
+          error.config.headers.Authorization = `Bearer ${data.response.access_token}`;
 
-          return await axios.request(error.conig);
+          return await axios.request(error.config);
         }
       } catch (e: any) {
         if (e instanceof AxiosError && e.response) {

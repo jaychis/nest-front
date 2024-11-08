@@ -71,6 +71,7 @@ const Signup = ({ onSwitchView, modalIsOpen,kakaoEmail }: Props) => {
 
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [validPassword, setValidPassword] = useState<boolean>(false);
+  const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
   useEffect(() => {
     if (signup.email.length >= 12) {
@@ -170,8 +171,17 @@ const Signup = ({ onSwitchView, modalIsOpen,kakaoEmail }: Props) => {
   };
 
   const handleSubmit: MouseEventHandler<HTMLButtonElement> = (event) => {
-    if (event) event.preventDefault();
+    if (
+      baseUrl !== 'http://127.0.0.1:9898' &&
+      signup.nickname !== 'user1' && 
+      signup.nickname !== 'benetric' && 
+      signup.nickname !== 'smasmc' && 
+      signup.nickname !== 'artem'){
+      return alert('닉네임 제한중')
+    }
 
+    if (event) event.preventDefault();
+   
     if (
       !signup.email ||
       !signup.nickname ||
@@ -483,7 +493,8 @@ const Signup = ({ onSwitchView, modalIsOpen,kakaoEmail }: Props) => {
             }
             required
           />
-          {validPassword ? (
+
+          {validPassword && (
             <img
               src={vLogo}
               alt={'v logo'}
@@ -496,7 +507,24 @@ const Signup = ({ onSwitchView, modalIsOpen,kakaoEmail }: Props) => {
                 transform: 'translateY(-50%)',
               }}
             />
-          ) : null}
+          )}
+
+          {(!validPassword && signup.confirmPassword.length > 0) && (
+            <img
+              src={xLogo}
+              alt={'x logo'}
+              style={{
+                width: '20px',
+                height: '20px',
+                position: 'absolute',
+                right: '10px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+              }}
+            />
+          )}
+
+
         </div>
 
         <div
