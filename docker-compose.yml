@@ -1,0 +1,34 @@
+version: '3'
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile-frontend
+    container_name: frontend-server
+    environment:
+      - NODE_ENV=production
+    ports:
+      - "3000:3000" # 프론트엔드 포트 설정 (React 등 프론트엔드 앱에 따라 변경)
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx-proxy-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./scripts/nginx-conf/prod/nginx-frontend.conf:/etc/nginx/nginx.conf # 프론트엔드용 Nginx 설정 파일 마운트
+      - ./data/certbot/conf:/etc/letsencrypt # SSL 인증서 경로
+      - ./data/certbot/www:/var/www/certbot # Certbot을 위한 웹 루트
+    depends_on:
+      - frontend
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
