@@ -1,31 +1,36 @@
-import React, { MouseEventHandler, useEffect, useState } from "react";
-import { LoginAPI, LoginParams, RefreshTokenAPI } from "../api/UserApi";
-import { CollectionTypes } from "../../_common/CollectionTypes";
-import { isValidPasswordFormat } from "../../_common/PasswordRegex";
-import { FaGoogle, FaApple, FaComment } from "react-icons/fa";
-import { SiNaver } from "react-icons/si";
-import Alert from "../../components/Alert";
+import React, { MouseEventHandler, useEffect, useState } from 'react';
+import { LoginAPI, LoginParams, RefreshTokenAPI } from '../api/UserApi';
+import { CollectionTypes } from '../../_common/CollectionTypes';
+import { isValidPasswordFormat } from '../../_common/PasswordRegex';
+import { FaGoogle, FaApple, FaComment } from 'react-icons/fa';
+import { SiNaver } from 'react-icons/si';
+import Alert from '../../components/Alert';
 import {
   UsersKakaoOAuthSignUpAPI,
   UsersKakaoOAuthLoginAPI,
   UsersNaverOAuthSignUpAPI,
-} from "../api/OAuthApi";
-type modalType = "login" | "signup" | "recovery" | "verity";
+} from '../api/OAuthApi';
+type modalType = 'login' | 'signup' | 'recovery' | 'verity';
 
 interface Props {
   readonly onSwitchView: (view: modalType) => void;
   readonly modalIsOpen: (state: boolean) => void;
   readonly kakaoEmail: string;
-  readonly setKakaoEmail: (state:string) => void;
+  readonly setKakaoEmail: (state: string) => void;
 }
-type OAuthReturnType = "NEW_USER" | "EXITING_USER";
+type OAuthReturnType = 'NEW_USER' | 'EXITING_USER';
 
-const Login = ({ onSwitchView, modalIsOpen,kakaoEmail, setKakaoEmail }: Props) => {
+const Login = ({
+  onSwitchView,
+  modalIsOpen,
+  kakaoEmail,
+  setKakaoEmail,
+}: Props) => {
   const [login, setLogin] = useState<LoginParams>({
-    email: "",
-    password: "",
+    email: '',
+    password: '',
   });
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>('');
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [errorModalVisible, setErrorModalVisible] = useState<boolean>(false); // State for ErrorModal
 
@@ -41,10 +46,10 @@ const Login = ({ onSwitchView, modalIsOpen,kakaoEmail, setKakaoEmail }: Props) =
     readonly refresh_token: string;
   }) => {
     modalIsOpen(false);
-    localStorage.setItem("access_token", access_token);
-    localStorage.setItem("refresh_token", refresh_token);
-    localStorage.setItem("id", id);
-    localStorage.setItem("nickname", nickname);
+    localStorage.setItem('access_token', access_token);
+    localStorage.setItem('refresh_token', refresh_token);
+    localStorage.setItem('id', id);
+    localStorage.setItem('nickname', nickname);
     setShowAlert(true); // 알람 표시
     setShowAlert(false); // 알람 숨기기
     window.location.reload();
@@ -68,7 +73,7 @@ const Login = ({ onSwitchView, modalIsOpen,kakaoEmail, setKakaoEmail }: Props) =
     const isPasswordValid: boolean = isValidPasswordFormat(login.password);
     const isEmailValid: boolean = /\S+@\S+\.\S+/.test(login.email);
     if (!isEmailValid) {
-      setErrorMessage("유효한 이메일 주소를 입력하세요.");
+      setErrorMessage('유효한 이메일 주소를 입력하세요.');
       return;
     }
 
@@ -93,8 +98,8 @@ const Login = ({ onSwitchView, modalIsOpen,kakaoEmail, setKakaoEmail }: Props) =
             const refreshResponse = refreshRes.data.response;
             const { access_token, refresh_token } = refreshResponse;
 
-            localStorage.setItem("access_token", access_token);
-            localStorage.setItem("refresh_token", refresh_token);
+            localStorage.setItem('access_token', access_token);
+            localStorage.setItem('refresh_token', refresh_token);
 
             // Retry the original request
             const retryRes = await LoginAPI(login);
@@ -108,54 +113,54 @@ const Login = ({ onSwitchView, modalIsOpen,kakaoEmail, setKakaoEmail }: Props) =
               refresh_token,
             });
           } catch (refreshErr) {
-            setErrorMessage("세션이 만료되었습니다. 다시 로그인해 주세요.");
+            setErrorMessage('세션이 만료되었습니다. 다시 로그인해 주세요.');
             console.error(refreshErr);
             localStorage.clear();
             modalIsOpen(true);
           }
         } else {
-          setErrorMessage("로그인 실패. 이메일과 비밀번호를 확인하세요.");
+          setErrorMessage('로그인 실패. 이메일과 비밀번호를 확인하세요.');
           console.error(err);
         }
       }
     } else {
       setErrorMessage(
-        "비밀번호는 최소 8자, 하나 이상의 문자, 하나의 숫자 및 하나의 특수문자입니다.",
+        '비밀번호는 최소 8자, 하나 이상의 문자, 하나의 숫자 및 하나의 특수문자입니다.',
       );
     }
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
+    if (event.key === 'Enter') {
       event.preventDefault(); // 기본 동작 방지
       processLogin();
     }
   };
 
   const naverOauthLogin = async () => {
-    console.log("naverOauthLogin check");
+    console.log('naverOauthLogin check');
     // alert("naverOauthLogin check");
 
     const res = await UsersNaverOAuthSignUpAPI();
     if (!res) return;
 
-    console.log("naverAuthLogin res : ", res);
+    console.log('naverAuthLogin res : ', res);
     const TYPE: OAuthReturnType = res.data.response.type;
 
-    if (TYPE === "NEW_USER") {
+    if (TYPE === 'NEW_USER') {
       // 이메일 가지고 있고, 회원가입시 해당 이메일이 회원가입창에 입력될 수 있도록
       console.log(
-        " res.data.response.profile.email : ",
+        ' res.data.response.profile.email : ',
         res.data.response.profile.email,
       );
       const EMAIL: string = res.data.response.profile.email as string;
-      console.log("EMAIL : ", EMAIL);
+      console.log('EMAIL : ', EMAIL);
 
       // onSwitchView();
-    } else if (TYPE === "EXITING_USER") {
+    } else if (TYPE === 'EXITING_USER') {
       const loginProfile = await UsersNaverOAuthSignUpAPI();
       if (!loginProfile) return;
-      console.log("loginProfile : ", loginProfile);
+      console.log('loginProfile : ', loginProfile);
       const { id, nickname, access_token, refresh_token } =
         loginProfile.data.response;
 
@@ -169,7 +174,7 @@ const Login = ({ onSwitchView, modalIsOpen,kakaoEmail, setKakaoEmail }: Props) =
   };
   const KAKAO_CLIENT_ID = (() => {
     switch (process.env.REACT_APP_NODE_ENV) {
-      case "production":
+      case 'production':
         return process.env.REACT_APP_KAKAO_CLIENT_ID; // production 환경의 Client ID
       default:
         return process.env.REACT_APP_KAKAO_TEST_CLIENT_ID; // 기본값 또는 undefined 방지
@@ -177,31 +182,43 @@ const Login = ({ onSwitchView, modalIsOpen,kakaoEmail, setKakaoEmail }: Props) =
   })();
 
   const REDIRECT_URI =
-    process.env.REACT_APP_NODE_ENV === "production"
+    process.env.REACT_APP_NODE_ENV === 'production'
       ? process.env.REACT_APP_KAKAO_REDIRECT_URL
-      : process.env.REACT_APP_NODE_ENV === "stage"
+      : process.env.REACT_APP_NODE_ENV === 'stage'
         ? process.env.REACT_APP_KAKAO_STAGE_REDIRECT_URL
         : process.env.REACT_APP_KAKAO_TEST_REDIRECT_URL;
   useEffect(() => {
-    console.log("KAKAO_CLIENT_ID : ", KAKAO_CLIENT_ID);
-    console.log("REDIRECT_URI : ", REDIRECT_URI);
+    console.log('KAKAO_CLIENT_ID : ', KAKAO_CLIENT_ID);
+    console.log('REDIRECT_URI : ', REDIRECT_URI);
     console.log(
       `process.env.REACT_APP_NODE_ENV ${process.env.REACT_APP_NODE_ENV}`,
     );
   });
 
+  const baseUrl = process.env.REACT_APP_API_BASE_URL;
+
   const kakaoOauthLogin = () => {
+    if (
+      baseUrl !== 'http://127.0.0.1:9898' &&
+      ((localStorage.getItem('nickname') as string) !== 'user1' ||
+        (localStorage.getItem('nickname') as string) !== 'benetric' ||
+        (localStorage.getItem('nickname') as string) !== 'smasmc' ||
+        (localStorage.getItem('nickname') as string) !== 'artem')
+    ) {
+      return alert('기능 개선 작업 진행 중입니다.');
+    }
+
     const currentUrl = window.location.href; // 현재 페이지의 경로
     const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=account_email&state=${encodeURIComponent(currentUrl)}`;
 
     const popup = window.open(
       KAKAO_AUTH_URL,
-      "PopupWin",
-      "width=500,height=600",
+      'PopupWin',
+      'width=500,height=600',
     );
     // 이벤트 리스너를 통해 팝업에서 인증 후 리디렉트된 URL의 코드를 받아 처리
     window.addEventListener(
-      "message",
+      'message',
       async (event) => {
         try {
           const { user } = event.data;
@@ -218,13 +235,13 @@ const Login = ({ onSwitchView, modalIsOpen,kakaoEmail, setKakaoEmail }: Props) =
             });
           } else {
             alert('먼저 카카오 계정과 같은 이메일로 회원가입을 진행해 주세요');
-            setKakaoEmail(parsedUser.email)
-            onSwitchView('signup')
+            setKakaoEmail(parsedUser.email);
+            onSwitchView('signup');
           }
           if (popup) popup.close();
         } catch (error) {
-          console.error("로그인 실패:", error);
-          alert("로그인에 실패했습니다. 다시 시도해주세요.");
+          console.error('로그인 실패:', error);
+          alert('로그인에 실패했습니다. 다시 시도해주세요.');
         }
       },
       { once: true },
@@ -241,7 +258,7 @@ const Login = ({ onSwitchView, modalIsOpen,kakaoEmail, setKakaoEmail }: Props) =
         />
       )}
       <div>
-        <div style={{ textAlign: "center", marginBottom: "20px" }}>
+        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
           <h2>로그인</h2>
         </div>
         <div style={styles.socialButtonsContainer}>
@@ -306,13 +323,18 @@ const Login = ({ onSwitchView, modalIsOpen,kakaoEmail, setKakaoEmail }: Props) =
           />
           {errorMessage && <div style={styles.errorText}>{errorMessage}</div>}
           <div style={styles.forgotPasswordContainer}>
-            <a onClick={() => {onSwitchView('recovery')}} style={styles.forgotPasswordLink}>
+            <a
+              onClick={() => {
+                onSwitchView('recovery');
+              }}
+              style={styles.forgotPasswordLink}
+            >
               비밀번호를 잊으셨나요?
             </a>
           </div>
         </form>
 
-        <div style={{ width: "100%", padding: "10px 0", textAlign: "center" }}>
+        <div style={{ width: '100%', padding: '10px 0', textAlign: 'center' }}>
           <button
             type="submit"
             style={styles.submitButton}
@@ -323,12 +345,17 @@ const Login = ({ onSwitchView, modalIsOpen,kakaoEmail, setKakaoEmail }: Props) =
         </div>
         <div
           style={{
-            display: "flex",
-            justifyContent: "center",
-            marginTop: "0px",
+            display: 'flex',
+            justifyContent: 'center',
+            marginTop: '0px',
           }}
         >
-          <button onClick={() => {onSwitchView('signup')}} style={styles.switchButton}>
+          <button
+            onClick={() => {
+              onSwitchView('signup');
+            }}
+            style={styles.switchButton}
+          >
             회원가입
           </button>
         </div>
@@ -339,109 +366,109 @@ const Login = ({ onSwitchView, modalIsOpen,kakaoEmail, setKakaoEmail }: Props) =
 
 const styles = {
   container: {
-    backgroundColor: "#fff",
-    borderRadius: "25px",
-    padding: "20px",
-    minWidth: "400px",
-    maxWidth: "600px",
-    width: "80%",
-    display: "flex",
-    flexDirection: "column" as "column",
-    justifyContent: "space-between",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-    height: "400px", // 높이를 회원가입과 맞춤
+    backgroundColor: '#fff',
+    borderRadius: '25px',
+    padding: '20px',
+    minWidth: '400px',
+    maxWidth: '600px',
+    width: '80%',
+    display: 'flex',
+    flexDirection: 'column' as 'column',
+    justifyContent: 'space-between',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    height: '400px', // 높이를 회원가입과 맞춤
   },
   header: {
-    textAlign: "center" as "center",
-    marginBottom: "20px",
+    textAlign: 'center' as 'center',
+    marginBottom: '20px',
   },
   socialButtonsContainer: {
-    display: "flex",
-    flexDirection: "column" as "column",
-    gap: "10px",
+    display: 'flex',
+    flexDirection: 'column' as 'column',
+    gap: '10px',
   },
   socialButton: {
-    display: "flex",
-    alignItems: "center" as "center",
-    justifyContent: "center" as "center",
-    padding: "10px",
-    border: "1px solid #ccc",
-    backgroundColor: "white",
-    borderRadius: "10px",
-    cursor: "pointer",
-    height: "40px",
+    display: 'flex',
+    alignItems: 'center' as 'center',
+    justifyContent: 'center' as 'center',
+    padding: '10px',
+    border: '1px solid #ccc',
+    backgroundColor: 'white',
+    borderRadius: '10px',
+    cursor: 'pointer',
+    height: '40px',
   },
   socialLogo: {
-    width: "20px",
-    height: "20px",
-    marginRight: "10px",
+    width: '20px',
+    height: '20px',
+    marginRight: '10px',
   },
   orContainer: {
-    display: "flex",
-    alignItems: "center" as "center",
-    textAlign: "center" as "center",
-    color: "#aaa",
-    margin: "20px 0",
+    display: 'flex',
+    alignItems: 'center' as 'center',
+    textAlign: 'center' as 'center',
+    color: '#aaa',
+    margin: '20px 0',
   },
   orLine: {
     flex: 1,
-    height: "1px",
-    background: "#aaa",
+    height: '1px',
+    background: '#aaa',
   },
   orText: {
-    margin: "0 10px",
+    margin: '0 10px',
   },
   input: {
-    padding: "10px",
-    border: "1px solid #ddd",
-    borderRadius: "4px",
-    marginBottom: "10px",
-    boxSizing: "border-box" as "border-box",
-    width: "100%",
-    height: "40px",
+    padding: '10px',
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+    marginBottom: '10px',
+    boxSizing: 'border-box' as 'border-box',
+    width: '100%',
+    height: '40px',
   },
   forgotPasswordContainer: {
-    width: "100%",
-    padding: "10px 0",
-    textAlign: "right" as "right",
+    width: '100%',
+    padding: '10px 0',
+    textAlign: 'right' as 'right',
   },
   forgotPasswordLink: {
-    fontSize: "14px",
-    color: "#007BFF",
+    fontSize: '14px',
+    color: '#007BFF',
   },
   submitContainer: {
-    display: "flex",
-    justifyContent: "center" as "center",
-    marginTop: "20px",
+    display: 'flex',
+    justifyContent: 'center' as 'center',
+    marginTop: '20px',
   },
   submitButton: {
-    padding: "10px 20px",
-    width: "200px",
-    borderRadius: "25px",
-    border: "none",
-    backgroundColor: "#84d7fb",
-    color: "white",
-    cursor: "pointer",
+    padding: '10px 20px',
+    width: '200px',
+    borderRadius: '25px',
+    border: 'none',
+    backgroundColor: '#84d7fb',
+    color: 'white',
+    cursor: 'pointer',
   },
   switchContainer: {
-    width: "100%",
-    padding: "10px 0",
-    textAlign: "center" as "center",
+    width: '100%',
+    padding: '10px 0',
+    textAlign: 'center' as 'center',
   },
   switchButton: {
-    padding: "10px 20px",
-    width: "200px",
-    borderRadius: "25px",
-    border: "none",
-    backgroundColor: "red",
-    color: "white",
-    cursor: "pointer",
+    padding: '10px 20px',
+    width: '200px',
+    borderRadius: '25px',
+    border: 'none',
+    backgroundColor: 'red',
+    color: 'white',
+    cursor: 'pointer',
   },
   errorText: {
-    color: "red",
-    textAlign: "center" as "center",
-    marginTop: "10px",
-    marginBottom: "10px",
+    color: 'red',
+    textAlign: 'center' as 'center',
+    marginTop: '10px',
+    marginBottom: '10px',
   },
 };
 
