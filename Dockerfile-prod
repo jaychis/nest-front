@@ -10,12 +10,12 @@ COPY . .
 
 ENV NODE_ENV=production
 
-RUN npm run build:prod
+RUN npm run build:conf.d
 
 FROM nginx:alpine
 
 COPY --from=build /app/build /usr/share/nginx/html
-COPY /scripts/nginx-conf/prod/nginx.conf /etc/nginx/nginx.conf
+COPY /nginx/conf.d/nginx.conf /etc/nginx/nginx.conf
 
 #COPY _certs/certificate.crt /etc/ssl/certs/certificate.crt
 #COPY _certs/ca_bundle.crt /etc/ssl/certs/ca_bundle.crt

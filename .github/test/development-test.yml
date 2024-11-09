@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - stage
-      - prod
+      - conf.d
   pull_request:
     branches:
       - stage
-      - prod
+      - conf.d
 
 env:
   DOCKER_IMAGE: ghcr.io/${{ github.actor }}/nest
@@ -56,7 +56,7 @@ jobs:
             ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }}
 
   build-prod:
-    if: github.ref == 'refs/heads/prod'
+    if: github.ref == 'refs/heads/conf.d'
     name: Build Prod
     runs-on: ubuntu-latest
     steps:
@@ -100,7 +100,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./Dockerfile-prod
+          file: ./Dockerfile-conf.d
           push: true
           build-args: |
             CERTIFICATE_CRT=${{ secrets.CERTIFICATE_CRT }}
@@ -145,8 +145,8 @@ jobs:
             --name nest-front-stage --restart always ${{ env.DOCKER_IMAGE }}:stage
 
   deploy-prod:
-    if: github.ref == 'refs/heads/prod'
-    needs: build-prod
+    if: github.ref == 'refs/heads/conf.d'
+    needs: build-conf.d
     name: Deploy to Production
     runs-on: [self-hosted, label-go]
     steps:

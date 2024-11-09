@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - stage
-      - prod
+      - conf.d
   pull_request:
     branches:
       - stage
-      - prod
+      - conf.d
 
 env:
   DOCKER_IMAGE: ghcr.io/${{ github.actor }}/nest
@@ -87,7 +87,7 @@ jobs:
             --name nest-front-stage --restart always ${{ env.DOCKER_IMAGE }}:stage
 
   build-prod:
-    if: github.ref == 'refs/heads/prod'
+    if: github.ref == 'refs/heads/conf.d'
     name: Build Prod
     runs-on: ubuntu-latest
     steps:
@@ -116,7 +116,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./Dockerfile-prod
+          file: ./Dockerfile-conf.d
           push: true
           build-args: |
             HTTP_PORT=80
@@ -127,10 +127,10 @@ jobs:
             ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }}
 
   deploy-prod:
-    if: github.ref == 'refs/heads/prod'
-    needs: build-prod
+    if: github.ref == 'refs/heads/conf.d'
+    needs: build-conf.d
     name: Deploy to Production
-    runs-on: [self-hosted, label-prod]
+    runs-on: [self-hosted, label-conf.d]
     steps:
       - name: Login to ghcr
         uses: docker/login-action@v1
@@ -164,23 +164,23 @@ jobs:
 #
 #      - name: Change permissions
 #        run: |
-#          chmod -R 755 scripts/nginx-conf/prod/
+#          chmod -R 755 nginx/nginx-conf/conf.d/
 #
 #
 #      - name: Show current directory and files for debugging
 #        run: |
 #          pwd
 #          ls -al
-#          ls -al scripts/nginx-conf/prod/
+#          ls -al nginx/nginx-conf/conf.d/
 #
 #
 #      - name: Create remote directory if it doesn't exist
 #        run: |
-#          ssh -o StrictHostKeyChecking=no ubuntu@54.180.163.127 "mkdir -p /home/ubuntu/nest-front/scripts/nginx-conf/prod/"
+#          ssh -o StrictHostKeyChecking=no ubuntu@54.180.163.127 "mkdir -p /home/ubuntu/nest-front/nginx/nginx-conf/conf.d/"
 #
 #      - name: Copy Nginx config to EC2
 #        run: |
-#          scp -r -o StrictHostKeyChecking=no scripts/nginx-conf/prod ubuntu@54.180.163.127:/home/ubuntu/nest-front/scripts/nginx-conf/prod/
+#          scp -r -o StrictHostKeyChecking=no nginx/nginx-conf/conf.d ubuntu@54.180.163.127:/home/ubuntu/nest-front/nginx/nginx-conf/conf.d/
 #
 #      - name: SSH into EC2 and apply Nginx configuration
 #        run: |
