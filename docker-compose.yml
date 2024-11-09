@@ -17,7 +17,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/conf.d:/etc/nginx/nginx.conf # 프론트엔드용 Nginx 설정 파일 마운트
+      - ./nginx/conf.d:/etc/nginx/conf.d # 프론트엔드용 Nginx 설정 파일 마운트
       - ./nginx/certificates:/etc/letsencrypt
     networks:
       - webnet
@@ -27,7 +27,7 @@ services:
     container_name: certbot
     volumes:
       - ./nginx/certificates:/etc/letsencrypt
-      - ./nginx/conf.d:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do sleep 1d; done'"
     networks:
       - webnet
