@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {
   ImageLocalPreviewUrls,
   ImageLocalPreviewUrlsReturnType,
-} from '../_common/ImageUploadFuntionality';
+} from '../_common/imageUploadFuntionality';
 
 interface UserSearchCardParams {
   readonly nickname: string;

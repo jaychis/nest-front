@@ -1,39 +1,39 @@
-import React, { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import logo from "../assets/img/panda_logo.png";
-import kakao from "../assets/img/kakao.png"
-import instagram from "../assets/img/instagram.png"
-import facebook from "../assets/img/facebook.png"
-import twitter from "../assets/img/twitter.png"
-import copy from "../assets/img/copy.png"
+import React, { useEffect, useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import logo from '../assets/img/panda_logo.png';
+import kakao from '../assets/img/kakao.png';
+import instagram from '../assets/img/instagram.png';
+import facebook from '../assets/img/facebook.png';
+import twitter from '../assets/img/twitter.png';
+import copy from '../assets/img/copy.png';
 import {
-  ReactionAPI,
+  ReactionApi,
   ReactionCountAPI,
   ReactionListAPI,
   ReactionParams,
-} from "../pages/api/ReactionApi";
+} from '../pages/api/reactionApi';
 import {
   BoardProps,
   ReactionStateTypes,
   ReactionType,
-} from "../_common/CollectionTypes";
-import YouTube from "react-youtube";
-import sanitizeHtml from "sanitize-html";
-import debounce from "lodash.debounce";
-import {  UserModalState} from "../reducers/modalStateSlice";
-import { useSelector } from "react-redux";
-import { RootState, AppDispatch } from "../store/store";
-import styled from "styled-components";
-import { shareCountApi } from "../pages/api/BoardApi";
+} from '../_common/collectionTypes';
+import YouTube from 'react-youtube';
+import sanitizeHtml from 'sanitize-html';
+import debounce from 'lodash.debounce';
+import { UserModalState } from '../reducers/modalStateSlice';
+import { useSelector } from 'react-redux';
+import { RootState, AppDispatch } from '../store/store';
+import styled from 'styled-components';
+import { shareCountApi } from '../pages/api/boardApi';
 
 const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
   try {
     const urlObj: URL = new URL(url);
 
-    return urlObj.searchParams.get("v") || "";
+    return urlObj.searchParams.get('v') || '';
   } catch (e) {
-    console.error("Invalid URL", e);
-    return "";
+    console.error('Invalid URL', e);
+    return '';
   }
 };
 
@@ -45,35 +45,40 @@ const Card = ({
   nickname,
   title,
   type,
-  shareCount
+  shareCount,
 }: BoardProps) => {
-  
   const navigate = useNavigate();
   const [isCardCount, setIsCardCount] = useState<number>(0);
   const [localCount, setLocalCount] = useState<number>(0);
   const [isCardHovered, setIsCardHovered] = useState<boolean>(false);
   const [isCardUpHovered, setIsCardUpHovered] = useState<boolean>(false);
   const [isCardDownHovered, setIsCardDownHovered] = useState<boolean>(false);
-  const [isCardCommentHovered, setIsCardCommentHovered] =useState<boolean>(false);
+  const [isCardCommentHovered, setIsCardCommentHovered] =
+    useState<boolean>(false);
   const [isCardShareHovered, setIsCardShareHovered] = useState<boolean>(false);
   const [isCardSendHovered, setIsCardSendHovered] = useState<boolean>(false);
   const [viewCount, setViewCount] = useState<number>(0); // 조회수 상태 추가
   const [isReaction, setIsReaction] = useState<ReactionStateTypes>(null);
-  const [shareContent, setShareContent] = useState<string>('')
-  const modalState : UserModalState = useSelector((state: RootState) => state.modalState);
+  const [shareContent, setShareContent] = useState<string>('');
+  const modalState: UserModalState = useSelector(
+    (state: RootState) => state.modalState,
+  );
   const [active, setIsActive] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [domain, setDomain] = useState<string>('');
   const kakaoApiKey = process.env.REACT_APP_KAKAO_API_KEY;
-  const baseUrl = process.env.REACT_APP_API_BASE_URL
-  
-  const USER_ID: string = localStorage.getItem("id") as string;
-  
+  const baseUrl = process.env.REACT_APP_API_BASE_URL;
+
+  const USER_ID: string = localStorage.getItem('id') as string;
+
   const handleClickOutside = (event: MouseEvent) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)){
-      setIsActive(false)
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node)
+    ) {
+      setIsActive(false);
     }
-  }
+  };
 
   React.useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
@@ -83,41 +88,78 @@ const Card = ({
   }, []);
 
   useEffect(() => {
-    if(baseUrl === 'http://127.0.0.1:9898'){
-      setDomain('http://localhost:3000/')
-    }
-    else{
-      setDomain('jaychis.com')
+    if (baseUrl === 'http://127.0.0.1:9898') {
+      setDomain('http://localhost:3000/');
+    } else {
+      setDomain('jaychis.com');
     }
 
     if (window.Kakao && !window.Kakao.isInitialized()) {
-        window.Kakao.init(kakaoApiKey);
-      }
-    }, [kakaoApiKey]);
+      window.Kakao.init(kakaoApiKey);
+    }
+  }, [kakaoApiKey]);
 
   const reactionButton = async (userReaction: ReactionStateTypes) => {
     if (userReaction !== null) {
       const param: ReactionParams = {
         boardId: id,
         userId: USER_ID,
-        type :userReaction,
-        reactionTarget: "BOARD",
+        type: userReaction,
+        reactionTarget: 'BOARD',
       };
       try {
-        const res = await ReactionAPI(param);
+        const res = await ReactionApi(param);
         const status: number = res.status;
         const type = res.data.response?.type;
-        if (userReaction === "DISLIKE" && isReaction === "DISLIKE" && localCount === 0) { setIsReaction(null)}
-        else if (userReaction === "LIKE" && isReaction === 'DISLIKE' && localCount === 0) {setIsReaction("LIKE"); setIsCardCount((prevCount) => prevCount + 1);}
-        else if (userReaction === "LIKE" && isReaction === 'LIKE') {setIsReaction(null); setIsCardCount((prevCount) => prevCount - 1); }
-        else if (userReaction === "LIKE" && isReaction === 'DISLIKE') {setIsReaction("LIKE"); setIsCardCount((prevCount) => prevCount + 2);}
-        else if (userReaction === "LIKE" && isReaction === null) {setIsReaction("LIKE"); setIsCardCount((prevCount) => prevCount +1);}
-
-        else if (userReaction === "DISLIKE" && isReaction === null && localCount === 0) {setIsReaction('DISLIKE');}
-        else if (userReaction === "DISLIKE" && isReaction === 'LIKE' && isCardCount === 1) { setIsReaction('DISLIKE'); setIsCardCount((prev) => prev - 1)}
-        else if (userReaction === "DISLIKE" && isReaction === null && localCount != 0) {setIsReaction("DISLIKE"); setIsCardCount((prevCount) => prevCount - 1);}
-        else if (userReaction === "DISLIKE" && isReaction === 'DISLIKE') {setIsReaction(null); setIsCardCount((prevCount) => prevCount + 1);}
-        else if (userReaction === "DISLIKE" && isReaction === 'LIKE') {setIsReaction("DISLIKE"); setIsCardCount((prevCount) => prevCount -2);}
+        if (
+          userReaction === 'DISLIKE' &&
+          isReaction === 'DISLIKE' &&
+          localCount === 0
+        ) {
+          setIsReaction(null);
+        } else if (
+          userReaction === 'LIKE' &&
+          isReaction === 'DISLIKE' &&
+          localCount === 0
+        ) {
+          setIsReaction('LIKE');
+          setIsCardCount((prevCount) => prevCount + 1);
+        } else if (userReaction === 'LIKE' && isReaction === 'LIKE') {
+          setIsReaction(null);
+          setIsCardCount((prevCount) => prevCount - 1);
+        } else if (userReaction === 'LIKE' && isReaction === 'DISLIKE') {
+          setIsReaction('LIKE');
+          setIsCardCount((prevCount) => prevCount + 2);
+        } else if (userReaction === 'LIKE' && isReaction === null) {
+          setIsReaction('LIKE');
+          setIsCardCount((prevCount) => prevCount + 1);
+        } else if (
+          userReaction === 'DISLIKE' &&
+          isReaction === null &&
+          localCount === 0
+        ) {
+          setIsReaction('DISLIKE');
+        } else if (
+          userReaction === 'DISLIKE' &&
+          isReaction === 'LIKE' &&
+          isCardCount === 1
+        ) {
+          setIsReaction('DISLIKE');
+          setIsCardCount((prev) => prev - 1);
+        } else if (
+          userReaction === 'DISLIKE' &&
+          isReaction === null &&
+          localCount != 0
+        ) {
+          setIsReaction('DISLIKE');
+          setIsCardCount((prevCount) => prevCount - 1);
+        } else if (userReaction === 'DISLIKE' && isReaction === 'DISLIKE') {
+          setIsReaction(null);
+          setIsCardCount((prevCount) => prevCount + 1);
+        } else if (userReaction === 'DISLIKE' && isReaction === 'LIKE') {
+          setIsReaction('DISLIKE');
+          setIsCardCount((prevCount) => prevCount - 2);
+        }
       } catch (err) {
         console.error(err);
       }
@@ -125,34 +167,34 @@ const Card = ({
   };
 
   const goBoardRead = () => {
-    sessionStorage.setItem("boardId", id);
-    sessionStorage.setItem("boardTitle", title);
+    sessionStorage.setItem('boardId', id);
+    sessionStorage.setItem('boardTitle', title);
     navigate(`/boards/read?id=${id}&title=${title}&content=${content}`);
   };
-  
+
   const fetchReactionList = async (boardId: string) => {
     try {
       const res = await ReactionListAPI({ boardId });
       const response = res.data.response;
-      
+
       response.forEach((el: ReactionType) => {
         if (USER_ID === el.user_id) {
-          setIsReaction(el.type);}
+          setIsReaction(el.type);
+        }
       });
     } catch (err) {
       console.error(err);
     }
   };
-  
+
   const fetchReactionCount = async (boardId: string) => {
     try {
       const res = await ReactionCountAPI({ boardId });
       const resCount = res.data.response;
-      if(resCount.board_score  > 0){
-        setIsCardCount(resCount.board_score)
-        setLocalCount(resCount.board_score)
-      }
-      else{
+      if (resCount.board_score > 0) {
+        setIsCardCount(resCount.board_score);
+        setLocalCount(resCount.board_score);
+      } else {
         setIsCardCount(0);
         setLocalCount(0);
       }
@@ -167,21 +209,21 @@ const Card = ({
   useEffect(() => {
     debouncedFetchReactionList(id);
     debouncedFetchReactionCount(id);
-    const temp = extractTextFromHTML(content[0])
-    setShareContent(temp)
-  },[]);
+    const temp = extractTextFromHTML(content[0]);
+    setShareContent(temp);
+  }, []);
 
   useEffect(() => {
-    if(localCount < 0){
-      setLocalCount(0)
+    if (localCount < 0) {
+      setLocalCount(0);
     }
-  },[localCount])
+  }, [localCount]);
 
-  const extractTextFromHTML = (htmlString : string):string => {
+  const extractTextFromHTML = (htmlString: string): string => {
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = htmlString;
-    return tempDiv.innerText || tempDiv.textContent ||'';
-  }
+    return tempDiv.innerText || tempDiv.textContent || '';
+  };
 
   const handleShaerTwitter = () => {
     const twitterShareUrl: string = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent('https://naver.com')}`;
@@ -191,26 +233,26 @@ const Card = ({
   };
 
   const handleShareInstagram = () => {
-    const instagramShareUrl : string = `https://www.instagram.com/direct/inbox/?url=${encodeURIComponent(domain)}&text=${encodeURIComponent('여기에 내용 넣으면 됨')}`;
+    const instagramShareUrl: string = `https://www.instagram.com/direct/inbox/?url=${encodeURIComponent(domain)}&text=${encodeURIComponent('여기에 내용 넣으면 됨')}`;
     navigator.clipboard.writeText(domain);
     shareCountApi(id);
     setIsActive(false);
     window.open(instagramShareUrl, '_blank', 'noopener,noreferrer');
-  }
+  };
 
   const handelShareFaceBook = () => {
-    const facebookShareUrl : string = `https:///www.facebook.com/sharer/sharer.php?u=naver.com`
+    const facebookShareUrl: string = `https:///www.facebook.com/sharer/sharer.php?u=naver.com`;
     shareCountApi(id);
     setIsActive(false);
-    window.open(facebookShareUrl, '_blank', 'noopener,noreferrer')
-  }
+    window.open(facebookShareUrl, '_blank', 'noopener,noreferrer');
+  };
 
-  const handleCopyClipBoard = (url : any) => {
+  const handleCopyClipBoard = (url: any) => {
     navigator.clipboard.writeText(url);
     shareCountApi(id);
     setIsActive(false);
-    alert("링크가 복사되었습니다.");
-  }
+    alert('링크가 복사되었습니다.');
+  };
 
   const handleShareKakao = () => {
     if (window.Kakao && window.Kakao.isInitialized()) {
@@ -240,50 +282,50 @@ const Card = ({
     } else {
       console.error('Kakao SDK가 초기화되지 않았습니다.');
     }
-}
+  };
 
   return (
     <>
       <CardContainer
         onMouseEnter={() => setIsCardHovered(true)}
         onMouseLeave={() => setIsCardHovered(false)}
-        isHovered = {isCardHovered}
+        isHovered={isCardHovered}
         modalState={modalState.modalState}
       >
         {/* Card Image */}
         <ImageContainer>
-          <LogoImg src = {logo}/>
-          <NicknameWrapper onClick={() => navigate(`/users/inquiry?nickname=${nickname}`)}>
+          <LogoImg src={logo} />
+          <NicknameWrapper
+            onClick={() => navigate(`/users/inquiry?nickname=${nickname}`)}
+          >
             {nickname}
           </NicknameWrapper>
         </ImageContainer>
-        
+
         {/* Card Content */}
         <ContentContainer>
-          <BoardTitle onClick={goBoardRead}>
-            {title}
-          </BoardTitle>
+          <BoardTitle onClick={goBoardRead}>{title}</BoardTitle>
 
-          {type === "TEXT" ? (
+          {type === 'TEXT' ? (
             <TextContainer>
-                {content?.map((co, index) => {
-                  // console.log("card content : ", co);
-                  return (
-                    <div
-                      key={`${id}-${index}`}
-                      dangerouslySetInnerHTML={{ __html: sanitizeHtml(co) }}
-                    />
-                  );
-                })}
+              {content?.map((co, index) => {
+                // console.log("card content : ", co);
+                return (
+                  <div
+                    key={`${id}-${index}`}
+                    dangerouslySetInnerHTML={{ __html: sanitizeHtml(co) }}
+                  />
+                );
+              })}
             </TextContainer>
-          ) : type === "MEDIA" ? (
-              <MediaContainer>
+          ) : type === 'MEDIA' ? (
+            <MediaContainer>
               {content.map((image, index) => (
                 <div key={`${id}-${index}`}>
-                  <ImagePreview src={image}alt={`Preview image ${index}`}/>
+                  <ImagePreview src={image} alt={`Preview image ${index}`} />
                 </div>
               ))}
-              </MediaContainer>
+            </MediaContainer>
           ) : (
             <>
               {content.map((video: string, index: number) => (
@@ -292,11 +334,11 @@ const Card = ({
                     <YouTube
                       videoId={getYouTubeVideoId({ url: video })}
                       opts={{
-                        width: "760px",
-                        height: "400px",
+                        width: '760px',
+                        height: '400px',
                         playerVars: { modestbranding: 1 },
                       }}
-                      style={{ borderRadius: "20px" }} // 추가된 부분
+                      style={{ borderRadius: '20px' }} // 추가된 부분
                     />
                   )}
                 </VideoContainer>
@@ -306,36 +348,34 @@ const Card = ({
         </ContentContainer>
       </CardContainer>
 
-      <ButtonContainer modalState = {modalState.modalState}>
+      <ButtonContainer modalState={modalState.modalState}>
         <ReactionWrapper>
           <LikeButton
-          isLiked={isReaction === 'LIKE'}
-          isHovered={isCardUpHovered}
-          onMouseEnter={() => setIsCardUpHovered(true)}
-          onMouseLeave={() => setIsCardUpHovered(false)}
-          onClick={() => reactionButton("LIKE")}
+            isLiked={isReaction === 'LIKE'}
+            isHovered={isCardUpHovered}
+            onMouseEnter={() => setIsCardUpHovered(true)}
+            onMouseLeave={() => setIsCardUpHovered(false)}
+            onClick={() => reactionButton('LIKE')}
           >
             좋아요
           </LikeButton>
-          <ReactionCount>
-            {isCardCount}
-          </ReactionCount>
+          <ReactionCount>{isCardCount}</ReactionCount>
           <DisLikeButton
-          isDisliked={isReaction === 'DISLIKE'}
-          isHovered={isCardDownHovered}
-          onMouseEnter={() => setIsCardDownHovered(true)}
-          onMouseLeave={() => setIsCardDownHovered(false)}
-          onClick={() => reactionButton("DISLIKE")}
+            isDisliked={isReaction === 'DISLIKE'}
+            isHovered={isCardDownHovered}
+            onMouseEnter={() => setIsCardDownHovered(true)}
+            onMouseLeave={() => setIsCardDownHovered(false)}
+            onClick={() => reactionButton('DISLIKE')}
           >
             싫어요
           </DisLikeButton>
         </ReactionWrapper>
         <CommentWrapper>
           <CommentButton
-          isHovered={isCardCommentHovered}
-          onMouseEnter={() => setIsCardCommentHovered(true)}
-          onMouseLeave={() => setIsCardCommentHovered(false)}
-          onClick={goBoardRead}
+            isHovered={isCardCommentHovered}
+            onMouseEnter={() => setIsCardCommentHovered(true)}
+            onMouseLeave={() => setIsCardCommentHovered(false)}
+            onClick={goBoardRead}
           >
             댓글
           </CommentButton>
@@ -344,47 +384,93 @@ const Card = ({
         {/* 공유 */}
         <ShareWrapper ref={dropdownRef}>
           <DropdownContainer>
-          <ShareButton
-          isHovered={isCardShareHovered}
-          onMouseEnter={() => setIsCardShareHovered(true)}
-          onMouseLeave={() => setIsCardShareHovered(false)}
-          onClick={() => {setIsActive((prev) => !prev)}}
-          >
-          <ShareImage src="https://img.icons8.com/ios/50/forward-arrow.png" alt="Share Icon" />
-          <ShareCount>{shareCount}</ShareCount>
-          </ShareButton>
-          {active && ( 
-            <DropdownMenu>
-              <DropdownItem href="#" onClick = {() => {handleShareKakao()}}><ShareIcon src = {kakao}/>카카오톡</DropdownItem>
-              <DropdownItem href="#" onClick = {() => {handleShareInstagram()}}><ShareIcon src = {instagram}/>인스타그램</DropdownItem>
-              <DropdownItem href="#" onClick = {() => {handelShareFaceBook()}}><ShareIcon src = {facebook}/>페이스북</DropdownItem>
-              <DropdownItem href="#" onClick = {() => {handleShaerTwitter()}}><ShareIcon src = {twitter}/>트위터</DropdownItem>
-              <DropdownItem href="#" onClick = {() => {handleCopyClipBoard(domain)}}><ShareIcon src = {copy}/>링크 복사</DropdownItem>
-            </DropdownMenu>)}
+            <ShareButton
+              isHovered={isCardShareHovered}
+              onMouseEnter={() => setIsCardShareHovered(true)}
+              onMouseLeave={() => setIsCardShareHovered(false)}
+              onClick={() => {
+                setIsActive((prev) => !prev);
+              }}
+            >
+              <ShareImage
+                src="https://img.icons8.com/ios/50/forward-arrow.png"
+                alt="Share Icon"
+              />
+              <ShareCount>{shareCount}</ShareCount>
+            </ShareButton>
+            {active && (
+              <DropdownMenu>
+                <DropdownItem
+                  href="#"
+                  onClick={() => {
+                    handleShareKakao();
+                  }}
+                >
+                  <ShareIcon src={kakao} />
+                  카카오톡
+                </DropdownItem>
+                <DropdownItem
+                  href="#"
+                  onClick={() => {
+                    handleShareInstagram();
+                  }}
+                >
+                  <ShareIcon src={instagram} />
+                  인스타그램
+                </DropdownItem>
+                <DropdownItem
+                  href="#"
+                  onClick={() => {
+                    handelShareFaceBook();
+                  }}
+                >
+                  <ShareIcon src={facebook} />
+                  페이스북
+                </DropdownItem>
+                <DropdownItem
+                  href="#"
+                  onClick={() => {
+                    handleShaerTwitter();
+                  }}
+                >
+                  <ShareIcon src={twitter} />
+                  트위터
+                </DropdownItem>
+                <DropdownItem
+                  href="#"
+                  onClick={() => {
+                    handleCopyClipBoard(domain);
+                  }}
+                >
+                  <ShareIcon src={copy} />
+                  링크 복사
+                </DropdownItem>
+              </DropdownMenu>
+            )}
           </DropdownContainer>
         </ShareWrapper>
 
         {/* 추후 삭제될 수 있는 기능이라 생각해 styled 컴포넌트로 변환하지않음*/}
         <div
           style={{
-            marginLeft : '-7px',
-            borderRadius: "30px",
-            width: "75px",
-            height: "50px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
+            marginLeft: '-7px',
+            borderRadius: '30px',
+            width: '75px',
+            height: '50px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
           }}
         >
           <button
             onMouseEnter={() => setIsCardSendHovered(true)}
             onMouseLeave={() => setIsCardSendHovered(false)}
             style={{
-              border : '1px solid gray',
-              background : isCardSendHovered ? '#f0f0f0' : 'white',
-              height: "100%",
-              width: "100%",
-              borderRadius: "30px",
+              border: '1px solid gray',
+              background: isCardSendHovered ? '#f0f0f0' : 'white',
+              height: '100%',
+              width: '100%',
+              borderRadius: '30px',
             }}
           >
             보내기
@@ -412,7 +498,7 @@ const Card = ({
         {/*  </span>*/}
         {/*</div>*/}
       </ButtonContainer>
-      <Hr/>
+      <Hr />
     </>
   );
 };
@@ -445,7 +531,7 @@ const DropdownItem = styled.a`
   }
 `;
 
-const CardContainer = styled.div<{ isHovered: boolean, modalState: boolean }>`
+const CardContainer = styled.div<{ isHovered: boolean; modalState: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -456,7 +542,7 @@ const CardContainer = styled.div<{ isHovered: boolean, modalState: boolean }>`
   margin: 10px;
   border-radius: 10px;
   cursor: pointer;
-  background-color: ${(props) => (props.isHovered ? "#f0f0f0" : "white")};
+  background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
   z-index: ${(props) => (props.modalState ? -10 : 999)};
 `;
 
@@ -504,7 +590,7 @@ const ImagePreview = styled.img`
   max-width: 760px;
   max-height: 500px;
   border-radius: 20px;
-  object-fit: contain; 
+  object-fit: contain;
   margin-top: 10px;
 `;
 
@@ -522,13 +608,13 @@ const VideoContainer = styled.div`
   overflow: hidden; // 추가된 부분
 `;
 
-const ButtonContainer = styled.div<{modalState: boolean}>`
+const ButtonContainer = styled.div<{ modalState: boolean }>`
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
   width: 100%;
   max-width: 800px;
-  z-index: ${(props) => (props.modalState ? -10 : 1000)}
+  z-index: ${(props) => (props.modalState ? -10 : 1000)};
 `;
 
 const ReactionWrapper = styled.div`
@@ -541,7 +627,7 @@ const ReactionWrapper = styled.div`
   align-items: center;
 `;
 
-const LikeButton = styled.button<{isLiked: boolean, isHovered:boolean}>`
+const LikeButton = styled.button<{ isLiked: boolean; isHovered: boolean }>`
   border: ${(props) => (props.isLiked ? '2px solid blue' : '1px solid gray')};
   background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
   width: 100%;
@@ -556,7 +642,10 @@ const ReactionCount = styled.span`
   height: 10px;
 `;
 
-const DisLikeButton = styled.button<{isDisliked: boolean, isHovered:boolean}>`
+const DisLikeButton = styled.button<{
+  isDisliked: boolean;
+  isHovered: boolean;
+}>`
   border: ${(props) => (props.isDisliked ? '1px solid red' : '1px solid gray')};
   background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
   width: 100%;
@@ -574,7 +663,7 @@ const CommentWrapper = styled.div`
   align-items: center;
 `;
 
-const CommentButton = styled.button<{isHovered: boolean}>`
+const CommentButton = styled.button<{ isHovered: boolean }>`
   border: 1px solid gray;
   background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
   height: 100%;
@@ -593,14 +682,14 @@ const ShareWrapper = styled.div`
 `;
 
 const ShareIcon = styled.img`
-  width : 30px !important;
-  height : 30px !important;
+  width: 30px !important;
+  height: 30px !important;
   object-fit: contain !important;
-  border-radius : 45% !important;
+  border-radius: 45% !important;
   margin-right: 10px;
-`
+`;
 
-const ShareButton = styled.button<{isHovered: boolean}>`
+const ShareButton = styled.button<{ isHovered: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;

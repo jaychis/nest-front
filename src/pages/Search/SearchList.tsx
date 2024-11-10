@@ -6,14 +6,14 @@ import {
   GetSearchMediaAPI,
   GetSearchPeopleAPI,
   GetSearchTagsAPI,
-} from '../api/SearchApi';
+} from '../api/searchApi';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import Card from '../../components/Card';
 import {
   CardType,
   CommunityType,
   UserType,
-} from '../../_common/CollectionTypes';
+} from '../../_common/collectionTypes';
 import BoardReply, { ReplyType } from '../Board/BoardReply';
 import EmptyState from '../../components/EmptyState';
 import styled from 'styled-components';
@@ -23,8 +23,7 @@ import { Navigate } from 'react-router-dom';
 import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
 import { AppDispatch } from '../../store/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { MainListTypes } from '../../_common/CollectionTypes';
-
+import { MainListTypes } from '../../_common/collectionTypes';
 
 type SearchListTypes =
   | 'BOARDS'
@@ -37,7 +36,9 @@ type SearchListTypes =
 export type sortTypes = 'RECENT' | 'COMMENTS';
 const SearchList = () => {
   const [searchCardList, setSearchCardList] = useState<CardType[]>([]);
-  const [searchCommunityList, setSearchCommunityList] = useState<CommunityType[]>([]);
+  const [searchCommunityList, setSearchCommunityList] = useState<
+    CommunityType[]
+  >([]);
   const [searchReplyList, setSearchReplyList] = useState<ReplyType[]>([]);
   const [searUserList, setSearchUserList] = useState<UserType[]>([]);
   const [searchTagList, setSearchTagsList] = useState([]);
@@ -55,7 +56,7 @@ const SearchList = () => {
         .then((res): void => {
           if (!res) return;
           const response = res.data.response;
-          console.log('BOARDS response : ',sortType, response);
+          console.log('BOARDS response : ', sortType, response);
 
           setSearchCardList(response);
         })
@@ -139,7 +140,7 @@ const SearchList = () => {
           console.error('SearchList GetSearchTagsAPI error : ', err),
         );
     }
-  }, [searchType, QUERY,sortType]); // QUERY를 의존성 배열에 추가하여 쿼리 변경 시 재실행
+  }, [searchType, QUERY, sortType]); // QUERY를 의존성 배열에 추가하여 쿼리 변경 시 재실행
 
   useEffect(() => console.log('searchType : ', searchType), [searchType]);
 
@@ -147,11 +148,11 @@ const SearchList = () => {
     setSortType(sortType);
   };
 
-  const navigateToCommunity = (communityName:MainListTypes) => {
+  const navigateToCommunity = (communityName: MainListTypes) => {
     dispatch(sideButtonSliceActions.setButtonType(communityName));
     navigate('/');
-  }
-  
+  };
+
   const NavBarStateChange = async ({
     type,
   }: {
@@ -248,32 +249,34 @@ const SearchList = () => {
     <>
       <NavBar />
       <MainContainer>
-      {(searchType === 'BOARDS' || searchType === 'IMAGE&VIDEO') && (
-        <SortButtonContainer>
-          <NavItem
-            onClick={() => {
-              handleChangeSortType('RECENT');
-            }}
-            style={{ background: sortType === 'RECENT' ? '#f0f0f0' : 'white' }}
-          >
-            최신순
-          </NavItem>
-          <NavItem
-            onClick={() => {
-              handleChangeSortType('COMMENTS');
-            }}
-            style={{
-              background: sortType === 'COMMENTS' ? '#f0f0f0' : 'white',
-            }}
-          >
-            댓글순
-          </NavItem>
-        </SortButtonContainer>
-      )}
+        {(searchType === 'BOARDS' || searchType === 'IMAGE&VIDEO') && (
+          <SortButtonContainer>
+            <NavItem
+              onClick={() => {
+                handleChangeSortType('RECENT');
+              }}
+              style={{
+                background: sortType === 'RECENT' ? '#f0f0f0' : 'white',
+              }}
+            >
+              최신순
+            </NavItem>
+            <NavItem
+              onClick={() => {
+                handleChangeSortType('COMMENTS');
+              }}
+              style={{
+                background: sortType === 'COMMENTS' ? '#f0f0f0' : 'white',
+              }}
+            >
+              댓글순
+            </NavItem>
+          </SortButtonContainer>
+        )}
 
-      {(searchType === 'BOARDS' ||
-        searchType === 'IMAGE&VIDEO' ||
-        searchType === 'TAGS') && (
+        {(searchType === 'BOARDS' ||
+          searchType === 'IMAGE&VIDEO' ||
+          searchType === 'TAGS') &&
           searchCardList.map((ca: CardType) => {
             return (
               <>
@@ -288,30 +291,28 @@ const SearchList = () => {
                   shareCount={ca.share_count}
                 />
               </>
-        );
-      }))}
+            );
+          })}
 
-      {searchType === 'COMMENTS' && ((
-            searchReplyList.map((re: ReplyType) => {
-              return (
-                <>
-                  <BoardReply
-                    id={re.id}
-                    comment_id={re.comment_id}
-                    user_id={re.user_id}
-                    content={re.content}
-                    nickname={re.nickname}
-                    created_at={re.created_at}
-                    updated_at={re.updated_at}
-                    deleted_at={re.deleted_at}
-                  />
-                </>
-              );
-            })
-        ))
-      }
+        {searchType === 'COMMENTS' &&
+          searchReplyList.map((re: ReplyType) => {
+            return (
+              <>
+                <BoardReply
+                  id={re.id}
+                  comment_id={re.comment_id}
+                  user_id={re.user_id}
+                  content={re.content}
+                  nickname={re.nickname}
+                  created_at={re.created_at}
+                  updated_at={re.updated_at}
+                  deleted_at={re.deleted_at}
+                />
+              </>
+            );
+          })}
 
-      {searchType === 'PEOPLE' && (
+        {searchType === 'PEOPLE' &&
           searUserList.map((user: UserType) => {
             return (
               <>
@@ -322,31 +323,32 @@ const SearchList = () => {
                 />
               </>
             );
-          })
-        )
-      }
+          })}
 
-      {searchType === 'COMMUNITIES' && (
-        searchCommunityList.map((community: CommunityType,index) => {
-          return(
-            <div onClick = {() => {navigateToCommunity(community.name as MainListTypes)}}>
-              <UserSearchCard
-                nickname={community.name}
-                profileImage={community.icon}
-                email={community.description}
+        {searchType === 'COMMUNITIES' &&
+          searchCommunityList.map((community: CommunityType, index) => {
+            return (
+              <div
+                onClick={() => {
+                  navigateToCommunity(community.name as MainListTypes);
+                }}
+              >
+                <UserSearchCard
+                  nickname={community.name}
+                  profileImage={community.icon}
+                  email={community.description}
                 />
-            </div>
-          )
-        })
-      )}
-    </MainContainer>
+              </div>
+            );
+          })}
+      </MainContainer>
     </>
   );
 };
 
 const MainContainer = styled.div`
   margin: 3vh 0 0 2vw;
-`
+`;
 
 const SortButtonContainer = styled.div`
   display: flex;

@@ -1,5 +1,5 @@
-import { errorHandling } from '../../_common/ErrorHandling';
-import { client } from './Client';
+import { errorHandling } from '../../_common/errorHandling';
+import { client } from './client';
 
 const CommunityTagsURL: string = 'community/tags';
 export interface CommunityTagsSubmitParams {

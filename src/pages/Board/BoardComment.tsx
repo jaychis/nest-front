@@ -3,16 +3,16 @@ import {
   CollectionTypes,
   ReactionStateTypes,
   ReactionType,
-} from '../../_common/CollectionTypes';
+} from '../../_common/collectionTypes';
 import {
-  ReactionAPI,
+  ReactionApi,
   ReactionCountAPI,
   ReactionListAPI,
   ReactionParams,
-} from '../api/ReactionApi';
+} from '../api/reactionApi';
 import logo from '../../assets/img/panda_logo.png';
 import { ReplyType } from './BoardReply';
-import { ReplySubmitAPI, ReplySubmitParams } from '../api/ReplyApi';
+import { ReplySubmitAPI, ReplySubmitParams } from '../api/replyApi';
 
 export interface CommentType {
   readonly id: string;
@@ -61,7 +61,7 @@ const BoardComment = (co: BoardCommentProps) => {
       };
 
       console.log('comment reaction param : ', param);
-      ReactionAPI(param)
+      ReactionApi(param)
         .then((res) => {
           const status: number = res.status;
           console.log('status : ', status);

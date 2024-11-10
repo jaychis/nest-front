@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { MainListTypes } from '../../_common/CollectionTypes';
+import { MainListTypes } from '../../_common/collectionTypes';
 import { AppDispatch } from '../../store/store';
 import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
 import { setCommunity } from '../../reducers/communitySlice';
 import { RootState } from '../../store/store';
 import { UserModalState } from '../../reducers/modalStateSlice';
 import logo from '../../assets/img/panda_logo.png';
-import { CommunityListAPI } from '../api/CommunityApi';
+import { CommunityListAPI } from '../api/communityApi';
 import Tooltip from '../../components/Tooltip';
 
 const GlobalSideBar = () => {
@@ -92,7 +92,9 @@ const GlobalSideBar = () => {
   interface CommunityClickType {
     button: MainListTypes;
   }
-  const handleCommunityClick = ({ button }: CommunityClickType,index: number,
+  const handleCommunityClick = (
+    { button }: CommunityClickType,
+    index: number,
   ) => {
     dispatch(sideButtonSliceActions.setButtonType(button));
     dispatch(setCommunity(communityList[index]));

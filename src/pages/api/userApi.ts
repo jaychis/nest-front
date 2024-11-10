@@ -1,8 +1,8 @@
-import { client } from './Client';
+import { client } from './client';
 import { createAsyncThunk, isRejectedWithValue } from '@reduxjs/toolkit';
 import { Simulate } from 'react-dom/test-utils';
 import error = Simulate.error;
-import { errorHandling } from '../../_common/ErrorHandling';
+import { errorHandling } from '../../_common/errorHandling';
 
 const USERS_URL: string = 'users';
 

@@ -1,4 +1,4 @@
-import { client } from "./Client";
+import { client } from './client';
 
 interface ReactionCountParams {
   readonly boardId: string;
@@ -14,14 +14,14 @@ export const ReactionListAPI = async ({ boardId }: ReactionListParams) =>
   await client.get(`reactions/list?boardId=${boardId}`);
 
 export interface ReactionParams {
-  readonly type: "LIKE" | "DISLIKE";
+  readonly type: 'LIKE' | 'DISLIKE';
   readonly boardId: string;
   readonly userId: string;
-  readonly reactionTarget: "BOARD" | "COMMENT" | "REPLY";
+  readonly reactionTarget: 'BOARD' | 'COMMENT' | 'REPLY';
 }
 
-export const ReactionAPI = async (params: ReactionParams) => {
-  const response = await client.post("reactions", params);
+export const ReactionApi = async (params: ReactionParams) => {
+  const response = await client.post('reactions', params);
 
   return response;
 };

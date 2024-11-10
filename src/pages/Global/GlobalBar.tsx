@@ -1,20 +1,20 @@
-import React, { useRef, useState, useEffect } from "react";
-import { FaSistrix, FaPlus, FaBell } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import UserModalForm from "../User/UserModalForm";
-import logo from "../../assets/img/panda_logo.png";
-import ProfileModal from "../User/ProfileModal";
-import { AddSearchAPI } from "../api/SearchApi";
-import NotificationModal from "../User/NotificationModal";
-import { searchQuery,setSearchResults } from "../../reducers/searchSlice";
-import { RootState, AppDispatch } from "../../store/store";
-import debounce from "lodash.debounce";
-import { UserModalState, setModalState } from "../../reducers/modalStateSlice";
-import "react-tooltip/dist/react-tooltip.css";
-import { Tooltip } from "react-tooltip";
-import "./GlobalBar.module.css";
-import styled from "styled-components";
+import React, { useRef, useState, useEffect } from 'react';
+import { FaSistrix, FaPlus, FaBell } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import UserModalForm from '../User/UserModalForm';
+import logo from '../../assets/img/panda_logo.png';
+import ProfileModal from '../User/ProfileModal';
+import { AddSearchAPI } from '../api/searchApi';
+import NotificationModal from '../User/NotificationModal';
+import { searchQuery, setSearchResults } from '../../reducers/searchSlice';
+import { RootState, AppDispatch } from '../../store/store';
+import debounce from 'lodash.debounce';
+import { UserModalState, setModalState } from '../../reducers/modalStateSlice';
+import 'react-tooltip/dist/react-tooltip.css';
+import { Tooltip } from 'react-tooltip';
+import './GlobalBar.module.css';
+import styled from 'styled-components';
 
 const GlobalBar = () => {
   const navigate = useNavigate();
@@ -22,11 +22,11 @@ const GlobalBar = () => {
   const modalState: UserModalState = useSelector(
     (state: RootState) => state.modalState,
   );
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const searchResults = useSelector(
     (state: RootState) => state.search.searchResults,
   );
-  const postSubmit = () => navigate("/boards/submit");
+  const postSubmit = () => navigate('/boards/submit');
   const [userHover, setUserHover] = useState<boolean>(false);
   const [bellHover, setBellHover] = useState<boolean>(false);
   const [logoHover, setLogoHover] = useState<boolean>(false);
@@ -59,7 +59,7 @@ const GlobalBar = () => {
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
+    if (event.key === 'Enter') {
       clickSearch();
     }
   };
@@ -67,7 +67,7 @@ const GlobalBar = () => {
   const clickSearch = async () => {
     if (!searchTerm) {
       // 나중에는 alert 제거하기
-      alert("내용을 입력해주세요");
+      alert('내용을 입력해주세요');
       return;
     }
 
@@ -85,7 +85,7 @@ const GlobalBar = () => {
   };
 
   const handleLogoClick = () => {
-    window.location.href = '/'
+    window.location.href = '/';
   };
 
   useEffect(() => {
@@ -102,18 +102,16 @@ const GlobalBar = () => {
 
   return (
     <div>
-      <GlobalTopBar
-        modalState = {modalState.modalState}
-      >
+      <GlobalTopBar modalState={modalState.modalState}>
         {/* Logo and Site Name */}
         <LogoWrapper
-          logoHover = {logoHover}
+          logoHover={logoHover}
           onMouseEnter={() => setLogoHover(true)}
           onMouseLeave={() => setLogoHover(false)}
           onClick={handleLogoClick}
         >
-          <LogoImage src={logo} alt="Logo"/>
-          <SiteName>{"jaychis.com"}</SiteName>
+          <LogoImage src={logo} alt="Logo" />
+          <SiteName>{'jaychis.com'}</SiteName>
         </LogoWrapper>
 
         {/* Search Bar */}
@@ -122,8 +120,8 @@ const GlobalBar = () => {
             type="search"
             placeholder="Search"
             value={searchTerm}
-            style={{ width: "35%", padding: "10px", borderRadius: "20px" }}
-            name={"search"}
+            style={{ width: '35%', padding: '10px', borderRadius: '20px' }}
+            name={'search'}
             onChange={(e) => handleSearchChange(e)}
             onKeyDown={handleKeyDown} // 엔터 키 이벤트 추가
           />
@@ -132,7 +130,7 @@ const GlobalBar = () => {
 
         {/* Navigation Icons */}
         <LoginStatusView>
-          {localStorage.getItem("access_token") ? (
+          {localStorage.getItem('access_token') ? (
             <>
               <ProfileButton
                 ref={userButtonRef}
@@ -141,11 +139,7 @@ const GlobalBar = () => {
                 onMouseLeave={() => setUserHover(false)}
                 onClick={toggleProfileModal}
               >
-                <ProfileImage
-                  src={logo}
-                  alt="Profile"
-                  onClick={openModal}
-                />
+                <ProfileImage src={logo} alt="Profile" onClick={openModal} />
               </ProfileButton>
               <ProfileModal
                 isOpen={isProfileModalOpen}
@@ -160,7 +154,10 @@ const GlobalBar = () => {
               >
                 <SubmitButton plusHover={plusHover} onClick={postSubmit}>
                   <Tooltip id="tooltip" place="top" arrowColor="transparent" />
-                  <PlusIcon data-tooltip-content="글쓰기" data-tooltip-id="tooltip" />
+                  <PlusIcon
+                    data-tooltip-content="글쓰기"
+                    data-tooltip-id="tooltip"
+                  />
                 </SubmitButton>
               </PostButtonContainer>
 
@@ -172,15 +169,15 @@ const GlobalBar = () => {
               >
                 <InquiryButton
                   inquiryHover={inquiryHover}
-                  onClick={() => navigate("/users/inquiry")}
+                  onClick={() => navigate('/users/inquiry')}
                 >
-                <Tooltip id="tooltip2" place="top" arrowColor="transparent" />
-                <InquiryIcon
-                  data-tooltip-content="문의하기"
-                  data-tooltip-id="tooltip2"
-                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAB7klEQVR4nO3Yz4uNURzH8df4kfyakowsLGQU2diIiMjKhkiilJ3ZmRr/gFhYs5iFslMWSikLWSkZUjY2QpRQfqc0fvPoqe/iaRjm3rn3Pj867zrdOs/5fp9z7nnO5/v9HhKJRCJREllDmsYtpK5kjV3IoPox+LeFvMMW9WEDXk122L/ggOqzB+OTHfbR+P2JEdVlJOZYnPMfh324MOgsZqkOM3Em5vYLx/+nWnvxKfquYqHymY/Lhc//4FTldyNeR/8dLFUei3GzIEhbW40jK/Egnj3BGuXI68OYw2Osbjcg5v/GjXj+Htv0jk14E+++jYHpRvY5uBBjvuKQ7rMPn+OdlzCvUylKX6jERMXoBsMF5TyNGd3ItY7ge4w/h9k6K6+j4fsHjnY7adxdiKrX0G/6LMCV8Jl/Uvt7lf2ux8uwu4fl2mcZ7oavt9jc6zR+Be6H7Qusa8PHWjwNH4+wqqx6ZBGuh/1H7GzBdgc+hO0YlpRdWOXyfD585EIwNAWbw/gWNhcxtyoVYh9OFeT5RKjQRPK+kzEmC5vctnKl7lBBnvP8aFdE5IFQu7EWd67Umn07nv/jtuNZjKnF5UM/jkWONB7tVhRFnS4LssbeotSVLC2kYmRpRypGlnakYmSN3ZGs5k1jFpJIJBIJveY3S2K8l4EjqFIAAAAASUVORK5CYII="
-                />
-              </InquiryButton>
+                  <Tooltip id="tooltip2" place="top" arrowColor="transparent" />
+                  <InquiryIcon
+                    data-tooltip-content="문의하기"
+                    data-tooltip-id="tooltip2"
+                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAB7klEQVR4nO3Yz4uNURzH8df4kfyakowsLGQU2diIiMjKhkiilJ3ZmRr/gFhYs5iFslMWSikLWSkZUjY2QpRQfqc0fvPoqe/iaRjm3rn3Pj867zrdOs/5fp9z7nnO5/v9HhKJRCJREllDmsYtpK5kjV3IoPox+LeFvMMW9WEDXk122L/ggOqzB+OTHfbR+P2JEdVlJOZYnPMfh324MOgsZqkOM3Em5vYLx/+nWnvxKfquYqHymY/Lhc//4FTldyNeR/8dLFUei3GzIEhbW40jK/Egnj3BGuXI68OYw2Osbjcg5v/GjXj+Htv0jk14E+++jYHpRvY5uBBjvuKQ7rMPn+OdlzCvUylKX6jERMXoBsMF5TyNGd3ItY7ge4w/h9k6K6+j4fsHjnY7adxdiKrX0G/6LMCV8Jl/Uvt7lf2ux8uwu4fl2mcZ7oavt9jc6zR+Be6H7Qusa8PHWjwNH4+wqqx6ZBGuh/1H7GzBdgc+hO0YlpRdWOXyfD585EIwNAWbw/gWNhcxtyoVYh9OFeT5RKjQRPK+kzEmC5vctnKl7lBBnvP8aFdE5IFQu7EWd67Umn07nv/jtuNZjKnF5UM/jkWONB7tVhRFnS4LssbeotSVLC2kYmRpRypGlnakYmSN3ZGs5k1jFpJIJBIJveY3S2K8l4EjqFIAAAAASUVORK5CYII="
+                  />
+                </InquiryButton>
               </InquiryButtonContainer>
 
               <NotificationButtonContainer
@@ -188,8 +185,8 @@ const GlobalBar = () => {
                 onMouseEnter={() => setBellHover(true)}
                 onMouseLeave={() => setBellHover(false)}
                 onClick={() => {
-                toggleNotificationModal();
-                openModal();
+                  toggleNotificationModal();
+                  openModal();
                 }}
               >
                 <BellIcon bellHover={bellHover} />
@@ -230,7 +227,7 @@ const GlobalTopBar = styled.nav<{ modalState: boolean }>`
 const LogoWrapper = styled.div<{ logoHover: boolean }>`
   display: flex;
   align-items: center;
-  background: ${(props) => (props.logoHover ? "#D3D3D3" : "transparent")};
+  background: ${(props) => (props.logoHover ? '#D3D3D3' : 'transparent')};
   border-radius: 25px;
   padding: 0.625rem; /* 10px을 rem으로 변환 */
   cursor: pointer;
@@ -257,7 +254,7 @@ const SearchInput = styled.input`
   width: 35%;
   padding: 10px;
   border-radius: 20px;
-  border: 1px solid #ccc; 
+  border: 1px solid #ccc;
 `;
 
 const SearchIcon = styled(FaSistrix)`
@@ -275,7 +272,7 @@ const ProfileButton = styled.div<{ userHover: boolean }>`
   border-radius: 50%;
   width: 40px;
   height: 40px;
-  background: ${(props) => (props.userHover ? "#D3D3D3" : "transparent")};
+  background: ${(props) => (props.userHover ? '#D3D3D3' : 'transparent')};
   cursor: pointer;
   position: relative;
 `;
@@ -295,12 +292,12 @@ const PostButtonContainer = styled.div<{ plusHover: boolean }>`
   font-size: 16px;
   border-radius: 25px;
   margin-left: 5px;
-  background: ${(props) => (props.plusHover ? "#D3D3D3" : "white")};
+  background: ${(props) => (props.plusHover ? '#D3D3D3' : 'white')};
 `;
 
 const SubmitButton = styled.button<{ plusHover: boolean }>`
   border: none;
-  background: ${(props) => (props.plusHover ? "#D3D3D3" : "white")};
+  background: ${(props) => (props.plusHover ? '#D3D3D3' : 'white')};
   cursor: pointer;
 `;
 
@@ -316,7 +313,7 @@ const InquiryButtonContainer = styled.div<{ inquiryHover: boolean }>`
   cursor: pointer;
   font-size: 16px;
   border-radius: 25px;
-  background: ${(props) => (props.inquiryHover ? "#D3D3D3" : "white")};
+  background: ${(props) => (props.inquiryHover ? '#D3D3D3' : 'white')};
 `;
 
 const InquiryButton = styled.button<{ inquiryHover: boolean }>`
@@ -326,7 +323,7 @@ const InquiryButton = styled.button<{ inquiryHover: boolean }>`
   border: none;
   font-size: 16px;
   border-radius: 25px;
-  background: ${(props) => (props.inquiryHover ? "#D3D3D3" : "white")};
+  background: ${(props) => (props.inquiryHover ? '#D3D3D3' : 'white')};
   cursor: pointer;
 `;
 
@@ -342,18 +339,18 @@ const NotificationButtonContainer = styled.div<{ bellHover: boolean }>`
   border-radius: 50%;
   width: 50px;
   height: 50px;
-  background: ${(props) => (props.bellHover ? "#D3D3D3" : "transparent")};
+  background: ${(props) => (props.bellHover ? '#D3D3D3' : 'transparent')};
   cursor: pointer;
   margin-right: 30px;
 `;
 
 const BellIcon = styled(FaBell)<{ bellHover: boolean }>`
-  color: ${(props) => (props.bellHover ? "white" : "black")};
+  color: ${(props) => (props.bellHover ? 'white' : 'black')};
   width: 20px;
   height: 20px;
 `;
 
 const LoginStatusView = styled.div`
   display: flex;
-  alignItems: center;
-`
+  alignitems: center;
+`;

@@ -1,46 +1,46 @@
-import React, { useEffect, useState, ChangeEvent, CSSProperties } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../store/store";
-import { ReduxProfileAPI } from "../api/UserApi";
-import { ProfileState } from "../../reducers/profileSlice";
-import { CardType } from "../../_common/CollectionTypes";
-import Card from "../../components/Card";
-import BoardComment, { CommentType } from "../Board/BoardComment";
-import { BoardInquiryAPI } from "../api/BoardApi";
-import { CommentInquiryAPI } from "../api/CommentApi";
+import React, { useEffect, useState, ChangeEvent, CSSProperties } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../store/store';
+import { ReduxProfileAPI } from '../api/userApi';
+import { ProfileState } from '../../reducers/profileSlice';
+import { CardType } from '../../_common/collectionTypes';
+import Card from '../../components/Card';
+import BoardComment, { CommentType } from '../Board/BoardComment';
+import { BoardInquiryAPI } from '../api/boardApi';
+import { CommentInquiryAPI } from '../api/commentApi';
 import {
   ImageLocalPreviewUrls,
   ImageLocalPreviewUrlsReturnType,
-} from "../../_common/ImageUploadFuntionality";
+} from '../../_common/imageUploadFuntionality';
 
-type ACTIVE_SECTION_TYPES = "POSTS" | "COMMENTS" | "PROFILE";
+type ACTIVE_SECTION_TYPES = 'POSTS' | 'COMMENTS' | 'PROFILE';
 const Profile = () => {
   const user: ProfileState = useSelector((state: RootState) => state.profile);
   const dispatch = useDispatch<AppDispatch>();
   const [myPosts, setMyPosts] = useState<CardType[]>([]);
   const [myComments, setMyComments] = useState<CommentType[]>([]);
   const [activeSection, setActiveSection] =
-    useState<ACTIVE_SECTION_TYPES>("POSTS");
-  const ID: string = (localStorage.getItem("id") as string) || "";
+    useState<ACTIVE_SECTION_TYPES>('POSTS');
+  const ID: string = (localStorage.getItem('id') as string) || '';
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [profilePreview, setProfilePreview] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [nickname, setNickname] = useState<string>(user.data.nickname || "");
-  const [email, setEmail] = useState<string>(user.data.email || "");
-  const [phone, setPhone] = useState<string>(user.data.phone || "");
+  const [nickname, setNickname] = useState<string>(user.data.nickname || '');
+  const [email, setEmail] = useState<string>(user.data.email || '');
+  const [phone, setPhone] = useState<string>(user.data.phone || '');
   const [boardId, setBoardId] = useState<string[]>([]);
 
   useEffect(() => {
     ExecuteBoardInquiryAPI({ id: ID }).then((res) => setMyPosts(res));
-    console.log(myPosts)
+    console.log(myPosts);
   }, [ID]);
 
   useEffect(() => {
-    if (activeSection === "POSTS") {
+    if (activeSection === 'POSTS') {
       ExecuteBoardInquiryAPI({ id: ID }).then((res) => setMyPosts(res));
     }
 
-    if (activeSection === "COMMENTS") {
+    if (activeSection === 'COMMENTS') {
       const commentInquiry = async (): Promise<void> => {
         const res = await CommentInquiryAPI(ID);
         if (!res) return;
@@ -51,9 +51,9 @@ const Profile = () => {
       commentInquiry();
     }
 
-    if (activeSection === "PROFILE") {
+    if (activeSection === 'PROFILE') {
       dispatch(ReduxProfileAPI({ id: ID })).then((res) => {
-        console.log("Profile API response:", res);
+        console.log('Profile API response:', res);
         if (res && res.payload) {
           setNickname(res.payload.nickname);
           setEmail(res.payload.email);
@@ -64,13 +64,13 @@ const Profile = () => {
   }, [activeSection, ID, dispatch]);
 
   useEffect(() => {
-    if (profilePicture && typeof profilePicture !== "string") {
+    if (profilePicture && typeof profilePicture !== 'string') {
       const reader = new FileReader();
       reader.onloadend = () => {
         setProfilePreview(reader.result as string);
       };
       reader.readAsDataURL(profilePicture);
-    } else if (typeof profilePicture === "string") {
+    } else if (typeof profilePicture === 'string') {
       setProfilePreview(profilePicture);
     } else {
       setProfilePreview(null);
@@ -105,44 +105,49 @@ const Profile = () => {
   return (
     <>
       <div style={styles.container}>
-        <div style={{ flex: 2, padding: "20px", overflowY: "auto" }}>
+        <div style={{ flex: 2, padding: '20px', overflowY: 'auto' }}>
           <div style={styles.buttonContainer}>
             <button
               style={
-                activeSection === "POSTS" ? styles.activeButton : styles.button
+                activeSection === 'POSTS' ? styles.activeButton : styles.button
               }
-              onClick={() => setActiveSection("POSTS")}
+              onClick={() => setActiveSection('POSTS')}
             >
               내가 등록한 게시글
             </button>
             <button
               style={
-                activeSection === "COMMENTS"
+                activeSection === 'COMMENTS'
                   ? styles.activeButton
                   : styles.button
               }
-              onClick={() => setActiveSection("COMMENTS")}
+              onClick={() => setActiveSection('COMMENTS')}
             >
               내가 등록한 댓글
             </button>
             <button
               style={
-                activeSection === "PROFILE"
+                activeSection === 'PROFILE'
                   ? styles.activeButton
                   : styles.button
               }
-              onClick={() => setActiveSection("PROFILE")}
+              onClick={() => setActiveSection('PROFILE')}
             >
               나의 정보
             </button>
           </div>
 
-          {activeSection === "POSTS" && (
+          {activeSection === 'POSTS' && (
             <div style={styles.section}>
               <h2 style={styles.sectionTitle}>내가 등록한 게시글</h2>
               {myPosts.length > 0 ? (
                 myPosts.map((post: CardType) => (
-                  <Card shareCount = {post.share_count} key={post.id} {...post} createdAt={post.created_at} />
+                  <Card
+                    shareCount={post.share_count}
+                    key={post.id}
+                    {...post}
+                    createdAt={post.created_at}
+                  />
                 ))
               ) : (
                 <p>등록된 포스트가 없습니다.</p>
@@ -150,7 +155,7 @@ const Profile = () => {
             </div>
           )}
 
-          {activeSection === "COMMENTS" && (
+          {activeSection === 'COMMENTS' && (
             <div style={styles.section}>
               <h2 style={styles.sectionTitle}>내가 등록한 댓글</h2>
               {myComments.length > 0 ? (
@@ -167,7 +172,7 @@ const Profile = () => {
             </div>
           )}
 
-          {activeSection === "PROFILE" && (
+          {activeSection === 'PROFILE' && (
             <div style={styles.section}>
               <h2 style={styles.sectionTitle}>프로필</h2>
               <div style={styles.profileContainer}>
@@ -184,7 +189,7 @@ const Profile = () => {
                       <div
                         style={styles.imagePreviewWrapper}
                         onClick={() =>
-                          document.getElementById("profilePicture")?.click()
+                          document.getElementById('profilePicture')?.click()
                         }
                       >
                         {profilePreview ? (
@@ -224,7 +229,7 @@ const Profile = () => {
                       />
                     ) : (
                       <span style={styles.value}>
-                        {nickname || "닉네임을 입력하세요"}
+                        {nickname || '닉네임을 입력하세요'}
                       </span>
                     )}
                   </div>
@@ -239,7 +244,7 @@ const Profile = () => {
                       />
                     ) : (
                       <span style={styles.value}>
-                        {email || "이메일을 입력하세요"}
+                        {email || '이메일을 입력하세요'}
                       </span>
                     )}
                   </div>
@@ -254,7 +259,7 @@ const Profile = () => {
                       />
                     ) : (
                       <span style={styles.value}>
-                        {phone || "전화번호를 입력하세요"}
+                        {phone || '전화번호를 입력하세요'}
                       </span>
                     )}
                   </div>
@@ -264,7 +269,7 @@ const Profile = () => {
                 onClick={isEditing ? handleSave : handleEditToggle}
                 style={styles.editButton}
               >
-                {isEditing ? "저장" : "수정"}
+                {isEditing ? '저장' : '수정'}
               </button>
             </div>
           )}
@@ -276,130 +281,130 @@ const Profile = () => {
 
 const styles: { [key: string]: CSSProperties } = {
   container: {
-    display: "flex",
-    width: "100%",
-    height: "100vh",
-    justifyContent: "center",
-    overflow: "hidden",
+    display: 'flex',
+    width: '100%',
+    height: '100vh',
+    justifyContent: 'center',
+    overflow: 'hidden',
   },
   buttonContainer: {
-    display: "flex",
-    justifyContent: "center",
-    marginBottom: "20px",
+    display: 'flex',
+    justifyContent: 'center',
+    marginBottom: '20px',
   },
   button: {
-    padding: "10px 20px",
-    margin: "0 10px",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-    backgroundColor: "white",
-    color: "#333",
-    fontWeight: "bold",
-    transition: "background-color 0.3s, color 0.3s",
+    padding: '10px 20px',
+    margin: '0 10px',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    backgroundColor: 'white',
+    color: '#333',
+    fontWeight: 'bold',
+    transition: 'background-color 0.3s, color 0.3s',
   },
   activeButton: {
-    padding: "10px 20px",
-    margin: "0 10px",
-    borderBottom: "2px solid #333",
-    borderTop: "none",
-    borderRight: "none",
-    borderLeft: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-    color: "#007BFF",
-    fontWeight: "bold",
-    transition: "background-color 0.3s, color 0.3s",
+    padding: '10px 20px',
+    margin: '0 10px',
+    borderBottom: '2px solid #333',
+    borderTop: 'none',
+    borderRight: 'none',
+    borderLeft: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    color: '#007BFF',
+    fontWeight: 'bold',
+    transition: 'background-color 0.3s, color 0.3s',
   },
   section: {
-    marginBottom: "20px",
-    backgroundColor: "#fff",
-    padding: "10px",
-    borderRadius: "10px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-    width: "100%",
+    marginBottom: '20px',
+    backgroundColor: '#fff',
+    padding: '10px',
+    borderRadius: '10px',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    width: '100%',
   },
   sectionTitle: {
-    fontSize: "24px",
-    marginBottom: "10px",
-    borderBottom: "2px solid #333",
-    paddingBottom: "5px",
+    fontSize: '24px',
+    marginBottom: '10px',
+    borderBottom: '2px solid #333',
+    paddingBottom: '5px',
   },
   profileContainer: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "flex-start",
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
   },
   imageUploadWrapper: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    cursor: "pointer",
-    marginRight: "20px",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
+    marginRight: '20px',
   },
   hiddenFileInput: {
-    display: "none",
+    display: 'none',
   },
   imagePreviewWrapper: {
-    width: "110px",
-    height: "110px",
-    borderRadius: "50%",
-    backgroundColor: "#E0E0E0",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "hidden",
-    position: "relative",
+    width: '110px',
+    height: '110px',
+    borderRadius: '50%',
+    backgroundColor: '#E0E0E0',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+    position: 'relative',
   },
   imagePreview: {
-    width: "100%",
-    height: "100%",
-    objectFit: "cover",
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
   },
   placeholder: {
-    fontSize: "14px",
-    color: "#888",
-    textAlign: "center",
+    fontSize: '14px',
+    color: '#888',
+    textAlign: 'center',
   },
   profileInfo: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    width: "100%", // Added to ensure consistency
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    width: '100%', // Added to ensure consistency
   },
   infoRow: {
-    display: "flex",
-    alignItems: "center",
-    marginBottom: "10px",
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: '10px',
   },
   label: {
-    fontWeight: "bold",
-    color: "#333",
-    fontSize: "18px",
-    width: "100px",
+    fontWeight: 'bold',
+    color: '#333',
+    fontSize: '18px',
+    width: '100px',
   },
   value: {
-    color: "#555",
-    fontSize: "18px",
+    color: '#555',
+    fontSize: '18px',
     flex: 1, // Added to ensure consistency
   },
   input: {
-    fontSize: "18px",
-    padding: "5px",
-    borderRadius: "10px",
-    border: "1px solid #ccc",
+    fontSize: '18px',
+    padding: '5px',
+    borderRadius: '10px',
+    border: '1px solid #ccc',
     flex: 1, // Added to ensure consistency
   },
   editButton: {
-    marginTop: "20px",
-    padding: "10px 20px",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-    backgroundColor: "#007BFF",
-    color: "white",
-    fontWeight: "bold",
-    transition: "background-color 0.3s, color 0.3s",
+    marginTop: '20px',
+    padding: '10px 20px',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    backgroundColor: '#007BFF',
+    color: 'white',
+    fontWeight: 'bold',
+    transition: 'background-color 0.3s, color 0.3s',
   },
 };
 
@@ -426,7 +431,7 @@ async function ExecuteBoardInquiryAPI({ id }: { readonly id: string }) {
     try {
       const res = await BoardInquiryAPI({ id });
       const response = res.data.response;
-      console.log("profile board inquiry api response : ", response);
+      console.log('profile board inquiry api response : ', response);
 
       // Cache the response
       cache[URL] = response;
@@ -438,17 +443,17 @@ async function ExecuteBoardInquiryAPI({ id }: { readonly id: string }) {
         console.warn(`Retry ${retryCount} for ${URL} after 429 error.`);
         await exponentialBackoff(retryCount);
       } else if (e.response && e.response.status === 401) {
-        console.error("Unauthorized error. Redirecting to login.");
-        window.location.href = "/login"; // Adjust this to your login route
+        console.error('Unauthorized error. Redirecting to login.');
+        window.location.href = '/login'; // Adjust this to your login route
         return;
       } else {
-        console.error("PROFILE BOARD INQUIRY ERROR : ", e);
+        console.error('PROFILE BOARD INQUIRY ERROR : ', e);
         return []; // Return an empty array on error
       }
     }
   }
 
-  console.error("Max retries reached. Returning empty response.");
+  console.error('Max retries reached. Returning empty response.');
   return [];
 }
 

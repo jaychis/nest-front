@@ -1,5 +1,5 @@
-import { client } from './Client';
-import { errorHandling } from '../../_common/ErrorHandling';
+import { client } from './client';
+import { errorHandling } from '../../_common/errorHandling';
 
 const ViewedBoardsURL: string = 'viewed/boards';
 

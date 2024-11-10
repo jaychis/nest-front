@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import Card from '../../components/Card';
-import { ReadAPI } from '../api/BoardApi';
-import { CardType, CollectionTypes } from '../../_common/CollectionTypes';
+import { ReadAPI } from '../api/boardApi';
+import { CardType, CollectionTypes } from '../../_common/collectionTypes';
 import {
   CommentListAPI,
   CommentSubmitAPI,
   CommentSubmitParams,
-} from '../api/CommentApi';
+} from '../api/commentApi';
 import BoardComment, { CommentType } from './BoardComment';
 import BoardReply, { ReplyType } from './BoardReply';
 import { useLocation } from 'react-router-dom';
-import { LogViewedBoardAPI } from '../api/ViewedBoardsApi';
+import { LogViewedBoardAPI } from '../api/viewedBoardsApi';
 
 const BoardRead = () => {
   const boardId: string = sessionStorage.getItem('boardId') as string;

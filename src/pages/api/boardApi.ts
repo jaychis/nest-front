@@ -1,6 +1,6 @@
-import { client } from './Client';
-import { BoardType } from '../../_common/CollectionTypes';
-import { errorHandling } from '../../_common/ErrorHandling';
+import { client } from './client';
+import { BoardType } from '../../_common/collectionTypes';
+import { errorHandling } from '../../_common/errorHandling';
 
 const BOARD_URL: string = 'boards';
 

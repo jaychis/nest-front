@@ -1,4 +1,4 @@
-import { client } from "./Client";
+import { client } from './client';
 
 export interface ReplySubmitParams {
   readonly nickname: string;
@@ -7,7 +7,7 @@ export interface ReplySubmitParams {
 }
 
 export const ReplySubmitAPI = async (params: ReplySubmitParams) => {
-  const URL: string = "replies/";
+  const URL: string = 'replies/';
 
   const res = await client.post(URL, params);
 

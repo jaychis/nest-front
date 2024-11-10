@@ -1,4 +1,4 @@
-import { client } from "./Client";
+import { client } from './client';
 
 export interface GetPresignedUrlParams {
   readonly key: string;
@@ -7,15 +7,15 @@ export interface GetPresignedUrlParams {
 
 export const getPresignedUrlAPI = async (params: GetPresignedUrlParams) => {
   try {
-    const URL: string = "s3/presigned-url";
-    console.log("URL : ", URL);
+    const URL: string = 's3/presigned-url';
+    console.log('URL : ', URL);
 
     const res = await client.post(URL, params);
-    console.log("getPresignedUrlAPI res : ", res);
+    console.log('getPresignedUrlAPI res : ', res);
 
     return res;
   } catch (e: any) {
-    console.error("getPresignedUrlAPI error : ", e);
+    console.error('getPresignedUrlAPI error : ', e);
     throw new Error(`${e}`);
   }
 };
@@ -25,11 +25,11 @@ export interface AWSImageDeleteParams {
 }
 
 export const AWSImageDeleteAPI = async ({ urls }: AWSImageDeleteParams) => {
-  const URL: string = "s3/";
-  console.log("URL : ", URL);
-  console.log("urls : ", urls);
-  const keys: string[] = urls.map((url: string) => url.split(".com/")[1]); // URL에서 파일 경로 추출
-  console.log("keys : ", keys);
+  const URL: string = 's3/';
+  console.log('URL : ', URL);
+  console.log('urls : ', urls);
+  const keys: string[] = urls.map((url: string) => url.split('.com/')[1]); // URL에서 파일 경로 추출
+  console.log('keys : ', keys);
 
   const param: { keys: string[] } = {
     keys,
@@ -40,7 +40,7 @@ export const AWSImageDeleteAPI = async ({ urls }: AWSImageDeleteParams) => {
 
     return res;
   } catch (e: any) {
-    console.log("AWSImageDeleteAPI err : ", e);
+    console.log('AWSImageDeleteAPI err : ', e);
     throw e;
   }
 };
@@ -58,10 +58,10 @@ export const AWSImageRegistAPI = async ({
 
   try {
     const res = await fetch(URL, {
-      method: "PUT",
+      method: 'PUT',
       headers: {
-        "Content-Type": file.type,
-        "x-amz-acl": "public-read",
+        'Content-Type': file.type,
+        'x-amz-acl': 'public-read',
       },
       body: file,
     });
@@ -69,7 +69,7 @@ export const AWSImageRegistAPI = async ({
     if (!res.ok) {
       const errorText = await res.clone().text(); // 응답 본문을 복제하여 읽기
       console.log(
-        "HTTP error response: ",
+        'HTTP error response: ',
         res.status,
         res.statusText,
         errorText,
@@ -78,7 +78,7 @@ export const AWSImageRegistAPI = async ({
 
     return res;
   } catch (e: any) {
-    console.log("AWSImageRegistAPI err : ", e);
+    console.log('AWSImageRegistAPI err : ', e);
     throw e;
   }
 };

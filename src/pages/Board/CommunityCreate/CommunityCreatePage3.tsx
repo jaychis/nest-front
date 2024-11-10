@@ -1,14 +1,14 @@
 import { FC, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCommunity } from '../../../contexts/CommunityContext';
-import { CommunitySubmitAPI } from '../../api/CommunityApi';
-import { CommunityVisibilityType } from '../../../_common/CollectionTypes';
-import { CommunityTagsSubmitAPI } from '../../api/CommunityTagsAPI';
+import { CommunitySubmitAPI } from '../../api/communityApi';
+import { CommunityVisibilityType } from '../../../_common/collectionTypes';
+import { CommunityTagsSubmitAPI } from '../../api/communityTagsAPI';
 import { FaGlobe, FaLock, FaUsers } from 'react-icons/fa'; // Importing icons from react-icons
 import styled from 'styled-components';
 import MultiStepNav from '../../../components/Buttons/MultiStepNav';
 import Button from '../../../components/Buttons/Button';
-import { GetSearchPeopleAPI } from '../../api/SearchApi';
+import { GetSearchPeopleAPI } from '../../api/searchApi';
 import vCheck from '../../../assets/img/v-check.png';
 
 const CommunityCreatePage3: FC = () => {
@@ -26,18 +26,18 @@ const CommunityCreatePage3: FC = () => {
   const requestedUserId: string = localStorage.getItem('id') as string;
 
   useEffect(() => {
-    if(visibility === 'PRIVATE' || visibility === 'RESTRICTED'){
+    if (visibility === 'PRIVATE' || visibility === 'RESTRICTED') {
       setIsCommunity((prevState) => ({
         ...prevState,
         id: [requestedUserId],
         visibility: visibility,
       }));
-    }else{
+    } else {
       setIsCommunity((prevState) => ({
         ...prevState,
         id: [],
         visibility: visibility,
-      }))
+      }));
     }
   }, [visibility]);
 
@@ -94,7 +94,7 @@ const CommunityCreatePage3: FC = () => {
     visibility: visibility,
     topics: [],
     id: [],
-    requestedUserId: requestedUserId
+    requestedUserId: requestedUserId,
   });
 
   const handleSubmit = async (): Promise<void> => {
@@ -105,7 +105,7 @@ const CommunityCreatePage3: FC = () => {
       icon: isCommunity.icon,
       visibility: isCommunity.visibility,
       userIds: isCommunity.id,
-      requestedUserId: isCommunity.requestedUserId
+      requestedUserId: isCommunity.requestedUserId,
     });
 
     if (!coRes) return;

@@ -1,6 +1,6 @@
-import { client } from './Client';
-import { errorHandling } from '../../_common/ErrorHandling';
-import { CommunityVisibilityType } from '../../_common/CollectionTypes';
+import { client } from './client';
+import { errorHandling } from '../../_common/errorHandling';
+import { CommunityVisibilityType } from '../../_common/collectionTypes';
 
 const COMMUNITY_URL: string = 'communities';
 
@@ -29,7 +29,7 @@ export interface CommunitySubmitParams {
   readonly banner?: string | null;
   readonly icon?: string | null;
   readonly userIds?: string[];
-  readonly requestedUserId: string,
+  readonly requestedUserId: string;
 }
 
 export const CommunitySubmitAPI = async (params: CommunitySubmitParams) => {

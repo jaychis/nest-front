@@ -1,12 +1,12 @@
 import React, { FormEvent, useEffect, useState, useRef } from 'react';
-import { BoardSubmitAPI, SubmitParams } from '../api/BoardApi';
+import { BoardSubmitAPI, SubmitParams } from '../api/boardApi';
 import { useNavigate } from 'react-router-dom';
 import 'react-quill/dist/quill.snow.css'; // import styles
 import ReactQuill from 'react-quill';
 import 'react-markdown-editor-lite/lib/index.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { BoardType } from '../../_common/CollectionTypes';
+import { BoardType } from '../../_common/collectionTypes';
 import {
   AwsImageUploadFunctionality,
   AwsImageUploadFunctionalityReturnType,
@@ -14,12 +14,12 @@ import {
   ImageLocalPreviewUrlsDelete,
   ImageLocalPreviewUrlsDeleteType,
   ImageLocalPreviewUrlsReturnType,
-} from '../../_common/ImageUploadFuntionality';
-import { GetCommunitiesNameAPI } from '../api/CommunityApi';
+} from '../../_common/imageUploadFuntionality';
+import { GetCommunitiesNameAPI } from '../api/communityApi';
 import ErrorModal from '../../_common/ErrorModal';
 import DeleteButton from '../../components/Buttons/DeleteButton';
 import styled from 'styled-components';
-import { TagListAPI } from '../api/TagApi';
+import { TagListAPI } from '../api/tagApi';
 
 const BoardSubmit = () => {
   const navigate = useNavigate();

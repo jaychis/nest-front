@@ -3,7 +3,7 @@ import DeleteButton from '../../../components/Buttons/DeleteButton';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useCommunity } from '../../../contexts/CommunityContext';
-import { TagListAPI } from '../../api/TagApi';
+import { TagListAPI } from '../../api/tagApi';
 
 const BoardTags = () => {
   const { topics, setTopics } = useCommunity();

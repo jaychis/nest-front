@@ -32,7 +32,11 @@ export const ErrorProvider: React.FC<ErrorProviderProps> = ({ children }) => {
 
   return (
     <ErrorContext.Provider value={{ showError }}>
-      <ErrorModal show={show} handleClose={handleClose} errorMessage={errorMessage} />
+      <ErrorModal
+        show={show}
+        handleClose={handleClose}
+        errorMessage={errorMessage}
+      />
       {children}
     </ErrorContext.Provider>
   );

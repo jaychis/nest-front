@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCommunity } from '../../../contexts/CommunityContext';
-import { TagListAPI } from '../../api/TagApi';
+import { TagListAPI } from '../../api/tagApi';
 import styled from 'styled-components';
 import Button from '../../../components/Buttons/Button';
 import MultiStepNav from '../../../components/Buttons/MultiStepNav';

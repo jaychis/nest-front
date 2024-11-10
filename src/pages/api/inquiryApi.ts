@@ -1,4 +1,4 @@
-import { client } from './Client';
+import { client } from './client';
 
 export interface InquiryParam {
   title: string | null;

@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ReduxProfileAPI } from "../pages/api/UserApi";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { ReduxProfileAPI } from '../pages/api/userApi';
 
 export interface ProfileState {
   data: {
@@ -11,26 +11,26 @@ export interface ProfileState {
     updated_at: string; // Date -> string
     deleted_at?: Date | null;
   };
-  status: "idle" | "loading" | "succeeded" | "failed";
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | undefined | null;
 }
 
 const initialState: ProfileState = {
   data: {
-    id: "",
-    email: "",
-    nickname: "",
-    phone: "",
+    id: '',
+    email: '',
+    nickname: '',
+    phone: '',
     created_at: new Date().toISOString(), // Date -> ISO string
     updated_at: new Date().toISOString(), // Date -> ISO string
     deleted_at: null,
   },
-  status: "idle",
+  status: 'idle',
   error: null,
 };
 
 const profileSlice = createSlice({
-  name: "profile",
+  name: 'profile',
   initialState,
   reducers: {
     profile(state, action: PayloadAction<ProfileState>) {
@@ -46,17 +46,17 @@ const profileSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(ReduxProfileAPI.pending, (state) => {
-        state.status = "loading";
+        state.status = 'loading';
       })
       .addCase(
         ReduxProfileAPI.fulfilled,
         (state, action: PayloadAction<typeof initialState.data>) => {
-          state.status = "succeeded";
+          state.status = 'succeeded';
           state.data = action.payload;
         },
       )
       .addCase(ReduxProfileAPI.rejected, (state, action) => {
-        state.status = "failed";
+        state.status = 'failed';
         state.error = action.error.message;
       });
   },

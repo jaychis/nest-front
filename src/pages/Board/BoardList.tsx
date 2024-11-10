@@ -4,9 +4,9 @@ import {
   BoardPopularListAPI,
   BoardShareListAPI,
   BoardTagsListAPI,
-} from '../api/BoardApi';
+} from '../api/boardApi';
 import Card from '../../components/Card';
-import { CardType } from '../../_common/CollectionTypes';
+import { CardType } from '../../_common/collectionTypes';
 import { MainListTypeState } from '../../reducers/mainListTypeSlice';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
@@ -72,9 +72,9 @@ const BoardList = () => {
   const [lastInView, setLastInView] = useState<boolean>(false);
   const [id, setId] = useState<IdType>(null);
   const [allDataLoaded, setAllDataLoaded] = useState<boolean>(false);
-  
+
   useEffect(() => {
-    if (list.length>0 && inView && !lastInView) {
+    if (list.length > 0 && inView && !lastInView) {
       ListApi({ id, allDataLoaded });
     }
     setLastInView(inView);
@@ -89,7 +89,7 @@ const BoardList = () => {
 
     if (id === null) {
       ListApi({ id, allDataLoaded });
-    } 
+    }
   }, [buttonType]);
 
   const ListApi = async ({ id, allDataLoaded }: AllListParams) => {
@@ -150,7 +150,7 @@ const BoardList = () => {
       console.error('API error: ', err);
     }
   };
-  
+
   return (
     <>
       <MainContainer>
