@@ -7,17 +7,18 @@ import {
   SignupParams,
   LoginAPI,
   LoginParams,
-} from '../api/UserApi';
-import { CollectionTypes } from '../../_common/CollectionTypes';
+} from '../api/userApi';
+import { CollectionTypes } from '../../_common/collectionTypes';
 import {
   isValidPasswordFormat,
   isValidPhoneNumber,
-} from '../../_common/PasswordRegex';
+} from '../../_common/passwordRegex';
 import { FaGoogle, FaApple, FaComment } from 'react-icons/fa';
 import { SiNaver } from 'react-icons/si';
 import vLogo from '../../assets/img/v-check.png';
 import xLogo from '../../assets/img/x-check.png';
 import Alert from '../../components/Alert';
+import { checkMasterPassword } from '../../_common/functions';
 
 interface Props {
   readonly onSwitchView: () => void;
@@ -223,6 +224,9 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
         : process.env.REACT_APP_KAKAO_TEST_REDIRECT_URL;
 
   const kakaoOauthSignUp = () => {
+    const check: boolean = checkMasterPassword();
+    if (!check) return;
+
     const currentUrl = window.location.href; // 현재 페이지의 경로
     const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=account_email&state=${encodeURIComponent(currentUrl)}`;
 

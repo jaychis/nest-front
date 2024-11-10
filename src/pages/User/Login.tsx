@@ -1,15 +1,11 @@
 import React, { MouseEventHandler, useEffect, useState } from 'react';
-import { LoginAPI, LoginParams, RefreshTokenAPI } from '../api/UserApi';
-import { CollectionTypes } from '../../_common/CollectionTypes';
-import { isValidPasswordFormat } from '../../_common/PasswordRegex';
-import { FaGoogle, FaApple, FaComment } from 'react-icons/fa';
-import { SiNaver } from 'react-icons/si';
+import { LoginAPI, LoginParams, RefreshTokenAPI } from '../api/userApi';
+import { CollectionTypes } from '../../_common/collectionTypes';
+import { isValidPasswordFormat } from '../../_common/passwordRegex';
+import { FaComment } from 'react-icons/fa';
 import Alert from '../../components/Alert';
-import {
-  UsersKakaoOAuthSignUpAPI,
-  UsersKakaoOAuthLoginAPI,
-  UsersNaverOAuthSignUpAPI,
-} from '../api/OAuthApi';
+import { UsersNaverOAuthSignUpAPI } from '../api/oAuthApi';
+import { checkMasterPassword } from '../../_common/functions';
 type modalType = 'login' | 'signup' | 'recovery' | 'verity';
 
 interface Props {
@@ -195,18 +191,9 @@ const Login = ({
     );
   });
 
-  const baseUrl = process.env.REACT_APP_API_BASE_URL;
-
   const kakaoOauthLogin = () => {
-    if (
-      baseUrl !== 'http://127.0.0.1:9898' &&
-      ((localStorage.getItem('nickname') as string) !== 'user1' ||
-        (localStorage.getItem('nickname') as string) !== 'benetric' ||
-        (localStorage.getItem('nickname') as string) !== 'smasmc' ||
-        (localStorage.getItem('nickname') as string) !== 'artem')
-    ) {
-      return alert('기능 개선 작업 진행 중입니다.');
-    }
+    const check: boolean = checkMasterPassword();
+    if (!check) return;
 
     const currentUrl = window.location.href; // 현재 페이지의 경로
     const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=account_email&state=${encodeURIComponent(currentUrl)}`;
