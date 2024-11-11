@@ -275,6 +275,7 @@ const ProfileButton = styled.div<{ userHover: boolean }>`
   background: ${(props) => (props.userHover ? '#D3D3D3' : 'transparent')};
   cursor: pointer;
   position: relative;
+  margin-top: 0.5vh;
 `;
 
 const ProfileImage = styled.img`
