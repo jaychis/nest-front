@@ -112,10 +112,6 @@ const BoardRead = () => {
     }
   };
 
-  if (!userId || !boardId) {
-    return <div>로딩중..</div>;
-  }
-
   const renderReplies = (replies: ReplyType[]) => {
     return (
       <div>
