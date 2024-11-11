@@ -27,10 +27,11 @@ import styled from 'styled-components';
 import { shareCountApi } from '../pages/api/boardApi';
 
 const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
+  let videoId = '' 
   try {
-    const urlObj: URL = new URL(url);
+    url.includes('v=') ? videoId = url.split('v=')[1] : videoId = url.split('youtu.be/')[1].split('?')[0]
 
-    return urlObj.searchParams.get('v') || '';
+    return videoId
   } catch (e) {
     console.error('Invalid URL', e);
     return '';
