@@ -67,6 +67,7 @@ const BoardSubmit = () => {
           return res;
         });
         setSuggestions(filteredTopics);
+        
       };
 
       boardTagsResponse();
@@ -332,6 +333,9 @@ const BoardSubmit = () => {
     fetchDefaultCommunities();
   }, []);
 
+  console.log(topics)
+  console.log(tagSearchTerm)
+
   return (
     <>
       <div
@@ -517,7 +521,7 @@ const BoardSubmit = () => {
                             ))}
                           </Suggestions>
                         )}
-                        {tagSearchTerm && suggestions.length === 0 && (
+                        {tagSearchTerm && !suggestions.includes(`#${tagSearchTerm}`) && !topics.includes(`#${tagSearchTerm}`) && (
                           <NoSuggestionWrapper>
                             <p>
                               등록된 태그가 없습니다. "{tagSearchTerm}"로 새
