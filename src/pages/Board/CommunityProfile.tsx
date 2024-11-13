@@ -19,6 +19,7 @@ const CommunityProfile = ({icon, name,description}:ProfileParams) => {
                         {name}
                     </CommunityName>
                 </CommunityNameWrapper>
+                <EditButton onClick = {() => {console.log('test')}}><EditIcon src="https://img.icons8.com/material-outlined/24/menu-2.png" alt="menu-2"/></EditButton>
             </CommunityInfoContainer>
         </>
     )
@@ -54,6 +55,20 @@ const CommunityNameWrapper = styled.div`
 const CommunityName = styled.h1`
     font-size: 2em;
     color: #333;
+    width: 90%;
+    display: inline;
+`
+
+const EditButton = styled.div`
+    position: absolute;
+    top: 18vh;
+    left: 55vw
+`
+
+const EditIcon = styled.img`
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
 `
 
 export default CommunityProfile;

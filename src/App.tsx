@@ -37,7 +37,7 @@ const styles = {
   },
   mainContent: {
     flex: 1,
-    marginLeft: '11%',
+    marginLeft: '11vw',
     marginTop: '80px',
   },
 };
