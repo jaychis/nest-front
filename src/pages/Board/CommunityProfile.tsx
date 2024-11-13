@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import logo from '../../assets/img/panda_logo.png'
+import DropDown from "../../components/Dropdown";
+import { useState,useRef,useEffect } from "react";
 
 interface ProfileParams {
      name: string
@@ -8,6 +10,24 @@ interface ProfileParams {
   };
 
 const CommunityProfile = ({icon, name,description}:ProfileParams) => {
+
+    const [editList, setEditList] = useState<string[]>(['이름 변경','배경화면 변경', '프로필 사진 변경'])
+    const [view, setView] = useState<boolean>(false);
+    const dropDownRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event:any) => {
+            if (dropDownRef.current && !dropDownRef.current.contains(event.target)) {
+                setView(false); 
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
     return(
         <>
             <CommunityInfoContainer>
@@ -19,7 +39,16 @@ const CommunityProfile = ({icon, name,description}:ProfileParams) => {
                         {name}
                     </CommunityName>
                 </CommunityNameWrapper>
-                <EditButton onClick = {() => {console.log('test')}}><EditIcon src="https://img.icons8.com/material-outlined/24/menu-2.png" alt="menu-2"/></EditButton>
+                <EditButton onClick = {() => {setView(!view)}}>
+                    <EditIcon src="https://img.icons8.com/material-outlined/24/menu-2.png" alt="menu-2"/>
+                </EditButton>
+
+                {view && (
+                <DropDownElement>
+                    <DropDown 
+                    ref = {dropDownRef}
+                    menu = {editList}/>
+                </DropDownElement>)}
             </CommunityInfoContainer>
         </>
     )
@@ -55,8 +84,6 @@ const CommunityNameWrapper = styled.div`
 const CommunityName = styled.h1`
     font-size: 2em;
     color: #333;
-    width: 90%;
-    display: inline;
 `
 
 const EditButton = styled.div`
@@ -69,6 +96,12 @@ const EditIcon = styled.img`
     cursor: pointer;
     width: 24px;
     height: 24px;
+`
+
+const DropDownElement = styled.div`
+    position: absolute;
+    top: 20vh;
+    left: 47.5vw
 `
 
 export default CommunityProfile;
