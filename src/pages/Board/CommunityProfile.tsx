@@ -1,5 +1,8 @@
 import styled from "styled-components";
 import logo from '../../assets/img/panda_logo.png'
+import DropDown from "../../components/Dropdown";
+import { useState,useRef,useEffect } from "react";
+import React from "react";
 
 interface ProfileParams {
      name: string
@@ -8,6 +11,39 @@ interface ProfileParams {
   };
 
 const CommunityProfile = ({icon, name,description}:ProfileParams) => {
+
+    const [editList, setEditList] = useState<string[]>(['이름 변경','배경화면 변경', '프로필 사진 변경'])
+    const [view, setView] = useState<boolean>(false);
+    const dropDownRef = React.useRef<HTMLDivElement>(null)
+    const editButtonRef = React.useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+        const handleClickOutside = (event:any) => {
+            if (dropDownRef.current &&
+                editButtonRef.current &&
+                !editButtonRef.current.contains(event.target)) {
+                setView(false); 
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    const handleButtonClick = () => {
+        setView((prev) => !prev); // view 상태를 토글
+    };
+    
+    useEffect(() => {
+        if (view && dropDownRef.current) {
+            dropDownRef.current.style.height = `${dropDownRef.current.scrollHeight}px`; // 내용 높이로 설정
+        } else if (dropDownRef.current) {
+            dropDownRef.current.style.height = '0px'; // 다시 0으로 설정
+        }
+    }, [view])
+
     return(
         <>
             <CommunityInfoContainer>
@@ -19,6 +55,19 @@ const CommunityProfile = ({icon, name,description}:ProfileParams) => {
                         {name}
                     </CommunityName>
                 </CommunityNameWrapper>
+                <EditButton 
+                ref = {editButtonRef}
+                onClick = {() => {handleButtonClick()}}>
+                    <EditIcon src="https://img.icons8.com/material-outlined/24/menu-2.png" alt="menu-2"/>
+                </EditButton>
+
+                {view && (
+                <DropDownElement>
+                    <DropDown 
+                    ref = {dropDownRef}
+                    menu = {editList}
+                    />
+                </DropDownElement>)}
             </CommunityInfoContainer>
         </>
     )
@@ -54,6 +103,24 @@ const CommunityNameWrapper = styled.div`
 const CommunityName = styled.h1`
     font-size: 2em;
     color: #333;
+`
+
+const EditButton = styled.div`
+    position: absolute;
+    top: 18vh;
+    left: 55vw
+`
+
+const EditIcon = styled.img`
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+`
+
+const DropDownElement = styled.div`
+    position: absolute;
+    top: 20vh;
+    left: 47.5vw
 `
 
 export default CommunityProfile;
