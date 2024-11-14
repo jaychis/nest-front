@@ -2,15 +2,20 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { CommunityVisibilityType } from '../_common/collectionTypes';
 
 export interface SelectCommunityParams {
+  readonly id: string;
   readonly name: string;
   readonly description: string;
+  readonly visibility: string;
+  readonly usersId?: string[];
   readonly banner?: string | null;
   readonly icon?: string | null;
 }
 
 const initialState: SelectCommunityParams = {
+  id: '',
   name: '',
   description: '',
+  visibility: 'PUBLIC',
   banner: null,
   icon: null,
 };

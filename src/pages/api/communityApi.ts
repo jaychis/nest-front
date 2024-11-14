@@ -107,6 +107,8 @@ export interface CommunityUpdateParams {
   readonly id: string;
   readonly name: string;
   readonly description: string;
+  readonly visibility: string
+  readonly userIds?: string[];
   readonly icon?: string;
   readonly banner?: string;
 }
