@@ -8,14 +8,14 @@ interface DropDownProps {
 
 const DropDown = React.forwardRef<HTMLDivElement, DropDownProps>(({ menu }, ref) => {
     return (
-        <div ref={ref}>
+        <div ref={ref} style={{ height: '0px', overflow: 'hidden', transition: 'height 0.1s ease' }}>
             <ul 
                 style={{
                     border: '1px solid #ddd',
                     borderRadius: '10px',
                     boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', 
                     backgroundColor: '#fff',
-                    padding: '10px',
+                    padding: '5px',
                     listStyleType: 'none',
                     margin: 0,
                 }}

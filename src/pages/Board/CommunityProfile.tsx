@@ -2,6 +2,7 @@ import styled from "styled-components";
 import logo from '../../assets/img/panda_logo.png'
 import DropDown from "../../components/Dropdown";
 import { useState,useRef,useEffect } from "react";
+import React from "react";
 
 interface ProfileParams {
      name: string
@@ -13,11 +14,14 @@ const CommunityProfile = ({icon, name,description}:ProfileParams) => {
 
     const [editList, setEditList] = useState<string[]>(['이름 변경','배경화면 변경', '프로필 사진 변경'])
     const [view, setView] = useState<boolean>(false);
-    const dropDownRef = useRef<HTMLDivElement | null>(null);
+    const dropDownRef = React.useRef<HTMLDivElement>(null)
+    const editButtonRef = React.useRef<HTMLDivElement>(null)
 
     useEffect(() => {
         const handleClickOutside = (event:any) => {
-            if (dropDownRef.current && !dropDownRef.current.contains(event.target)) {
+            if (dropDownRef.current &&
+                editButtonRef.current &&
+                !editButtonRef.current.contains(event.target)) {
                 setView(false); 
             }
         };
@@ -27,6 +31,18 @@ const CommunityProfile = ({icon, name,description}:ProfileParams) => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
+
+    const handleButtonClick = () => {
+        setView((prev) => !prev); // view 상태를 토글
+    };
+    
+    useEffect(() => {
+        if (view && dropDownRef.current) {
+            dropDownRef.current.style.height = `${dropDownRef.current.scrollHeight}px`; // 내용 높이로 설정
+        } else if (dropDownRef.current) {
+            dropDownRef.current.style.height = '0px'; // 다시 0으로 설정
+        }
+    }, [view])
 
     return(
         <>
@@ -39,7 +55,9 @@ const CommunityProfile = ({icon, name,description}:ProfileParams) => {
                         {name}
                     </CommunityName>
                 </CommunityNameWrapper>
-                <EditButton onClick = {() => {setView(!view)}}>
+                <EditButton 
+                ref = {editButtonRef}
+                onClick = {() => {handleButtonClick()}}>
                     <EditIcon src="https://img.icons8.com/material-outlined/24/menu-2.png" alt="menu-2"/>
                 </EditButton>
 
@@ -47,7 +65,8 @@ const CommunityProfile = ({icon, name,description}:ProfileParams) => {
                 <DropDownElement>
                     <DropDown 
                     ref = {dropDownRef}
-                    menu = {editList}/>
+                    menu = {editList}
+                    />
                 </DropDownElement>)}
             </CommunityInfoContainer>
         </>
