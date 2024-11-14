@@ -3,16 +3,13 @@ import logo from '../../assets/img/panda_logo.png'
 import DropDown from "../../components/Dropdown";
 import { useState,useRef,useEffect } from "react";
 import React from "react";
+import { CommunityUpdateAPI,CommunityUpdateParams } from "../api/communityApi";
+import { SelectCommunityParams } from "../../reducers/communitySlice";
 
-interface ProfileParams {
-     name: string
-     description: string;
-     icon: string | null | undefined
-  };
 
-const CommunityProfile = ({icon, name,description}:ProfileParams) => {
+const CommunityProfile = ({icon, name,description,id,banner,visibility}:SelectCommunityParams) => {
 
-    const [editList, setEditList] = useState<string[]>(['이름 변경','배경화면 변경', '프로필 사진 변경'])
+    const editList = ['이름 변경', '배경 변경', '프로필 변경']
     const [view, setView] = useState<boolean>(false);
     const dropDownRef = React.useRef<HTMLDivElement>(null)
     const editButtonRef = React.useRef<HTMLDivElement>(null)
@@ -51,7 +48,7 @@ const CommunityProfile = ({icon, name,description}:ProfileParams) => {
                     <ProfileImage src = {icon === null ? logo : `${icon}`} alt ='Description'/>
                 </ProfileCircle>
                 <CommunityNameWrapper>
-                    <CommunityName>
+                    <CommunityName onClick = {() => {CommunityUpdateAPI({name: '커뮤니티 수정 테스트', id:id, description:description, visibility:visibility})}}>
                         {name}
                     </CommunityName>
                 </CommunityNameWrapper>

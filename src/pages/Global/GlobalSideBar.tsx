@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { MainListTypes } from '../../_common/collectionTypes';
 import { AppDispatch } from '../../store/store';
 import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
-import { setCommunity } from '../../reducers/communitySlice';
+import { setCommunity,SelectCommunityParams } from '../../reducers/communitySlice';
 import { RootState } from '../../store/store';
 import { UserModalState } from '../../reducers/modalStateSlice';
 import logo from '../../assets/img/panda_logo.png';
@@ -24,13 +24,6 @@ const GlobalSideBar = () => {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const isLoggedIn = !!localStorage.getItem('access_token');
-
-  type SelectCommunityParams = {
-    readonly name: string;
-    readonly description: string;
-    readonly banner: string | null;
-    readonly icon: string | null;
-  };
 
   const [communityList, setCommunityList] = useState<SelectCommunityParams[]>(
     [],
