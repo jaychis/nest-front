@@ -31,7 +31,13 @@ const communitySlice = createSlice({
       state.icon = action.payload.icon;
     },
     setCommunity(state, action: PayloadAction<SelectCommunityParams>) {
-      return { ...state, ...action.payload };
+      state.id = action.payload.id;
+      state.name = action.payload.name;
+      state.description = action.payload.description;
+      state.visibility = action.payload.visibility;
+      state.usersId = action.payload.usersId ?? state.usersId;
+      state.banner = action.payload.banner ?? state.banner;
+      state.icon = action.payload.icon ?? state.icon;
     },
   },
 });

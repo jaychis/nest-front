@@ -4,7 +4,7 @@ interface Props {
   readonly children: React.ReactNode;
   readonly isOpen: boolean;
   readonly onClose: () => void;
-  readonly buttonLabel: string;
+  readonly buttonLabel?: string;
   // readonly onSubmit: () => void;
 }
 const Modal = ({ children, isOpen, onClose, buttonLabel}: Props) => {
@@ -51,7 +51,6 @@ const ModalBody = styled.div`
   flex-direction: column;
   justify-content: space-between;
   overflow: auto;
-  
 `;
 
 const CloseButton = styled.button`
