@@ -7,7 +7,7 @@ export interface SelectCommunityParams {
   readonly description: string;
   readonly visibility: string;
   readonly usersId?: string[];
-  readonly banner?: string | null;
+  readonly banner: string | null;
   readonly icon?: string | null;
 }
 
@@ -36,7 +36,7 @@ const communitySlice = createSlice({
       state.description = action.payload.description;
       state.visibility = action.payload.visibility;
       state.usersId = action.payload.usersId ?? state.usersId;
-      state.banner = action.payload.banner ?? state.banner;
+      state.banner = action.payload.banner;
       state.icon = action.payload.icon ?? state.icon;
     },
   },

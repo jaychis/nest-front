@@ -10,6 +10,8 @@ import { setCommunity } from "../../reducers/communitySlice"
 import { useSelector } from "react-redux"
 import { setModalState, UserModalState } from "../../reducers/modalStateSlice";
 import { RootState } from "../../store/store";
+import DragAndDrop from "../../components/DragAndDrop";
+import { AwsImageUploadFunctionalityReturnType } from "../../_common/imageUploadFuntionality";
 
 const CommunityProfile = () => {
     const dropDownRef = React.useRef<HTMLDivElement>(null)
@@ -22,6 +24,7 @@ const CommunityProfile = () => {
 
     const editList = ['이름 변경', '배경 변경', '프로필 변경']
     const [editCommunityName, setEditCommunityName] = useState<string>('');
+    const [editBackground, setEditBackground] = useState<AwsImageUploadFunctionalityReturnType | string>();
     const [editType, setEditType] = useState<string>('');
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [view, setView] = useState<boolean>(false)
@@ -35,6 +38,7 @@ const CommunityProfile = () => {
 
     const handleModal = () => {
         setIsOpen(!isOpen)
+        dispatch(setModalState(!modalState.modalState))
     }
 
     useEffect(() => {
@@ -84,7 +88,25 @@ const CommunityProfile = () => {
                     handleModal()
                     alert('커뮤니티 이름이 변경되었습니다.')
                     }}>
-                        확인
+                        변경
+                    </SubmitButton>
+                    </>
+                )}
+
+                {editType === '배경 변경' && (
+                    <>
+                    <DragAndDrop
+                    onFileChange={setEditBackground}
+                    />
+                    
+                    <SubmitButton 
+                    onClick = {() => {
+                    CommunityUpdateAPI({...selectCommunity, banner:editBackground as string})
+                    dispatch(setModalState(!modalState.modalState))
+                    handleModal()
+                    alert('배경화면이 변경 되었습니다.')
+                    }}>
+                        변경
                     </SubmitButton>
                     </>
                 )}
@@ -96,33 +118,12 @@ const CommunityProfile = () => {
                     type="text"
                     id="communityName"
                     placeholder="변경할 이름을 입력해주세요"
-                    onChange={(e) => 
-                    dispatch(setCommunity({ ...selectCommunity, name: e.target.value }))}
                     />
                     <SubmitButton 
                     onClick = {() => {
                     console.log(CommunityUpdateAPI(selectCommunity))
                     }}>
-                        확인
-                    </SubmitButton>
-                    </>
-                )}
-
-                {editType === '배경 변경' && (
-                    <>
-                    <CommunityNameInput
-                    required
-                    type="text"
-                    id="communityName"
-                    placeholder="변경할 이름을 입력해주세요"
-                    onChange={(e) => 
-                    dispatch(setCommunity({ ...selectCommunity, name: e.target.value }))}
-                    />
-                    <SubmitButton 
-                    onClick = {() => {
-                    console.log(CommunityUpdateAPI(selectCommunity))
-                    }}>
-                        확인
+                        변경
                     </SubmitButton>
                     </>
                 )}
@@ -147,7 +148,7 @@ const CommunityProfile = () => {
                 <DropDownElement ref = {dropDownRef}>
                     <DropDown 
                     menu = {editList}
-                    communityEditHandler = {communityEditHandler}
+                    eventHandler = {communityEditHandler}
                     />
                 </DropDownElement>)}
                 
@@ -227,7 +228,7 @@ const SubmitButton = styled.button`
   cursor: pointer;
   font-weight: bold;
   margin-top: 5vh;
-  margin-left: 40%;
+  margin-left: 38%;
 `;
 
 export default CommunityProfile;

@@ -8,11 +8,11 @@ import { CommunityUpdateAPI } from "../api/communityApi"
 const CommunityBanner = () => {
 
     const selectCommunity: SelectCommunityParams = useSelector((state:any) => state.community)
-    
+    console.log(selectCommunity)
     return(
         <>
             <BackgroundContainer>
-                <BackgroundImage src = {selectCommunity.banner === null ? logo : `${selectCommunity.banner}`} alt="Description"/>
+                <BackgroundImage src = {selectCommunity.banner === null ? logo : selectCommunity.banner} alt="Description"/>
                 <CommunityProfile/>
             </BackgroundContainer>
         </>

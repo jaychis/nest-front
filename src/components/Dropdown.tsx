@@ -2,10 +2,10 @@ import React from "react";
 
 interface DropDownProps {
     readonly menu: string[]
-    readonly communityEditHandler: (item: string) => any;
+    readonly eventHandler: (item: string) => any;
 }
 
-const DropDown = ({ menu,communityEditHandler }:DropDownProps) => {
+const DropDown = ({ menu,eventHandler }:DropDownProps) => {
     return (
         <div style={{ height: '20vh', overflow: 'hidden', transition: 'height 0.1s ease' }}>
             <ul 
@@ -33,9 +33,9 @@ const DropDown = ({ menu,communityEditHandler }:DropDownProps) => {
                     }}
                     onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
                     onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#fff'}
-                    
+                    onClick = {() => {eventHandler(item)}}
                     >
-                        <span onClick = {() => {communityEditHandler(item)}}>{item}</span>
+                        {item}
                     </li>
                 ))}
             </ul>

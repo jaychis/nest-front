@@ -14,7 +14,7 @@ const Modal = ({ children, isOpen, onClose, buttonLabel}: Props) => {
   return (
       <ModalContainer>
           <ModalBody>
-            <div style={{ display: "flex", height: "20%" }}>
+            <div style={{ display: "flex", height: "20%", marginBottom: '2vh' }}>
               <CloseButton onClick={onClose}>
                 Close
               </CloseButton>
