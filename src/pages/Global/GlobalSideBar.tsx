@@ -41,7 +41,7 @@ const GlobalSideBar = () => {
       const res = await CommunityListAPI({ take: 10, page });
       if (!res) return;
       const response = res.data.response.current_list;
-
+      console.log(res)
       const uniqueCommunities = response.filter(
         (community: SelectCommunityParams) => {
           if (communityNamesSet.has(community.name)) {

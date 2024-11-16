@@ -12,15 +12,8 @@ const CommunityBanner = () => {
     return(
         <>
             <BackgroundContainer>
-                <BackgroundImage src = {selectCommunity.banner === null ? logo : `${selectCommunity.banner}`} alt="Description"/>
-                <CommunityProfile
-                id = {selectCommunity.id}
-                icon = {selectCommunity.icon}
-                name = {selectCommunity.name}
-                description={selectCommunity.description}
-                banner={selectCommunity.banner}
-                visibility={selectCommunity.visibility}
-                />
+                <BackgroundImage src = {selectCommunity.banner === null ? logo : selectCommunity.banner} alt="Description"/>
+                <CommunityProfile/>
             </BackgroundContainer>
         </>
     )
