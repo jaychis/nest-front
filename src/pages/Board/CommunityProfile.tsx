@@ -25,6 +25,7 @@ const CommunityProfile = () => {
     const editList = ['이름 변경', '배경 변경', '프로필 변경']
     const [editCommunityName, setEditCommunityName] = useState<string>('');
     const [editBackground, setEditBackground] = useState<AwsImageUploadFunctionalityReturnType | string>();
+    const [editProfile, setEditProfile] = useState<AwsImageUploadFunctionalityReturnType | string>();
     const [editType, setEditType] = useState<string>('');
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [view, setView] = useState<boolean>(false)
@@ -113,15 +114,17 @@ const CommunityProfile = () => {
 
                 {editType === '프로필 변경' && (
                     <>
-                    <CommunityNameInput
-                    required
-                    type="text"
-                    id="communityName"
-                    placeholder="변경할 이름을 입력해주세요"
+                    <DragAndDrop
+                    onFileChange={setEditProfile}
                     />
+                    
                     <SubmitButton 
                     onClick = {() => {
-                    console.log(CommunityUpdateAPI(selectCommunity))
+                    CommunityUpdateAPI({...selectCommunity, icon: editProfile as string})
+                    dispatch(setModalState(!modalState.modalState))
+                    handleModal()
+                    alert('프로필 사진이 변경 되었습니다.')
+                    window.location.reload();
                     }}>
                         변경
                     </SubmitButton>
