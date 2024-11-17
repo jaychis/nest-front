@@ -134,7 +134,7 @@ const CommunityProfile = () => {
             </Modal>
 
                 <ProfileCircle>
-                    <ProfileImage src = {selectCommunity.icon === null ? logo : `${selectCommunity.icon}`} alt ='Description'/>
+                    <ProfileImage src = {selectCommunity.icon === null ? logo : selectCommunity.icon} alt ='Description'/>
                 </ProfileCircle>
 
                 <CommunityNameWrapper>
