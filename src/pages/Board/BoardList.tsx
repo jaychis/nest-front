@@ -29,6 +29,8 @@ const MainContainer = ({ children }: ContainerProps) => {
         justifyContent: 'flex-start',
         width: '100%',
         boxSizing: 'border-box',
+        marginLeft: '1%',
+        marginTop: '1%'
       }}
     >
       {children}
