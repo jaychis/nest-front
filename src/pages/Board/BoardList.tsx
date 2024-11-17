@@ -83,15 +83,12 @@ const BoardList = () => {
   }, [inView]);
 
   useEffect(() => {
-    let allDataLoaded: boolean = false;
+    setAllDataLoaded(false);
     setId(null);
     setList([]);
     setLastInView(false);
-    setAllDataLoaded(false);
-
-    if (id === null) {
-      ListApi({ id, allDataLoaded });
-    }
+    ListApi({ id: null, allDataLoaded:false });
+    
   }, [buttonType]);
 
   const ListApi = async ({ id, allDataLoaded }: AllListParams) => {
@@ -135,6 +132,7 @@ const BoardList = () => {
             lastId: id,
             category: buttonType,
           });
+          console.log(response)
           break;
       }
 
