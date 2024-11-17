@@ -20,28 +20,26 @@ const DragAndDrop: React.FC<DragAndDropProps> = ({ onFileChange }) => {
       showRemoveIcon: true,
     },
     onRemove: (file) => {
-      setFileList((prevList) => prevList.filter((f) => f.uid !== file.uid)); // fileList에서 파일 제거
-      onFileChange(null); // 부모 컴포넌트 상태 업데이트
-      console.log('File removed');
+      setFileList((prevList) => prevList.filter((f) => f.uid !== file.uid)); 
+      onFileChange(null); 
       return true;
     },
     onChange: async (e) => {
       const temp: File = e.file.originFileObj as File;
       
       if (e.file.status === 'removed') {
-        // 파일이 삭제될 경우, 업로드 함수 실행 방지
         return;
       }
 
       const res = await AwsImageUploadFunctionality({ fileList: [temp] });
       if (!res?.imageUrls[0]) return;
-      onFileChange(res?.imageUrls[0]); // 성공적으로 업로드된 파일 URL 전달
+      onFileChange(res?.imageUrls[0]); 
 
-      // fileList 상태 업데이트와 상태 변경
+      
       setFileList(
         e.fileList.map((file) => ({
           ...file,
-          status: 'done', // 파일 상태를 'done'으로 설정하여 로딩 아이콘 제거
+          status: 'done', 
         }))
       );
     },
