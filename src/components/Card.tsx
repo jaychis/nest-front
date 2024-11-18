@@ -728,7 +728,6 @@ const ShareButton = styled.button.withConfig({
   cursor: pointer;
 `;
 
-
 const ShareImage = styled.img`
   height: 35px;
   width: 25px;
