@@ -21,7 +21,6 @@ const CommunityCreatePage3: FC = () => {
   const { communityName, description, banner, icon, topics } = useCommunity();
   const [visibility, setVisibility] =
     useState<CommunityVisibilityType>('PUBLIC');
-  const [searchNickname, setSearchNickname] = useState<string>('');
   const [searchResultList, setSearchResultList] = useState<User[]>([]);
   const requestedUserId: string = localStorage.getItem('id') as string;
 
@@ -45,7 +44,6 @@ const CommunityCreatePage3: FC = () => {
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const { value } = event.target;
-    setSearchNickname(value);
     try {
       if (value) {
         const res = await GetSearchPeopleAPI({ query: value });
