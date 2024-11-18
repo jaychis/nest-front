@@ -29,6 +29,8 @@ const MainContainer = ({ children }: ContainerProps) => {
         justifyContent: 'flex-start',
         width: '100%',
         boxSizing: 'border-box',
+        marginLeft: '1%',
+        marginTop: '1%'
       }}
     >
       {children}
@@ -81,15 +83,12 @@ const BoardList = () => {
   }, [inView]);
 
   useEffect(() => {
-    let allDataLoaded: boolean = false;
+    setAllDataLoaded(false);
     setId(null);
     setList([]);
     setLastInView(false);
-    setAllDataLoaded(false);
-
-    if (id === null) {
-      ListApi({ id, allDataLoaded });
-    }
+    ListApi({ id: null, allDataLoaded:false });
+    
   }, [buttonType]);
 
   const ListApi = async ({ id, allDataLoaded }: AllListParams) => {

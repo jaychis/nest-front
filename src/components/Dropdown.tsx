@@ -1,4 +1,4 @@
-import React from "react";
+
 
 interface DropDownProps {
     readonly menu: string[]
@@ -7,7 +7,7 @@ interface DropDownProps {
 
 const DropDown = ({ menu,eventHandler }:DropDownProps) => {
     return (
-        <div style={{ height: '20vh', overflow: 'hidden', transition: 'height 0.1s ease' }}>
+        <div style={{ height: '100%', overflow: 'hidden', transition: 'height 0.1s ease' }}>
             <ul 
             style={{
             border: '1px solid #ddd',

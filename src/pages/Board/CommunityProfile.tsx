@@ -5,31 +5,43 @@ import { useState,useRef,useEffect } from "react";
 import React from "react";
 import { CommunityUpdateAPI,CommunityUpdateParams } from "../api/communityApi";
 import Modal from "../../components/Modal";
-import { useDispatch } from "react-redux";
-import { setCommunity } from "../../reducers/communitySlice"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux";
 import { setModalState, UserModalState } from "../../reducers/modalStateSlice";
 import { RootState } from "../../store/store";
 import DragAndDrop from "../../components/DragAndDrop";
 import { AwsImageUploadFunctionalityReturnType } from "../../_common/imageUploadFuntionality";
+import { GetSearchPeopleAPI } from "../api/searchApi";
+import vCheck from '../../assets/img/v-check.png'
 
 const CommunityProfile = () => {
+
+    interface User {
+        nickname: string;
+        id: string[];
+    }
+
     const dropDownRef = React.useRef<HTMLDivElement>(null)
     const editButtonRef = React.useRef<HTMLDivElement>(null)
     const [body, setBody] = useState<React.ReactNode>(null);
-
     const selectCommunity: CommunityUpdateParams = useSelector((state:any) => state.community)
     const modalState: UserModalState = useSelector((state: RootState) => state.modalState,);
     const dispatch = useDispatch();
-
-    const editList = ['이름 변경', '배경 변경', '프로필 변경']
+    console.log(selectCommunity)
+    const editList = ['이름 변경', '배경 변경', '프로필 변경','초대하기']
+    const [searchResultList, setSearchResultList] = useState<User[]>([]);
     const [editCommunityName, setEditCommunityName] = useState<string>('');
     const [editBackground, setEditBackground] = useState<AwsImageUploadFunctionalityReturnType | string>();
+    const [editProfile, setEditProfile] = useState<AwsImageUploadFunctionalityReturnType | string>();
+    const [editUserList, setEditUserList] = useState(selectCommunity.userIds)
     const [editType, setEditType] = useState<string>('');
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [view, setView] = useState<boolean>(false)
     
     const communityEditHandler = (item: string) => {
+        if(item === '초대하기' && selectCommunity.visibility === 'PUBLIC'){
+            setView(false);
+            return alert('공개 커뮤니티는 유저를 초대할 수 없습니다.')
+        }
         setEditType(item) 
         dispatch(setModalState(!modalState.modalState))
         handleModal()
@@ -41,6 +53,38 @@ const CommunityProfile = () => {
         dispatch(setModalState(!modalState.modalState))
     }
 
+    const handleUserSearchChange = async (
+        event: React.ChangeEvent<HTMLInputElement>,
+      ) => {
+        const { value } = event.target;
+        try {
+          if (value) {
+            const res = await GetSearchPeopleAPI({ query: value });
+            if (res && res.data && res.data.response) {
+              setSearchResultList(
+                res.data.response.map((user: any) => ({
+                  nickname: user.nickname,
+                  id: user.id,
+                })),
+              );
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
+
+      const handleUserSelect = (userId: string) => {
+        if (editUserList?.includes(userId)) {
+          const deleteId = editUserList.filter(
+            (prevState) => prevState !== userId,
+          );
+          setEditUserList(deleteId);
+        } else {
+            setEditUserList((prevState) => [...(prevState || []), userId]);
+        }
+      };
+    
     useEffect(() => {
         const handleClickOutside = (event: any) => {
             if (editButtonRef.current &&
@@ -113,25 +157,65 @@ const CommunityProfile = () => {
 
                 {editType === '프로필 변경' && (
                     <>
-                    <CommunityNameInput
-                    required
-                    type="text"
-                    id="communityName"
-                    placeholder="변경할 이름을 입력해주세요"
+                    <DragAndDrop
+                    onFileChange={setEditProfile}
                     />
+                    
                     <SubmitButton 
                     onClick = {() => {
-                    console.log(CommunityUpdateAPI(selectCommunity))
+                    CommunityUpdateAPI({...selectCommunity, icon: editProfile as string})
+                    dispatch(setModalState(!modalState.modalState))
+                    handleModal()
+                    alert('프로필 사진이 변경 되었습니다.')
+                    window.location.reload();
                     }}>
                         변경
                     </SubmitButton>
                     </>
                 )}
+
+                {editType === '초대하기' && (
+                    <>
+                        <UserSearchInput
+                        placeholder="초대할 유저의 닉네임을 입력해주세요"
+                        onChange={handleUserSearchChange}
+                        />
+                        {searchResultList.length > 0 && (
+                        <SearchResultList>
+                        {searchResultList.map((result, index) => (
+                            <>
+                            <SearchResultItem
+                            key={index}
+                            index={index}
+                            onClick={() =>
+                            handleUserSelect(result.id.toLocaleString())}
+                            >
+                            {result.nickname}
+                            {editUserList?.includes(
+                            result.id.toLocaleString(),
+                            ) ? (
+                            <VCheckImg src={vCheck} />
+                            ) : null}
+                            </SearchResultItem>
+                            </>
+                        ))}
+                    </SearchResultList>)}
+                    <SubmitButton 
+                    onClick = {() => {
+                    CommunityUpdateAPI({...selectCommunity,userIds: editUserList})
+                    dispatch(setModalState(!modalState.modalState))
+                    handleModal()
+                    alert('멤버가 변경 되었습니다.')
+                    }}>
+                        변경
+                    </SubmitButton>
+                </>
+                )}
                 
             </Modal>
 
                 <ProfileCircle>
-                    <ProfileImage src = {selectCommunity.icon === null ? logo : `${selectCommunity.icon}`} alt ='Description'/>
+                    <ProfileImage src = {selectCommunity.icon === null ? logo : selectCommunity.icon} alt ='Description'/>
                 </ProfileCircle>
 
                 <CommunityNameWrapper>
@@ -229,6 +313,33 @@ const SubmitButton = styled.button`
   font-weight: bold;
   margin-top: 5vh;
   margin-left: 38%;
+`;
+
+const UserSearchInput = styled.input`
+  border-radius: 25px;
+  height: 25px;
+  width: 90%;
+  margin: 10px 0 0 4%;
+`;
+
+const SearchResultList = styled.ul`
+  list-style-type: none;
+  padding: 0;
+`;
+
+const SearchResultItem = styled.li<{ index: number }>`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 8px;
+  background-color: ${(props) => (props.index % 2 === 0 ? '#f9f9f9' : '#fff')};
+  width: 90%;
+`;
+
+const VCheckImg = styled.img`
+  height: 20px;
+  width: 20px;
+  margin-left: auto;
 `;
 
 export default CommunityProfile;

@@ -1,11 +1,13 @@
 import React, { MouseEventHandler, useEffect, useState } from 'react';
-import { LoginAPI, LoginParams, RefreshTokenAPI } from '../api/userApi';
+
 import { CollectionTypes } from '../../_common/collectionTypes';
 import { isValidPasswordFormat } from '../../_common/passwordRegex';
 import { FaComment } from 'react-icons/fa';
 import Alert from '../../components/Alert';
+import { LoginAPI, LoginParams, RefreshTokenAPI } from '../api/userApi';
 import { UsersNaverOAuthSignUpAPI } from '../api/oAuthApi';
 import { checkMasterPassword } from '../../_common/functions';
+
 type modalType = 'login' | 'signup' | 'recovery' | 'verity';
 
 interface Props {
