@@ -1,12 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { CommunityVisibilityType } from '../_common/collectionTypes';
 
 export interface SelectCommunityParams {
   readonly id: string;
   readonly name: string;
   readonly description: string;
   readonly visibility: string;
-  readonly usersId?: string[];
+  readonly userIds: [];
   readonly banner: string | null;
   readonly icon: string | null;
 }
@@ -18,6 +17,7 @@ const initialState: SelectCommunityParams = {
   visibility: 'PUBLIC',
   banner: null,
   icon: null,
+  userIds: []
 };
 
 const communitySlice = createSlice({
@@ -25,19 +25,22 @@ const communitySlice = createSlice({
   initialState,
   reducers: {
     community(state, action: PayloadAction<SelectCommunityParams>) {
+      state.id = action.payload.id;
       state.name = action.payload.name;
       state.description = action.payload.description;
       state.banner = action.payload.banner;
       state.icon = action.payload.icon;
+      state.visibility = action.payload.visibility;
+      state.userIds = action.payload.userIds;
     },
     setCommunity(state, action: PayloadAction<SelectCommunityParams>) {
       state.id = action.payload.id;
       state.name = action.payload.name;
       state.description = action.payload.description;
       state.visibility = action.payload.visibility;
-      state.usersId = action.payload.usersId ?? state.usersId;
       state.banner = action.payload.banner;
       state.icon = action.payload.icon;
+      state.userIds = action.payload.userIds
     },
   },
 });

@@ -132,7 +132,6 @@ const BoardList = () => {
             lastId: id,
             category: buttonType,
           });
-          console.log(response)
           break;
       }
 
