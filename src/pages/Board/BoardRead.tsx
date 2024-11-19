@@ -16,7 +16,7 @@ const BoardRead = () => {
   const boardId: string = sessionStorage.getItem('boardId') as string;
   const BOARD_TITLE: string = sessionStorage.getItem('boardTitle') as string;
   const userId: string = localStorage.getItem('id') as string;
-
+  
   const [isBoardState, setIsBoardStateBoard] = useState<CardType>({
     id: boardId,
     user_id: '',
@@ -42,6 +42,7 @@ const BoardRead = () => {
   const title = query.get('title');
 
   useEffect(() => {
+    if(!id && !title) return
     const readBoard = async (): Promise<void> => {
       const commentRes = await CommentListAPI({ boardId: id });
 
@@ -49,16 +50,17 @@ const BoardRead = () => {
       const commentResponse = commentRes.data.response;
       console.log('commentResponse : ', commentResponse);
       setIsCommentState([...commentResponse]);
-
       const res = await ReadAPI({
         id: id,
         title: title,
       });
-
+      {/* 글 작성후 해당 게시글로 넘어오게 되면 
+        res자체는 null이나 undefined가 아니여서 코드가 중단되지 않고 실행되지만  
+        res.data.response는 undefined여서 LogViewedBoardAPI를 호출하는 과정에서 400에러가 발생*/}
       if (!res) return;
       const response = res.data.response;
       console.log('response : ', response);
-
+      
       setIsBoardStateBoard(response);
 
       const logViewedRes = await LogViewedBoardAPI({
@@ -68,7 +70,7 @@ const BoardRead = () => {
       console.log('logViewedRes : ', logViewedRes);
     };
     readBoard();
-  }, [boardId, userId]);
+  }, [id,title]);
 
   const [writeComment, setWriteComment] = useState<CommentSubmitParams>({
     boardId: boardId,

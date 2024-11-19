@@ -333,9 +333,6 @@ const BoardSubmit = () => {
     fetchDefaultCommunities();
   }, []);
 
-  console.log(topics)
-  console.log(tagSearchTerm)
-
   return (
     <>
       <div
