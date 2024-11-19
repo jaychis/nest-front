@@ -26,17 +26,16 @@ const CommunityProfile = () => {
     const selectCommunity: CommunityUpdateParams = useSelector((state:any) => state.community)
     const modalState: UserModalState = useSelector((state: RootState) => state.modalState,);
     const dispatch = useDispatch();
-    console.log(selectCommunity)
     const editList = ['이름 변경', '배경 변경', '프로필 변경','초대하기']
     const [searchResultList, setSearchResultList] = useState<User[]>([]);
     const [editCommunityName, setEditCommunityName] = useState<string>('');
     const [editBackground, setEditBackground] = useState<AwsImageUploadFunctionalityReturnType | string>();
     const [editProfile, setEditProfile] = useState<AwsImageUploadFunctionalityReturnType | string>();
-    const [editUserList, setEditUserList] = useState(selectCommunity.userIds)
+    const [editUserList, setEditUserList] = useState<string[]>(selectCommunity.userIds ? [...selectCommunity.userIds] : []);
     const [editType, setEditType] = useState<string>('');
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [view, setView] = useState<boolean>(false)
-    
+    console.log(editUserList)
     const communityEditHandler = (item: string) => {
         if(item === '초대하기' && selectCommunity.visibility === 'PUBLIC'){
             setView(false);
