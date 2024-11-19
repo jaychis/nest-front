@@ -1,4 +1,4 @@
-
+import styled from "styled-components";
 
 interface DropDownProps {
     readonly menu: string[]
@@ -7,40 +7,47 @@ interface DropDownProps {
 
 const DropDown = ({ menu,eventHandler }:DropDownProps) => {
     return (
-        <div style={{ height: '100%', overflow: 'hidden', transition: 'height 0.1s ease' }}>
-            <ul 
-            style={{
-            border: '1px solid #ddd',
-            borderRadius: '10px',
-            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', 
-            backgroundColor: '#fff',
-            padding: '5px',
-            listStyleType: 'none',
-            margin: 0,
-            }}
+        <DropDownContainer>
+            <DropDownList
             >
                 {menu.map((item, index) => (
-                    <li 
+                    <DropDownItem
                     key={index} 
-                    style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '6vw',  
-                    height: '40px', 
-                    padding: '5px',
-                    fontSize: '1rem',
-                    }}
                     onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
                     onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#fff'}
                     onClick = {() => {eventHandler(item)}}
                     >
                         {item}
-                    </li>
+                    </DropDownItem>
                 ))}
-            </ul>
-        </div>
+            </DropDownList>
+        </DropDownContainer>
     );
 };
+
+const DropDownContainer = styled.div`
+    height: 100%;
+    overflow: hidden;
+`
+
+const DropDownList = styled.ul`
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  padding: 5px;
+  list-style-type: none;
+  margin: 0;
+`;
+
+const DropDownItem = styled.li`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 6vw;
+    height: 40px;
+    padding: 5px;
+    font-size: 1rem;
+`
 
 export default DropDown;
