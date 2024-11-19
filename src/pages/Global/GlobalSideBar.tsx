@@ -25,12 +25,8 @@ const GlobalSideBar = () => {
   const [loading, setLoading] = useState(false);
   const isLoggedIn = !!localStorage.getItem('access_token');
 
-  const [communityList, setCommunityList] = useState<SelectCommunityParams[]>(
-    [],
-  );
-  const [communityNamesSet, setCommunityNamesSet] = useState<Set<string>>(
-    new Set(),
-  );
+  const [communityList, setCommunityList] = useState<SelectCommunityParams[]>([],);
+  const [communityNamesSet, setCommunityNamesSet] = useState<Set<string>>(new Set(),);
   const [displayCount, setDisplayCount] = useState(5);
 
   const fetchCommunities = async (page: number) => {
@@ -41,7 +37,6 @@ const GlobalSideBar = () => {
       const res = await CommunityListAPI({ take: 10, page });
       if (!res) return;
       const response = res.data.response.current_list;
-      console.log(res)
       const uniqueCommunities = response.filter(
         (community: SelectCommunityParams) => {
           if (communityNamesSet.has(community.name)) {

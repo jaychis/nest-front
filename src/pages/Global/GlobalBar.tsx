@@ -212,7 +212,11 @@ const GlobalBar = () => {
 
 export default GlobalBar;
 
-const GlobalTopBar = styled.nav<{ modalState: boolean }>`
+const GlobalTopBar = styled.nav.withConfig({
+  shouldForwardProp: (prop) => prop !== 'modalState',
+})<{
+  modalState: boolean;
+}>`
   position: fixed;
   display: flex;
   justify-content: space-between;
@@ -224,7 +228,11 @@ const GlobalTopBar = styled.nav<{ modalState: boolean }>`
   z-index: ${(props) => (props.modalState ? -1 : 2000)};
 `;
 
-const LogoWrapper = styled.div<{ logoHover: boolean }>`
+const LogoWrapper = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'logoHover',
+})<{
+  logoHover: boolean;
+}>`
   display: flex;
   align-items: center;
   background: ${(props) => (props.logoHover ? '#D3D3D3' : 'transparent')};
@@ -265,7 +273,11 @@ const SearchIcon = styled(FaSistrix)`
   cursor: pointer;
 `;
 
-const ProfileButton = styled.div<{ userHover: boolean }>`
+const ProfileButton = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'userHover',
+})<{
+  userHover: boolean;
+}>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -285,7 +297,11 @@ const ProfileImage = styled.img`
   z-index: 2;
 `;
 
-const PostButtonContainer = styled.div<{ plusHover: boolean }>`
+const PostButtonContainer = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'plusHover',
+})<{
+  plusHover: boolean;
+}>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -296,18 +312,27 @@ const PostButtonContainer = styled.div<{ plusHover: boolean }>`
   background: ${(props) => (props.plusHover ? '#D3D3D3' : 'white')};
 `;
 
-const SubmitButton = styled.button<{ plusHover: boolean }>`
+const SubmitButton = styled.button.withConfig({
+  shouldForwardProp: (prop) => prop !== 'plusHover',
+})<{
+  plusHover: boolean;
+}>`
   border: none;
   background: ${(props) => (props.plusHover ? '#D3D3D3' : 'white')};
   cursor: pointer;
 `;
+
 
 const PlusIcon = styled(FaPlus)`
   height: 30px;
   width: 15px;
 `;
 
-const InquiryButtonContainer = styled.div<{ inquiryHover: boolean }>`
+const InquiryButtonContainer = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'inquiryHover',
+})<{
+  inquiryHover: boolean;
+}>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -317,7 +342,11 @@ const InquiryButtonContainer = styled.div<{ inquiryHover: boolean }>`
   background: ${(props) => (props.inquiryHover ? '#D3D3D3' : 'white')};
 `;
 
-const InquiryButton = styled.button<{ inquiryHover: boolean }>`
+const InquiryButton = styled.button.withConfig({
+  shouldForwardProp: (prop) => prop !== 'inquiryHover',
+})<{
+  inquiryHover: boolean;
+}>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -333,7 +362,11 @@ const InquiryIcon = styled.img`
   width: 55%;
 `;
 
-const NotificationButtonContainer = styled.div<{ bellHover: boolean }>`
+const NotificationButtonContainer = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'bellHover',
+})<{
+  bellHover: boolean;
+}>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -345,7 +378,11 @@ const NotificationButtonContainer = styled.div<{ bellHover: boolean }>`
   margin-right: 30px;
 `;
 
-const BellIcon = styled(FaBell)<{ bellHover: boolean }>`
+const BellIcon = styled(FaBell).withConfig({
+  shouldForwardProp: (prop) => prop !== 'bellHover',
+})<{
+  bellHover: boolean;
+}>`
   color: ${(props) => (props.bellHover ? 'white' : 'black')};
   width: 20px;
   height: 20px;
