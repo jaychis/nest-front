@@ -3,8 +3,8 @@ FROM node AS build
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install -g dotenv-cli cross-env
-RUN npm install
+
+RUN npm install --production=false
 
 COPY . .
 
@@ -15,6 +15,7 @@ RUN npm run build:stage
 FROM nginx:alpine
 
 COPY --from=build /app/build /usr/share/nginx/html
+
 COPY /nginx/stage/nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 80
