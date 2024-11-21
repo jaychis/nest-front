@@ -93,8 +93,7 @@ const BoardList = () => {
 
   const ListApi = async ({ id, allDataLoaded }: AllListParams) => {
     if (allDataLoaded) return;
-    const test = await BoardTagsListAPI()
-    console.log(test)
+    
     try {
       let response;
       switch (buttonType) {
