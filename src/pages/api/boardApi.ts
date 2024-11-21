@@ -26,7 +26,7 @@ interface BoardTagsListParams {
   readonly category?: string | null;
   readonly userId: string;
 }
-export const BoardTagsListAPI = ({
+export const BoardTagsRelatedAPI = ({
   take,
   lastId,
   category,
@@ -78,11 +78,11 @@ interface ReadParams {
   readonly id: string | null;
   readonly title: string | null;
 }
-export const ReadAPI = (params: ReadParams) => {
+export const ReadAPI = async (params: ReadParams) => {
   try {
     const URL: string = `${BOARD_URL}/read`;
 
-    const res = client.post(URL, params);
+    const res = await client.post(URL, params);
     console.log('READ API res : ', res);
 
     return res;
