@@ -45,7 +45,7 @@ const BoardRead = () => {
     if(!id && !title) return
     const readBoard = async (): Promise<void> => {
       const commentRes = await CommentListAPI({ boardId: id });
-
+      console.log('test')
       if (!commentRes) return;
       const commentResponse = commentRes.data.response;
       console.log('commentResponse : ', commentResponse);
