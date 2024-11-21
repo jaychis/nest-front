@@ -12,7 +12,6 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import EmptyState from '../../components/EmptyState';
 import { useInView } from 'react-intersection-observer';
-import { BoardTagsListAPI } from '../api/boardTagsApi';
 import CommunityBanner from './CommunityBanner';
 
 interface ContainerProps {
