@@ -82,7 +82,6 @@ const BoardSubmit = () => {
 
   const handleAddTopic = (topic: string) => {
     const formattedTopic = topic.startsWith('#') ? topic : `#${topic}`;
-
     if (topics.length < 3 && !topics.includes(formattedTopic)) {
       setTopics([...topics, formattedTopic]);
       setTagSearchTerm('');
@@ -332,9 +331,6 @@ const BoardSubmit = () => {
 
     fetchDefaultCommunities();
   }, []);
-
-  console.log(topics)
-  console.log(tagSearchTerm)
 
   return (
     <>

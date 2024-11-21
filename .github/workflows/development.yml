@@ -34,6 +34,13 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ env.VERSION }}
           restore-keys: |
             ${{ runner.os }}-buildx-
+      - name: Set GHCR_TOKEN based on actor
+        run: |
+          if [ "$(echo ${{ github.actor }} | tr '[:upper:]' '[:lower:]')" == "jungpill" ]; then
+            echo "GHCR_TOKEN=${{ secrets.JUNGPILL_GHCR_TOKEN }}" >> $GITHUB_ENV
+          else
+            echo "GHCR_TOKEN=${{ secrets.GHCR_TOKEN }}" >> $GITHUB_ENV
+          fi
 
       - name: Login to ghcr
         uses: docker/login-action@v1
@@ -61,6 +68,14 @@ jobs:
     name: Deploy to Stage
     runs-on: [self-hosted, label-go]
     steps:
+      - name: Set GHCR_TOKEN based on actor
+        run: |
+          if [ "$(echo ${{ github.actor }} | tr '[:upper:]' '[:lower:]')" == "jungpill" ]; then
+            echo "GHCR_TOKEN=${{ secrets.JUNGPILL_GHCR_TOKEN }}" >> $GITHUB_ENV
+          else
+            echo "GHCR_TOKEN=${{ secrets.GHCR_TOKEN }}" >> $GITHUB_ENV
+          fi
+
       - name: Login to ghcr
         uses: docker/login-action@v1
         with:
@@ -105,6 +120,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
 
+      - name: Set GHCR_TOKEN based on actor
+        run: |
+          if [ "$(echo ${{ github.actor }} | tr '[:upper:]' '[:lower:]')" == "jungpill" ]; then
+            echo "GHCR_TOKEN=${{ secrets.JUNGPILL_GHCR_TOKEN }}" >> $GITHUB_ENV
+          else
+            echo "GHCR_TOKEN=${{ secrets.GHCR_TOKEN }}" >> $GITHUB_ENV
+          fi
+
       - name: Login to ghcr
         uses: docker/login-action@v1
         with:
@@ -132,6 +155,14 @@ jobs:
     name: Deploy to Production
     runs-on: [self-hosted, label-prod]
     steps:
+      - name: Set GHCR_TOKEN based on actor
+        run: |
+          if [ "$(echo ${{ github.actor }} | tr '[:upper:]' '[:lower:]')" == "jungpill" ]; then
+            echo "GHCR_TOKEN=${{ secrets.JUNGPILL_GHCR_TOKEN }}" >> $GITHUB_ENV
+          else
+            echo "GHCR_TOKEN=${{ secrets.GHCR_TOKEN }}" >> $GITHUB_ENV
+          fi
+          
       - name: Login to ghcr
         uses: docker/login-action@v1
         with:
