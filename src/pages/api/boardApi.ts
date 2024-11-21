@@ -26,7 +26,7 @@ interface BoardTagsListParams {
   readonly category?: string | null;
   readonly userId: string;
 }
-export const BoardTagsListAPI = ({
+export const BoardTagsRelatedAPI = ({
   take,
   lastId,
   category,
