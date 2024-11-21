@@ -108,7 +108,6 @@ export interface SubmitParams {
 export const BoardSubmitAPI = async (params: SubmitParams) => {
   const accessToken: string = localStorage.getItem('access_token') as string;
   const URL: string = `${BOARD_URL}/`;
-
   try {
     const res = await client.post(URL, params, {
       headers: {
