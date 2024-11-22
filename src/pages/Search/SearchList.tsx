@@ -273,8 +273,7 @@ const SearchList = () => {
         )}
 
         {(searchType === 'BOARDS' ||
-          searchType === 'IMAGE&VIDEO' ||
-          searchType === 'TAGS') &&
+          searchType === 'IMAGE&VIDEO') &&
           searchCardList.map((ca: CardType) => {
             return (
               <>
