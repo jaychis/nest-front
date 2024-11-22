@@ -81,6 +81,7 @@ export const GetSearchBoardsAPI = async (
 };
 
 export const GetSearchTagsAPI = async (param: SearchParam) => {
+  console.log(param)
   try {
     const URL: string = `${SearchesURL}/get/tags/${param.query}`;
 
