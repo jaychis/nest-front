@@ -21,6 +21,12 @@ export interface UserType {
   readonly deleted_at: Date | null;
 }
 
+export interface TagType {
+  readonly id: string;
+  readonly name: string;
+  readonly communitiesTags?: any[]; 
+};
+
 export interface CommunityType {
   readonly id: string;
   readonly name: string;
@@ -76,5 +82,7 @@ export interface InquiryType {
   readonly title: string;
   readonly update_at: Date;
 }
+
+
 
 export type CommunityVisibilityType = 'PUBLIC' | 'RESTRICTED' | 'PRIVATE';
