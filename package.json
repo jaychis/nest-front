@@ -52,11 +52,11 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start:local": "set PORT=3060 && env-cmd -f .env.development react-scripts start",
-    "start:dev": "set PORT=3060 && env-cmd -f .env.development react-scripts start",
-    "start:stage": "set PORT=3060 && env-cmd -f .env.stage react-scripts start",
+    "start:local": "env-cmd -f .env.development react-scripts start",
+    "start:dev": "env-cmd -f .env.development react-scripts start",
+    "start:stage": "env-cmd -f .env.stage react-scripts start",
     "build:stage": "env-cmd -f .env.stage react-scripts build",
-    "start:prod": "set PORT=3060 && env-cmd -f .env.production react-scripts start",
+    "start:prod": "env-cmd -f .env.production react-scripts start",
     "build:prod": "env-cmd -f .env.production react-scripts build",
     "build": "react-scripts build",
     "test": "react-scripts test",
