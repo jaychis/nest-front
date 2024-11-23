@@ -31,11 +31,6 @@ const Profile = () => {
   const [boardId, setBoardId] = useState<string[]>([]);
 
   useEffect(() => {
-    ExecuteBoardInquiryAPI({ id: ID }).then((res) => setMyPosts(res));
-    console.log(myPosts);
-  }, [ID]);
-
-  useEffect(() => {
     if (activeSection === 'POSTS') {
       ExecuteBoardInquiryAPI({ id: ID }).then((res) => setMyPosts(res));
     }

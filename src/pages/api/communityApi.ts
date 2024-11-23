@@ -29,7 +29,7 @@ export interface CommunitySubmitParams {
   readonly banner?: string | null;
   readonly icon?: string | null;
   readonly userIds?: string[];
-  readonly requestedUserId: string;
+  readonly communityCreator: string;
 }
 
 export const CommunitySubmitAPI = async (params: CommunitySubmitParams) => {

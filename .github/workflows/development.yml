@@ -19,9 +19,6 @@ jobs:
   build-stage:
     if: github.ref == 'refs/heads/stage'
     name: Build Stage
-    permissions: # 올바른 위치에 permissions 추가
-      contents: read
-      packages: write
     runs-on: ubuntu-latest
     steps:
       - name: Check out source code
@@ -69,9 +66,6 @@ jobs:
     if: github.ref == 'refs/heads/stage'
     needs: build-stage
     name: Deploy to Stage
-    permissions:
-      contents: read
-      packages: write
     runs-on: [self-hosted, label-go]
     steps:
       - name: Set GHCR_TOKEN based on actor
