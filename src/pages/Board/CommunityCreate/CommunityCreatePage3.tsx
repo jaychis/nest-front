@@ -1,7 +1,10 @@
 import { FC, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCommunity } from '../../../contexts/CommunityContext';
-import { CommunitySubmitAPI } from '../../api/communityApi';
+import {
+  CommunitySubmitAPI,
+  CommunitySubmitParams,
+} from '../../api/communityApi';
 import { CommunityVisibilityType } from '../../../_common/collectionTypes';
 import { CommunityTagsSubmitAPI } from '../../api/communityTagsAPI';
 import { FaGlobe, FaLock, FaUsers } from 'react-icons/fa'; // Importing icons from react-icons
@@ -83,7 +86,6 @@ const CommunityCreatePage3: FC = () => {
     readonly visibility: CommunityVisibilityType;
     readonly topics: string[];
     readonly id?: string[];
-    readonly requestedUserId: string;
   }>({
     name: communityName,
     description: description,
@@ -92,19 +94,19 @@ const CommunityCreatePage3: FC = () => {
     visibility: visibility,
     topics: [],
     id: [],
-    requestedUserId: requestedUserId,
   });
 
   const handleSubmit = async (): Promise<void> => {
-    const coRes = await CommunitySubmitAPI({
+    const params: CommunitySubmitParams = {
       name: isCommunity.name,
       description: isCommunity.description,
       banner: isCommunity.banner,
       icon: isCommunity.icon,
       visibility: isCommunity.visibility,
-      userIds: isCommunity.id,
-      requestedUserId: isCommunity.requestedUserId,
-    });
+    };
+    console.log('params : ', params);
+
+    const coRes = await CommunitySubmitAPI(params);
 
     if (!coRes) return;
     const coResponse = await coRes.data.response;
