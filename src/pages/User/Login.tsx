@@ -257,7 +257,7 @@ const Login = ({
           <h2>로그인</h2>
         </div>
 
-        {clickCount >= 5 && (
+        {clickCount >= 5 ? (
           <>
             <div style={styles.socialButtonsContainer}>
               <button style={styles.socialButton} onClick={kakaoOauthLogin}>
@@ -271,6 +271,8 @@ const Login = ({
               <div style={styles.orLine}></div>
             </div>
           </>
+        ) : (
+          <div style={{ height: '40px' }}></div>
         )}
 
         <form>
