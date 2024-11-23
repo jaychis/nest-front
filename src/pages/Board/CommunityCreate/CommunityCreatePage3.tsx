@@ -97,6 +97,8 @@ const CommunityCreatePage3: FC = () => {
   });
 
   const handleSubmit = async (): Promise<void> => {
+    if(!isCommunity.name || !isCommunity.description) return alert('커뮤니티 이름과 설명은 필수 입력 사항입니다')
+      
     const params: CommunitySubmitParams = {
       name: isCommunity.name,
       description: isCommunity.description,
