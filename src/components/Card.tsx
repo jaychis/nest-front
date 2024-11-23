@@ -532,7 +532,12 @@ const DropdownItem = styled.a`
   }
 `;
 
-const CardContainer = styled.div<{ isHovered: boolean; modalState: boolean }>`
+const CardContainer = styled.div.withConfig({
+  shouldForwardProp: (prop) => !['isHovered', 'modalState'].includes(prop),
+})<{
+  isHovered: boolean;
+  modalState: boolean;
+}>`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -609,7 +614,11 @@ const VideoContainer = styled.div`
   overflow: hidden; // 추가된 부분
 `;
 
-const ButtonContainer = styled.div<{ modalState: boolean }>`
+const ButtonContainer = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'modalState',
+})<{
+  modalState: boolean;
+}>`
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
@@ -628,7 +637,12 @@ const ReactionWrapper = styled.div`
   align-items: center;
 `;
 
-const LikeButton = styled.button<{ isLiked: boolean; isHovered: boolean }>`
+const LikeButton = styled.button.withConfig({
+  shouldForwardProp: (prop) => !['isLiked', 'isHovered'].includes(prop),
+})<{
+  isLiked: boolean;
+  isHovered: boolean;
+}>`
   border: ${(props) => (props.isLiked ? '2px solid blue' : '1px solid gray')};
   background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
   width: 100%;
@@ -643,7 +657,9 @@ const ReactionCount = styled.span`
   height: 10px;
 `;
 
-const DisLikeButton = styled.button<{
+const DisLikeButton = styled.button.withConfig({
+  shouldForwardProp: (prop) => !['isDisliked', 'isHovered'].includes(prop),
+})<{
   isDisliked: boolean;
   isHovered: boolean;
 }>`
@@ -664,7 +680,11 @@ const CommentWrapper = styled.div`
   align-items: center;
 `;
 
-const CommentButton = styled.button<{ isHovered: boolean }>`
+const CommentButton = styled.button.withConfig({
+  shouldForwardProp: (prop) => prop !== 'isHovered',
+})<{
+  isHovered: boolean;
+}>`
   border: 1px solid gray;
   background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
   height: 100%;
@@ -690,7 +710,11 @@ const ShareIcon = styled.img`
   margin-right: 10px;
 `;
 
-const ShareButton = styled.button<{ isHovered: boolean }>`
+const ShareButton = styled.button.withConfig({
+  shouldForwardProp: (prop) => prop !== 'isHovered',
+})<{
+  isHovered: boolean;
+}>`
   display: flex;
   align-items: center;
   justify-content: center;

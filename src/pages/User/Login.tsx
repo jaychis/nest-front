@@ -31,6 +31,7 @@ const Login = ({
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [errorModalVisible, setErrorModalVisible] = useState<boolean>(false); // State for ErrorModal
+  const [clickCount, setClickCount] = useState<number>(0);
 
   const setLoginProcess = ({
     id,
@@ -237,6 +238,8 @@ const Login = ({
     );
   };
 
+  const hiddenButton = () => setClickCount(clickCount + 1);
+
   return (
     <div style={styles.container}>
       {showAlert && (
@@ -247,38 +250,29 @@ const Login = ({
         />
       )}
       <div>
-        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+        <div
+          style={{ textAlign: 'center', marginBottom: '20px' }}
+          onClick={hiddenButton}
+        >
           <h2>로그인</h2>
         </div>
-        <div style={styles.socialButtonsContainer}>
-          {/*<button*/}
-          {/*  style={styles.socialButton}*/}
-          {/*  onClick={() => alert("Continue with Google")}*/}
-          {/*>*/}
-          {/*  <FaGoogle style={styles.socialLogo} />*/}
-          {/*  구글로 로그인*/}
-          {/*</button>*/}
-          {/*<button*/}
-          {/*  style={styles.socialButton}*/}
-          {/*  onClick={() => alert("Continue with Apple")}*/}
-          {/*>*/}
-          {/*  <FaApple style={styles.socialLogo} />*/}
-          {/*  애플로 로그인*/}
-          {/*</button>*/}
-          {/*<button style={styles.socialButton} onClick={naverOauthLogin}>*/}
-          {/*  <SiNaver style={styles.socialLogo} />*/}
-          {/*  네이버로 로그인*/}
-          {/*</button>*/}
-          <button style={styles.socialButton} onClick={kakaoOauthLogin}>
-            <FaComment style={styles.socialLogo} />
-            카카오로 로그인
-          </button>
-        </div>
-        <div style={styles.orContainer}>
-          <div style={styles.orLine}></div>
-          <div style={styles.orText}>OR</div>
-          <div style={styles.orLine}></div>
-        </div>
+
+        {clickCount >= 5 && (
+          <>
+            <div style={styles.socialButtonsContainer}>
+              <button style={styles.socialButton} onClick={kakaoOauthLogin}>
+                <FaComment style={styles.socialLogo} />
+                카카오로 로그인
+              </button>
+            </div>
+            <div style={styles.orContainer}>
+              <div style={styles.orLine}></div>
+              <div style={styles.orText}>OR</div>
+              <div style={styles.orLine}></div>
+            </div>
+          </>
+        )}
+
         <form>
           <input
             style={styles.input}
