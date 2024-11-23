@@ -17,6 +17,9 @@ env:
 
 jobs:
   build-stage:
+  permissions:
+      contents: read
+      packages: write
     if: github.ref == 'refs/heads/stage'
     name: Build Stage
     runs-on: ubuntu-latest
@@ -65,7 +68,7 @@ jobs:
   deploy-stage:
     if: github.ref == 'refs/heads/stage'
     needs: build-stage
-    permissions: #403 error 해결 위한 explicit permission 추가
+    permissions:
       contents: read
       packages: write
     name: Deploy to Stage
