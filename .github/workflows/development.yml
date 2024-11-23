@@ -65,6 +65,9 @@ jobs:
   deploy-stage:
     if: github.ref == 'refs/heads/stage'
     needs: build-stage
+    permissions: #403 error 해결 위한 explicit permission 추가
+      contents: read
+      packages: write
     name: Deploy to Stage
     runs-on: [self-hosted, label-go]
     steps:
