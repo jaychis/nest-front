@@ -72,6 +72,7 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
 
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [validPassword, setValidPassword] = useState<boolean>(false);
+  const [clickCount, setClickCount] = useState<number>(0);
 
   useEffect(() => {
     if (signup.email.length >= 12) {
@@ -269,6 +270,8 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
     );
   };
 
+  const hiddenButton = () => setClickCount(clickCount + 1);
+
   return (
     <div
       style={{
@@ -291,51 +294,42 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
           type="success"
         />
       )}
-      <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+      <div
+        style={{ textAlign: 'center', marginBottom: '20px' }}
+        onClick={hiddenButton}
+      >
         <h2>회원가입</h2>
       </div>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        {/*<button*/}
-        {/*  style={styles.socialButton}*/}
-        {/*  onClick={() => alert("Continue with Google")}*/}
-        {/*>*/}
-        {/*  <FaGoogle style={styles.socialLogo} />*/}
-        {/*  구글로 가입*/}
-        {/*</button>*/}
-        {/*<button*/}
-        {/*  style={styles.socialButton}*/}
-        {/*  onClick={() => alert("Continue with Apple")}*/}
-        {/*>*/}
-        {/*  <FaApple style={styles.socialLogo} />*/}
-        {/*  애플로 가입*/}
-        {/*</button>*/}
-        {/*<button*/}
-        {/*  style={styles.socialButton}*/}
-        {/*  onClick={() => alert("Continue with Naver")}*/}
-        {/*>*/}
-        {/*  <SiNaver style={styles.socialLogo} />*/}
-        {/*  네이버로 가입*/}
-        {/*</button>*/}
-        <button style={styles.socialButton} onClick={() => kakaoOauthSignUp()}>
-          <FaComment style={styles.socialLogo} />
-          카카오로 가입
-        </button>
-      </div>
-
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          textAlign: 'center',
-          color: '#aaa',
-          margin: '20px 0',
-        }}
-      >
-        <div style={{ flex: 1, height: '1px', background: '#aaa' }}></div>
-        <div style={{ margin: '0 10px' }}>OR</div>
-        <div style={{ flex: 1, height: '1px', background: '#aaa' }}></div>
-      </div>
+      {clickCount >= 5 ? (
+        <>
+          <div
+            style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
+          >
+            <button
+              style={styles.socialButton}
+              onClick={() => kakaoOauthSignUp()}
+            >
+              <FaComment style={styles.socialLogo} />
+              카카오로 가입
+            </button>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              textAlign: 'center',
+              color: '#aaa',
+              margin: '20px 0',
+            }}
+          >
+            <div style={{ flex: 1, height: '1px', background: '#aaa' }}></div>
+            <div style={{ margin: '0 10px' }}>OR</div>
+            <div style={{ flex: 1, height: '1px', background: '#aaa' }}></div>
+          </div>
+        </>
+      ) : (
+        <div style={{ height: '20px' }}></div>
+      )}
 
       <form>
         <div
