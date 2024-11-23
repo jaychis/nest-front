@@ -154,13 +154,13 @@ const BoardList = () => {
     <>
       <MainContainer>
         {buttonType !== 'HOME' &&
-          buttonType !== 'POPULAR' &&
-          buttonType !== 'TAGMATCH' &&
-          buttonType !== 'FREQUENTSHARE' && (
-            <>
-              <CommunityBanner />
-            </>
-          )}
+        buttonType !== 'POPULAR' &&
+        buttonType !== 'TAGMATCH' &&
+        buttonType !== 'FREQUENTSHARE' && (
+          <>
+            <CommunityBanner />
+          </>
+        )}
         <CardsContainer>
           {list.length ? (
             list.map((el: CardType, index) => {
