@@ -54,9 +54,7 @@ const BoardRead = () => {
         id: id,
         title: title,
       });
-      {/* 글 작성후 해당 게시글로 넘어오게 되면 
-        res자체는 null이나 undefined가 아니여서 코드가 중단되지 않고 실행되지만  
-        res.data.response는 undefined여서 LogViewedBoardAPI를 호출하는 과정에서 400에러가 발생*/}
+      
       if (!res) return;
       const response = res.data.response;
       console.log('response : ', response);
