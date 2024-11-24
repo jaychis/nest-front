@@ -12,6 +12,7 @@ import DragAndDrop from "../../components/DragAndDrop";
 import { AwsImageUploadFunctionalityReturnType } from "../../_common/imageUploadFuntionality";
 import { GetSearchPeopleAPI } from "../api/searchApi";
 import vCheck from '../../assets/img/v-check.png'
+import Confirm from "../../components/Confirm";
 
 const CommunityProfile = () => {
 
@@ -22,11 +23,11 @@ const CommunityProfile = () => {
 
     const dropDownRef = React.useRef<HTMLDivElement>(null)
     const editButtonRef = React.useRef<HTMLDivElement>(null)
-    const [body, setBody] = useState<React.ReactNode>(null);
+    
     const selectCommunity: CommunityUpdateParams = useSelector((state:any) => state.community)
     const modalState: UserModalState = useSelector((state: RootState) => state.modalState,);
     const dispatch = useDispatch();
-    const editList = ['이름 변경', '배경 변경', '프로필 변경','초대하기']
+    const editList = ['이름 변경', '배경 변경', '프로필 변경','초대하기','탈퇴하기']
     const [searchResultList, setSearchResultList] = useState<User[]>([]);
     const [editCommunityName, setEditCommunityName] = useState<string>('');
     const [editBackground, setEditBackground] = useState<AwsImageUploadFunctionalityReturnType | string>();
@@ -35,7 +36,9 @@ const CommunityProfile = () => {
     const [editType, setEditType] = useState<string>('');
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [view, setView] = useState<boolean>(false)
-    console.log(editUserList)
+    const [deleteUserId, setDeleteUserId] = useState<string[]>(['']);
+    
+
     const communityEditHandler = (item: string) => {
         if(item === '초대하기' && selectCommunity.visibility === 'PUBLIC'){
             setView(false);
@@ -73,16 +76,22 @@ const CommunityProfile = () => {
         }
       };
 
-      const handleUserSelect = (userId: string) => {
-        if (editUserList?.includes(userId)) {
-          const deleteId = editUserList.filter(
-            (prevState) => prevState !== userId,
-          );
-          setEditUserList(deleteId);
-        } else {
-            setEditUserList((prevState) => [...(prevState || []), userId]);
-        }
-      };
+    const handleUserSelect = (userId: string) => {
+    if (editUserList?.includes(userId)) {
+        const deleteId = editUserList.filter(
+        (prevState) => prevState !== userId,
+        );
+        setEditUserList(deleteId);
+    } else {
+        setEditUserList((prevState) => [...(prevState || []), userId]);
+    }
+    };
+
+    const handleClickOk = () => {
+        CommunityUpdateAPI({...selectCommunity,userIds: deleteUserId});
+        alert('탈퇴 되었습니다.')
+        setEditType('')
+    }
     
     useEffect(() => {
         const handleClickOutside = (event: any) => {
@@ -99,6 +108,11 @@ const CommunityProfile = () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
+
+    useEffect(() => {
+        if(editType === '탈퇴하기') setIsOpen(false)
+        setDeleteUserId(editUserList.filter((prevState) => prevState !== localStorage.getItem('id')))
+    },[editType])
 
     return(
         <>
@@ -210,8 +224,18 @@ const CommunityProfile = () => {
                     </SubmitButton>
                 </>
                 )}
-                
             </Modal>
+
+            {editType === '탈퇴하기' && (
+                    <>
+                    <Confirm
+                    message={'정말 탈퇴 하시겠습니까?'}
+                    title={'커뮤니티 탈퇴'}
+                    onClickCancel={() => setEditType('')} 
+                    onClickOk={() => handleClickOk()}
+                    />
+                    </>
+                )}  
 
                 <ProfileCircle>
                     <ProfileImage src = {selectCommunity.icon === null ? logo : selectCommunity.icon} alt ='Description'/>
