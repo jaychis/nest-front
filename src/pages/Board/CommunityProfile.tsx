@@ -92,6 +92,11 @@ const CommunityProfile = () => {
         alert('탈퇴 되었습니다.')
         setEditType('')
     }
+
+    const handleClickCancel = () => {
+        dispatch(setModalState(!modalState.modalState))
+        setEditType('')
+    }
     
     useEffect(() => {
         const handleClickOutside = (event: any) => {
@@ -231,7 +236,7 @@ const CommunityProfile = () => {
                     <Confirm
                     message={'정말 탈퇴 하시겠습니까?'}
                     title={'커뮤니티 탈퇴'}
-                    onClickCancel={() => setEditType('')} 
+                    onClickCancel={() => handleClickCancel()} 
                     onClickOk={() => handleClickOk()}
                     />
                     </>
