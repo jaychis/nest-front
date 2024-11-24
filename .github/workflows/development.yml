@@ -34,13 +34,7 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ env.VERSION }}
           restore-keys: |
             ${{ runner.os }}-buildx-
-      - name: Set GHCR_TOKEN based on actor
-        run: |
-          if [ "$(echo ${{ github.actor }} | tr '[:upper:]' '[:lower:]')" == "jungpill" ]; then
-            echo "GHCR_TOKEN=${{ secrets.JUNGPILL_GHCR_TOKEN }}" >> $GITHUB_ENV
-          else
-            echo "GHCR_TOKEN=${{ secrets.GHCR_TOKEN }}" >> $GITHUB_ENV
-          fi
+
 
       - name: Login to ghcr
         uses: docker/login-action@v1
@@ -61,6 +55,14 @@ jobs:
           tags: |
             ${{ env.DOCKER_IMAGE }}:stage
             ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }}
+
+      - name: Set GHCR_TOKEN based on actor
+        run: |
+          if [ "$(echo ${{ github.actor }} | tr '[:upper:]' '[:lower:]')" == "jungpill" ]; then
+            echo "GHCR_TOKEN=${{ secrets.JUNGPILL_GHCR_TOKEN }}" >> $GITHUB_ENV
+          else
+            echo "GHCR_TOKEN=${{ secrets.GHCR_TOKEN }}" >> $GITHUB_ENV
+          fi
 
   deploy-stage:
     if: github.ref == 'refs/heads/stage'
@@ -101,6 +103,7 @@ jobs:
             -e NAVER_CLIENT_SECRET="${{ secrets.NAVER_CLIENT_SECRET }}" \
             --name nest-front-stage --restart always ${{ env.DOCKER_IMAGE }}:stage
 
+
   build-prod:
     if: github.ref == 'refs/heads/prod'
     name: Build Prod
@@ -119,14 +122,6 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ env.VERSION }}
           restore-keys: |
             ${{ runner.os }}-buildx-
-
-      - name: Set GHCR_TOKEN based on actor
-        run: |
-          if [ "$(echo ${{ github.actor }} | tr '[:upper:]' '[:lower:]')" == "jungpill" ]; then
-            echo "GHCR_TOKEN=${{ secrets.JUNGPILL_GHCR_TOKEN }}" >> $GITHUB_ENV
-          else
-            echo "GHCR_TOKEN=${{ secrets.GHCR_TOKEN }}" >> $GITHUB_ENV
-          fi
 
       - name: Login to ghcr
         uses: docker/login-action@v1
@@ -149,6 +144,14 @@ jobs:
             ${{ env.DOCKER_IMAGE }}:prod
             ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }}
 
+      - name: Set GHCR_TOKEN based on actor
+        run: |
+          if [ "$(echo ${{ github.actor }} | tr '[:upper:]' '[:lower:]')" == "jungpill" ]; then
+            echo "GHCR_TOKEN=${{ secrets.JUNGPILL_GHCR_TOKEN }}" >> $GITHUB_ENV
+          else
+            echo "GHCR_TOKEN=${{ secrets.GHCR_TOKEN }}" >> $GITHUB_ENV
+          fi
+
   deploy-prod:
     if: github.ref == 'refs/heads/prod'
     needs: build-prod
@@ -162,7 +165,7 @@ jobs:
           else
             echo "GHCR_TOKEN=${{ secrets.GHCR_TOKEN }}" >> $GITHUB_ENV
           fi
-          
+
       - name: Login to ghcr
         uses: docker/login-action@v1
         with:
@@ -187,36 +190,3 @@ jobs:
             -e NAVER_CLIENT_ID="${{ secrets.NAVER_CLIENT_ID }}" \
             -e NAVER_CLIENT_SECRET="${{ secrets.NAVER_CLIENT_SECRET }}" \
             --name nest-front --restart always ${{ env.DOCKER_IMAGE }}:prod
-
-#      - name: Set up SSH for Nginx configuration deployment
-#        uses: webfactory/ssh-agent@v0.5.3
-#        with:
-#          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
-#
-#      - name: Change permissions
-#        run: |
-#          chmod -R 755 nginx/nginx-conf/conf.d/
-#
-#
-#      - name: Show current directory and files for debugging
-#        run: |
-#          pwd
-#          ls -al
-#          ls -al nginx/nginx-conf/conf.d/
-#
-#
-#      - name: Create remote directory if it doesn't exist
-#        run: |
-#          ssh -o StrictHostKeyChecking=no ubuntu@54.180.163.127 "mkdir -p /home/ubuntu/nest-front/nginx/nginx-conf/conf.d/"
-#
-#      - name: Copy Nginx config to EC2
-#        run: |
-#          scp -r -o StrictHostKeyChecking=no nginx/nginx-conf/conf.d ubuntu@54.180.163.127:/home/ubuntu/nest-front/nginx/nginx-conf/conf.d/
-#
-#      - name: SSH into EC2 and apply Nginx configuration
-#        run: |
-#         ssh -o StrictHostKeyChecking=no ubuntu@your-ec2-ip << 'EOF'
-#           sudo cp -r /home/ubuntu/nginx-config/nginx /etc/nginx/
-#           sudo nginx -t
-#           sudo systemctl restart nginx
-#         EOF
