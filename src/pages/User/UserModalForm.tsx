@@ -22,6 +22,9 @@ const UserModalForm = () => {
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [kakaoEmail, setKakaoEmail] = useState<string>('');
+  const [adminButtonCount, setAdminButtonCount] = useState<number>(0);
+  const [isAdminLoginHovered, setIsAdminLoginHovered] =
+    useState<boolean>(false);
 
   const switchView = (view: modalType) => {
     setActiveView(view);
@@ -64,8 +67,40 @@ const UserModalForm = () => {
     }
   };
 
+  const adminHiddenButton = () => setAdminButtonCount(adminButtonCount + 1);
+
   return (
     <>
+      <div
+        className="modalContainer"
+        style={{
+          width: '100px',
+          height: '50px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+        onClick={adminHiddenButton}
+      >
+        {adminButtonCount >= 5 && (
+          <button
+            style={{
+              height: '100%',
+              width: '100%',
+              border: 'none',
+              backgroundColor: isAdminLoginHovered ? '#77C2E2' : '#84d7fb',
+              borderRadius: '30px',
+              fontWeight: 'bold',
+              color: 'white',
+            }}
+            className="my-component"
+            onMouseEnter={() => setIsAdminLoginHovered(true)}
+            onMouseLeave={() => setIsAdminLoginHovered(false)}
+          >
+            <span style={{ fontWeight: '10000' }}>Admin Log In</span>
+          </button>
+        )}
+      </div>
       <div
         className="modalContainer"
         style={{
@@ -248,16 +283,16 @@ const SubmitInput = styled.input`
 `;
 
 const SwitchButton = styled.button`
-    padding: 10px 20px;
-    width: 200px;
-    border-radius: 25px;
-    border: none;
-    background-color: #000;
-    color: white;
-    cursor: pointer;
+  padding: 10px 20px;
+  width: 200px;
+  border-radius: 25px;
+  border: none;
+  background-color: #000;
+  color: white;
+  cursor: pointer;
 
-    &:hover {
-        background-color: #333; //
+  &:hover {
+    background-color: #333; //
 `;
 
 const SubmitButton = styled.button`
@@ -269,6 +304,7 @@ const SubmitButton = styled.button`
   color: white;
   cursor: pointer;
   margin-bottom: 10px;
+
   &:hover {
     background-color: #72c2e9; // 예시: 호버 시 색상 변경
   }

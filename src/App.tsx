@@ -15,6 +15,7 @@ import CommunityCreatePage1 from './pages/Board/CommunityCreate/CommunityCreateP
 import CommunityCreatePage2 from './pages/Board/CommunityCreate/CommunityCreatePage2';
 import CommunityCreatePage3 from './pages/Board/CommunityCreate/CommunityCreatePage3';
 import { CommunityProvider } from './contexts/CommunityContext';
+import AdminList from './pages/Admin/AdminList';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -121,6 +122,9 @@ function App() {
                 </Layout>
               }
             />
+            {/*어드민*/}
+            <Route path={'/admin/list'} element={<AdminList />} />
+
             {/* 새 라우터 */}
           </Routes>
         </CommunityProvider>
