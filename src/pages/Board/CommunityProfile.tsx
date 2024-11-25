@@ -37,7 +37,6 @@ const CommunityProfile = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [view, setView] = useState<boolean>(false)
     const [deleteUserId, setDeleteUserId] = useState<string[]>(['']);
-    
 
     const communityEditHandler = (item: string) => {
         if(item === '초대하기' && selectCommunity.visibility === 'PUBLIC'){
