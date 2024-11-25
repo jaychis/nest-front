@@ -3,7 +3,7 @@ import {
   BoardListAPI,
   BoardPopularListAPI,
   BoardShareListAPI,
-  BoardTagsListAPI,
+  BoardTagsRelatedAPI,
 } from '../api/boardApi';
 import Card from '../../components/Card';
 import { CardType } from '../../_common/collectionTypes';
@@ -12,7 +12,6 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import EmptyState from '../../components/EmptyState';
 import { useInView } from 'react-intersection-observer';
-import styled from 'styled-components';
 import CommunityBanner from './CommunityBanner';
 
 interface ContainerProps {
@@ -93,6 +92,7 @@ const BoardList = () => {
 
   const ListApi = async ({ id, allDataLoaded }: AllListParams) => {
     if (allDataLoaded) return;
+    
     try {
       let response;
       switch (buttonType) {
@@ -112,7 +112,7 @@ const BoardList = () => {
           break;
 
         case 'TAGMATCH':
-          response = await BoardTagsListAPI({
+          response = await BoardTagsRelatedAPI({
             take: TAKE,
             lastId: id,
             category: null,
@@ -154,13 +154,13 @@ const BoardList = () => {
     <>
       <MainContainer>
         {buttonType !== 'HOME' &&
-          buttonType !== 'POPULAR' &&
-          buttonType !== 'TAGMATCH' &&
-          buttonType !== 'FREQUENTSHARE' && (
-            <>
-              <CommunityBanner />
-            </>
-          )}
+        buttonType !== 'POPULAR' &&
+        buttonType !== 'TAGMATCH' &&
+        buttonType !== 'FREQUENTSHARE' && (
+          <>
+            <CommunityBanner />
+          </>
+        )}
         <CardsContainer>
           {list.length ? (
             list.map((el: CardType, index) => {

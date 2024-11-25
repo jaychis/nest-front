@@ -16,7 +16,7 @@ const BoardRead = () => {
   const boardId: string = sessionStorage.getItem('boardId') as string;
   const BOARD_TITLE: string = sessionStorage.getItem('boardTitle') as string;
   const userId: string = localStorage.getItem('id') as string;
-
+  
   const [isBoardState, setIsBoardStateBoard] = useState<CardType>({
     id: boardId,
     user_id: '',
@@ -42,23 +42,23 @@ const BoardRead = () => {
   const title = query.get('title');
 
   useEffect(() => {
+    if(!id && !title) return
     const readBoard = async (): Promise<void> => {
       const commentRes = await CommentListAPI({ boardId: id });
-
+      console.log('test')
       if (!commentRes) return;
       const commentResponse = commentRes.data.response;
       console.log('commentResponse : ', commentResponse);
       setIsCommentState([...commentResponse]);
-
       const res = await ReadAPI({
         id: id,
         title: title,
       });
-
+      
       if (!res) return;
       const response = res.data.response;
       console.log('response : ', response);
-
+      
       setIsBoardStateBoard(response);
 
       const logViewedRes = await LogViewedBoardAPI({
@@ -68,7 +68,7 @@ const BoardRead = () => {
       console.log('logViewedRes : ', logViewedRes);
     };
     readBoard();
-  }, [boardId, userId]);
+  }, [id,title]);
 
   const [writeComment, setWriteComment] = useState<CommentSubmitParams>({
     boardId: boardId,

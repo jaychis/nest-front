@@ -113,10 +113,11 @@ export interface CommunityUpdateParams {
 
 export const CommunityUpdateAPI = async (params: CommunityUpdateParams) => {
   try {
+    console.log("userIds in API call:", params.userIds); 
     const URL: string = `${COMMUNITY_URL}/`;
 
     const res = await client.patch(URL, params);
-
+    console.log(res.data)
     return res;
   } catch (e: any) {
     errorHandling({ text: 'CommunityUpdateAPI', error: e });

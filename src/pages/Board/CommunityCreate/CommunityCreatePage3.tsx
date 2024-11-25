@@ -25,13 +25,13 @@ const CommunityCreatePage3: FC = () => {
   const [visibility, setVisibility] =
     useState<CommunityVisibilityType>('PUBLIC');
   const [searchResultList, setSearchResultList] = useState<User[]>([]);
-  const requestedUserId: string = localStorage.getItem('id') as string;
+  const communityCreator: string = localStorage.getItem('id') as string;
 
   useEffect(() => {
     if (visibility === 'PRIVATE' || visibility === 'RESTRICTED') {
       setIsCommunity((prevState) => ({
         ...prevState,
-        id: [requestedUserId],
+        id: [communityCreator],
         visibility: visibility,
       }));
     } else {
@@ -79,24 +79,26 @@ const CommunityCreatePage3: FC = () => {
   };
 
   const [isCommunity, setIsCommunity] = useState<{
-    readonly name: string;
-    readonly description: string;
-    readonly banner?: string | null;
-    readonly icon?: string | null;
-    readonly visibility: CommunityVisibilityType;
-    readonly topics: string[];
-    readonly id?: string[];
+      readonly name: string;
+      readonly description: string;
+      readonly banner?: string | null;
+      readonly icon?: string | null;
+      readonly visibility: CommunityVisibilityType;
+      readonly topics: string[];
+      readonly id?: string[];
   }>({
-    name: communityName,
-    description: description,
-    banner: banner,
-    icon: icon,
-    visibility: visibility,
-    topics: [],
-    id: [],
+      name: communityName,
+      description: description,
+      banner: banner,
+      icon: icon,
+      visibility: visibility,
+      topics: [],
+      id: [],
   });
 
   const handleSubmit = async (): Promise<void> => {
+    if(!isCommunity.name || !isCommunity.description) return alert('커뮤니티 이름과 설명은 필수 입력 사항입니다')
+      
     const params: CommunitySubmitParams = {
       name: isCommunity.name,
       description: isCommunity.description,

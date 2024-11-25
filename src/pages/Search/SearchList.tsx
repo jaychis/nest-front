@@ -13,6 +13,7 @@ import {
   CardType,
   CommunityType,
   UserType,
+  TagType
 } from '../../_common/collectionTypes';
 import BoardReply, { ReplyType } from '../Board/BoardReply';
 import EmptyState from '../../components/EmptyState';
@@ -24,6 +25,7 @@ import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
 import { AppDispatch } from '../../store/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { MainListTypes } from '../../_common/collectionTypes';
+import { Tag } from 'sanitize-html';
 
 type SearchListTypes =
   | 'BOARDS'
@@ -41,8 +43,7 @@ const SearchList = () => {
   >([]);
   const [searchReplyList, setSearchReplyList] = useState<ReplyType[]>([]);
   const [searUserList, setSearchUserList] = useState<UserType[]>([]);
-  const [searchTagList, setSearchTagsList] = useState([]);
-
+  const [searchTagList, setSearchTagList] = useState<TagType[]>([]);
   const [params, setParams] = useSearchParams();
   const [searchType, setSearchType] = useState<SearchListTypes>('BOARDS');
   const QUERY: string = params.get('query') as string;
@@ -128,13 +129,10 @@ const SearchList = () => {
       GetSearchTagsAPI({ query: QUERY })
         .then((res): void => {
           if (!res) return;
-
-          const response = res.data.response[0].communities.map(
-            (tag: { community: CommunityType }) => tag.community,
-          );
+          const response = res.data.response
           console.log('TAGS response : ', response);
 
-          setSearchTagsList(response);
+          setSearchTagList(response);
         })
         .catch((err) =>
           console.error('SearchList GetSearchTagsAPI error : ', err),
@@ -275,8 +273,7 @@ const SearchList = () => {
         )}
 
         {(searchType === 'BOARDS' ||
-          searchType === 'IMAGE&VIDEO' ||
-          searchType === 'TAGS') &&
+          searchType === 'IMAGE&VIDEO') &&
           searchCardList.map((ca: CardType) => {
             return (
               <>
@@ -338,6 +335,15 @@ const SearchList = () => {
                   profileImage={community.icon}
                   email={community.description}
                 />
+              </div>
+            );
+          })}
+
+        {searchType === 'TAGS' &&
+          searchTagList?.map((tags:TagType) => {
+            return (
+              <div>
+                {tags.name}
               </div>
             );
           })}
