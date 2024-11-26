@@ -100,7 +100,7 @@ const Profile = () => {
   return (
     <>
       <div style={styles.container}>
-        <div style={{ flex: 2, padding: '20px', overflowY: 'auto' }}>
+        <div style={{ flex: 2, padding: '20px'}}>
           <div style={styles.buttonContainer}>
             <button
               style={
@@ -280,7 +280,6 @@ const styles: { [key: string]: CSSProperties } = {
     width: '100%',
     height: '100vh',
     justifyContent: 'center',
-    overflow: 'hidden',
   },
   buttonContainer: {
     display: 'flex',
@@ -348,7 +347,6 @@ const styles: { [key: string]: CSSProperties } = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    overflow: 'hidden',
     position: 'relative',
   },
   imagePreview: {
