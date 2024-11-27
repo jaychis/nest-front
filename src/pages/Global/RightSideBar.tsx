@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { GetRecentViewedBoardsAPI } from '../api/viewedBoardsApi';
 import { RootState } from '../../store/store';
 import { UserModalState } from '../../reducers/modalStateSlice';
-import { searchQuery } from '../../reducers/searchSlice';
+import styled from 'styled-components';
 
 type SelectTapTypes = 'topSearches' | 'recentBoards';
 
@@ -97,13 +97,7 @@ const RightSideBar = () => {
   };
 
   return (
-    <div
-      style={{
-        width: '250px',
-        marginLeft: 'auto',
-        marginRight: '20px',
-      }}
-    >
+    <RightSideBarContainer>
       <div
         style={{
           width: '250px',
@@ -207,7 +201,7 @@ const RightSideBar = () => {
           )
         )}
       </div>
-    </div>
+    </RightSideBarContainer>
   );
 };
 
@@ -298,3 +292,13 @@ const styles = {
 };
 
 export default RightSideBar;
+
+const RightSideBarContainer = styled.div`
+  width: 250px;
+  margin-left: auto;
+  margin-right: 20px;
+
+  @media (max-width: 768px) {
+    display: none; // 모바일에서 숨김
+  }
+`;
