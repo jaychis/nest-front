@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState,useEffect } from 'react';
 import './App.css';
 import GlobalBar from './pages/Global/GlobalBar';
 import GlobalSideBar from './pages/Global/GlobalSideBar';
@@ -18,12 +19,17 @@ import { CommunityProvider } from './contexts/CommunityContext';
 import AdminList from './pages/Admin/AdminList';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
+  
+  const [idMobile, setIsMobile] = useState<boolean>(false)
+
+  
   return (
     <>
       <GlobalBar />
       <div style={styles.layoutContainer}>
         <GlobalSideBar />
-        <div style={styles.mainContent}>{children}</div>
+        <div style={styles.mainContent}>
+          {children}</div>
         <RightSideBar />
       </div>
     </>
