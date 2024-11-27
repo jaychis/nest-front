@@ -10,6 +10,7 @@ import { UserModalState } from '../../reducers/modalStateSlice';
 import logo from '../../assets/img/panda_logo.png';
 import { CommunityListAPI } from '../api/communityApi';
 import Tooltip from '../../components/Tooltip';
+import styled from 'styled-components';
 
 const GlobalSideBar = () => {
   const navigate = useNavigate();
@@ -99,26 +100,10 @@ const GlobalSideBar = () => {
     }
     navigate('/community/create1');
   };
-
+  
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        width: '200px',
-        height: '100%', // 전체 높이를 채우되,
-        overflowY: 'auto', // 필요한 경우에만 스크롤을 생성
-        background: '#fff',
-        marginRight: '10px',
-        borderRadius: '8px',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-        border: '1px solid #ddd',
-        borderTop: 'none',
-        marginTop: '90px',
-        position: 'fixed',
-        zIndex: modalState.modalState ? -1 : 1000,
-      }}
-    >
+    <GlobalSideBarContainer 
+    isModalOpen={modalState.modalState}>
       <div
         style={{
           padding: '6px 0',
@@ -314,8 +299,30 @@ const GlobalSideBar = () => {
           </div>
         )}
       </div>
-    </div>
+    </GlobalSideBarContainer>
   );
 };
 
 export default GlobalSideBar;
+
+const GlobalSideBarContainer = styled.div<{ isModalOpen: boolean }>`
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  height: 100%; /* 전체 높이 */
+  overflow-y: auto; /* 필요한 경우 스크롤 */
+  background: #fff;
+  margin-right: 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ddd;
+  border-top: none;
+  margin-top: 90px;
+  position: fixed;
+  z-index: ${({ isModalOpen }) => (isModalOpen ? -1 : 1000)};
+
+  /* 768px 이하에서는 숨김 */
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
