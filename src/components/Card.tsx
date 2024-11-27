@@ -30,7 +30,6 @@ const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
   let videoId = '' 
   try {
     url.includes('v=') ? videoId = url.split('v=')[1] : videoId = url.split('youtu.be/')[1].split('?')[0]
-
     return videoId
   } catch (e) {
     console.error('Invalid URL', e);
