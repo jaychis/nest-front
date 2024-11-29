@@ -29,7 +29,7 @@ const MainContainer = ({ children }: ContainerProps) => {
         width: '100%',
         boxSizing: 'border-box',
         marginLeft: '1%',
-        marginTop: '1%'
+        marginTop: '1%',
       }}
     >
       {children}
@@ -86,13 +86,12 @@ const BoardList = () => {
     setId(null);
     setList([]);
     setLastInView(false);
-    ListApi({ id: null, allDataLoaded:false });
-    
+    ListApi({ id: null, allDataLoaded: false });
   }, [buttonType]);
 
   const ListApi = async ({ id, allDataLoaded }: AllListParams) => {
     if (allDataLoaded) return;
-    
+
     try {
       let response;
       switch (buttonType) {
@@ -154,13 +153,13 @@ const BoardList = () => {
     <>
       <MainContainer>
         {buttonType !== 'HOME' &&
-        buttonType !== 'POPULAR' &&
-        buttonType !== 'TAGMATCH' &&
-        buttonType !== 'FREQUENTSHARE' && (
-          <>
-            <CommunityBanner />
-          </>
-        )}
+          buttonType !== 'POPULAR' &&
+          buttonType !== 'TAGMATCH' &&
+          buttonType !== 'FREQUENTSHARE' && (
+            <>
+              <CommunityBanner />
+            </>
+          )}
         <CardsContainer>
           {list.length ? (
             list.map((el: CardType, index) => {

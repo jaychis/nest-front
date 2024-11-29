@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 import GlobalBar from './pages/Global/GlobalBar';
 import GlobalSideBar from './pages/Global/GlobalSideBar';
@@ -17,37 +17,38 @@ import CommunityCreatePage2 from './pages/Board/CommunityCreate/CommunityCreateP
 import CommunityCreatePage3 from './pages/Board/CommunityCreate/CommunityCreatePage3';
 import { CommunityProvider } from './contexts/CommunityContext';
 import AdminList from './pages/Admin/AdminList';
+import styled from 'styled-components';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  
-  const [idMobile, setIsMobile] = useState<boolean>(false)
+  const [idMobile, setIsMobile] = useState<boolean>(false);
 
-  
   return (
     <>
       <GlobalBar />
-      <div style={styles.layoutContainer}>
+      <LayoutContainer>
         <GlobalSideBar />
-        <div style={styles.mainContent}>
-          {children}</div>
+        <MainContent>{children}</MainContent>
         <RightSideBar />
-      </div>
+      </LayoutContainer>
     </>
   );
 };
 
-const styles = {
-  layoutContainer: {
-    display: 'flex',
-    width: '100%',
-    height: '100vh',
-  },
-  mainContent: {
-    flex: 1,
-    marginLeft: '11%',
-    marginTop: '80px',
-  },
-};
+const LayoutContainer = styled.div`
+  display: flex;
+  width: 100%;
+  height: 100vh;
+`;
+
+const MainContent = styled.div`
+  flex: 1;
+  margin-top: 80px;
+
+  @media (min-width: 768px) {
+    margin-left: 11%;
+  }
+`;
+
 function App() {
   return (
     <>
