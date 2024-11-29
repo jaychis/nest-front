@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 import GlobalBar from './pages/Global/GlobalBar';
 import GlobalSideBar from './pages/Global/GlobalSideBar';
@@ -37,21 +37,16 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   @media (max-width: 768px){
     margin-left: 0;
     max-width: 600px;
-
   }
 
-  
   `;
   
-
   return (
     <>
       <GlobalBar />
       <LayoutContainer>
         <GlobalSideBar />
-        <MainContent>
-          {children}
-        </MainContent>
+        <MainContent>{children}</MainContent>
         <RightSideBar />
       </LayoutContainer>
     </>
@@ -59,7 +54,18 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
 };
 
-
+const styles = {
+  layoutContainer: {
+    display: 'flex',
+    width: '100%',
+    height: '100vh',
+  },
+  mainContent: {
+    flex: 1,
+    marginLeft: '11%',
+    marginTop: '80px',
+  },
+};
 function App() {
   return (
     <>

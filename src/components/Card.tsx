@@ -22,15 +22,15 @@ import sanitizeHtml from 'sanitize-html';
 import debounce from 'lodash.debounce';
 import { UserModalState } from '../reducers/modalStateSlice';
 import { useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '../store/store';
+import { RootState } from '../store/store';
 import styled from 'styled-components';
 import { shareCountApi } from '../pages/api/boardApi';
 
 const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
-  let videoId = '' 
   try {
-    url.includes('v=') ? videoId = url.split('v=')[1] : videoId = url.split('youtu.be/')[1].split('?')[0]
-    return videoId
+    return url.includes('v=')
+      ? url.split('v=')[1].split('&')[0]
+      : url.split('youtu.be/')[1].split('?')[0];
   } catch (e) {
     console.error('Invalid URL', e);
     return '';
@@ -331,15 +331,18 @@ const Card = ({
               {content.map((video: string, index: number) => (
                 <VideoContainer key={`${id}-${index}`}>
                   {video && (
-                    <YouTube
-                      videoId={getYouTubeVideoId({ url: video })}
-                      opts={{
-                        width: '760px',
-                        height: '400px',
-                        playerVars: { modestbranding: 1 },
-                      }}
-                      style={{ borderRadius: '20px' }} // 추가된 부분
-                    />
+                    <ResponsiveVideoContainer>
+                      <VideoWrapper>
+                        <YouTube
+                          videoId={getYouTubeVideoId({ url: video })}
+                          opts={{
+                            width: '100%',
+                            height: '100%',
+                            playerVars: { modestbranding: 1 },
+                          }}
+                        />
+                      </VideoWrapper>
+                    </ResponsiveVideoContainer>
                   )}
                 </VideoContainer>
               ))}
@@ -596,8 +599,28 @@ const MediaContainer = styled.div`
 const VideoContainer = styled.div`
   display: flex;
   justify-content: center;
-  border-radius: 20px; // 추가된 부분
-  overflow: hidden; // 추가된 부분
+  border-radius: 20px;
+  overflow: hidden;
+  max-width: 760px;
+  width: 95%;
+  margin: 0 auto;
+`;
+
+const ResponsiveVideoContainer = styled.div`
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* Aspect ratio 16:9 */
+  height: 0;
+  overflow: hidden;
+  border-radius: 20px;
+`;
+
+const VideoWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 `;
 
 const ButtonContainer = styled.div.withConfig({
