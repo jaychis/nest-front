@@ -20,8 +20,27 @@ import AdminList from './pages/Admin/AdminList';
 import styled from 'styled-components';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  const [idMobile, setIsMobile] = useState<boolean>(false);
+  
+  const [idMobile, setIsMobile] = useState<boolean>(false)
 
+  const LayoutContainer = styled.div`
+  display: flex;
+  width: 100%;
+  height: 100vh;
+`;
+
+  const MainContent = styled.div`
+  flex: 1;
+  margin-left: 11%;
+  margin-top: 80px;
+
+  @media (max-width: 768px){
+    margin-left: 0;
+    max-width: 600px;
+  }
+
+  `;
+  
   return (
     <>
       <GlobalBar />
@@ -32,23 +51,21 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       </LayoutContainer>
     </>
   );
+
 };
 
-const LayoutContainer = styled.div`
-  display: flex;
-  width: 100%;
-  height: 100vh;
-`;
-
-const MainContent = styled.div`
-  flex: 1;
-  margin-top: 80px;
-
-  @media (min-width: 768px) {
-    margin-left: 11%;
-  }
-`;
-
+const styles = {
+  layoutContainer: {
+    display: 'flex',
+    width: '100%',
+    height: '100vh',
+  },
+  mainContent: {
+    flex: 1,
+    marginLeft: '11%',
+    marginTop: '80px',
+  },
+};
 function App() {
   return (
     <>
