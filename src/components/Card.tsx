@@ -22,7 +22,7 @@ import sanitizeHtml from 'sanitize-html';
 import debounce from 'lodash.debounce';
 import { UserModalState } from '../reducers/modalStateSlice';
 import { useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '../store/store';
+import { RootState } from '../store/store';
 import styled from 'styled-components';
 import { shareCountApi } from '../pages/api/boardApi';
 
