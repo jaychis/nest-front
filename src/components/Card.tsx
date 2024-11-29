@@ -450,32 +450,16 @@ const Card = ({
           </DropdownContainer>
         </ShareWrapper>
 
-        {/* 추후 삭제될 수 있는 기능이라 생각해 styled 컴포넌트로 변환하지않음*/}
-        <div
-          style={{
-            marginLeft: '-7px',
-            borderRadius: '30px',
-            width: '75px',
-            height: '50px',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <button
+        
+        <ScirpWrapper>
+          <ScripButton
+            isHovered={isCardSendHovered}
             onMouseEnter={() => setIsCardSendHovered(true)}
             onMouseLeave={() => setIsCardSendHovered(false)}
-            style={{
-              border: '1px solid gray',
-              background: isCardSendHovered ? '#f0f0f0' : 'white',
-              height: '100%',
-              width: '100%',
-              borderRadius: '30px',
-            }}
           >
             보내기
-          </button>
-        </div>
+          </ScripButton>
+        </ScirpWrapper>
         {/*<div*/}
         {/*  style={{*/}
         {/*    marginLeft: "auto", // 자동 여백을 사용하여 오른쪽 정렬*/}
@@ -542,13 +526,17 @@ const CardContainer = styled.div.withConfig({
   justify-content: flex-start;
   align-items: flex-start;
   width: 100%;
-  max-width: 1000px;
   min-height: 200px;
   margin: 10px;
   border-radius: 10px;
   cursor: pointer;
   background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
   z-index: ${(props) => (props.modalState ? -10 : 999)};
+
+  @media (max-width: 768px) {
+    margin: none;
+
+  }
 `;
 
 const ImageContainer = styled.div`
@@ -563,7 +551,7 @@ const LogoImg = styled.img`
   width: 50px;
   height: 50px;
   object-fit: cover;
-  margin-right: 10px; // 이미지와 닉네임 사이의 간격
+  margin-right: 10px;
   border-radius: 30px;
 `;
 
@@ -580,7 +568,7 @@ const BoardTitle = styled.h3`
   font-weight: bold;
   text-align: left;
   white-space: normal;
-  font-size: 30px;
+  font-size: 1.5rem;
 `;
 
 const TextContainer = styled.div`
@@ -588,7 +576,6 @@ const TextContainer = styled.div`
   white-space: normal;
   word-break: break-word;
   width: 100%;
-  font-size: 20px;
 `;
 
 const ImagePreview = styled.img`
@@ -624,6 +611,7 @@ const ButtonContainer = styled.div.withConfig({
   width: 100%;
   max-width: 800px;
   z-index: ${(props) => (props.modalState ? -10 : 1000)};
+
 `;
 
 const ReactionWrapper = styled.div`
@@ -634,6 +622,11 @@ const ReactionWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  @media (max-width: 768px){
+  width: 120px;
+  }
+  
 `;
 
 const LikeButton = styled.button.withConfig({
@@ -648,12 +641,22 @@ const LikeButton = styled.button.withConfig({
   height: 100%;
   border-radius: 30px;
   cursor: pointer;
+
+  @media (max-width: 768px){
+    width: 45px;
+    height: 40px;
+    font-size: 10px;
+  }
 `;
 
 const ReactionCount = styled.span`
   margin: 10px;
   width: 10px;
   height: 10px;
+
+  @media(max-width: 768px){
+    margin: 5px;
+  }
 `;
 
 const DisLikeButton = styled.button.withConfig({
@@ -668,15 +671,25 @@ const DisLikeButton = styled.button.withConfig({
   height: 100%;
   border-radius: 30px;
   cursor: pointer;
+
+  @media (max-width: 768px){
+    width: 45px;
+    height: 40px;
+    font-size: 10px;
+  }
 `;
 
 const CommentWrapper = styled.div`
-  border-radius: 30px;
   width: 75px;
   height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
+
+  @media (max-width: 768px){
+    width: 45px;
+    margin-right: 7px;
+  }
 `;
 
 const CommentButton = styled.button.withConfig({
@@ -690,15 +703,21 @@ const CommentButton = styled.button.withConfig({
   width: 100%;
   border-radius: 30px;
   cursor: pointer;
+
+  @media (max-width: 768px){
+    width: 45px;
+    height: 40px;
+    font-size: 10px;
+  }
 `;
 
 const ShareWrapper = styled.div`
-  border-radius: 30px;
   width: 15%;
   height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
+
 `;
 
 const ShareIcon = styled.img`
@@ -725,6 +744,14 @@ const ShareButton = styled.button.withConfig({
   border-radius: 30px;
   margin-left: -7px;
   cursor: pointer;
+
+  @media (max-width: 768px){
+    width: 65px;
+    height: 40px;
+    font-size: 10px;
+    margin-left: 5px;
+    margin-right: 7px;
+  }
 `;
 
 const ShareImage = styled.img`
@@ -738,6 +765,44 @@ const ShareCount = styled.p`
   margin-bottom: 15px;
   font-weight: 700;
 `;
+
+const ScirpWrapper = styled.div`
+  margin-left: -7px;
+  border-radius: 30px;
+  width: 75px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media(max-width: 768px){
+    margin-left: 0px;
+  }
+`;
+
+const ScripButton = styled.button.withConfig({
+  shouldForwardProp: (prop) => prop !== 'isHovered', // isHovered를 DOM에 전달하지 않음
+})<{
+  isHovered: boolean; // isHovered 타입 정의
+}>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
+  border: 1px solid gray;
+  height: 100%;
+  width: 100%;
+  border-radius: 30px;
+  cursor: pointer;
+
+  @media (max-width: 768px){
+    width: 65px;
+    height: 40px;
+    font-size: 10px;
+  }
+
+`;
+
 
 const Hr = styled.hr`
   border: none;
