@@ -643,7 +643,7 @@ const LikeButton = styled.button.withConfig({
   cursor: pointer;
 
   @media (max-width: 768px){
-    width: 45px;
+    width: 50px;
     height: 40px;
     font-size: 10px;
   }
@@ -673,7 +673,7 @@ const DisLikeButton = styled.button.withConfig({
   cursor: pointer;
 
   @media (max-width: 768px){
-    width: 45px;
+    width: 50px;
     height: 40px;
     font-size: 10px;
   }
