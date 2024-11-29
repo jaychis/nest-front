@@ -225,7 +225,6 @@ const CommunityCreatePage1: FC = () => {
 
 export default CommunityCreatePage1;
 
-// Styled Components
 const Container = styled.div<{ textareaHeight: string }>`
   background-color: #ffffff;
   padding: 20px;
