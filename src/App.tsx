@@ -54,18 +54,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
 };
 
-const styles = {
-  layoutContainer: {
-    display: 'flex',
-    width: '100%',
-    height: '100vh',
-  },
-  mainContent: {
-    flex: 1,
-    marginLeft: '11%',
-    marginTop: '80px',
-  },
-};
 function App() {
   return (
     <>
