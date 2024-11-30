@@ -13,48 +13,38 @@ import { RootState } from '../../store/store';
 import EmptyState from '../../components/EmptyState';
 import { useInView } from 'react-intersection-observer';
 import CommunityBanner from './CommunityBanner';
+import styled from 'styled-components';
 
-interface ContainerProps {
-  children?: React.ReactNode;
-}
+const MainContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  box-sizing: border-box;
+  margin-left: 1%;
+  margin-top: 1%;
 
-const MainContainer = ({ children }: ContainerProps) => {
-  return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        width: '100%',
-        boxSizing: 'border-box',
-        marginLeft: '1%',
-        marginTop: '1%'
-      }}
-    >
-      {children}
-    </div>
-  );
-};
+  @media (max-width: 768px) {
+    margin-left: 0;
+    max-width: 600px;
+  }
+`;
 
-// const CardsContainer: React.FC<ContainerProps> = ({ children }) => {
-const CardsContainer = ({ children }: ContainerProps) => {
-  return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        width: '100%',
-        maxWidth: '800px', // 적절한 최대 너비 설정
-        boxSizing: 'border-box',
-        padding: '0 20px', // 좌우 패딩 추가
-      }}
-    >
-      {children}
-    </div>
-  );
-};
+const CardsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 800px; /* Set an appropriate max width */
+  box-sizing: border-box;
+  padding: 0 20px; /* Add left and right padding */
+`;
+
+// Styled-components for InvisibleRefContainer
+const InvisibleRefContainer = styled.div`
+  opacity: 0;
+`;
 
 const BoardList = () => {
   interface AllListParams {
@@ -86,13 +76,12 @@ const BoardList = () => {
     setId(null);
     setList([]);
     setLastInView(false);
-    ListApi({ id: null, allDataLoaded:false });
-    
+    ListApi({ id: null, allDataLoaded: false });
   }, [buttonType]);
 
   const ListApi = async ({ id, allDataLoaded }: AllListParams) => {
     if (allDataLoaded) return;
-    
+
     try {
       let response;
       switch (buttonType) {
@@ -154,20 +143,19 @@ const BoardList = () => {
     <>
       <MainContainer>
         {buttonType !== 'HOME' &&
-        buttonType !== 'POPULAR' &&
-        buttonType !== 'TAGMATCH' &&
-        buttonType !== 'FREQUENTSHARE' && (
-          <>
-            <CommunityBanner />
-          </>
-        )}
+          buttonType !== 'POPULAR' &&
+          buttonType !== 'TAGMATCH' &&
+          buttonType !== 'FREQUENTSHARE' && (
+            <>
+              <CommunityBanner />
+            </>
+          )}
         <CardsContainer>
           {list.length ? (
             list.map((el: CardType, index) => {
               return (
                 <React.Fragment key={`${el.id}-${index}`}>
                   <Card
-                    // 고유한 키 추가
                     id={el.id}
                     category={el.category}
                     title={el.title}
@@ -181,13 +169,11 @@ const BoardList = () => {
               );
             })
           ) : (
-            <EmptyState /> // Use the EmptyState component
+            <EmptyState />
           )}
         </CardsContainer>
       </MainContainer>
-      <div style={{ opacity: '0' }} ref={ref}>
-        d
-      </div>
+      <InvisibleRefContainer ref={ref}>d</InvisibleRefContainer>
     </>
   );
 };

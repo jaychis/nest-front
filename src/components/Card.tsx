@@ -60,6 +60,8 @@ const Card = ({
   const [viewCount, setViewCount] = useState<number>(0); // 조회수 상태 추가
   const [isReaction, setIsReaction] = useState<ReactionStateTypes>(null);
   const [shareContent, setShareContent] = useState<string>('');
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+
   const modalState: UserModalState = useSelector(
     (state: RootState) => state.modalState,
   );
@@ -70,6 +72,26 @@ const Card = ({
   const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
   const USER_ID: string = localStorage.getItem('id') as string;
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth <= 760);
+    };
+
+    handleResize();
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  const videoOptions = {
+    width: isSmallScreen ? '100%' : '760px',
+    height: isSmallScreen ? '330px' : '400px',
+    playerVars: { modestbranding: 1 },
+  };
 
   const handleClickOutside = (event: MouseEvent) => {
     if (
@@ -309,7 +331,6 @@ const Card = ({
           {type === 'TEXT' ? (
             <TextContainer>
               {content?.map((co, index) => {
-                // console.log("card content : ", co);
                 return (
                   <div
                     key={`${id}-${index}`}
@@ -331,15 +352,14 @@ const Card = ({
               {content.map((video: string, index: number) => (
                 <VideoContainer key={`${id}-${index}`}>
                   {video && (
-                    <YouTube
-                      videoId={getYouTubeVideoId({ url: video })}
-                      opts={{
-                        width: '760px',
-                        height: '400px',
-                        playerVars: { modestbranding: 1 },
-                      }}
-                      style={{ borderRadius: '20px' }} // 추가된 부분
-                    />
+                    <ResponsiveVideoContainer>
+                      <VideoWrapper>
+                        <YouTube
+                          videoId={getYouTubeVideoId({ url: video })}
+                          opts={videoOptions}
+                        />
+                      </VideoWrapper>
+                    </ResponsiveVideoContainer>
                   )}
                 </VideoContainer>
               ))}
@@ -392,11 +412,11 @@ const Card = ({
                 setIsActive((prev) => !prev);
               }}
             >
-              <ShareImage
+              <ShareImageTag
                 src="https://img.icons8.com/ios/50/forward-arrow.png"
                 alt="Share Icon"
               />
-              <ShareCount>{shareCount}</ShareCount>
+              <ShareCountTag>{shareCount}</ShareCountTag>
             </ShareButton>
             {active && (
               <DropdownMenu>
@@ -450,32 +470,15 @@ const Card = ({
           </DropdownContainer>
         </ShareWrapper>
 
-        {/* 추후 삭제될 수 있는 기능이라 생각해 styled 컴포넌트로 변환하지않음*/}
-        <div
-          style={{
-            marginLeft: '-7px',
-            borderRadius: '30px',
-            width: '75px',
-            height: '50px',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <button
+        <ScirpWrapper>
+          <ScripButton
+            isHovered={isCardSendHovered}
             onMouseEnter={() => setIsCardSendHovered(true)}
             onMouseLeave={() => setIsCardSendHovered(false)}
-            style={{
-              border: '1px solid gray',
-              background: isCardSendHovered ? '#f0f0f0' : 'white',
-              height: '100%',
-              width: '100%',
-              borderRadius: '30px',
-            }}
           >
             보내기
-          </button>
-        </div>
+          </ScripButton>
+        </ScirpWrapper>
         {/*<div*/}
         {/*  style={{*/}
         {/*    marginLeft: "auto", // 자동 여백을 사용하여 오른쪽 정렬*/}
@@ -498,7 +501,7 @@ const Card = ({
         {/*  </span>*/}
         {/*</div>*/}
       </ButtonContainer>
-      <Hr />
+      <HrTag />
     </>
   );
 };
@@ -542,13 +545,16 @@ const CardContainer = styled.div.withConfig({
   justify-content: flex-start;
   align-items: flex-start;
   width: 100%;
-  max-width: 1000px;
   min-height: 200px;
   margin: 10px;
   border-radius: 10px;
   cursor: pointer;
   background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
   z-index: ${(props) => (props.modalState ? -10 : 999)};
+
+  @media (max-width: 768px) {
+    margin: none;
+  }
 `;
 
 const ImageContainer = styled.div`
@@ -563,7 +569,7 @@ const LogoImg = styled.img`
   width: 50px;
   height: 50px;
   object-fit: cover;
-  margin-right: 10px; // 이미지와 닉네임 사이의 간격
+  margin-right: 10px;
   border-radius: 30px;
 `;
 
@@ -580,7 +586,7 @@ const BoardTitle = styled.h3`
   font-weight: bold;
   text-align: left;
   white-space: normal;
-  font-size: 30px;
+  font-size: 1.5rem;
 `;
 
 const TextContainer = styled.div`
@@ -588,7 +594,6 @@ const TextContainer = styled.div`
   white-space: normal;
   word-break: break-word;
   width: 100%;
-  font-size: 20px;
 `;
 
 const ImagePreview = styled.img`
@@ -609,8 +614,27 @@ const MediaContainer = styled.div`
 const VideoContainer = styled.div`
   display: flex;
   justify-content: center;
-  border-radius: 20px; // 추가된 부분
-  overflow: hidden; // 추가된 부분
+  border-radius: 20px;
+  overflow: hidden;
+  max-width: 760px;
+  margin: 0 auto;
+`;
+
+const ResponsiveVideoContainer = styled.div`
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* Aspect ratio 16:9 */
+  height: 0;
+  overflow: hidden;
+  border-radius: 20px;
+`;
+
+const VideoWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 `;
 
 const ButtonContainer = styled.div.withConfig({
@@ -634,6 +658,10 @@ const ReactionWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  @media (max-width: 768px) {
+    width: 120px;
+  }
 `;
 
 const LikeButton = styled.button.withConfig({
@@ -648,12 +676,22 @@ const LikeButton = styled.button.withConfig({
   height: 100%;
   border-radius: 30px;
   cursor: pointer;
+
+  @media (max-width: 768px) {
+    width: 50px;
+    height: 40px;
+    font-size: 10px;
+  }
 `;
 
 const ReactionCount = styled.span`
   margin: 10px;
   width: 10px;
   height: 10px;
+
+  @media (max-width: 768px) {
+    margin: 5px;
+  }
 `;
 
 const DisLikeButton = styled.button.withConfig({
@@ -668,15 +706,25 @@ const DisLikeButton = styled.button.withConfig({
   height: 100%;
   border-radius: 30px;
   cursor: pointer;
+
+  @media (max-width: 768px) {
+    width: 50px;
+    height: 40px;
+    font-size: 10px;
+  }
 `;
 
 const CommentWrapper = styled.div`
-  border-radius: 30px;
   width: 75px;
   height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
+
+  @media (max-width: 768px) {
+    width: 45px;
+    margin-right: 7px;
+  }
 `;
 
 const CommentButton = styled.button.withConfig({
@@ -690,10 +738,15 @@ const CommentButton = styled.button.withConfig({
   width: 100%;
   border-radius: 30px;
   cursor: pointer;
+
+  @media (max-width: 768px) {
+    width: 45px;
+    height: 40px;
+    font-size: 10px;
+  }
 `;
 
 const ShareWrapper = styled.div`
-  border-radius: 30px;
   width: 15%;
   height: 50px;
   display: flex;
@@ -725,21 +778,65 @@ const ShareButton = styled.button.withConfig({
   border-radius: 30px;
   margin-left: -7px;
   cursor: pointer;
+
+  @media (max-width: 768px) {
+    width: 65px;
+    height: 40px;
+    font-size: 10px;
+    margin-left: 5px;
+    margin-right: 7px;
+  }
 `;
 
-const ShareImage = styled.img`
+const ShareImageTag = styled.img`
   height: 35px;
   width: 25px;
 `;
 
-const ShareCount = styled.p`
+const ShareCountTag = styled.p`
   display: flex;
   font-size: 20px;
   margin-bottom: 15px;
   font-weight: 700;
 `;
 
-const Hr = styled.hr`
+const ScirpWrapper = styled.div`
+  margin-left: -7px;
+  border-radius: 30px;
+  width: 75px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media (max-width: 768px) {
+    margin-left: 0px;
+  }
+`;
+
+const ScripButton = styled.button.withConfig({
+  shouldForwardProp: (prop) => prop !== 'isHovered', // isHovered를 DOM에 전달하지 않음
+})<{
+  isHovered: boolean; // isHovered 타입 정의
+}>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
+  border: 1px solid gray;
+  height: 100%;
+  width: 100%;
+  border-radius: 30px;
+  cursor: pointer;
+
+  @media (max-width: 768px) {
+    width: 65px;
+    height: 40px;
+    font-size: 10px;
+  }
+`;
+
+const HrTag = styled.hr`
   border: none;
   height: 2px;
   background-color: #f0f0f0;
