@@ -1,15 +1,8 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 import React from 'react';
 import {
-  CommentListAPI,
-  CommentSubmitAPI,
-  CommentInquiryAPI,
-} from '../pages/api/commentApi';
-import {
   submitCommentContactApi,
-  CommentSubmitParams,
   commentContactListApi,
 } from '../pages/api/inquiryApi';
 

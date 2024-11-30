@@ -22,15 +22,15 @@ import sanitizeHtml from 'sanitize-html';
 import debounce from 'lodash.debounce';
 import { UserModalState } from '../reducers/modalStateSlice';
 import { useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '../store/store';
+import { RootState } from '../store/store';
 import styled from 'styled-components';
 import { shareCountApi } from '../pages/api/boardApi';
 
 const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
   try {
     return url.includes('v=')
-      ? url.split('v=')[1].split('&')[0]
-      : url.split('youtu.be/')[1].split('?')[0];
+      ? url?.split('v=')[1]?.split('&')[0]
+      : url?.split('youtu.be/')[1]?.split('?')[0];
   } catch (e) {
     console.error('Invalid URL', e);
     return '';
@@ -648,6 +648,7 @@ const ButtonContainer = styled.div.withConfig({
   width: 100%;
   max-width: 800px;
   z-index: ${(props) => (props.modalState ? -10 : 1000)};
+
 `;
 
 const ReactionWrapper = styled.div`

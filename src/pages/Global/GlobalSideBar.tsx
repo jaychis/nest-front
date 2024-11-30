@@ -4,7 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { MainListTypes } from '../../_common/collectionTypes';
 import { AppDispatch } from '../../store/store';
 import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
-import { setCommunity,SelectCommunityParams } from '../../reducers/communitySlice';
+import {
+  setCommunity,
+  SelectCommunityParams,
+} from '../../reducers/communitySlice';
 import { RootState } from '../../store/store';
 import { UserModalState } from '../../reducers/modalStateSlice';
 import logo from '../../assets/img/panda_logo.png';
@@ -26,8 +29,12 @@ const GlobalSideBar = () => {
   const [loading, setLoading] = useState(false);
   const isLoggedIn = !!localStorage.getItem('access_token');
 
-  const [communityList, setCommunityList] = useState<SelectCommunityParams[]>([],);
-  const [communityNamesSet, setCommunityNamesSet] = useState<Set<string>>(new Set(),);
+  const [communityList, setCommunityList] = useState<SelectCommunityParams[]>(
+    [],
+  );
+  const [communityNamesSet, setCommunityNamesSet] = useState<Set<string>>(
+    new Set(),
+  );
   const [displayCount, setDisplayCount] = useState(5);
 
   const fetchCommunities = async (page: number) => {
@@ -100,10 +107,9 @@ const GlobalSideBar = () => {
     }
     navigate('/community/create1');
   };
-  
+
   return (
-    <GlobalSideBarContainer 
-    isModalOpen={modalState.modalState}>
+    <GlobalSideBarContainer isModalOpen={modalState.modalState}>
       <div
         style={{
           padding: '6px 0',
@@ -305,7 +311,9 @@ const GlobalSideBar = () => {
 
 export default GlobalSideBar;
 
-const GlobalSideBarContainer = styled.div<{ isModalOpen: boolean }>`
+const GlobalSideBarContainer = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'isModalOpen',
+})<{ isModalOpen: boolean }>`
   display: flex;
   flex-direction: column;
   width: 200px;
@@ -321,7 +329,6 @@ const GlobalSideBarContainer = styled.div<{ isModalOpen: boolean }>`
   position: fixed;
   z-index: ${({ isModalOpen }) => (isModalOpen ? -1 : 1000)};
 
-  /* 768px 이하에서는 숨김 */
   @media (max-width: 768px) {
     display: none;
   }
