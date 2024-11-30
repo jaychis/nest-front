@@ -29,8 +29,8 @@ import { shareCountApi } from '../pages/api/boardApi';
 const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
   try {
     return url.includes('v=')
-      ? url.split('v=')[1].split('&')[0]
-      : url.split('youtu.be/')[1].split('?')[0];
+      ? url?.split('v=')[1]?.split('&')[0]
+      : url?.split('youtu.be/')[1]?.split('?')[0];
   } catch (e) {
     console.error('Invalid URL', e);
     return '';
