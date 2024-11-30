@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { SendEmail } from '../pages/api/userApi';
 
 type modalType = 'login' | 'signup' | 'recovery' | 'verity';
 interface Props {

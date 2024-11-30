@@ -1,14 +1,12 @@
-// src/components/EmptyState.tsx
-
-import React from "react";
-import logo from "../assets/img/panda_logo.png";
-import styled from "styled-components";
+import React from 'react';
+import logo from '../assets/img/panda_logo.png';
+import styled from 'styled-components';
 const EmptyState = () => {
   return (
     <Container>
       <Image src={logo} alt="Empty State" />
       <Text>아직 아무것도 없어요!</Text>
-  </Container>
+    </Container>
   );
 };
 

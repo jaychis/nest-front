@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import DeleteButton from '../../../components/Buttons/DeleteButton';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 import { useCommunity } from '../../../contexts/CommunityContext';
 import { TagListAPI } from '../../api/tagApi';
 
