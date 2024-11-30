@@ -22,15 +22,15 @@ import sanitizeHtml from 'sanitize-html';
 import debounce from 'lodash.debounce';
 import { UserModalState } from '../reducers/modalStateSlice';
 import { useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '../store/store';
+import { RootState } from '../store/store';
 import styled from 'styled-components';
 import { shareCountApi } from '../pages/api/boardApi';
 
 const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
-  let videoId = '' 
   try {
-    url.includes('v=') ? videoId = url.split('v=')[1] : videoId = url.split('youtu.be/')[1].split('?')[0]
-    return videoId
+    return url.includes('v=')
+      ? url.split('v=')[1].split('&')[0]
+      : url.split('youtu.be/')[1].split('?')[0];
   } catch (e) {
     console.error('Invalid URL', e);
     return '';
@@ -60,6 +60,8 @@ const Card = ({
   const [viewCount, setViewCount] = useState<number>(0); // 조회수 상태 추가
   const [isReaction, setIsReaction] = useState<ReactionStateTypes>(null);
   const [shareContent, setShareContent] = useState<string>('');
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+
   const modalState: UserModalState = useSelector(
     (state: RootState) => state.modalState,
   );
@@ -70,6 +72,26 @@ const Card = ({
   const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
   const USER_ID: string = localStorage.getItem('id') as string;
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth <= 760);
+    };
+
+    handleResize();
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  const videoOptions = {
+    width: isSmallScreen ? '100%' : '760px',
+    height: isSmallScreen ? '330px' : '400px',
+    playerVars: { modestbranding: 1 },
+  };
 
   const handleClickOutside = (event: MouseEvent) => {
     if (
@@ -309,7 +331,6 @@ const Card = ({
           {type === 'TEXT' ? (
             <TextContainer>
               {content?.map((co, index) => {
-                // console.log("card content : ", co);
                 return (
                   <div
                     key={`${id}-${index}`}
@@ -331,15 +352,14 @@ const Card = ({
               {content.map((video: string, index: number) => (
                 <VideoContainer key={`${id}-${index}`}>
                   {video && (
-                    <YouTube
-                      videoId={getYouTubeVideoId({ url: video })}
-                      opts={{
-                        width: '760px',
-                        height: '400px',
-                        playerVars: { modestbranding: 1 },
-                      }}
-                      style={{ borderRadius: '20px' }} // 추가된 부분
-                    />
+                    <ResponsiveVideoContainer>
+                      <VideoWrapper>
+                        <YouTube
+                          videoId={getYouTubeVideoId({ url: video })}
+                          opts={videoOptions}
+                        />
+                      </VideoWrapper>
+                    </ResponsiveVideoContainer>
                   )}
                 </VideoContainer>
               ))}
@@ -450,7 +470,6 @@ const Card = ({
           </DropdownContainer>
         </ShareWrapper>
 
-        
         <ScirpWrapper>
           <ScripButton
             isHovered={isCardSendHovered}
@@ -482,7 +501,7 @@ const Card = ({
         {/*  </span>*/}
         {/*</div>*/}
       </ButtonContainer>
-      <HrTag/>
+      <HrTag />
     </>
   );
 };
