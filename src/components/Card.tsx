@@ -27,10 +27,10 @@ import styled from 'styled-components';
 import { shareCountApi } from '../pages/api/boardApi';
 
 const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
-  let videoId = '' 
   try {
-    url.includes('v=') ? videoId = url.split('v=')[1] : videoId = url.split('youtu.be/')[1].split('?')[0]
-    return videoId
+    return url.includes('v=')
+      ? url.split('v=')[1].split('&')[0]
+      : url.split('youtu.be/')[1].split('?')[0];
   } catch (e) {
     console.error('Invalid URL', e);
     return '';
@@ -331,15 +331,18 @@ const Card = ({
               {content.map((video: string, index: number) => (
                 <VideoContainer key={`${id}-${index}`}>
                   {video && (
-                    <YouTube
-                      videoId={getYouTubeVideoId({ url: video })}
-                      opts={{
-                        width: '760px',
-                        height: '400px',
-                        playerVars: { modestbranding: 1 },
-                      }}
-                      style={{ borderRadius: '20px' }} // 추가된 부분
-                    />
+                    <ResponsiveVideoContainer>
+                      <VideoWrapper>
+                        <YouTube
+                          videoId={getYouTubeVideoId({ url: video })}
+                          opts={{
+                            width: '100%',
+                            height: '100%',
+                            playerVars: { modestbranding: 1 },
+                          }}
+                        />
+                      </VideoWrapper>
+                    </ResponsiveVideoContainer>
                   )}
                 </VideoContainer>
               ))}
@@ -392,11 +395,11 @@ const Card = ({
                 setIsActive((prev) => !prev);
               }}
             >
-              <ShareImage
+              <ShareImageTag
                 src="https://img.icons8.com/ios/50/forward-arrow.png"
                 alt="Share Icon"
               />
-              <ShareCount>{shareCount}</ShareCount>
+              <ShareCountTag>{shareCount}</ShareCountTag>
             </ShareButton>
             {active && (
               <DropdownMenu>
@@ -450,7 +453,6 @@ const Card = ({
           </DropdownContainer>
         </ShareWrapper>
 
-        
         <ScirpWrapper>
           <ScripButton
             isHovered={isCardSendHovered}
@@ -482,7 +484,7 @@ const Card = ({
         {/*  </span>*/}
         {/*</div>*/}
       </ButtonContainer>
-      <Hr />
+      <HrTag />
     </>
   );
 };
@@ -535,7 +537,6 @@ const CardContainer = styled.div.withConfig({
 
   @media (max-width: 768px) {
     margin: none;
-
   }
 `;
 
@@ -596,8 +597,27 @@ const MediaContainer = styled.div`
 const VideoContainer = styled.div`
   display: flex;
   justify-content: center;
-  border-radius: 20px; // 추가된 부분
-  overflow: hidden; // 추가된 부분
+  border-radius: 20px;
+  overflow: hidden;
+  max-width: 760px;
+  margin: 0 auto;
+`;
+
+const ResponsiveVideoContainer = styled.div`
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* Aspect ratio 16:9 */
+  height: 0;
+  overflow: hidden;
+  border-radius: 20px;
+`;
+
+const VideoWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 `;
 
 const ButtonContainer = styled.div.withConfig({
@@ -611,7 +631,6 @@ const ButtonContainer = styled.div.withConfig({
   width: 100%;
   max-width: 800px;
   z-index: ${(props) => (props.modalState ? -10 : 1000)};
-
 `;
 
 const ReactionWrapper = styled.div`
@@ -623,10 +642,9 @@ const ReactionWrapper = styled.div`
   justify-content: center;
   align-items: center;
 
-  @media (max-width: 768px){
-  width: 120px;
+  @media (max-width: 768px) {
+    width: 120px;
   }
-  
 `;
 
 const LikeButton = styled.button.withConfig({
@@ -642,7 +660,7 @@ const LikeButton = styled.button.withConfig({
   border-radius: 30px;
   cursor: pointer;
 
-  @media (max-width: 768px){
+  @media (max-width: 768px) {
     width: 50px;
     height: 40px;
     font-size: 10px;
@@ -654,7 +672,7 @@ const ReactionCount = styled.span`
   width: 10px;
   height: 10px;
 
-  @media(max-width: 768px){
+  @media (max-width: 768px) {
     margin: 5px;
   }
 `;
@@ -672,7 +690,7 @@ const DisLikeButton = styled.button.withConfig({
   border-radius: 30px;
   cursor: pointer;
 
-  @media (max-width: 768px){
+  @media (max-width: 768px) {
     width: 50px;
     height: 40px;
     font-size: 10px;
@@ -686,7 +704,7 @@ const CommentWrapper = styled.div`
   justify-content: center;
   align-items: center;
 
-  @media (max-width: 768px){
+  @media (max-width: 768px) {
     width: 45px;
     margin-right: 7px;
   }
@@ -704,7 +722,7 @@ const CommentButton = styled.button.withConfig({
   border-radius: 30px;
   cursor: pointer;
 
-  @media (max-width: 768px){
+  @media (max-width: 768px) {
     width: 45px;
     height: 40px;
     font-size: 10px;
@@ -717,7 +735,6 @@ const ShareWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-
 `;
 
 const ShareIcon = styled.img`
@@ -745,7 +762,7 @@ const ShareButton = styled.button.withConfig({
   margin-left: -7px;
   cursor: pointer;
 
-  @media (max-width: 768px){
+  @media (max-width: 768px) {
     width: 65px;
     height: 40px;
     font-size: 10px;
@@ -754,12 +771,12 @@ const ShareButton = styled.button.withConfig({
   }
 `;
 
-const ShareImage = styled.img`
+const ShareImageTag = styled.img`
   height: 35px;
   width: 25px;
 `;
 
-const ShareCount = styled.p`
+const ShareCountTag = styled.p`
   display: flex;
   font-size: 20px;
   margin-bottom: 15px;
@@ -775,7 +792,7 @@ const ScirpWrapper = styled.div`
   justify-content: center;
   align-items: center;
 
-  @media(max-width: 768px){
+  @media (max-width: 768px) {
     margin-left: 0px;
   }
 `;
@@ -795,16 +812,14 @@ const ScripButton = styled.button.withConfig({
   border-radius: 30px;
   cursor: pointer;
 
-  @media (max-width: 768px){
+  @media (max-width: 768px) {
     width: 65px;
     height: 40px;
     font-size: 10px;
   }
-
 `;
 
-
-const Hr = styled.hr`
+const HrTag = styled.hr`
   border: none;
   height: 2px;
   background-color: #f0f0f0;
