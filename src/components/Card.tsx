@@ -60,6 +60,8 @@ const Card = ({
   const [viewCount, setViewCount] = useState<number>(0); // 조회수 상태 추가
   const [isReaction, setIsReaction] = useState<ReactionStateTypes>(null);
   const [shareContent, setShareContent] = useState<string>('');
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+
   const modalState: UserModalState = useSelector(
     (state: RootState) => state.modalState,
   );
@@ -70,6 +72,26 @@ const Card = ({
   const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
   const USER_ID: string = localStorage.getItem('id') as string;
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth <= 760);
+    };
+
+    handleResize();
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  const videoOptions = {
+    width: isSmallScreen ? '100%' : '760px',
+    height: isSmallScreen ? '330px' : '400px',
+    playerVars: { modestbranding: 1 },
+  };
 
   const handleClickOutside = (event: MouseEvent) => {
     if (
@@ -309,7 +331,6 @@ const Card = ({
           {type === 'TEXT' ? (
             <TextContainer>
               {content?.map((co, index) => {
-                // console.log("card content : ", co);
                 return (
                   <div
                     key={`${id}-${index}`}
@@ -335,11 +356,7 @@ const Card = ({
                       <VideoWrapper>
                         <YouTube
                           videoId={getYouTubeVideoId({ url: video })}
-                          opts={{
-                            width: '100%',
-                            height: '100%',
-                            playerVars: { modestbranding: 1 },
-                          }}
+                          opts={videoOptions}
                         />
                       </VideoWrapper>
                     </ResponsiveVideoContainer>
