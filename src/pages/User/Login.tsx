@@ -5,7 +5,7 @@ import { isValidPasswordFormat } from '../../_common/passwordRegex';
 import { FaComment } from 'react-icons/fa';
 import Alert from '../../components/Alert';
 import { LoginAPI, LoginParams, RefreshTokenAPI } from '../api/userApi';
-import { UsersNaverOAuthSignUpAPI } from '../api/oAuthApi';
+import { KakaoOAuthLoginAPI, UsersNaverOAuthSignUpAPI } from '../api/oAuthApi';
 import { checkMasterPassword } from '../../_common/functions';
 
 type modalType = 'login' | 'signup' | 'recovery' | 'verity';
@@ -171,21 +171,26 @@ const Login = ({
       });
     }
   };
-  const KAKAO_CLIENT_ID = (() => {
-    switch (process.env.REACT_APP_NODE_ENV) {
-      case 'production':
-        return process.env.REACT_APP_KAKAO_CLIENT_ID; // production 환경의 Client ID
-      default:
-        return process.env.REACT_APP_KAKAO_TEST_CLIENT_ID; // 기본값 또는 undefined 방지
-    }
-  })();
 
-  const REDIRECT_URI =
-    process.env.REACT_APP_NODE_ENV === 'production'
-      ? process.env.REACT_APP_KAKAO_REDIRECT_URL
-      : process.env.REACT_APP_NODE_ENV === 'stage'
-        ? process.env.REACT_APP_KAKAO_STAGE_REDIRECT_URL
-        : process.env.REACT_APP_KAKAO_TEST_REDIRECT_URL;
+  // https://kauth.kakao.com/oauth/authorize?
+  // response_type=code&
+  // client_id=026c54fa1a5db9470f3de31c6951c6df&
+  // redirect_uri=http://localhost:9898/users/kakao/callback&scope=account_email&
+  // state=http%3A%2F%2Flocalhost%3A3000%2F
+  const KAKAO_CLIENT_ID = process.env.REACT_APP_KAKAO_CLIENT_ID as string;
+
+  const env = process.env.REACT_APP_NODE_ENV as keyof typeof REDIRECT_URLS;
+  const REDIRECT_URLS: {
+    readonly production: string;
+    readonly stage: string;
+    readonly development: string;
+  } = {
+    production: process.env.REACT_APP_KAKAO_REDIRECT_URL as string,
+    stage: process.env.REACT_APP_KAKAO_STAGE_REDIRECT_URL as string,
+    development: process.env.REACT_APP_KAKAO_TEST_REDIRECT_URL as string,
+  };
+  const REDIRECT_URI = REDIRECT_URLS[env] as string;
+
   useEffect(() => {
     console.log('KAKAO_CLIENT_ID : ', KAKAO_CLIENT_ID);
     console.log('REDIRECT_URI : ', REDIRECT_URI);
@@ -195,43 +200,60 @@ const Login = ({
   });
 
   const kakaoOauthLogin = () => {
-    const check: boolean = checkMasterPassword();
-    if (!check) return;
-
     const currentUrl = window.location.href; // 현재 페이지의 경로
-    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=account_email&state=${encodeURIComponent(currentUrl)}`;
+    // const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=account_email&state=${encodeURIComponent(currentUrl)}`;
+
+    // alert(`REDIRECT_URI: ${REDIRECT_URI}`);
+    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}`;
+    // window.location.href = KAKAO_AUTH_URL;
+    console.log('KAKAO_AUTH_URL : ', KAKAO_AUTH_URL);
+    // alert(`KAKAO_AUTH_URL : ${KAKAO_AUTH_URL}`);
 
     const popup = window.open(
       KAKAO_AUTH_URL,
       'PopupWin',
       'width=500,height=600',
     );
-    // 이벤트 리스너를 통해 팝업에서 인증 후 리디렉트된 URL의 코드를 받아 처리
+    console.log('popup : ', popup);
+    if (!popup) {
+      console.error(
+        '팝업 창을 열 수 없습니다. 팝업 차단이 설정되었는지 확인하세요.',
+      );
+      return;
+    }
+
+    // 팝업 창으로부터 메시지를 수신
     window.addEventListener(
       'message',
       async (event) => {
+        // alert(`event.data : ${event.data}`);
+
         try {
           const { user } = event.data;
+          console.log('user : ', user);
+          if (user) {
+            const { id, access_token, refresh_token, nickname } = user;
 
-          const parsedUser = JSON.parse(user);
-
-          console.log(`Received user info: ${JSON.stringify(parsedUser)}`);
-          if (parsedUser.subscriptionStatus === true) {
             setLoginProcess({
-              id: parsedUser.id,
-              nickname: parsedUser.nickname,
-              access_token: parsedUser.access_token,
-              refresh_token: parsedUser.refresh_token,
+              id,
+              nickname,
+              access_token,
+              refresh_token,
             });
+
+            localStorage.setItem('id', id);
+            localStorage.setItem('access_token', access_token);
+            localStorage.setItem('refresh_token', refresh_token);
+            localStorage.setItem('nickname', nickname);
           } else {
-            alert('먼저 카카오 계정과 같은 이메일로 회원가입을 진행해 주세요');
-            setKakaoEmail(parsedUser.email);
-            onSwitchView('signup');
+            alert('사용자 정보를 받아오지 못했습니다. 다시 시도해 주세요.');
           }
+
           if (popup) popup.close();
         } catch (error) {
           console.error('로그인 실패:', error);
           alert('로그인에 실패했습니다. 다시 시도해주세요.');
+          if (popup) popup.close();
         }
       },
       { once: true },
