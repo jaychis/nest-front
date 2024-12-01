@@ -200,14 +200,10 @@ const Login = ({
   });
 
   const kakaoOauthLogin = () => {
-    const currentUrl = window.location.href; // 현재 페이지의 경로
     // const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=account_email&state=${encodeURIComponent(currentUrl)}`;
-
-    // alert(`REDIRECT_URI: ${REDIRECT_URI}`);
     const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}`;
-    // window.location.href = KAKAO_AUTH_URL;
+
     console.log('KAKAO_AUTH_URL : ', KAKAO_AUTH_URL);
-    // alert(`KAKAO_AUTH_URL : ${KAKAO_AUTH_URL}`);
 
     const popup = window.open(
       KAKAO_AUTH_URL,
