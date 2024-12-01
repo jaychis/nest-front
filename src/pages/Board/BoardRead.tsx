@@ -12,6 +12,7 @@ import BoardReply, { ReplyType } from './BoardReply';
 import { useLocation } from 'react-router-dom';
 import { LogViewedBoardAPI } from '../api/viewedBoardsApi';
 
+
 const BoardRead = () => {
   const boardId: string = sessionStorage.getItem('boardId') as string;
   const BOARD_TITLE: string = sessionStorage.getItem('boardTitle') as string;
@@ -215,6 +216,7 @@ const BoardRead = () => {
               }}
             >
               <textarea
+              wrap='hard'
                 style={{
                   width: '100%',
                   border: 'none',
@@ -272,7 +274,7 @@ const BoardRead = () => {
                 </button>
               </div>
             </div>
-            {isCommentState?.length > 0 ? renderComments(isCommentState) : []}
+            {isCommentState?.length > 0 ? <pre>{renderComments(isCommentState)}</pre> : []}
           </div>
         </div>
       </div>
