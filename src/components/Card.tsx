@@ -315,14 +315,14 @@ const Card = ({
         modalState={modalState.modalState}
       >
         {/* Card Image */}
-        <ImageContainer>
+        <LogoContainer>
           <LogoImg src={logo} />
           <NicknameWrapper
             onClick={() => navigate(`/users/inquiry?nickname=${nickname}`)}
           >
             {nickname}
           </NicknameWrapper>
-        </ImageContainer>
+        </LogoContainer>
 
         {/* Card Content */}
         <ContentContainer>
@@ -557,7 +557,7 @@ const CardContainer = styled.div.withConfig({
   }
 `;
 
-const ImageContainer = styled.div`
+const LogoContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -597,15 +597,15 @@ const TextContainer = styled.div`
 `;
 
 const ImagePreview = styled.img`
-  max-width: 760px;
-  max-height: 500px;
+  width: 85%;
+  height: 85%;
   border-radius: 20px;
   object-fit: contain;
   margin-top: 10px;
 `;
 
 const MediaContainer = styled.div`
-  width: 85%;
+  
   background: #606060;
   text-align: center;
   border: 2px solid darkgray;
