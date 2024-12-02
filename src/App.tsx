@@ -30,12 +30,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     margin-left: 11%;
     margin-top: 80px;
 
-    @media (max-width: 768px){
-    margin-left: 0;
-    max-width: 600px;
-  }
-`
-  
+    @media (max-width: 768px) {
+      margin-left: 0;
+      max-width: 600px;
+    }
+  `;
   return (
     <>
       <GlobalBar />
@@ -46,7 +45,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       </LayoutContainer>
     </>
   );
-
 };
 
 function App() {
