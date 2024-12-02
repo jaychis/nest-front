@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kakao Redirect</title>
+</head>
+<body>
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+
+    if (code && window.opener) {
+        // 부모 창에 인증 코드를 전달
+        window.opener.postMessage({ code }, window.location.origin);
+        // 팝업 창 닫기
+        window.close();
+    } else {
+        alert('인증 코드가 존재하지 않습니다.');
+    }
+</script>
+</body>
+</html>
