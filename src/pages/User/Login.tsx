@@ -30,7 +30,6 @@ const Login = ({
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [errorModalVisible, setErrorModalVisible] = useState<boolean>(false); // State for ErrorModal
-  const [clickCount, setClickCount] = useState<number>(0);
 
   const setLoginProcess = ({
     id,
@@ -193,6 +192,8 @@ const Login = ({
     );
   });
 
+  const goSignup = () => onSwitchView('signup');
+
   const kakaoOauthLogin = () => {
     const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}`;
 
@@ -220,15 +221,33 @@ const Login = ({
           const response = await KakaoOAuthLoginAPI({ code });
           if (!response) return;
 
-          const { id, nickname, access_token, refresh_token } =
-            response.data.response;
+          const {
+            id,
+            nickname,
+            access_token,
+            refresh_token,
+            isNewUser,
+            email,
+          } = response.data.response as {
+            readonly id: string;
+            readonly email: string;
+            readonly nickname: string;
+            readonly access_token: string;
+            readonly refresh_token: string;
+            readonly isNewUser: boolean;
+          };
 
-          modalIsOpen(false);
-          localStorage.setItem('access_token', access_token);
-          localStorage.setItem('refresh_token', refresh_token);
-          localStorage.setItem('id', id);
-          localStorage.setItem('nickname', nickname);
-          window.location.reload();
+          if (!isNewUser) {
+            modalIsOpen(false);
+            localStorage.setItem('access_token', access_token);
+            localStorage.setItem('refresh_token', refresh_token);
+            localStorage.setItem('id', id);
+            localStorage.setItem('nickname', nickname);
+            window.location.reload();
+          } else {
+            localStorage.setItem('email', email);
+            goSignup();
+          }
         } else {
           alert('인증 코드가 없습니다. 다시 시도해 주세요.');
         }
@@ -250,8 +269,6 @@ const Login = ({
     }
   }, []);
 
-  const hiddenButton = () => setClickCount(clickCount + 1);
-
   return (
     <div style={styles.container}>
       {showAlert && (
@@ -262,30 +279,21 @@ const Login = ({
         />
       )}
       <div>
-        <div
-          style={{ textAlign: 'center', marginBottom: '20px' }}
-          onClick={hiddenButton}
-        >
+        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
           <h2>로그인</h2>
         </div>
 
-        {clickCount >= 5 ? (
-          <>
-            <div style={styles.socialButtonsContainer}>
-              <button style={styles.socialButton} onClick={kakaoOauthLogin}>
-                <FaComment style={styles.socialLogo} />
-                카카오로 로그인
-              </button>
-            </div>
-            <div style={styles.orContainer}>
-              <div style={styles.orLine}></div>
-              <div style={styles.orText}>OR</div>
-              <div style={styles.orLine}></div>
-            </div>
-          </>
-        ) : (
-          <div style={{ height: '40px' }}></div>
-        )}
+        <div style={styles.socialButtonsContainer}>
+          <button style={styles.socialButton} onClick={kakaoOauthLogin}>
+            <FaComment style={styles.socialLogo} />
+            카카오로 로그인
+          </button>
+        </div>
+        <div style={styles.orContainer}>
+          <div style={styles.orLine}></div>
+          <div style={styles.orText}>OR</div>
+          <div style={styles.orLine}></div>
+        </div>
 
         <form>
           <input
@@ -347,12 +355,7 @@ const Login = ({
             marginTop: '0px',
           }}
         >
-          <button
-            onClick={() => {
-              onSwitchView('signup');
-            }}
-            style={styles.switchButton}
-          >
+          <button onClick={goSignup} style={styles.switchButton}>
             회원가입
           </button>
         </div>
