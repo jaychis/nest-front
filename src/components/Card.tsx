@@ -352,14 +352,15 @@ const Card = ({
               {content.map((video: string, index: number) => (
                 <VideoContainer key={`${id}-${index}`}>
                   {video && (
-                    <ResponsiveVideoContainer>
-                      <VideoWrapper>
-                        <YouTube
-                          videoId={getYouTubeVideoId({ url: video })}
-                          opts={videoOptions}
-                        />
-                      </VideoWrapper>
-                    </ResponsiveVideoContainer>
+                    <YouTube
+                      videoId={getYouTubeVideoId({ url: video })}
+                      opts={{
+                        width: '100%',
+                        height: '400px',
+                        playerVars: { modestbranding: 1 },
+                      }}
+                      style={{ borderRadius: '20px' }} // 추가된 부분
+                    />
                   )}
                 </VideoContainer>
               ))}
@@ -609,15 +610,21 @@ const MediaContainer = styled.div`
   background: #606060;
   text-align: center;
   border: 2px solid darkgray;
+
+   @media(max-width: 375px){
+    width: 100%;
+  }
 `;
 
 const VideoContainer = styled.div`
-  display: flex;
-  justify-content: center;
+  width: 85%;
   border-radius: 20px;
   overflow: hidden;
-  max-width: 760px;
-  margin: 0 auto;
+
+ @media (max-width: 370px) {
+  width: 100%;
+  margin: 0 0 0 0;
+}
 `;
 
 const ResponsiveVideoContainer = styled.div`
