@@ -1,30 +1,33 @@
-import { useState } from "react";
 import styled from 'styled-components';
 
 interface ConfirmProps {
-    readonly onClickOk:() => void;
-    readonly onClickCancel:() => void;
-    readonly message: string;
-    readonly title: string
+  readonly onClickOk: () => void;
+  readonly onClickCancel: () => void;
+  readonly message: string;
+  readonly title: string;
 }
 
-const Confirm = ({ message,title, onClickOk, onClickCancel }: ConfirmProps) => {
+const Confirm = ({
+  message,
+  title,
+  onClickOk,
+  onClickCancel,
+}: ConfirmProps) => {
+  return (
+    <Overlay>
+      <DialogBox>
+        <DialogTitle>{title}</DialogTitle>
+        <DialogMessage>{message}</DialogMessage>
+        <ButtonContainer>
+          <CancelButton onClick={onClickCancel}>CANCEL</CancelButton>
+          <ConfirmButton onClick={onClickOk}>OK</ConfirmButton>
+        </ButtonContainer>
+      </DialogBox>
+    </Overlay>
+  );
+};
 
-    return(
-        <Overlay>
-            <DialogBox>
-                <DialogTitle>{title}</DialogTitle>
-                <DialogMessage>{message}</DialogMessage>
-                <ButtonContainer>
-                <CancelButton onClick={onClickCancel}>CANCEL</CancelButton>
-                <ConfirmButton onClick={onClickOk}>OK</ConfirmButton>
-                </ButtonContainer>
-            </DialogBox>
-        </Overlay>
-    )
-}
-
-export default Confirm
+export default Confirm;
 
 const Overlay = styled.div`
   position: fixed;

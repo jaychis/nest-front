@@ -15,37 +15,6 @@ import { useInView } from 'react-intersection-observer';
 import CommunityBanner from './CommunityBanner';
 import styled from 'styled-components';
 
-const MainContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  width: 100%;
-  box-sizing: border-box;
-  margin-left: 1%;
-  margin-top: 1%;
-
-  @media (max-width: 768px) {
-    margin-left: 0;
-    max-width: 600px;
-  }
-`;
-
-const CardsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  max-width: 800px; /* Set an appropriate max width */
-  box-sizing: border-box;
-  padding: 0 20px; /* Add left and right padding */
-`;
-
-// Styled-components for InvisibleRefContainer
-const InvisibleRefContainer = styled.div`
-  opacity: 0;
-`;
-
 const BoardList = () => {
   interface AllListParams {
     readonly id: IdType;
@@ -177,5 +146,35 @@ const BoardList = () => {
     </>
   );
 };
+
+const MainContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  box-sizing: border-box;
+  margin-left: 1%;
+  margin-top: 1%;
+
+  @media (max-width: 768px) {
+    margin-left: 0;
+    max-width: 600px;
+  }
+`;
+
+const CardsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 800px; /* Set an appropriate max width */
+  box-sizing: border-box;
+  padding: 0 20px; /* Add left and right padding */
+`;
+
+const InvisibleRefContainer = styled.div`
+  opacity: 0;
+`;
 
 export default BoardList;
