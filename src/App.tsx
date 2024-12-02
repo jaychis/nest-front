@@ -35,6 +35,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       max-width: 600px;
     }
   `;
+
   return (
     <>
       <GlobalBar />
