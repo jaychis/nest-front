@@ -33,7 +33,11 @@ interface ValidSignupType {
 
 const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
   const [signup, setSignup] = useState<SignupParams>({
-    email: kakaoEmail,
+    email: kakaoEmail
+      ? kakaoEmail
+      : localStorage.getItem('email')
+        ? (localStorage.getItem('email') as string)
+        : '',
     nickname: '',
     password: '',
     confirmPassword: '',
@@ -69,7 +73,6 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
 
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [validPassword, setValidPassword] = useState<boolean>(false);
-  const [clickCount, setClickCount] = useState<number>(0);
 
   useEffect(() => {
     if (signup.email.length >= 12) {
@@ -193,8 +196,10 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
       SignupAPI(signup)
         .then((res): void => {
           const response = res.data.response;
+          localStorage.removeItem('email');
+
           if (res.status === 201 && response) {
-            setShowAlert(true); // 알람 표시
+            setShowAlert(true);
             processLogin();
             if (modalIsOpen) modalIsOpen(false);
           }
@@ -206,65 +211,6 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
       );
     }
   };
-  const KAKAO_CLIENT_ID = (() => {
-    switch (process.env.REACT_APP_NODE_ENV) {
-      case 'production':
-        return process.env.REACT_APP_KAKAO_CLIENT_ID; // production 환경의 Client ID
-      default:
-        return process.env.REACT_APP_KAKAO_TEST_CLIENT_ID; // 기본값 또는 undefined 방지
-    }
-  })();
-  const REDIRECT_URI =
-    process.env.REACT_APP_NODE_ENV === 'production'
-      ? process.env.REACT_APP_KAKAO_REDIRECT_URL
-      : process.env.REACT_APP_NODE_ENV === 'stage'
-        ? process.env.REACT_APP_KAKAO_STAGE_REDIRECT_URL
-        : process.env.REACT_APP_KAKAO_TEST_REDIRECT_URL;
-
-  const kakaoOauthSignUp = () => {
-    const currentUrl = window.location.href; // 현재 페이지의 경로
-    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=account_email&state=${encodeURIComponent(currentUrl)}`;
-
-    const popup = window.open(
-      KAKAO_AUTH_URL,
-      'PopupWin',
-      'width=500,height=600',
-    );
-    // 이벤트 리스너를 통해 팝업에서 인증 후 리디렉트된 URL의 코드를 받아 처리
-    window.addEventListener(
-      'message',
-      async (event) => {
-        try {
-          const { user } = event.data; // 카카오로부터 받은 사용자 정보
-          const parsedUser = JSON.parse(user); // 문자열로 온 경우 파싱
-
-          console.log(`Received user info: ${JSON.stringify(parsedUser)}`);
-
-          // 이메일, 닉네임, 전화번호를 기입할 수 있도록 상태 업데이트
-          setSignup((prevSignup) => ({
-            ...prevSignup,
-            email: parsedUser.email || '',
-            nickname: parsedUser.nickname || '',
-            phone: parsedUser.phone || '',
-          }));
-
-          // 팝업이 열려 있으면 닫기
-          if (popup) popup.close();
-        } catch (error) {
-          console.error(
-            '카카오로부터 사용자 정보를 받아오는 데 실패했습니다.',
-            error,
-          );
-          alert(
-            '카카오로부터 사용자 정보를 받아오는 데 실패했습니다. 다시 시도해주세요.',
-          );
-        }
-      },
-      { once: true }, // 한 번만 실행되도록 설정
-    );
-  };
-
-  const hiddenButton = () => setClickCount(clickCount + 1);
 
   return (
     <div
@@ -288,42 +234,9 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
           type="success"
         />
       )}
-      <div
-        style={{ textAlign: 'center', marginBottom: '20px' }}
-        onClick={hiddenButton}
-      >
+      <div style={{ textAlign: 'center', marginBottom: '20px' }}>
         <h2>회원가입</h2>
       </div>
-      {clickCount >= 5 ? (
-        <>
-          <div
-            style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
-          >
-            <button
-              style={styles.socialButton}
-              onClick={() => kakaoOauthSignUp()}
-            >
-              <FaComment style={styles.socialLogo} />
-              카카오로 가입
-            </button>
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              textAlign: 'center',
-              color: '#aaa',
-              margin: '20px 0',
-            }}
-          >
-            <div style={{ flex: 1, height: '1px', background: '#aaa' }}></div>
-            <div style={{ margin: '0 10px' }}>OR</div>
-            <div style={{ flex: 1, height: '1px', background: '#aaa' }}></div>
-          </div>
-        </>
-      ) : (
-        <div style={{ height: '20px' }}></div>
-      )}
 
       <form>
         <div
