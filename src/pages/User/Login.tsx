@@ -5,7 +5,7 @@ import { isValidPasswordFormat } from '../../_common/passwordRegex';
 import { FaComment } from 'react-icons/fa';
 import Alert from '../../components/Alert';
 import { LoginAPI, LoginParams, RefreshTokenAPI } from '../api/userApi';
-import { UsersNaverOAuthSignUpAPI } from '../api/oAuthApi';
+import { KakaoOAuthLoginAPI, UsersNaverOAuthSignUpAPI } from '../api/oAuthApi';
 
 type modalType = 'login' | 'signup' | 'recovery' | 'verity';
 
@@ -171,11 +171,6 @@ const Login = ({
     }
   };
 
-  // https://kauth.kakao.com/oauth/authorize?
-  // response_type=code&
-  // client_id=026c54fa1a5db9470f3de31c6951c6df&
-  // redirect_uri=http://localhost:9898/users/kakao/callback&scope=account_email&
-  // state=http%3A%2F%2Flocalhost%3A3000%2F
   const KAKAO_CLIENT_ID = process.env.REACT_APP_KAKAO_CLIENT_ID as string;
 
   const env = process.env.REACT_APP_NODE_ENV as keyof typeof REDIRECT_URLS;
@@ -199,17 +194,14 @@ const Login = ({
   });
 
   const kakaoOauthLogin = () => {
-    // const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=account_email&state=${encodeURIComponent(currentUrl)}`;
+    const REDIRECT_URI = 'http://localhost:3000/redirect.html'; // 이 페이지는 위에서 작성한 HTML 파일
     const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}`;
-
-    console.log('KAKAO_AUTH_URL : ', KAKAO_AUTH_URL);
 
     const popup = window.open(
       KAKAO_AUTH_URL,
       'PopupWin',
       'width=500,height=600',
     );
-    console.log('popup : ', popup);
     if (!popup) {
       console.error(
         '팝업 창을 열 수 없습니다. 팝업 차단이 설정되었는지 확인하세요.',
@@ -217,43 +209,48 @@ const Login = ({
       return;
     }
 
-    // 팝업 창으로부터 메시지를 수신
+    // 팝업에서 부모 창으로 메시지가 전달될 때를 위한 이벤트 리스너
     window.addEventListener(
       'message',
       async (event) => {
-        // alert(`event.data : ${event.data}`);
+        if (event.origin !== window.location.origin) {
+          return;
+        }
+        const { code } = event.data;
+        if (code) {
+          const response = await KakaoOAuthLoginAPI({ code });
+          if (!response) return;
 
-        try {
-          const { user } = event.data;
-          console.log('user : ', user);
-          if (user) {
-            const { id, access_token, refresh_token, nickname } = user;
+          const { id, nickname, access_token, refresh_token } =
+            response.data.response;
+          alert(JSON.stringify(response.data.response));
 
-            setLoginProcess({
-              id,
-              nickname,
-              access_token,
-              refresh_token,
-            });
-
-            localStorage.setItem('id', id);
-            localStorage.setItem('access_token', access_token);
-            localStorage.setItem('refresh_token', refresh_token);
-            localStorage.setItem('nickname', nickname);
-          } else {
-            alert('사용자 정보를 받아오지 못했습니다. 다시 시도해 주세요.');
-          }
-
-          if (popup) popup.close();
-        } catch (error) {
-          console.error('로그인 실패:', error);
-          alert('로그인에 실패했습니다. 다시 시도해주세요.');
-          if (popup) popup.close();
+          modalIsOpen(false);
+          localStorage.setItem('access_token', access_token);
+          localStorage.setItem('refresh_token', refresh_token);
+          localStorage.setItem('id', id);
+          localStorage.setItem('nickname', nickname);
+          window.location.reload();
+        } else {
+          alert('인증 코드가 없습니다. 다시 시도해 주세요.');
         }
       },
       { once: true },
-    );
+    ); // 한번만 리스닝하도록 설정 (팝업 인증 성공 이후 다시 듣지 않음)
   };
+
+  // 리다이렉션 페이지에서 부모 창으로 데이터를 전달하는 useEffect
+  useEffect(() => {
+    if (window.opener) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+
+      if (code) {
+        window.opener.postMessage({ code }, window.location.origin);
+        window.close();
+      }
+    }
+  }, []);
 
   const hiddenButton = () => setClickCount(clickCount + 1);
 
