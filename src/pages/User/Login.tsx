@@ -194,7 +194,6 @@ const Login = ({
   });
 
   const kakaoOauthLogin = () => {
-    const REDIRECT_URI = 'http://localhost:3000/redirect.html'; // 이 페이지는 위에서 작성한 HTML 파일
     const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}`;
 
     const popup = window.open(
