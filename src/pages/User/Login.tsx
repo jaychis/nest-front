@@ -222,7 +222,6 @@ const Login = ({
 
           const { id, nickname, access_token, refresh_token } =
             response.data.response;
-          alert(JSON.stringify(response.data.response));
 
           modalIsOpen(false);
           localStorage.setItem('access_token', access_token);
@@ -235,7 +234,7 @@ const Login = ({
         }
       },
       { once: true },
-    ); // 한번만 리스닝하도록 설정 (팝업 인증 성공 이후 다시 듣지 않음)
+    );
   };
 
   // 리다이렉션 페이지에서 부모 창으로 데이터를 전달하는 useEffect
