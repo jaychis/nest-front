@@ -36,23 +36,28 @@ const ShareComponent = ({shareCount,id,title,content}:ShareProps) => {
     }
   };
 
-  const handleShare = (platform: string, url: string, title: string, content: string[], id: string) => {
-  const domain = 'https://jaychis.com';
+  const handleShare = (platform: string) => {
+  let domain = ''
+
+  if(process.env.REACT_APP_NODE_ENV === 'development') domain = 'localhost:3000'
+  else if(process.env.REACT_APP_NODE_ENV === 'stage') domain = 'stage.jaychis.com'
+  else domain = 'jaychis.com'
   
+  domain = domain + `/boards/read?id=${id}&title=${title}&content=${content}`
+
   switch (platform) {
     case '트위터':
-      const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(domain)}`;
+      const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}%0A${encodeURIComponent('naver.com')}`;
       shareCountApi(id);
       setIsActive(false);
       window.open(twitterShareUrl, '_blank', 'noopener,noreferrer');
       break;
 
     case '인스타그램':
-      const instagramShareUrl = `https://www.instagram.com/direct/inbox/?url=${encodeURIComponent(domain)}&text=${encodeURIComponent('여기에 내용 넣으면 됨')}`;
-      navigator.clipboard.writeText(domain);
+      navigator.clipboard.writeText(`${domain}/boards/read?id=${id}&title=${title}&content=${content}`);
       shareCountApi(id);
       setIsActive(false);
-      window.open(instagramShareUrl, '_blank', 'noopener,noreferrer');
+      window.open(`https://www.instagram.com/direct/`, '_blank', 'noopener,noreferrer');
       break;
 
     case '페이스북':
@@ -63,7 +68,7 @@ const ShareComponent = ({shareCount,id,title,content}:ShareProps) => {
       break;
 
     case '링크복사':
-      navigator.clipboard.writeText(url);
+      navigator.clipboard.writeText(domain);
       shareCountApi(id);
       setIsActive(false);
       alert('링크가 복사되었습니다.');
@@ -127,7 +132,7 @@ const ShareComponent = ({shareCount,id,title,content}:ShareProps) => {
                 <DropdownItem
                   href="#"
                   onClick={() => {
-                    handleShare('카카오톡',title,'',content,id);
+                    handleShare('카카오톡');
                   }}
                 >
                   <ShareIcon src={kakao} />
@@ -136,7 +141,7 @@ const ShareComponent = ({shareCount,id,title,content}:ShareProps) => {
                 <DropdownItem
                   href="#"
                   onClick={() => {
-                    handleShare('인스타그램','title','test',content,id);
+                    handleShare('인스타그램');
                   }}
                 >
                   <ShareIcon src={instagram} />
@@ -145,7 +150,7 @@ const ShareComponent = ({shareCount,id,title,content}:ShareProps) => {
                 <DropdownItem
                   href="#"
                   onClick={() => {
-                    handleShare('페이스북','title','test',content,id);
+                    handleShare('페이스북');
                   }}
                 >
                   <ShareIcon src={facebook} />
@@ -154,7 +159,7 @@ const ShareComponent = ({shareCount,id,title,content}:ShareProps) => {
                 <DropdownItem
                   href="#"
                   onClick={() => {
-                    handleShare('트위터','title','test',content,id);
+                    handleShare('트위터');
                   }}
                 >
                   <ShareIcon src={twitter} />
@@ -163,7 +168,7 @@ const ShareComponent = ({shareCount,id,title,content}:ShareProps) => {
                 <DropdownItem
                   href="#"
                   onClick={() => {
-                    handleShare('링크복사','title','test',content,id);
+                    handleShare('링크복사');
                   }}
                 >
                   <ShareIcon src={copy} />
