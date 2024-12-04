@@ -47,14 +47,14 @@ const ShareComponent = ({shareCount,id,title,content}:ShareProps) => {
 
   switch (platform) {
     case '트위터':
-      const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}%0A${encodeURIComponent('naver.com')}`;
+      const twitterShareUrl = `https://twitter.com/intent/tweet?text=${title}%0A${domain}`;
       shareCountApi(id);
       setIsActive(false);
       window.open(twitterShareUrl, '_blank', 'noopener,noreferrer');
       break;
 
     case '인스타그램':
-      navigator.clipboard.writeText(`${domain}/boards/read?id=${id}&title=${title}&content=${content}`);
+      navigator.clipboard.writeText(domain);
       shareCountApi(id);
       setIsActive(false);
       window.open(`https://www.instagram.com/direct/`, '_blank', 'noopener,noreferrer');
