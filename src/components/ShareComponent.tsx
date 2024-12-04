@@ -83,7 +83,7 @@ const ShareComponent = ({shareCount,id,title,content}:ShareProps) => {
           content: {
             title: `${title}`,
             description: `${content}`,
-            imageUrl: 'https://i.postimg.cc/jd4cY735/3.png',
+            imageUrl: 'https://i.ibb.co/pwfv8nX/panda-logo.png',
             link: {
               mobileWebUrl: domain,
               webUrl: domain,
