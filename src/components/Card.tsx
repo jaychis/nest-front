@@ -466,24 +466,23 @@ const ImagePreview = styled.img`
 `;
 
 const MediaContainer = styled.div`
-  width: 100%;
+  width: 85%;
   background: #606060;
   text-align: center;
   border: 2px solid darkgray;
 
-  @media (max-width: 375px) {
+  @media (max-width: 644px) {
     width: 100%;
   }
 `;
 
 const VideoContainer = styled.div`
-  width: 100%;
+  width: 85%;
   border-radius: 20px;
   overflow: hidden;
 
-  @media (max-width: 370px) {
+  @media (max-width: 644px) {
     width: 100%;
-    margin: 0 0 0 0;
   }
 `;
 
