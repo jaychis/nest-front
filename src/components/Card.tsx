@@ -352,14 +352,13 @@ const Card = ({
         </CommentWrapper>
 
         {/* 공유 */}
-        <ShareComponent 
+        <ShareComponent
           shareCount={shareCount}
           title={title}
           content={content}
-          id = {id}
-
+          id={id}
         />
-            
+
         <ScirpWrapper>
           <ScripButton
             isHovered={isCardSendHovered}
@@ -467,12 +466,12 @@ const ImagePreview = styled.img`
 `;
 
 const MediaContainer = styled.div`
-  
+  width: 85%;
   background: #606060;
   text-align: center;
   border: 2px solid darkgray;
 
-   @media(max-width: 375px){
+  @media (max-width: 644px) {
     width: 100%;
   }
 `;
@@ -482,10 +481,10 @@ const VideoContainer = styled.div`
   border-radius: 20px;
   overflow: hidden;
 
- @media (max-width: 370px) {
-  width: 100%;
-  margin: 0 0 0 0;
-}
+  @media (max-width: 644px) {
+    width: 100%;
+    margin: 0 0 0 0;
+  }
 `;
 
 const ResponsiveVideoContainer = styled.div`
@@ -516,7 +515,6 @@ const ButtonContainer = styled.div.withConfig({
   width: 100%;
   max-width: 800px;
   z-index: ${(props) => (props.modalState ? -10 : 1000)};
-
 `;
 
 const ReactionWrapper = styled.div`
