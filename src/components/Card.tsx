@@ -315,14 +315,14 @@ const Card = ({
         modalState={modalState.modalState}
       >
         {/* Card Image */}
-        <ImageContainer>
+        <LogoContainer>
           <LogoImg src={logo} />
           <NicknameWrapper
             onClick={() => navigate(`/users/inquiry?nickname=${nickname}`)}
           >
             {nickname}
           </NicknameWrapper>
-        </ImageContainer>
+        </LogoContainer>
 
         {/* Card Content */}
         <ContentContainer>
@@ -352,14 +352,15 @@ const Card = ({
               {content.map((video: string, index: number) => (
                 <VideoContainer key={`${id}-${index}`}>
                   {video && (
-                    <ResponsiveVideoContainer>
-                      <VideoWrapper>
-                        <YouTube
-                          videoId={getYouTubeVideoId({ url: video })}
-                          opts={videoOptions}
-                        />
-                      </VideoWrapper>
-                    </ResponsiveVideoContainer>
+                    <YouTube
+                      videoId={getYouTubeVideoId({ url: video })}
+                      opts={{
+                        width: '100%',
+                        height: '400px',
+                        playerVars: { modestbranding: 1 },
+                      }}
+                      style={{ borderRadius: '20px' }} // 추가된 부분
+                    />
                   )}
                 </VideoContainer>
               ))}
@@ -557,7 +558,7 @@ const CardContainer = styled.div.withConfig({
   }
 `;
 
-const ImageContainer = styled.div`
+const LogoContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -597,27 +598,33 @@ const TextContainer = styled.div`
 `;
 
 const ImagePreview = styled.img`
-  max-width: 760px;
-  max-height: 500px;
+  width: 85%;
+  height: 85%;
   border-radius: 20px;
   object-fit: contain;
   margin-top: 10px;
 `;
 
 const MediaContainer = styled.div`
-  width: 85%;
+  
   background: #606060;
   text-align: center;
   border: 2px solid darkgray;
+
+   @media(max-width: 375px){
+    width: 100%;
+  }
 `;
 
 const VideoContainer = styled.div`
-  display: flex;
-  justify-content: center;
+  width: 85%;
   border-radius: 20px;
   overflow: hidden;
-  max-width: 760px;
-  margin: 0 auto;
+
+ @media (max-width: 370px) {
+  width: 100%;
+  margin: 0 0 0 0;
+}
 `;
 
 const ResponsiveVideoContainer = styled.div`
