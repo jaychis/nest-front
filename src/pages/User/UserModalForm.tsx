@@ -70,36 +70,27 @@ const UserModalForm = () => {
 
   return (
     <>
-      <div
-        className="modalContainer"
-        style={{
-          width: '100px',
-          height: '50px',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-        onClick={adminHiddenButton}
-      >
-        {adminButtonCount >= 5 && (
-          <button
-            style={{
-              height: '100%',
-              width: '100%',
-              border: 'none',
-              backgroundColor: isAdminLoginHovered ? '#77C2E2' : '#84d7fb',
-              borderRadius: '30px',
-              fontWeight: 'bold',
-              color: 'white',
-            }}
-            className="my-component"
-            onMouseEnter={() => setIsAdminLoginHovered(true)}
-            onMouseLeave={() => setIsAdminLoginHovered(false)}
-          >
-            <span style={{ fontWeight: '10000' }}>Admin Log In</span>
-          </button>
-        )}
-      </div>
+      {/*<div*/}
+      {/*  className="modalContainer"*/}
+      {/*  style={{*/}
+      {/*    width: '100px',*/}
+      {/*    height: '50px',*/}
+      {/*    display: 'flex',*/}
+      {/*    justifyContent: 'center',*/}
+      {/*    alignItems: 'center',*/}
+      {/*  }}*/}
+      {/*  onClick={adminHiddenButton}*/}
+      {/*>*/}
+      {/*  {adminButtonCount >= 5 && (*/}
+      {/*    <AdminLoginButton*/}
+      {/*      isHovered={isAdminLoginHovered}*/}
+      {/*      onMouseEnter={() => setIsAdminLoginHovered(true)}*/}
+      {/*      onMouseLeave={() => setIsAdminLoginHovered(false)}*/}
+      {/*    >*/}
+      {/*      <span style={{ fontWeight: 'bold' }}>Admin Log In</span>*/}
+      {/*    </AdminLoginButton>*/}
+      {/*  )}*/}
+      {/*</div>*/}
       <div
         className="modalContainer"
         style={{
@@ -270,6 +261,16 @@ const UserModalForm = () => {
 };
 
 export default UserModalForm;
+
+const AdminLoginButton = styled.button<{ isHovered: boolean }>`
+  height: 100%;
+  width: 100%;
+  border: none;
+  backgroundcolor: ${(props) => (props.isHovered ? '#77C2E2' : '#84d7fb')};
+  borderradius: 30px;
+  fontweight: bold;
+  color: white;
+`;
 
 const SubmitInput = styled.input`
   min-width: 400px;
