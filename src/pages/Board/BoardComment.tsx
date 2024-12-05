@@ -193,12 +193,6 @@ const BoardComment = (co: BoardCommentProps) => {
       >
         <div
           style={{
-            backgroundColor:
-              isCommentReaction === null
-                ? 'white'
-                : isCommentReaction === 'LIKE'
-                  ? 'red'
-                  : '#84d7fb',
             padding: '10px',
             marginRight: '10px',
             borderRadius: '20px',
@@ -209,9 +203,8 @@ const BoardComment = (co: BoardCommentProps) => {
             onMouseEnter={() => setIsCardCommentUpHovered(true)}
             onMouseLeave={() => setIsCardCommentUpHovered(false)}
             style={{
-              borderColor: isCardCommentUpHovered ? 'red' : '#e0e0e0',
+              border: isCommentReaction === 'LIKE' ? '2px solid blue' : '1px solid gray',
               backgroundColor: isCardCommentUpHovered ? '#c9c6c5' : '#f5f5f5',
-              border: 'none',
               width: '65px',
               height: '30px',
               borderRadius: '30px',
@@ -227,9 +220,8 @@ const BoardComment = (co: BoardCommentProps) => {
             onMouseEnter={() => setIsCardCommentDownHovered(true)}
             onMouseLeave={() => setIsCardCommentDownHovered(false)}
             style={{
-              borderColor: isCardCommentDownHovered ? 'blue' : '#e0e0e0',
+              border: isCommentReaction === 'DISLIKE' ? '2px solid red' : '1px solid gray',
               backgroundColor: isCardCommentDownHovered ? '#c9c6c5' : '#f5f5f5',
-              border: 'none',
               width: '65px',
               height: '30px',
               borderRadius: '30px',

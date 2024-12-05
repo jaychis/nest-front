@@ -1,11 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/img/panda_logo.png';
-import kakao from '../assets/img/kakao.png';
-import instagram from '../assets/img/instagram.png';
-import facebook from '../assets/img/facebook.png';
-import twitter from '../assets/img/twitter.png';
-import copy from '../assets/img/copy.png';
 import {
   ReactionApi,
   ReactionCountAPI,
@@ -25,6 +20,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import styled from 'styled-components';
 import { shareCountApi } from '../pages/api/boardApi';
+import ShareComponent from './ShareComponent';
 
 const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
   try {
@@ -55,9 +51,7 @@ const Card = ({
   const [isCardDownHovered, setIsCardDownHovered] = useState<boolean>(false);
   const [isCardCommentHovered, setIsCardCommentHovered] =
     useState<boolean>(false);
-  const [isCardShareHovered, setIsCardShareHovered] = useState<boolean>(false);
   const [isCardSendHovered, setIsCardSendHovered] = useState<boolean>(false);
-  const [viewCount, setViewCount] = useState<number>(0); // 조회수 상태 추가
   const [isReaction, setIsReaction] = useState<ReactionStateTypes>(null);
   const [shareContent, setShareContent] = useState<string>('');
   const [isSmallScreen, setIsSmallScreen] = useState(false);
@@ -92,22 +86,6 @@ const Card = ({
     height: isSmallScreen ? '330px' : '400px',
     playerVars: { modestbranding: 1 },
   };
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      dropdownRef.current &&
-      !dropdownRef.current.contains(event.target as Node)
-    ) {
-      setIsActive(false);
-    }
-  };
-
-  React.useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
 
   useEffect(() => {
     if (baseUrl === 'http://127.0.0.1:9898') {
@@ -247,35 +225,6 @@ const Card = ({
     return tempDiv.innerText || tempDiv.textContent || '';
   };
 
-  const handleShaerTwitter = () => {
-    const twitterShareUrl: string = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent('https://naver.com')}`;
-    shareCountApi(id);
-    setIsActive(false);
-    window.open(twitterShareUrl, '_blank', 'noopener,noreferrer');
-  };
-
-  const handleShareInstagram = () => {
-    const instagramShareUrl: string = `https://www.instagram.com/direct/inbox/?url=${encodeURIComponent(domain)}&text=${encodeURIComponent('여기에 내용 넣으면 됨')}`;
-    navigator.clipboard.writeText(domain);
-    shareCountApi(id);
-    setIsActive(false);
-    window.open(instagramShareUrl, '_blank', 'noopener,noreferrer');
-  };
-
-  const handelShareFaceBook = () => {
-    const facebookShareUrl: string = `https:///www.facebook.com/sharer/sharer.php?u=naver.com`;
-    shareCountApi(id);
-    setIsActive(false);
-    window.open(facebookShareUrl, '_blank', 'noopener,noreferrer');
-  };
-
-  const handleCopyClipBoard = (url: any) => {
-    navigator.clipboard.writeText(url);
-    shareCountApi(id);
-    setIsActive(false);
-    alert('링크가 복사되었습니다.');
-  };
-
   const handleShareKakao = () => {
     if (window.Kakao && window.Kakao.isInitialized()) {
       shareCountApi(id);
@@ -403,74 +352,14 @@ const Card = ({
         </CommentWrapper>
 
         {/* 공유 */}
-        <ShareWrapper ref={dropdownRef}>
-          <DropdownContainer>
-            <ShareButton
-              isHovered={isCardShareHovered}
-              onMouseEnter={() => setIsCardShareHovered(true)}
-              onMouseLeave={() => setIsCardShareHovered(false)}
-              onClick={() => {
-                setIsActive((prev) => !prev);
-              }}
-            >
-              <ShareImageTag
-                src="https://img.icons8.com/ios/50/forward-arrow.png"
-                alt="Share Icon"
-              />
-              <ShareCountTag>{shareCount}</ShareCountTag>
-            </ShareButton>
-            {active && (
-              <DropdownMenu>
-                <DropdownItem
-                  href="#"
-                  onClick={() => {
-                    handleShareKakao();
-                  }}
-                >
-                  <ShareIcon src={kakao} />
-                  카카오톡
-                </DropdownItem>
-                <DropdownItem
-                  href="#"
-                  onClick={() => {
-                    handleShareInstagram();
-                  }}
-                >
-                  <ShareIcon src={instagram} />
-                  인스타그램
-                </DropdownItem>
-                <DropdownItem
-                  href="#"
-                  onClick={() => {
-                    handelShareFaceBook();
-                  }}
-                >
-                  <ShareIcon src={facebook} />
-                  페이스북
-                </DropdownItem>
-                <DropdownItem
-                  href="#"
-                  onClick={() => {
-                    handleShaerTwitter();
-                  }}
-                >
-                  <ShareIcon src={twitter} />
-                  트위터
-                </DropdownItem>
-                <DropdownItem
-                  href="#"
-                  onClick={() => {
-                    handleCopyClipBoard(domain);
-                  }}
-                >
-                  <ShareIcon src={copy} />
-                  링크 복사
-                </DropdownItem>
-              </DropdownMenu>
-            )}
-          </DropdownContainer>
-        </ShareWrapper>
+        <ShareComponent 
+          shareCount={shareCount}
+          title={title}
+          content={content}
+          id = {id}
 
+        />
+            
         <ScirpWrapper>
           <ScripButton
             isHovered={isCardSendHovered}
@@ -506,34 +395,6 @@ const Card = ({
     </>
   );
 };
-
-const DropdownContainer = styled.div`
-  position: relative;
-  display: inline-block;
-`;
-
-const DropdownMenu = styled.div`
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  min-width: 160px;
-`;
-
-const DropdownItem = styled.a`
-  padding: 10px 15px;
-  display: flex;
-  align-items: center;
-  color: black;
-  text-decoration: none;
-  font-size: 14px;
-  &:hover {
-    background-color: #f1f1f1;
-  }
-`;
 
 const CardContainer = styled.div.withConfig({
   shouldForwardProp: (prop) => !['isHovered', 'modalState'].includes(prop),
@@ -752,60 +613,6 @@ const CommentButton = styled.button.withConfig({
     height: 40px;
     font-size: 10px;
   }
-`;
-
-const ShareWrapper = styled.div`
-  width: 15%;
-  height: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const ShareIcon = styled.img`
-  width: 30px !important;
-  height: 30px !important;
-  object-fit: contain !important;
-  border-radius: 45% !important;
-  margin-right: 10px;
-`;
-
-const ShareButton = styled.button.withConfig({
-  shouldForwardProp: (prop) => prop !== 'isHovered',
-})<{
-  isHovered: boolean;
-}>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
-  border: 1px solid gray;
-  height: 50px;
-  width: 80px;
-  border-radius: 30px;
-  margin-left: -7px;
-  cursor: pointer;
-
-  @media (max-width: 768px) {
-    width: 65px;
-    height: 40px;
-    font-size: 10px;
-    margin-left: 5px;
-    margin-right: 7px;
-  }
-`;
-
-const ShareImageTag = styled.img`
-  height: 35px;
-  width: 25px;
-`;
-
-const ShareCountTag = styled.p`
-  display: flex;
-  font-size: 20px;
-  margin-bottom: 15px;
-  font-weight: 700;
 `;
 
 const ScirpWrapper = styled.div`
