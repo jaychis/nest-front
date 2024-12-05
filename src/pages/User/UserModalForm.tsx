@@ -59,7 +59,6 @@ const UserModalForm = () => {
       return alert('비밀번호를 입력해 주세요');
     if (password === confirmPassword) {
       const res = PasswordReset({ email, password });
-      console.log(res);
       alert('비밀번호가 변경되었습니다. 다시 로그인 해주세요');
       switchView('login');
     } else {
