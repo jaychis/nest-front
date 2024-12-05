@@ -120,7 +120,6 @@ const GlobalBar = () => {
             type="search"
             placeholder="Search"
             value={searchTerm}
-            style={{ width: '35%', padding: '10px', borderRadius: '20px' }}
             name={'search'}
             onChange={(e) => handleSearchChange(e)}
             onKeyDown={handleKeyDown} // 엔터 키 이벤트 추가
@@ -247,6 +246,10 @@ const LogoImage = styled.img`
 
 const SiteName = styled.span`
   margin-left: 0.625rem; /* 10px을 rem으로 변환 */
+
+  @media (max-width: 644px) {
+    display: none;
+  }
 `;
 
 const SearchContainer = styled.div`
@@ -263,6 +266,10 @@ const SearchInput = styled.input`
   padding: 10px;
   border-radius: 20px;
   border: 1px solid #ccc;
+
+  @media (max-width: 644px) {
+    width: 100%;
+  }
 `;
 
 const SearchIcon = styled(FaSistrix)`
@@ -321,7 +328,6 @@ const SubmitButton = styled.button.withConfig({
   background: ${(props) => (props.plusHover ? '#D3D3D3' : 'white')};
   cursor: pointer;
 `;
-
 
 const PlusIcon = styled(FaPlus)`
   height: 30px;
