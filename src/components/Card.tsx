@@ -483,7 +483,6 @@ const VideoContainer = styled.div`
 
   @media (max-width: 644px) {
     width: 100%;
-    margin: 0 0 0 0;
   }
 `;
 
