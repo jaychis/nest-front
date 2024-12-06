@@ -497,6 +497,7 @@ const ButtonContainer = styled.div.withConfig({
   align-items: flex-start;
   width: 100%;
   max-width: 800px;
+  height: 100%;
   z-index: ${(props) => (props.modalState ? -10 : 1000)};
   margin-top: 5px;
 `;
@@ -505,7 +506,7 @@ const ReactionWrapper = styled.div`
   margin-right: 5px;
   border-radius: 30px;
   width: 150px;
-  height: 50px;
+  height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -567,7 +568,7 @@ const DisLikeButton = styled.button.withConfig({
 
 const CommentWrapper = styled.div`
   width: 75px;
-  height: 50px;
+  height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -601,7 +602,7 @@ const ScirpWrapper = styled.div`
   margin-left: -7px;
   border-radius: 30px;
   width: 75px;
-  height: 50px;
+  height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
