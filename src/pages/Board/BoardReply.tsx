@@ -93,7 +93,7 @@ const BoardReply = (re: ReplyType) => {
         {re.content}
       </ReplyContent>
       <ReactionContainer>
-        <ReactionButton
+        <LikeReactionButton
           isCommentReaction={isReplyReaction}
           onMouseEnter={() => setIsCardReplyUpHovered(true)}
           onMouseLeave={() => setIsCardReplyUpHovered(false)}
@@ -101,9 +101,9 @@ const BoardReply = (re: ReplyType) => {
           isHovered={isCardReplyUpHovered}
         >
           좋아요
-        </ReactionButton>
+        </LikeReactionButton>
         <ReactionCount>{isCardReplyCount}</ReactionCount>
-        <ReactionButton
+        <DisLikeReactionButton
           isCommentReaction={isReplyReaction}
           onMouseEnter={() => setIsCardReplyDownHovered(true)}
           onMouseLeave={() => setIsCardReplyDownHovered(false)}
@@ -111,7 +111,7 @@ const BoardReply = (re: ReplyType) => {
           isHovered={isCardReplyDownHovered}
         >
           싫어요
-        </ReactionButton>
+        </DisLikeReactionButton>
         <ShareButton
           isHovered={isCardReplyShareHovered}
           onMouseEnter={() => setIsCardReplyShareHovered(true)}
@@ -183,23 +183,33 @@ const ReactionContainer = styled.div`
   width: 100%;
 `;
 
-const ReactionButton = styled.button<{
+const LikeReactionButton = styled.button<{
   readonly isHovered: boolean;
   readonly isCommentReaction: ReactionStateTypes;
 }>`
   border: ${(props) =>
-    props.isCommentReaction === null
-      ? '1px solid gray'
-      : props.isCommentReaction === 'LIKE'
-        ? '2px solid blue'
-        : '2px solid red'};
-  padding: 10px;
+    props.isCommentReaction === 'LIKE' ? '2px solid blue' : '1px solid gray'};
+
   margin-right: 10px;
   border-radius: 20px;
   width: 65px;
   height: 30px;
   background-color: ${(props) => (props.isHovered ? '#c9c6c5' : '#f5f5f5')};
-  border-color: ${(props) => (props.isHovered ? 'red' : '#e0e0e0')};
+  cursor: pointer;
+`;
+
+const DisLikeReactionButton = styled.button<{
+  readonly isHovered: boolean;
+  readonly isCommentReaction: ReactionStateTypes;
+}>`
+  border: ${(props) =>
+    props.isCommentReaction === 'DISLIKE' ? '2px solid red' : '1px solid gray'};
+
+  margin-right: 10px;
+  border-radius: 20px;
+  width: 65px;
+  height: 30px;
+  background-color: ${(props) => (props.isHovered ? '#c9c6c5' : '#f5f5f5')};
   cursor: pointer;
 `;
 
