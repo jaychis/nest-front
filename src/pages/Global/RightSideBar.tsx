@@ -118,8 +118,8 @@ const RightSideBar = () => {
         {error && <ErrorText>{error}</ErrorText>}
         {selectedTab === 'topSearches' ? (
           <ScrollableList>
-            <h3 style={styles.header}>실시간 검색어 TOP 10</h3>
-            <ol style={styles.list}>
+            <Header>실시간 검색어 TOP 10</Header>
+            <List>
               {isTopTenList.length > 0 ? (
                 isTopTenList.map(
                   (
@@ -129,61 +129,52 @@ const RightSideBar = () => {
                     },
                     index: number,
                   ) => (
-                    <li
+                    <ListItem
                       key={index}
-                      style={
-                        hoveredIndex === index
-                          ? styles.hoveredListItem
-                          : styles.listItem
-                      }
+                      hovered={hoveredIndex === index}
                       onMouseEnter={() => setHoveredIndex(index)}
                       onMouseLeave={() => setHoveredIndex(null)}
                       onClick={() => handleSearchClick(search.query)} // Add onClick event
                     >
                       <div>
-                        <span style={styles.rank}>{index + 1}</span>
-                        <span style={styles.query}>{search.query}</span>
+                        <Rank>{index + 1}</Rank>
+                        <Query>{search.query}</Query>
                       </div>
-                      <div style={styles.details}>
-                        <span style={styles.count}>{search.count}</span>
-                      </div>
-                    </li>
+                      <Details>
+                        <Count>{search.count}</Count>
+                      </Details>
+                    </ListItem>
                   ),
                 )
               ) : (
                 <p>데이터를 불러오는 중...</p>
               )}
-            </ol>
+            </List>
           </ScrollableList>
         ) : (
           isLoggedIn && (
             <ScrollableList>
-              <h3 style={styles.header}>최근 본 게시물</h3>
-              <ul style={styles.list}>
+              <Header>최근 본 게시물</Header>
+              <List>
                 {recentViewedList.length > 0 ? (
                   recentViewedList.map((post, index) => (
-                    <li
+                    <ListItem
                       key={post.id}
-                      style={
-                        hoveredRecentPostIndex === index
-                          ? styles.hoveredListItem
-                          : styles.listItem
-                      }
+                      hovered={hoveredRecentPostIndex === index}
                       onMouseEnter={() => setHoveredRecentPostIndex(index)}
                       onMouseLeave={() => setHoveredRecentPostIndex(null)}
                     >
-                      <a
+                      <Link
                         href={`/boards/read?id=${post.id}&title=${post.title}`}
-                        style={styles.link}
                       >
                         {post.title}
-                      </a>
-                    </li>
+                      </Link>
+                    </ListItem>
                   ))
                 ) : (
                   <p>최근 본 게시물이 없습니다.</p>
                 )}
-              </ul>
+              </List>
             </ScrollableList>
           )
         )}
@@ -191,79 +182,6 @@ const RightSideBar = () => {
     </RightSideBarContainer>
   );
 };
-
-const styles = {
-  activeTab: {
-    padding: '10px 20px',
-    cursor: 'pointer',
-    borderRadius: '8px',
-    border: '1px solid #0079D3',
-    background: '#0079D3',
-    color: '#fff',
-    fontWeight: 'bold' as 'bold',
-    fontSize: '14px', // Reduced font size
-  },
-  header: {
-    borderBottom: '1px solid #ddd',
-    paddingBottom: '10px',
-    marginBottom: '20px',
-  },
-  list: {
-    listStyleType: 'none' as 'none',
-    padding: '0',
-    margin: '0',
-  },
-  listItem: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '12px 0',
-    borderBottom: '1px solid #f0f0f0',
-    background: 'white',
-    color: 'black',
-  },
-  hoveredListItem: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '12px 0',
-    borderBottom: '1px solid #f0f0f0',
-    background: '#f0f0f0',
-    color: 'black',
-    borderRadius: '15px',
-  },
-  rank: {
-    fontSize: '18px',
-    fontWeight: 'bold' as 'bold',
-    color: '#333',
-    marginRight: '15px', // Add margin to create space between rank and query
-  },
-  query: {
-    fontSize: '16px',
-    color: '#333',
-  },
-  details: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginTop: '5px',
-    fontSize: '14px',
-    color: '#666',
-  },
-  count: {
-    marginRight: '10px',
-    fontWeight: 'bold' as 'bold',
-  },
-  source: {
-    fontStyle: 'italic',
-  },
-  link: {
-    fontSize: '16px',
-    color: '#333', // Match the text color with query
-    textDecoration: 'none' as 'none',
-  },
-};
-
-export default RightSideBar;
 
 const RightSideBarContainer = styled.div`
   width: 250px;
@@ -311,6 +229,69 @@ const ErrorText = styled.div`
 `;
 
 const ScrollableList = styled.div`
-  max-height: 500px; /* Adjust as needed to control the scroll area size */
-  overflow-y: auto; /* Enables vertical scrolling if content exceeds max-height */
+  max-height: 75%;
+  overflow-y: scroll;
+
+  ::-webkit-scrollbar {
+    width: 0px; /* 웹킷 기반 브라우저(Chrome, Safari 등)에서 스크롤바의 너비를 0으로 설정하여 숨김 */
+  }
+
+  -ms-overflow-style: none; /* IE와 Edge에서 스크롤바를 숨김 */
+  scrollbar-width: none; /* Firefox에서 스크롤바를 숨김 */
 `;
+
+const Header = styled.h3`
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+`;
+
+const List = styled.ol`
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+`;
+
+const ListItem = styled.li<{ hovered: boolean }>`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+  background: ${(props) => (props.hovered ? '#f0f0f0' : 'white')};
+  color: black;
+  border-radius: ${(props) => (props.hovered ? '15px' : '0')};
+`;
+
+const Rank = styled.span`
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin-right: 15px;
+`;
+
+const Query = styled.span`
+  font-size: 16px;
+  color: #333;
+`;
+
+const Details = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+  font-size: 14px;
+  color: #666;
+`;
+
+const Count = styled.span`
+  margin-right: 10px;
+  font-weight: bold;
+`;
+
+const Link = styled.a`
+  font-size: 16px;
+  color: #333;
+  text-decoration: none;
+`;
+
+export default RightSideBar;
