@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import Card from '../../components/Card';
 import { ReadAPI } from '../api/boardApi';
 import { CardType, CollectionTypes } from '../../_common/collectionTypes';
@@ -12,12 +13,11 @@ import BoardReply, { ReplyType } from './BoardReply';
 import { useLocation } from 'react-router-dom';
 import { LogViewedBoardAPI } from '../api/viewedBoardsApi';
 
-
 const BoardRead = () => {
   const boardId: string = sessionStorage.getItem('boardId') as string;
   const BOARD_TITLE: string = sessionStorage.getItem('boardTitle') as string;
   const userId: string = localStorage.getItem('id') as string;
-  
+
   const [isBoardState, setIsBoardStateBoard] = useState<CardType>({
     id: boardId,
     user_id: '',
@@ -43,33 +43,28 @@ const BoardRead = () => {
   const title = query.get('title');
 
   useEffect(() => {
-    if(!id && !title) return
+    if (!id && !title) return;
     const readBoard = async (): Promise<void> => {
       const commentRes = await CommentListAPI({ boardId: id });
-      console.log('test')
       if (!commentRes) return;
       const commentResponse = commentRes.data.response;
-      console.log('commentResponse : ', commentResponse);
       setIsCommentState([...commentResponse]);
       const res = await ReadAPI({
         id: id,
         title: title,
       });
-      
+
       if (!res) return;
       const response = res.data.response;
-      console.log('response : ', response);
-      
       setIsBoardStateBoard(response);
 
-      const logViewedRes = await LogViewedBoardAPI({
+      await LogViewedBoardAPI({
         userId: response.user_id,
         boardId: response.id,
       });
-      console.log('logViewedRes : ', logViewedRes);
     };
     readBoard();
-  }, [id,title]);
+  }, [id, title]);
 
   const [writeComment, setWriteComment] = useState<CommentSubmitParams>({
     boardId: boardId,
@@ -77,14 +72,15 @@ const BoardRead = () => {
     nickname: (localStorage.getItem('nickname') as string) || '',
     userId: userId || '',
   });
+
   const commentHandleChange = (event: CollectionTypes) => {
     const { name, value } = event;
-
     setWriteComment({
       ...writeComment,
       [name]: value,
     });
   };
+
   const commentWrite = () => {
     if (!writeComment.content) {
       alert('댓글을 내용을 입력해주세요');
@@ -103,7 +99,6 @@ const BoardRead = () => {
 
         const response = res.data.response;
         setIsCommentState([response, ...isCommentState]);
-
         setWriteComment((prev) => ({
           ...prev,
           content: '',
@@ -115,48 +110,26 @@ const BoardRead = () => {
 
   const renderReplies = (replies: ReplyType[]) => {
     return (
-      <div>
+      <RepliesContainer>
         {replies.map((re: ReplyType) => (
-          <div key={re.id}>
-            <BoardReply
-              id={re.id}
-              comment_id={re.comment_id}
-              user_id={re.user_id}
-              content={re.content}
-              nickname={re.nickname}
-              created_at={re.created_at}
-              updated_at={re.updated_at}
-              deleted_at={re.deleted_at}
-            />
-          </div>
+          <BoardReply key={re.id} {...re} />
         ))}
-      </div>
+      </RepliesContainer>
     );
   };
 
   const renderComments = (comments: CommentType[]) => {
     return (
-      <div>
+      <CommentsContainer>
         {comments.map((co) => (
-          <div key={co.id}>
-            <BoardComment
-              id={co.id}
-              board_id={co.board_id}
-              user_id={co.user_id}
-              content={co.content}
-              nickname={co.nickname}
-              replies={co.replies}
-              created_at={co.created_at}
-              updated_at={co.updated_at}
-              deleted_at={co.deleted_at}
-              onReplySubmit={handleReplySubmit}
-            />
-            <div style={{ marginLeft: '40px' }}>
-              {co.replies?.length > 0 ? renderReplies(co.replies) : []}
-            </div>
-          </div>
+          <CommentContainer key={co.id}>
+            <BoardComment {...co} onReplySubmit={handleReplySubmit} />
+            <RepliesWrapper>
+              {co.replies?.length > 0 ? renderReplies(co.replies) : null}
+            </RepliesWrapper>
+          </CommentContainer>
         ))}
-      </div>
+      </CommentsContainer>
     );
   };
 
@@ -167,119 +140,133 @@ const BoardRead = () => {
           const replyList = comment?.replies
             ? [...comment.replies, reply]
             : [reply];
-
           return { ...comment, replies: replyList };
         } else {
           return comment;
         }
       });
-
       return updatedComments;
     });
   };
 
   return (
-    <>
-      {/*<GlobalBar />*/}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          height: '100vh',
-          width: '100%',
-        }}
-      >
-        <div style={{ display: 'flex', width: '90%' }}>
-          <div style={{ flex: 2 }}>
-            {!isBoardState?.id ? null : (
-              <Card
-                id={isBoardState.id}
-                category={isBoardState.category}
-                title={isBoardState.title}
-                nickname={isBoardState.nickname}
-                createdAt={isBoardState.created_at}
-                content={isBoardState.content}
-                type={isBoardState.type}
-                shareCount={isBoardState.share_count}
-              />
-            )}
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                width: '80%',
-                margin: '10px',
-                border: '3px solid #ccc',
-                borderRadius: '30px',
-                padding: '10px',
-                marginLeft: '-0.5%',
-              }}
-            >
-              <textarea
-              wrap='hard'
-                style={{
-                  width: '100%',
-                  border: 'none',
-                  borderRadius: '14px',
-                  resize: 'vertical',
-                  boxSizing: 'border-box',
-                  outline: 'none',
-                }}
-                name={'content'}
-                value={writeComment.content}
-                onChange={(value) =>
-                  commentHandleChange({
-                    name: value.target.name,
-                    value: value.target.value,
-                  })
-                }
-              ></textarea>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'flex-end',
-                  marginTop: '10px',
-                }}
-              >
-                <button
-                  style={{
-                    padding: '6px 12px',
-                    marginLeft: '5px',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                    fontSize: '14px',
-                    backgroundColor: '#f5f5f5',
-                    color: '#333',
-                  }}
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={() => {
-                    commentWrite();
-                  }}
-                  style={{
-                    padding: '6px 12px',
-                    marginLeft: '5px',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                    fontSize: '14px',
-                    backgroundColor: '#84d7fb',
-                    color: 'white',
-                  }}
-                >
-                  Comment
-                </button>
-              </div>
-            </div>
-            {isCommentState?.length > 0 ? <pre>{renderComments(isCommentState)}</pre> : []}
-          </div>
-        </div>
-      </div>
-    </>
+    <BoardReadContainer>
+      <InnerContainer>
+        <CardContainer>
+          {!isBoardState?.id ? null : (
+            <Card
+              id={isBoardState.id}
+              category={isBoardState.category}
+              title={isBoardState.title}
+              nickname={isBoardState.nickname}
+              createdAt={isBoardState.created_at}
+              content={isBoardState.content}
+              type={isBoardState.type}
+              shareCount={isBoardState.share_count}
+            />
+          )}
+          <CommentSection>
+            <CommentTextArea
+              wrap="hard"
+              name={'content'}
+              value={writeComment.content}
+              onChange={(value) =>
+                commentHandleChange({
+                  name: value.target.name,
+                  value: value.target.value,
+                })
+              }
+            ></CommentTextArea>
+            <ButtonGroup>
+              <CancelButton>Cancel</CancelButton>
+              <CommentButton onClick={commentWrite}>Comment</CommentButton>
+            </ButtonGroup>
+          </CommentSection>
+          {isCommentState?.length > 0 ? renderComments(isCommentState) : null}
+        </CardContainer>
+      </InnerContainer>
+    </BoardReadContainer>
   );
 };
 
 export default BoardRead;
+
+const BoardReadContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+  width: 100%;
+`;
+
+const InnerContainer = styled.div`
+  display: flex;
+  width: 90%;
+`;
+
+const CardContainer = styled.div`
+  flex: 2;
+`;
+
+const CommentSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  margin: 10px;
+  border: 3px solid #ccc;
+  border-radius: 30px;
+  padding: 10px;
+  margin-left: -0.5%;
+`;
+
+const CommentTextArea = styled.textarea`
+  width: 100%;
+  border: none;
+  border-radius: 14px;
+  resize: vertical;
+  box-sizing: border-box;
+  outline: none;
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+`;
+
+const CancelButton = styled.button`
+  padding: 6px 12px;
+  margin-left: 5px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  background-color: #f5f5f5;
+  color: #333;
+`;
+
+const CommentButton = styled.button`
+  padding: 6px 12px;
+  margin-left: 5px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  background-color: #84d7fb;
+  color: white;
+`;
+
+const CommentsContainer = styled.div`
+  margin-top: 20px;
+`;
+
+const CommentContainer = styled.div`
+  margin-bottom: 15px;
+`;
+
+const RepliesWrapper = styled.div`
+  margin-left: 40px;
+`;
+
+const RepliesContainer = styled.div`
+  margin-top: 10px;
+`;
