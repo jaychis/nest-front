@@ -244,9 +244,11 @@ const Card = ({
           ) : type === 'MEDIA' ? (
             <MediaContainer>
               {content.map((image, index) => (
-                <div key={`${id}-${index}`}>
-                  <ImagePreview src={image} alt={`Preview image ${index}`} />
-                </div>
+                <ImagePreview
+                  key={`${id}-${index}`}
+                  src={image}
+                  alt={`Preview image ${index}`}
+                />
               ))}
             </MediaContainer>
           ) : (
@@ -269,80 +271,81 @@ const Card = ({
             </>
           )}
         </ContentContainer>
+
+        <ButtonContainer modalState={modalState.modalState}>
+          <ReactionWrapper>
+            <LikeButton
+              isLiked={isReaction === 'LIKE'}
+              isHovered={isCardUpHovered}
+              onMouseEnter={() => setIsCardUpHovered(true)}
+              onMouseLeave={() => setIsCardUpHovered(false)}
+              onClick={() => reactionButton('LIKE')}
+            >
+              좋아요
+            </LikeButton>
+            <ReactionCount>{isCardCount}</ReactionCount>
+            <DisLikeButton
+              isDisliked={isReaction === 'DISLIKE'}
+              isHovered={isCardDownHovered}
+              onMouseEnter={() => setIsCardDownHovered(true)}
+              onMouseLeave={() => setIsCardDownHovered(false)}
+              onClick={() => reactionButton('DISLIKE')}
+            >
+              싫어요
+            </DisLikeButton>
+          </ReactionWrapper>
+          <CommentWrapper>
+            <CommentButton
+              isHovered={isCardCommentHovered}
+              onMouseEnter={() => setIsCardCommentHovered(true)}
+              onMouseLeave={() => setIsCardCommentHovered(false)}
+              onClick={goBoardRead}
+            >
+              댓글
+            </CommentButton>
+          </CommentWrapper>
+
+          {/* 공유 */}
+          <ShareComponent
+            shareCount={shareCount}
+            title={title}
+            content={content}
+            id={id}
+          />
+
+          <ScirpWrapper>
+            <ScripButton
+              isHovered={isCardSendHovered}
+              onMouseEnter={() => setIsCardSendHovered(true)}
+              onMouseLeave={() => setIsCardSendHovered(false)}
+            >
+              보내기
+            </ScripButton>
+          </ScirpWrapper>
+          {/*<div*/}
+          {/*  style={{*/}
+          {/*    marginLeft: "auto", // 자동 여백을 사용하여 오른쪽 정렬*/}
+          {/*    borderRadius: "30px",*/}
+          {/*    width: "auto", // 너비 자동 조정*/}
+          {/*    height: "50px",*/}
+          {/*    display: "flex",*/}
+          {/*    justifyContent: "right",*/}
+          {/*    alignItems: "center",*/}
+          {/*  }}*/}
+          {/*>*/}
+          {/*  <span*/}
+          {/*    style={{*/}
+          {/*      fontSize: "14px",*/}
+          {/*      color: "#000",*/}
+          {/*    }}*/}
+          {/*  >*/}
+          {/*    /!* 조회수  *!/*/}
+          {/*    {viewCount}회*/}
+          {/*  </span>*/}
+          {/*</div>*/}
+        </ButtonContainer>
       </CardContainer>
 
-      <ButtonContainer modalState={modalState.modalState}>
-        <ReactionWrapper>
-          <LikeButton
-            isLiked={isReaction === 'LIKE'}
-            isHovered={isCardUpHovered}
-            onMouseEnter={() => setIsCardUpHovered(true)}
-            onMouseLeave={() => setIsCardUpHovered(false)}
-            onClick={() => reactionButton('LIKE')}
-          >
-            좋아요
-          </LikeButton>
-          <ReactionCount>{isCardCount}</ReactionCount>
-          <DisLikeButton
-            isDisliked={isReaction === 'DISLIKE'}
-            isHovered={isCardDownHovered}
-            onMouseEnter={() => setIsCardDownHovered(true)}
-            onMouseLeave={() => setIsCardDownHovered(false)}
-            onClick={() => reactionButton('DISLIKE')}
-          >
-            싫어요
-          </DisLikeButton>
-        </ReactionWrapper>
-        <CommentWrapper>
-          <CommentButton
-            isHovered={isCardCommentHovered}
-            onMouseEnter={() => setIsCardCommentHovered(true)}
-            onMouseLeave={() => setIsCardCommentHovered(false)}
-            onClick={goBoardRead}
-          >
-            댓글
-          </CommentButton>
-        </CommentWrapper>
-
-        {/* 공유 */}
-        <ShareComponent
-          shareCount={shareCount}
-          title={title}
-          content={content}
-          id={id}
-        />
-
-        <ScirpWrapper>
-          <ScripButton
-            isHovered={isCardSendHovered}
-            onMouseEnter={() => setIsCardSendHovered(true)}
-            onMouseLeave={() => setIsCardSendHovered(false)}
-          >
-            보내기
-          </ScripButton>
-        </ScirpWrapper>
-        {/*<div*/}
-        {/*  style={{*/}
-        {/*    marginLeft: "auto", // 자동 여백을 사용하여 오른쪽 정렬*/}
-        {/*    borderRadius: "30px",*/}
-        {/*    width: "auto", // 너비 자동 조정*/}
-        {/*    height: "50px",*/}
-        {/*    display: "flex",*/}
-        {/*    justifyContent: "right",*/}
-        {/*    alignItems: "center",*/}
-        {/*  }}*/}
-        {/*>*/}
-        {/*  <span*/}
-        {/*    style={{*/}
-        {/*      fontSize: "14px",*/}
-        {/*      color: "#000",*/}
-        {/*    }}*/}
-        {/*  >*/}
-        {/*    /!* 조회수  *!/*/}
-        {/*    {viewCount}회*/}
-        {/*  </span>*/}
-        {/*</div>*/}
-      </ButtonContainer>
       <HrTag />
     </>
   );
@@ -359,7 +362,9 @@ const CardContainer = styled.div.withConfig({
   justify-content: flex-start;
   align-items: flex-start;
   width: 100%;
-  min-height: 200px;
+  height: 100%;
+  max-height: 1000px;
+  max-width: 600px;
   margin: 10px;
   border-radius: 10px;
   cursor: pointer;
@@ -367,8 +372,28 @@ const CardContainer = styled.div.withConfig({
   z-index: ${(props) => (props.modalState ? -10 : 999)};
 
   @media (max-width: 768px) {
-    margin: none;
+    margin: 0;
   }
+`;
+
+const MediaContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #606060;
+  text-align: center;
+  border: 2px solid darkgray;
+  object-fit: contain;
+`;
+
+const ImagePreview = styled.img`
+  max-width: 700px;
+  max-height: 400px;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  display: block;
+  object-fit: contain;
 `;
 
 const LogoContainer = styled.div`
@@ -393,6 +418,7 @@ const NicknameWrapper = styled.div`
 
 const ContentContainer = styled.div`
   width: 100%;
+
   overflow: visible;
 `;
 
@@ -410,50 +436,9 @@ const TextContainer = styled.div`
   width: 100%;
 `;
 
-const ImagePreview = styled.img`
-  width: 100%;
-  height: 85%;
-  border-radius: 20px;
-  object-fit: contain;
-  margin-top: 10px;
-`;
-
-const MediaContainer = styled.div`
-  width: 85%;
-  background: #606060;
-  text-align: center;
-  border: 2px solid darkgray;
-
-  @media (max-width: 644px) {
-    width: 100%;
-  }
-`;
-
 const VideoContainer = styled.div`
-  width: 85%;
   border-radius: 20px;
   overflow: hidden;
-
-  @media (max-width: 644px) {
-    width: 100%;
-  }
-`;
-
-const ResponsiveVideoContainer = styled.div`
-  position: relative;
-  width: 100%;
-  padding-bottom: 56.25%; /* Aspect ratio 16:9 */
-  height: 0;
-  overflow: hidden;
-  border-radius: 20px;
-`;
-
-const VideoWrapper = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
 `;
 
 const ButtonContainer = styled.div.withConfig({
@@ -467,6 +452,7 @@ const ButtonContainer = styled.div.withConfig({
   width: 100%;
   max-width: 800px;
   z-index: ${(props) => (props.modalState ? -10 : 1000)};
+  margin-top: 5px;
 `;
 
 const ReactionWrapper = styled.div`
@@ -605,9 +591,9 @@ const HrTag = styled.hr`
   border: none;
   height: 2px;
   background-color: #f0f0f0;
-  margin: 16px 0;
+  margin: 5px 0;
   width: 100%;
-  max-width: 900px;
+  max-width: 600px;
 `;
 
 export default Card;
