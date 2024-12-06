@@ -22,11 +22,15 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const LayoutContainer = styled.div`
     display: flex;
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
   `;
 
   const GlobalSideBarContainer = styled.div`
     width: 200px;
+
+    @media (max-width: 767px) {
+      width: 0px;
+    }
   `;
 
   const MainContent = styled.div`
