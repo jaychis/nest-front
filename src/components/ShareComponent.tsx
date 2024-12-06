@@ -6,7 +6,16 @@ import instagram from '../assets/img/instagram.png';
 import twitter from '../assets/img/twitter.png';
 import facebook from '../assets/img/facebook.png';
 import copy from '../assets/img/copy.png';
+import styled from 'styled-components';
+import React, { useState, useRef } from 'react';
+import { shareCountApi } from '../pages/api/boardApi';
+import kakao from '../assets/img/kakao.png';
+import instagram from '../assets/img/instagram.png';
+import twitter from '../assets/img/twitter.png';
+import facebook from '../assets/img/facebook.png';
+import copy from '../assets/img/copy.png';
 
+interface ShareProps {
 interface ShareProps {
   readonly shareCount: number;
   readonly id: string;
@@ -52,13 +61,13 @@ const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
 
     domain = domain + `/boards/read?id=${id}&title=${title}&content=${content}`;
 
-  switch (platform) {
-    case '트위터':
-      const twitterShareUrl = `https://twitter.com/intent/tweet?text=${title}%0A${encodeURIComponent(domain)}`;
-      shareCountApi(id);
-      setIsActive(false);
-      window.open(twitterShareUrl, '_blank', 'noopener,noreferrer');
-      break;
+    switch (platform) {
+      case '트위터':
+        const twitterShareUrl = `https://twitter.com/intent/tweet?text=${title}%0A${domain}`;
+        shareCountApi(id);
+        setIsActive(false);
+        window.open(twitterShareUrl, '_blank', 'noopener,noreferrer');
+        break;
 
       case '인스타그램':
         navigator.clipboard.writeText(domain);
