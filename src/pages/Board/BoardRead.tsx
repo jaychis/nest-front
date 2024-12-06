@@ -210,12 +210,17 @@ const CardContainer = styled.div`
 const CommentSection = styled.div`
   display: flex;
   flex-direction: column;
-  width: 80%;
+  width: 100%;
+  max-width: 560px;
   margin: 10px;
   border: 3px solid #ccc;
   border-radius: 30px;
   padding: 10px;
-  margin-left: -0.5%;
+
+  @media (max-width: 767px) {
+    max-width: 450px;
+    margin: 10px 0px;
+  }
 `;
 
 const CommentTextArea = styled.textarea`
@@ -257,6 +262,13 @@ const CommentButton = styled.button`
 
 const CommentsContainer = styled.div`
   margin-top: 20px;
+  width: 100%;
+  max-width: 560px;
+
+  @media (max-width: 767px) {
+    max-width: 450px;
+    margin: 10px 0px;
+  }
 `;
 
 const CommentContainer = styled.div`
