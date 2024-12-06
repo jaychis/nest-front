@@ -22,25 +22,35 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const LayoutContainer = styled.div`
     display: flex;
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
+  `;
+
+  const GlobalSideBarContainer = styled.div`
+    width: 200px;
+
+    @media (max-width: 767px) {
+      width: 0px;
+    }
   `;
 
   const MainContent = styled.div`
     flex: 1;
-    margin-left: 11%;
     margin-top: 80px;
+    overflow: auto;
 
-    @media (max-width: 767px){
-    margin-left: 0;
-    max-width: 600px;
-  }
-`
-  
+    @media (max-width: 767px) {
+      margin-left: 0;
+      max-width: 600px;
+    }
+  `;
+
   return (
     <>
       <GlobalBar />
       <LayoutContainer>
-        <GlobalSideBar />
+        <GlobalSideBarContainer>
+          <GlobalSideBar />
+        </GlobalSideBarContainer>
         <MainContent>{children}</MainContent>
         <RightSideBar />
       </LayoutContainer>
