@@ -1,21 +1,20 @@
-import styled from "styled-components";
-import React, { useEffect, useState, useRef } from 'react';
-import { shareCountApi } from "../pages/api/boardApi";
-import kakao from '../assets/img/kakao.png'
-import instagram from '../assets/img/instagram.png'
-import twitter from '../assets/img/twitter.png'
-import facebook from '../assets/img/facebook.png'
-import copy from '../assets/img/copy.png'
+import styled from 'styled-components';
+import React, { useState, useRef } from 'react';
+import { shareCountApi } from '../pages/api/boardApi';
+import kakao from '../assets/img/kakao.png';
+import instagram from '../assets/img/instagram.png';
+import twitter from '../assets/img/twitter.png';
+import facebook from '../assets/img/facebook.png';
+import copy from '../assets/img/copy.png';
 
-interface ShareProps{
+interface ShareProps {
   readonly shareCount: number;
   readonly id: string;
   readonly title: string;
   readonly content: string[];
 }
 
-const ShareComponent = ({shareCount,id,title,content}:ShareProps) => {
-
+const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isCardShareHovered, setIsCardShareHovered] = useState<boolean>(false);
   const [active, setIsActive] = useState<boolean>(false);
@@ -43,42 +42,48 @@ const ShareComponent = ({shareCount,id,title,content}:ShareProps) => {
   };
 
   const handleShare = (platform: string) => {
-  let domain = ''
+    let domain = '';
 
-  if(process.env.REACT_APP_NODE_ENV === 'development') domain = 'localhost:3000'
-  else if(process.env.REACT_APP_NODE_ENV === 'stage') domain = 'stage.jaychis.com'
-  else domain = 'jaychis.com'
-  
-  domain = domain + `/boards/read?id=${id}&title=${title}&content=${content}`
+    if (process.env.REACT_APP_NODE_ENV === 'development')
+      domain = 'localhost:3000';
+    else if (process.env.REACT_APP_NODE_ENV === 'stage')
+      domain = 'stage.jaychis.com';
+    else domain = 'jaychis.com';
 
-  switch (platform) {
-    case '트위터':
-      const twitterShareUrl = `https://twitter.com/intent/tweet?text=${title}%0A${encodeURIComponent(domain)}`;
-      shareCountApi(id);
-      setIsActive(false);
-      window.open(twitterShareUrl, '_blank', 'noopener,noreferrer');
-      break;
+    domain = domain + `/boards/read?id=${id}&title=${title}&content=${content}`;
 
-    case '인스타그램':
-      navigator.clipboard.writeText(domain);
-      shareCountApi(id);
-      setIsActive(false);
-      window.open(`https://www.instagram.com/direct/`, '_blank', 'noopener,noreferrer');
-      break;
+    switch (platform) {
+      case '트위터':
+        const twitterShareUrl = `https://twitter.com/intent/tweet?text=${title}%0A${domain}`;
+        shareCountApi(id);
+        setIsActive(false);
+        window.open(twitterShareUrl, '_blank', 'noopener,noreferrer');
+        break;
 
-    case '페이스북':
-      const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(domain)}`;
-      shareCountApi(id);
-      setIsActive(false);
-      window.open(facebookShareUrl, '_blank', 'noopener,noreferrer');
-      break;
+      case '인스타그램':
+        navigator.clipboard.writeText(domain);
+        shareCountApi(id);
+        setIsActive(false);
+        window.open(
+          `https://www.instagram.com/direct/`,
+          '_blank',
+          'noopener,noreferrer',
+        );
+        break;
 
-    case '링크복사':
-      navigator.clipboard.writeText(domain);
-      shareCountApi(id);
-      setIsActive(false);
-      alert('링크가 복사되었습니다.');
-      break;
+      case '페이스북':
+        const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(domain)}`;
+        shareCountApi(id);
+        setIsActive(false);
+        window.open(facebookShareUrl, '_blank', 'noopener,noreferrer');
+        break;
+
+      case '링크복사':
+        navigator.clipboard.writeText(domain);
+        shareCountApi(id);
+        setIsActive(false);
+        alert('링크가 복사되었습니다.');
+        break;
 
     case '카카오톡':
       if (window.Kakao && window.Kakao.isInitialized()) {
@@ -110,10 +115,10 @@ const ShareComponent = ({shareCount,id,title,content}:ShareProps) => {
       }
       break;
 
-    default:
-      console.error('지원하지 않는 플랫폼입니다.');
-  }
-};
+      default:
+        console.error('지원하지 않는 플랫폼입니다.');
+    }
+  };
 
     return(
         <>
@@ -187,7 +192,7 @@ const ShareComponent = ({shareCount,id,title,content}:ShareProps) => {
     )
 }
 
-export default ShareComponent
+export default ShareComponent;
 
 const DropdownContainer = styled.div`
   position: relative;
@@ -219,7 +224,7 @@ const DropdownItem = styled.a`
 
 const ShareWrapper = styled.div`
   width: 15%;
-  height: 50px;
+  height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -244,7 +249,7 @@ const ShareButton = styled.button.withConfig({
   gap: 8px;
   background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
   border: 1px solid gray;
-  height: 50px;
+  height: 40px;
   width: 80px;
   border-radius: 30px;
   margin-left: -7px;
@@ -260,13 +265,13 @@ const ShareButton = styled.button.withConfig({
 `;
 
 const ShareImageTag = styled.img`
-  height: 35px;
-  width: 25px;
+  height: 20px;
+  width: 23px;
 `;
 
 const ShareCountTag = styled.p`
   display: flex;
-  font-size: 20px;
+  font-size: 15px;
   margin-bottom: 15px;
   font-weight: 700;
 `;
