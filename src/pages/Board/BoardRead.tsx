@@ -151,40 +151,38 @@ const BoardRead = () => {
 
   return (
     <BoardReadContainer>
-      <InnerContainer>
-        <CardContainer>
-          {!isBoardState?.id ? null : (
-            <Card
-              id={isBoardState.id}
-              category={isBoardState.category}
-              title={isBoardState.title}
-              nickname={isBoardState.nickname}
-              createdAt={isBoardState.created_at}
-              content={isBoardState.content}
-              type={isBoardState.type}
-              shareCount={isBoardState.share_count}
-            />
-          )}
-          <CommentSection>
-            <CommentTextArea
-              wrap="hard"
-              name={'content'}
-              value={writeComment.content}
-              onChange={(value) =>
-                commentHandleChange({
-                  name: value.target.name,
-                  value: value.target.value,
-                })
-              }
-            ></CommentTextArea>
-            <ButtonGroup>
-              <CancelButton>Cancel</CancelButton>
-              <CommentButton onClick={commentWrite}>Comment</CommentButton>
-            </ButtonGroup>
-          </CommentSection>
-          {isCommentState?.length > 0 ? renderComments(isCommentState) : null}
-        </CardContainer>
-      </InnerContainer>
+      <CardContainer>
+        {!isBoardState?.id ? null : (
+          <Card
+            id={isBoardState.id}
+            category={isBoardState.category}
+            title={isBoardState.title}
+            nickname={isBoardState.nickname}
+            createdAt={isBoardState.created_at}
+            content={isBoardState.content}
+            type={isBoardState.type}
+            shareCount={isBoardState.share_count}
+          />
+        )}
+        <CommentSection>
+          <CommentTextArea
+            wrap="hard"
+            name={'content'}
+            value={writeComment.content}
+            onChange={(value) =>
+              commentHandleChange({
+                name: value.target.name,
+                value: value.target.value,
+              })
+            }
+          />
+          <ButtonGroup>
+            <CancelButton>Cancel</CancelButton>
+            <CommentButton onClick={commentWrite}>Comment</CommentButton>
+          </ButtonGroup>
+        </CommentSection>
+        {isCommentState?.length > 0 ? renderComments(isCommentState) : null}
+      </CardContainer>
     </BoardReadContainer>
   );
 };
@@ -194,17 +192,17 @@ export default BoardRead;
 const BoardReadContainer = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
   height: 100vh;
   width: 100%;
 `;
 
-const InnerContainer = styled.div`
-  display: flex;
-  width: 90%;
-`;
-
 const CardContainer = styled.div`
-  flex: 2;
+  flex: 1;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  align-items: center;
 `;
 
 const CommentSection = styled.div`
