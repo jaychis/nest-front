@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { AddSearchAPI, GetTopTenSearchesAPI } from '../api/searchApi';
 import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash.debounce';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { GetRecentViewedBoardsAPI } from '../api/viewedBoardsApi';
 import { RootState } from '../../store/store';
 import { UserModalState } from '../../reducers/modalStateSlice';
@@ -98,200 +98,90 @@ const RightSideBar = () => {
 
   return (
     <RightSideBarContainer>
-      <div
-        style={{
-          width: '250px',
-          padding: '20px',
-          background: '#fff',
-          border: '1px solid #ddd',
-          borderTop: 'none',
-          borderRadius: '8px',
-          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-          height: '100%',
-          position: 'fixed' as 'fixed',
-          zIndex: modalState.modalState ? -1 : 1000,
-          marginTop: '90px',
-        }}
-      >
-        <div style={styles.tabs}>
-          <div
-            style={
-              selectedTab === 'topSearches' ? styles.activeTab : styles.tab
-            }
+      <SidebarContent modalState={modalState.modalState}>
+        <Tabs>
+          <Tab
+            active={selectedTab === 'topSearches'}
             onClick={() => setSelectedTab('topSearches')}
           >
             실시간 검색어
-          </div>
-          <div
-            style={
-              selectedTab === 'recentBoards' ? styles.activeTab : styles.tab
-            }
+          </Tab>
+
+          <Tab
+            active={selectedTab === 'recentBoards'}
             onClick={() => handleTabClick('recentBoards')}
           >
             최근 본 게시물
-          </div>
-        </div>
-        {error && <div style={{ color: 'red' }}>{error}</div>}
+          </Tab>
+        </Tabs>
+
+        {error && <ErrorText>{error}</ErrorText>}
         {selectedTab === 'topSearches' ? (
-          <div>
-            <h3 style={styles.header}>실시간 검색어 TOP 10</h3>
-            <ol style={styles.list}>
+          <ScrollableList>
+            <Header>실시간 검색어 TOP 10</Header>
+            <List>
               {isTopTenList.length > 0 ? (
                 isTopTenList.map(
                   (
-                    search: { readonly query: string; readonly count: number },
+                    search: {
+                      readonly query: string;
+                      readonly count: number;
+                    },
                     index: number,
                   ) => (
-                    <li
+                    <ListItem
                       key={index}
-                      style={
-                        hoveredIndex === index
-                          ? styles.hoveredListItem
-                          : styles.listItem
-                      }
+                      hovered={hoveredIndex === index}
                       onMouseEnter={() => setHoveredIndex(index)}
                       onMouseLeave={() => setHoveredIndex(null)}
                       onClick={() => handleSearchClick(search.query)} // Add onClick event
                     >
                       <div>
-                        <span style={styles.rank}>{index + 1}</span>
-                        <span style={styles.query}>{search.query}</span>
+                        <Rank>{index + 1}</Rank>
+                        <Query>{search.query}</Query>
                       </div>
-                      <div style={styles.details}>
-                        <span style={styles.count}>{search.count}</span>
-                      </div>
-                    </li>
+                      <Details>
+                        <Count>{search.count}</Count>
+                      </Details>
+                    </ListItem>
                   ),
                 )
               ) : (
                 <p>데이터를 불러오는 중...</p>
               )}
-            </ol>
-          </div>
+            </List>
+          </ScrollableList>
         ) : (
           isLoggedIn && (
-            <div>
-              <h3 style={styles.header}>최근 본 게시물</h3>
-              <ul style={styles.list}>
+            <ScrollableList>
+              <Header>최근 본 게시물</Header>
+              <List>
                 {recentViewedList.length > 0 ? (
                   recentViewedList.map((post, index) => (
-                    <li
+                    <ListItem
                       key={post.id}
-                      style={
-                        hoveredRecentPostIndex === index
-                          ? styles.hoveredListItem
-                          : styles.listItem
-                      }
+                      hovered={hoveredRecentPostIndex === index}
                       onMouseEnter={() => setHoveredRecentPostIndex(index)}
                       onMouseLeave={() => setHoveredRecentPostIndex(null)}
                     >
-                      <a
+                      <Link
                         href={`/boards/read?id=${post.id}&title=${post.title}`}
-                        style={styles.link}
                       >
                         {post.title}
-                      </a>
-                    </li>
+                      </Link>
+                    </ListItem>
                   ))
                 ) : (
                   <p>최근 본 게시물이 없습니다.</p>
                 )}
-              </ul>
-            </div>
+              </List>
+            </ScrollableList>
           )
         )}
-      </div>
+      </SidebarContent>
     </RightSideBarContainer>
   );
 };
-
-const styles = {
-  tabs: {
-    display: 'flex',
-    justifyContent: 'space-around',
-    marginBottom: '20px',
-  },
-  tab: {
-    padding: '10px 20px',
-    cursor: 'pointer',
-    borderRadius: '8px',
-    border: '1px solid #ddd',
-    background: '#f0f0f0',
-    fontWeight: 'bold' as 'bold',
-    marginRight: '10px', // Added marginRight to create space between tabs
-    fontSize: '14px', // Reduced font size
-  },
-  activeTab: {
-    padding: '10px 20px',
-    cursor: 'pointer',
-    borderRadius: '8px',
-    border: '1px solid #0079D3',
-    background: '#0079D3',
-    color: '#fff',
-    fontWeight: 'bold' as 'bold',
-    fontSize: '14px', // Reduced font size
-  },
-  header: {
-    borderBottom: '1px solid #ddd',
-    paddingBottom: '10px',
-    marginBottom: '20px',
-  },
-  list: {
-    listStyleType: 'none' as 'none',
-    padding: '0',
-    margin: '0',
-  },
-  listItem: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '12px 0',
-    borderBottom: '1px solid #f0f0f0',
-    background: 'white',
-    color: 'black',
-  },
-  hoveredListItem: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '12px 0',
-    borderBottom: '1px solid #f0f0f0',
-    background: '#f0f0f0',
-    color: 'black',
-    borderRadius: '15px',
-  },
-  rank: {
-    fontSize: '18px',
-    fontWeight: 'bold' as 'bold',
-    color: '#333',
-    marginRight: '15px', // Add margin to create space between rank and query
-  },
-  query: {
-    fontSize: '16px',
-    color: '#333',
-  },
-  details: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginTop: '5px',
-    fontSize: '14px',
-    color: '#666',
-  },
-  count: {
-    marginRight: '10px',
-    fontWeight: 'bold' as 'bold',
-  },
-  source: {
-    fontStyle: 'italic',
-  },
-  link: {
-    fontSize: '16px',
-    color: '#333', // Match the text color with query
-    textDecoration: 'none' as 'none',
-  },
-};
-
-export default RightSideBar;
 
 const RightSideBarContainer = styled.div`
   width: 250px;
@@ -302,3 +192,106 @@ const RightSideBarContainer = styled.div`
     display: none; // 모바일에서 숨김
   }
 `;
+
+const SidebarContent = styled.div<{ readonly modalState: boolean }>`
+  width: 250px;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  position: fixed;
+  z-index: ${(props) => (props.modalState ? -1 : 1000)};
+  margin-top: 90px;
+`;
+
+const Tabs = styled.div`
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+`;
+
+const Tab = styled.div<{ readonly active: boolean }>`
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 8px;
+  border: 1px solid ${(props) => (props.active ? '#0079D3' : '#ddd')};
+  background: ${(props) => (props.active ? '#0079D3' : '#f0f0f0')};
+  color: ${(props) => (props.active ? '#fff' : '#333')};
+  font-weight: bold;
+  font-size: 14px;
+`;
+
+const ErrorText = styled.div`
+  color: red;
+`;
+
+const ScrollableList = styled.div`
+  max-height: 75%;
+  overflow-y: scroll;
+
+  ::-webkit-scrollbar {
+    width: 0px; /* 웹킷 기반 브라우저(Chrome, Safari 등)에서 스크롤바의 너비를 0으로 설정하여 숨김 */
+  }
+
+  -ms-overflow-style: none; /* IE와 Edge에서 스크롤바를 숨김 */
+  scrollbar-width: none; /* Firefox에서 스크롤바를 숨김 */
+`;
+
+const Header = styled.h3`
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+`;
+
+const List = styled.ol`
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+`;
+
+const ListItem = styled.li<{ hovered: boolean }>`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+  background: ${(props) => (props.hovered ? '#f0f0f0' : 'white')};
+  color: black;
+  border-radius: ${(props) => (props.hovered ? '15px' : '0')};
+`;
+
+const Rank = styled.span`
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin-right: 15px;
+`;
+
+const Query = styled.span`
+  font-size: 16px;
+  color: #333;
+`;
+
+const Details = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+  font-size: 14px;
+  color: #666;
+`;
+
+const Count = styled.span`
+  margin-right: 10px;
+  font-weight: bold;
+`;
+
+const Link = styled.a`
+  font-size: 16px;
+  color: #333;
+  text-decoration: none;
+`;
+
+export default RightSideBar;
