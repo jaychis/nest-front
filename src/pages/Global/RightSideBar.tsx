@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { AddSearchAPI, GetTopTenSearchesAPI } from '../api/searchApi';
 import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash.debounce';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { GetRecentViewedBoardsAPI } from '../api/viewedBoardsApi';
 import { RootState } from '../../store/store';
 import { UserModalState } from '../../reducers/modalStateSlice';
@@ -98,48 +98,35 @@ const RightSideBar = () => {
 
   return (
     <RightSideBarContainer>
-      <div
-        style={{
-          width: '250px',
-          padding: '20px',
-          background: '#fff',
-          border: '1px solid #ddd',
-          borderTop: 'none',
-          borderRadius: '8px',
-          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-          height: '100%',
-          position: 'fixed' as 'fixed',
-          zIndex: modalState.modalState ? -1 : 1000,
-          marginTop: '90px',
-        }}
-      >
-        <div style={styles.tabs}>
-          <div
-            style={
-              selectedTab === 'topSearches' ? styles.activeTab : styles.tab
-            }
+      <SidebarContent modalState={modalState.modalState}>
+        <Tabs>
+          <Tab
+            active={selectedTab === 'topSearches'}
             onClick={() => setSelectedTab('topSearches')}
           >
             실시간 검색어
-          </div>
-          <div
-            style={
-              selectedTab === 'recentBoards' ? styles.activeTab : styles.tab
-            }
+          </Tab>
+
+          <Tab
+            active={selectedTab === 'recentBoards'}
             onClick={() => handleTabClick('recentBoards')}
           >
             최근 본 게시물
-          </div>
-        </div>
-        {error && <div style={{ color: 'red' }}>{error}</div>}
+          </Tab>
+        </Tabs>
+
+        {error && <ErrorText>{error}</ErrorText>}
         {selectedTab === 'topSearches' ? (
-          <div>
+          <ScrollableList>
             <h3 style={styles.header}>실시간 검색어 TOP 10</h3>
             <ol style={styles.list}>
               {isTopTenList.length > 0 ? (
                 isTopTenList.map(
                   (
-                    search: { readonly query: string; readonly count: number },
+                    search: {
+                      readonly query: string;
+                      readonly count: number;
+                    },
                     index: number,
                   ) => (
                     <li
@@ -167,10 +154,10 @@ const RightSideBar = () => {
                 <p>데이터를 불러오는 중...</p>
               )}
             </ol>
-          </div>
+          </ScrollableList>
         ) : (
           isLoggedIn && (
-            <div>
+            <ScrollableList>
               <h3 style={styles.header}>최근 본 게시물</h3>
               <ul style={styles.list}>
                 {recentViewedList.length > 0 ? (
@@ -197,30 +184,15 @@ const RightSideBar = () => {
                   <p>최근 본 게시물이 없습니다.</p>
                 )}
               </ul>
-            </div>
+            </ScrollableList>
           )
         )}
-      </div>
+      </SidebarContent>
     </RightSideBarContainer>
   );
 };
 
 const styles = {
-  tabs: {
-    display: 'flex',
-    justifyContent: 'space-around',
-    marginBottom: '20px',
-  },
-  tab: {
-    padding: '10px 20px',
-    cursor: 'pointer',
-    borderRadius: '8px',
-    border: '1px solid #ddd',
-    background: '#f0f0f0',
-    fontWeight: 'bold' as 'bold',
-    marginRight: '10px', // Added marginRight to create space between tabs
-    fontSize: '14px', // Reduced font size
-  },
   activeTab: {
     padding: '10px 20px',
     cursor: 'pointer',
@@ -301,4 +273,44 @@ const RightSideBarContainer = styled.div`
   @media (max-width: 767px) {
     display: none; // 모바일에서 숨김
   }
+`;
+
+const SidebarContent = styled.div<{ readonly modalState: boolean }>`
+  width: 250px;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  position: fixed;
+  z-index: ${(props) => (props.modalState ? -1 : 1000)};
+  margin-top: 90px;
+`;
+
+const Tabs = styled.div`
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+`;
+
+const Tab = styled.div<{ readonly active: boolean }>`
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 8px;
+  border: 1px solid ${(props) => (props.active ? '#0079D3' : '#ddd')};
+  background: ${(props) => (props.active ? '#0079D3' : '#f0f0f0')};
+  color: ${(props) => (props.active ? '#fff' : '#333')};
+  font-weight: bold;
+  font-size: 14px;
+`;
+
+const ErrorText = styled.div`
+  color: red;
+`;
+
+const ScrollableList = styled.div`
+  max-height: 500px; /* Adjust as needed to control the scroll area size */
+  overflow-y: auto; /* Enables vertical scrolling if content exceeds max-height */
 `;
