@@ -47,7 +47,7 @@ const ShareComponent = ({shareCount,id,title,content}:ShareProps) => {
 
   switch (platform) {
     case '트위터':
-      const twitterShareUrl = `https://twitter.com/intent/tweet?text=${title}%0A${domain}`;
+      const twitterShareUrl = `https://twitter.com/intent/tweet?text=${title}%0A${encodeURIComponent(domain)}`;
       shareCountApi(id);
       setIsActive(false);
       window.open(twitterShareUrl, '_blank', 'noopener,noreferrer');
@@ -75,6 +75,7 @@ const ShareComponent = ({shareCount,id,title,content}:ShareProps) => {
       break;
 
     case '카카오톡':
+      console.log(domain)
       if (window.Kakao && window.Kakao.isInitialized()) {
         shareCountApi(id);
         setIsActive(false);
