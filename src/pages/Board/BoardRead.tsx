@@ -203,6 +203,10 @@ const CardContainer = styled.div`
   max-width: 600px;
   margin: 0 auto;
   align-items: center;
+
+  @media (max-width: 768px) {
+    max-width: 95%;
+  }
 `;
 
 const CommentSection = styled.div`
