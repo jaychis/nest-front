@@ -59,11 +59,6 @@ const Card = ({
   const modalState: UserModalState = useSelector(
     (state: RootState) => state.modalState,
   );
-  const [active, setIsActive] = useState<boolean>(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const [domain, setDomain] = useState<string>('');
-  const kakaoApiKey = process.env.REACT_APP_KAKAO_API_KEY;
-  const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
   const USER_ID: string = localStorage.getItem('id') as string;
 
@@ -86,18 +81,6 @@ const Card = ({
     height: isSmallScreen ? '330px' : '400px',
     playerVars: { modestbranding: 1 },
   };
-
-  useEffect(() => {
-    if (baseUrl === 'http://127.0.0.1:9898') {
-      setDomain('http://localhost:3000/');
-    } else {
-      setDomain('jaychis.com');
-    }
-
-    if (window.Kakao && !window.Kakao.isInitialized()) {
-      window.Kakao.init(kakaoApiKey);
-    }
-  }, [kakaoApiKey]);
 
   const reactionButton = async (userReaction: ReactionStateTypes) => {
     if (userReaction !== null) {
@@ -223,36 +206,6 @@ const Card = ({
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = htmlString;
     return tempDiv.innerText || tempDiv.textContent || '';
-  };
-
-  const handleShareKakao = () => {
-    if (window.Kakao && window.Kakao.isInitialized()) {
-      shareCountApi(id);
-      setIsActive(false);
-      window.Kakao.Share.sendDefault({
-        objectType: 'feed',
-        content: {
-          title: `${title}`,
-          description: `${content}`,
-          imageUrl: 'https://i.postimg.cc/jd4cY735/3.png',
-          link: {
-            mobileWebUrl: 'https://naver.com',
-            webUrl: 'https://naver.com',
-          },
-        },
-        buttons: [
-          {
-            title: '웹으로 보기',
-            link: {
-              mobileWebUrl: 'https://naver.com',
-              webUrl: 'https://naver.com',
-            },
-          },
-        ],
-      });
-    } else {
-      console.error('Kakao SDK가 초기화되지 않았습니다.');
-    }
   };
 
   return (

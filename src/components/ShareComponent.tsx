@@ -46,13 +46,13 @@ const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
 
     domain = domain + `/boards/read?id=${id}&title=${title}&content=${content}`;
 
-    switch (platform) {
-      case '트위터':
-        const twitterShareUrl = `https://twitter.com/intent/tweet?text=${title}%0A${domain}`;
-        shareCountApi(id);
-        setIsActive(false);
-        window.open(twitterShareUrl, '_blank', 'noopener,noreferrer');
-        break;
+  switch (platform) {
+    case '트위터':
+      const twitterShareUrl = `https://twitter.com/intent/tweet?text=${title}%0A${encodeURIComponent(domain)}`;
+      shareCountApi(id);
+      setIsActive(false);
+      window.open(twitterShareUrl, '_blank', 'noopener,noreferrer');
+      break;
 
       case '인스타그램':
         navigator.clipboard.writeText(domain);
@@ -79,35 +79,36 @@ const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
         alert('링크가 복사되었습니다.');
         break;
 
-      case '카카오톡':
-        if (window.Kakao && window.Kakao.isInitialized()) {
-          shareCountApi(id);
-          setIsActive(false);
-          window.Kakao.Share.sendDefault({
-            objectType: 'feed',
-            content: {
-              title: `${title}`,
-              description: `${content}`,
-              imageUrl: 'https://i.ibb.co/pwfv8nX/panda-logo.png',
+    case '카카오톡':
+      console.log(domain)
+      if (window.Kakao && window.Kakao.isInitialized()) {
+        shareCountApi(id);
+        setIsActive(false);
+        window.Kakao.Share.sendDefault({
+          objectType: 'feed',
+          content: {
+            title: `${title}`,
+            description: `${content}`,
+            imageUrl: 'https://i.ibb.co/pwfv8nX/panda-logo.png',
+            link: {
+              mobileWebUrl: domain,
+              webUrl: domain,
+            },
+          },
+          buttons: [
+            {
+              title: '웹으로 보기',
               link: {
                 mobileWebUrl: domain,
                 webUrl: domain,
               },
             },
-            buttons: [
-              {
-                title: '웹으로 보기',
-                link: {
-                  mobileWebUrl: domain,
-                  webUrl: domain,
-                },
-              },
-            ],
-          });
-        } else {
-          console.error('Kakao SDK가 초기화되지 않았습니다.');
-        }
-        break;
+          ],
+        });
+      } else {
+        console.error('Kakao SDK가 초기화되지 않았습니다.');
+      }
+      break;
 
       default:
         console.error('지원하지 않는 플랫폼입니다.');
