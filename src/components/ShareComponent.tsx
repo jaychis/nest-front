@@ -81,7 +81,6 @@ const ShareComponent = ({shareCount,id,title,content}:ShareProps) => {
       break;
 
     case '카카오톡':
-      console.log(domain)
       if (window.Kakao && window.Kakao.isInitialized()) {
         shareCountApi(id);
         setIsActive(false);
