@@ -6,7 +6,16 @@ import instagram from '../assets/img/instagram.png';
 import twitter from '../assets/img/twitter.png';
 import facebook from '../assets/img/facebook.png';
 import copy from '../assets/img/copy.png';
+import styled from 'styled-components';
+import React, { useState, useRef } from 'react';
+import { shareCountApi } from '../pages/api/boardApi';
+import kakao from '../assets/img/kakao.png';
+import instagram from '../assets/img/instagram.png';
+import twitter from '../assets/img/twitter.png';
+import facebook from '../assets/img/facebook.png';
+import copy from '../assets/img/copy.png';
 
+interface ShareProps {
 interface ShareProps {
   readonly shareCount: number;
   readonly id: string;
@@ -14,6 +23,7 @@ interface ShareProps {
   readonly content: string[];
 }
 
+const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
 const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isCardShareHovered, setIsCardShareHovered] = useState<boolean>(false);
@@ -26,10 +36,16 @@ const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
       window.Kakao.init(kakaoApiKey);
     }
 
+
+    if (window.Kakao && !window.Kakao.isInitialized()) {
+      window.Kakao.init(kakaoApiKey);
+    }
+
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
+  }, [kakaoApiKey]);
   }, [kakaoApiKey]);
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -42,6 +58,15 @@ const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
   };
 
   const handleShare = (platform: string) => {
+    let domain = '';
+
+    if (process.env.REACT_APP_NODE_ENV === 'development')
+      domain = 'localhost:3000';
+    else if (process.env.REACT_APP_NODE_ENV === 'stage')
+      domain = 'stage.jaychis.com';
+    else domain = 'jaychis.com';
+
+    domain = domain + `/boards/read?id=${id}&title=${title}&content=${content}`;
     let domain = '';
 
     if (process.env.REACT_APP_NODE_ENV === 'development')
