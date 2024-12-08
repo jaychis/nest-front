@@ -6,16 +6,7 @@ import instagram from '../assets/img/instagram.png';
 import twitter from '../assets/img/twitter.png';
 import facebook from '../assets/img/facebook.png';
 import copy from '../assets/img/copy.png';
-import styled from 'styled-components';
-import React, { useState, useRef } from 'react';
-import { shareCountApi } from '../pages/api/boardApi';
-import kakao from '../assets/img/kakao.png';
-import instagram from '../assets/img/instagram.png';
-import twitter from '../assets/img/twitter.png';
-import facebook from '../assets/img/facebook.png';
-import copy from '../assets/img/copy.png';
 
-interface ShareProps {
 interface ShareProps {
   readonly shareCount: number;
   readonly id: string;
@@ -158,7 +149,6 @@ const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
                   카카오톡
                 </DropdownItem>
                 <DropdownItem
-                  href="#"
                   onClick={() => {
                     handleShare('인스타그램');
                   }}
@@ -167,7 +157,6 @@ const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
                   인스타그램
                 </DropdownItem>
                 <DropdownItem
-                  href="#"
                   onClick={() => {
                     handleShare('페이스북');
                   }}
@@ -176,7 +165,6 @@ const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
                   페이스북
                 </DropdownItem>
                 <DropdownItem
-                  href="#"
                   onClick={() => {
                     handleShare('트위터');
                   }}
@@ -185,7 +173,6 @@ const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
                   트위터
                 </DropdownItem>
                 <DropdownItem
-                  href="#"
                   onClick={() => {
                     handleShare('링크복사');
                   }}
