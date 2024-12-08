@@ -58,11 +58,6 @@ const Card = ({
   const modalState: UserModalState = useSelector(
     (state: RootState) => state.modalState,
   );
-  const [active, setIsActive] = useState<boolean>(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const [domain, setDomain] = useState<string>('');
-  const kakaoApiKey = process.env.REACT_APP_KAKAO_API_KEY;
-  const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
   const USER_ID: string = localStorage.getItem('id') as string;
 
@@ -79,18 +74,6 @@ const Card = ({
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-
-  useEffect(() => {
-    if (baseUrl === 'http://127.0.0.1:9898') {
-      setDomain('http://localhost:3000/');
-    } else {
-      setDomain('jaychis.com');
-    }
-
-    if (window.Kakao && !window.Kakao.isInitialized()) {
-      window.Kakao.init(kakaoApiKey);
-    }
-  }, [kakaoApiKey]);
 
   const reactionButton = async (userReaction: ReactionStateTypes) => {
     if (userReaction !== null) {
