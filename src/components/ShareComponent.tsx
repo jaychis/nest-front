@@ -18,13 +18,19 @@ const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isCardShareHovered, setIsCardShareHovered] = useState<boolean>(false);
   const [active, setIsActive] = useState<boolean>(false);
+  const kakaoApiKey = process.env.REACT_APP_KAKAO_API_KEY;
 
   React.useEffect(() => {
+
+    if (window.Kakao && !window.Kakao.isInitialized()) {
+      window.Kakao.init(kakaoApiKey);
+    }
+
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [kakaoApiKey]);
 
   const handleClickOutside = (event: MouseEvent) => {
     if (
@@ -91,16 +97,16 @@ const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
             description: `${content}`,
             imageUrl: 'https://i.ibb.co/pwfv8nX/panda-logo.png',
             link: {
-              mobileWebUrl: domain,
-              webUrl: domain,
+              mobileWebUrl: encodeURIComponent(domain),
+              webUrl: `https://${domain}`,
             },
           },
           buttons: [
             {
               title: '웹으로 보기',
               link: {
-                mobileWebUrl: domain,
-                webUrl: domain,
+                mobileWebUrl: encodeURIComponent(domain),
+                webUrl: `https://${domain}`,
               },
             },
           ],
@@ -115,78 +121,77 @@ const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
     }
   };
 
-  return (
-    <>
-      <ShareWrapper ref={dropdownRef}>
-        <DropdownContainer>
-          <ShareButton
-            isHovered={isCardShareHovered}
-            onMouseEnter={() => setIsCardShareHovered(true)}
-            onMouseLeave={() => setIsCardShareHovered(false)}
-            onClick={() => {
-              setIsActive((prev) => !prev);
-            }}
-          >
-            <ShareImageTag
-              src="https://img.icons8.com/ios/50/forward-arrow.png"
-              alt="Share Icon"
-            />
-            <ShareCountTag>{shareCount}</ShareCountTag>
-          </ShareButton>
-          {active && (
-            <DropdownMenu>
-              <DropdownItem
-                href="#"
-                onClick={() => {
-                  handleShare('카카오톡');
-                }}
-              >
-                <ShareIcon src={kakao} />
-                카카오톡
-              </DropdownItem>
-              <DropdownItem
-                href="#"
-                onClick={() => {
-                  handleShare('인스타그램');
-                }}
-              >
-                <ShareIcon src={instagram} />
-                인스타그램
-              </DropdownItem>
-              <DropdownItem
-                href="#"
-                onClick={() => {
-                  handleShare('페이스북');
-                }}
-              >
-                <ShareIcon src={facebook} />
-                페이스북
-              </DropdownItem>
-              <DropdownItem
-                href="#"
-                onClick={() => {
-                  handleShare('트위터');
-                }}
-              >
-                <ShareIcon src={twitter} />
-                트위터
-              </DropdownItem>
-              <DropdownItem
-                href="#"
-                onClick={() => {
-                  handleShare('링크복사');
-                }}
-              >
-                <ShareIcon src={copy} />
-                링크 복사
-              </DropdownItem>
-            </DropdownMenu>
-          )}
-        </DropdownContainer>
-      </ShareWrapper>
-    </>
-  );
-};
+    return(
+        <>
+          <ShareWrapper ref={dropdownRef}>
+          <DropdownContainer>
+            <ShareButton
+              isHovered={isCardShareHovered}
+              onMouseEnter={() => setIsCardShareHovered(true)}
+              onMouseLeave={() => setIsCardShareHovered(false)}
+              onClick={() => {
+                setIsActive((prev) => !prev);
+              }}
+            >
+              <ShareImageTag
+                src="https://img.icons8.com/ios/50/forward-arrow.png"
+                alt="Share Icon"
+              />
+              <ShareCountTag>{shareCount}</ShareCountTag>
+            </ShareButton>
+            {active && (
+              <DropdownMenu>
+                <DropdownItem
+                  onClick={() => {
+                    handleShare('카카오톡');
+                  }}
+                >
+                  <ShareIcon src={kakao} />
+                  카카오톡
+                </DropdownItem>
+                <DropdownItem
+                  href="#"
+                  onClick={() => {
+                    handleShare('인스타그램');
+                  }}
+                >
+                  <ShareIcon src={instagram} />
+                  인스타그램
+                </DropdownItem>
+                <DropdownItem
+                  href="#"
+                  onClick={() => {
+                    handleShare('페이스북');
+                  }}
+                >
+                  <ShareIcon src={facebook} />
+                  페이스북
+                </DropdownItem>
+                <DropdownItem
+                  href="#"
+                  onClick={() => {
+                    handleShare('트위터');
+                  }}
+                >
+                  <ShareIcon src={twitter} />
+                  트위터
+                </DropdownItem>
+                <DropdownItem
+                  href="#"
+                  onClick={() => {
+                    handleShare('링크복사');
+                  }}
+                >
+                  <ShareIcon src={copy} />
+                  링크 복사
+                </DropdownItem>
+              </DropdownMenu>
+            )}
+          </DropdownContainer>
+        </ShareWrapper>
+        </>
+    )
+}
 
 export default ShareComponent;
 
