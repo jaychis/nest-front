@@ -19,7 +19,6 @@ import { UserModalState } from '../reducers/modalStateSlice';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import styled from 'styled-components';
-import { shareCountApi } from '../pages/api/boardApi';
 import ShareComponent from './ShareComponent';
 
 const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
@@ -80,12 +79,6 @@ const Card = ({
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-
-  const videoOptions = {
-    width: isSmallScreen ? '100%' : '760px',
-    height: isSmallScreen ? '330px' : '400px',
-    playerVars: { modestbranding: 1 },
-  };
 
   useEffect(() => {
     if (baseUrl === 'http://127.0.0.1:9898') {
@@ -223,36 +216,6 @@ const Card = ({
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = htmlString;
     return tempDiv.innerText || tempDiv.textContent || '';
-  };
-
-  const handleShareKakao = () => {
-    if (window.Kakao && window.Kakao.isInitialized()) {
-      shareCountApi(id);
-      setIsActive(false);
-      window.Kakao.Share.sendDefault({
-        objectType: 'feed',
-        content: {
-          title: `${title}`,
-          description: `${content}`,
-          imageUrl: 'https://i.postimg.cc/jd4cY735/3.png',
-          link: {
-            mobileWebUrl: 'https://naver.com',
-            webUrl: 'https://naver.com',
-          },
-        },
-        buttons: [
-          {
-            title: '웹으로 보기',
-            link: {
-              mobileWebUrl: 'https://naver.com',
-              webUrl: 'https://naver.com',
-            },
-          },
-        ],
-      });
-    } else {
-      console.error('Kakao SDK가 초기화되지 않았습니다.');
-    }
   };
 
   return (
@@ -413,7 +376,6 @@ const CardContainer = styled.div.withConfig({
   max-height: 600px;
   max-width: 600px;
   margin: 10px;
-  border-radius: 10px;
   cursor: pointer;
   background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
   z-index: ${(props) => (props.modalState ? -10 : 999)};
@@ -430,7 +392,9 @@ const MediaContainer = styled.div`
   background: #606060;
   text-align: center;
   border: 2px solid darkgray;
-  object-fit: contain;
+  //object-fit: contain;
+  border-radius: 20px;
+  margin: 10px auto;
 `;
 
 const ImagePreview = styled.img`
@@ -500,6 +464,8 @@ const ButtonContainer = styled.div.withConfig({
   height: 100%;
   z-index: ${(props) => (props.modalState ? -10 : 1000)};
   margin-top: 5px;
+  height: 100%;
+  max-height: 80px;
 `;
 
 const ReactionWrapper = styled.div`
