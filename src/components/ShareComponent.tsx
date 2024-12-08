@@ -6,7 +6,16 @@ import instagram from '../assets/img/instagram.png';
 import twitter from '../assets/img/twitter.png';
 import facebook from '../assets/img/facebook.png';
 import copy from '../assets/img/copy.png';
+import styled from 'styled-components';
+import React, { useState, useRef } from 'react';
+import { shareCountApi } from '../pages/api/boardApi';
+import kakao from '../assets/img/kakao.png';
+import instagram from '../assets/img/instagram.png';
+import twitter from '../assets/img/twitter.png';
+import facebook from '../assets/img/facebook.png';
+import copy from '../assets/img/copy.png';
 
+interface ShareProps {
 interface ShareProps {
   readonly shareCount: number;
   readonly id: string;
@@ -15,16 +24,29 @@ interface ShareProps {
 }
 
 const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
+const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isCardShareHovered, setIsCardShareHovered] = useState<boolean>(false);
   const [active, setIsActive] = useState<boolean>(false);
+  const kakaoApiKey = process.env.REACT_APP_KAKAO_API_KEY;
 
   React.useEffect(() => {
+
+    if (window.Kakao && !window.Kakao.isInitialized()) {
+      window.Kakao.init(kakaoApiKey);
+    }
+
+
+    if (window.Kakao && !window.Kakao.isInitialized()) {
+      window.Kakao.init(kakaoApiKey);
+    }
+
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [kakaoApiKey]);
+  }, [kakaoApiKey]);
 
   const handleClickOutside = (event: MouseEvent) => {
     if (
@@ -36,6 +58,15 @@ const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
   };
 
   const handleShare = (platform: string) => {
+    let domain = '';
+
+    if (process.env.REACT_APP_NODE_ENV === 'development')
+      domain = 'localhost:3000';
+    else if (process.env.REACT_APP_NODE_ENV === 'stage')
+      domain = 'stage.jaychis.com';
+    else domain = 'jaychis.com';
+
+    domain = domain + `/boards/read?id=${id}&title=${title}&content=${content}`;
     let domain = '';
 
     if (process.env.REACT_APP_NODE_ENV === 'development')
@@ -79,113 +110,108 @@ const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
         alert('링크가 복사되었습니다.');
         break;
 
-      case '카카오톡':
-        if (window.Kakao && window.Kakao.isInitialized()) {
-          shareCountApi(id);
-          setIsActive(false);
-          window.Kakao.Share.sendDefault({
-            objectType: 'feed',
-            content: {
-              title: `${title}`,
-              description: `${content}`,
-              imageUrl: 'https://i.ibb.co/pwfv8nX/panda-logo.png',
+    case '카카오톡':
+      if (window.Kakao && window.Kakao.isInitialized()) {
+        shareCountApi(id);
+        setIsActive(false);
+        window.Kakao.Share.sendDefault({
+          objectType: 'feed',
+          content: {
+            title: `${title}`,
+            description: `${content}`,
+            imageUrl: 'https://i.ibb.co/pwfv8nX/panda-logo.png',
+            link: {
+              mobileWebUrl: encodeURIComponent(domain),
+              webUrl: `https://${domain}`,
+            },
+          },
+          buttons: [
+            {
+              title: '웹으로 보기',
               link: {
-                mobileWebUrl: domain,
-                webUrl: domain,
+                mobileWebUrl: encodeURIComponent(domain),
+                webUrl: `https://${domain}`,
               },
             },
-            buttons: [
-              {
-                title: '웹으로 보기',
-                link: {
-                  mobileWebUrl: domain,
-                  webUrl: domain,
-                },
-              },
-            ],
-          });
-        } else {
-          console.error('Kakao SDK가 초기화되지 않았습니다.');
-        }
-        break;
+          ],
+        });
+      } else {
+        console.error('Kakao SDK가 초기화되지 않았습니다.');
+      }
+      break;
 
       default:
         console.error('지원하지 않는 플랫폼입니다.');
     }
   };
 
-  return (
-    <>
-      <ShareWrapper ref={dropdownRef}>
-        <DropdownContainer>
-          <ShareButton
-            isHovered={isCardShareHovered}
-            onMouseEnter={() => setIsCardShareHovered(true)}
-            onMouseLeave={() => setIsCardShareHovered(false)}
-            onClick={() => {
-              setIsActive((prev) => !prev);
-            }}
-          >
-            <ShareImageTag
-              src="https://img.icons8.com/ios/50/forward-arrow.png"
-              alt="Share Icon"
-            />
-            <ShareCountTag>{shareCount}</ShareCountTag>
-          </ShareButton>
-          {active && (
-            <DropdownMenu>
-              <DropdownItem
-                href="#"
-                onClick={() => {
-                  handleShare('카카오톡');
-                }}
-              >
-                <ShareIcon src={kakao} />
-                카카오톡
-              </DropdownItem>
-              <DropdownItem
-                href="#"
-                onClick={() => {
-                  handleShare('인스타그램');
-                }}
-              >
-                <ShareIcon src={instagram} />
-                인스타그램
-              </DropdownItem>
-              <DropdownItem
-                href="#"
-                onClick={() => {
-                  handleShare('페이스북');
-                }}
-              >
-                <ShareIcon src={facebook} />
-                페이스북
-              </DropdownItem>
-              <DropdownItem
-                href="#"
-                onClick={() => {
-                  handleShare('트위터');
-                }}
-              >
-                <ShareIcon src={twitter} />
-                트위터
-              </DropdownItem>
-              <DropdownItem
-                href="#"
-                onClick={() => {
-                  handleShare('링크복사');
-                }}
-              >
-                <ShareIcon src={copy} />
-                링크 복사
-              </DropdownItem>
-            </DropdownMenu>
-          )}
-        </DropdownContainer>
-      </ShareWrapper>
-    </>
-  );
-};
+    return(
+        <>
+          <ShareWrapper ref={dropdownRef}>
+          <DropdownContainer>
+            <ShareButton
+              isHovered={isCardShareHovered}
+              onMouseEnter={() => setIsCardShareHovered(true)}
+              onMouseLeave={() => setIsCardShareHovered(false)}
+              onClick={() => {
+                setIsActive((prev) => !prev);
+              }}
+            >
+              <ShareImageTag
+                src="https://img.icons8.com/ios/50/forward-arrow.png"
+                alt="Share Icon"
+              />
+              <ShareCountTag>{shareCount}</ShareCountTag>
+            </ShareButton>
+            {active && (
+              <DropdownMenu>
+                <DropdownItem
+                  onClick={() => {
+                    handleShare('카카오톡');
+                  }}
+                >
+                  <ShareIcon src={kakao} />
+                  카카오톡
+                </DropdownItem>
+                <DropdownItem
+                  onClick={() => {
+                    handleShare('인스타그램');
+                  }}
+                >
+                  <ShareIcon src={instagram} />
+                  인스타그램
+                </DropdownItem>
+                <DropdownItem
+                  onClick={() => {
+                    handleShare('페이스북');
+                  }}
+                >
+                  <ShareIcon src={facebook} />
+                  페이스북
+                </DropdownItem>
+                <DropdownItem
+                  onClick={() => {
+                    handleShare('트위터');
+                  }}
+                >
+                  <ShareIcon src={twitter} />
+                  트위터
+                </DropdownItem>
+                <DropdownItem
+                  onClick={() => {
+                    handleShare('링크복사');
+                  }}
+                >
+                  <ShareIcon src={copy} />
+                  링크 복사
+                </DropdownItem>
+              </DropdownMenu>
+            )}
+          </DropdownContainer>
+        </ShareWrapper>
+        </>
+    )
+}
 
 export default ShareComponent;
 
