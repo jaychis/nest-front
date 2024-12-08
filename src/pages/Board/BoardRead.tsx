@@ -192,9 +192,11 @@ export default BoardRead;
 const BoardReadContainer = styled.div`
   display: flex;
   justify-content: center;
-  align-items: center;
-  min-height: 100vh;
   width: 100%;
+  align-items: flex-start;
+  height: auto;
+
+  overflow-x: hidden;
 `;
 
 const CardContainer = styled.div`
@@ -203,6 +205,7 @@ const CardContainer = styled.div`
   max-width: 600px;
   margin: 0 auto;
   align-items: center;
+  height: auto;
 
   @media (max-width: 768px) {
     max-width: 95%;

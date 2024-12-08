@@ -41,10 +41,6 @@ const BoardComment = (co: BoardCommentProps) => {
     useState<boolean>(false);
   const [isCardCommentReplyHovered, setIsCardCommentReplyHovered] =
     useState<boolean>(false);
-  const [isCardCommentShareHovered, setIsCardCommentShareHovered] =
-    useState<boolean>(false);
-  const [isCardCommentSendHovered, setIsCardCommentSendHovered] =
-    useState<boolean>(false);
   const [isCommentReaction, setCommentIsReaction] =
     useState<ReactionStateTypes>(null);
   const [isCommentReplyButton, setIsCommentReplyButton] =
@@ -201,7 +197,6 @@ const BoardComment = (co: BoardCommentProps) => {
 
 export default BoardComment;
 
-// Styled Components
 const CommentContainer = styled.div`
   display: flex;
   flex-direction: column;

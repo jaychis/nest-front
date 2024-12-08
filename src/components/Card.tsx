@@ -465,6 +465,8 @@ const ButtonContainer = styled.div.withConfig({
   height: 100%;
   z-index: ${(props) => (props.modalState ? -10 : 1000)};
   margin-top: 5px;
+  height: 100%;
+  max-height: 80px;
 `;
 
 const ReactionWrapper = styled.div`
