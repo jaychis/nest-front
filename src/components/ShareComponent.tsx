@@ -19,13 +19,19 @@ const ShareComponent = ({shareCount,id,title,content}:ShareProps) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isCardShareHovered, setIsCardShareHovered] = useState<boolean>(false);
   const [active, setIsActive] = useState<boolean>(false);
+  const kakaoApiKey = process.env.REACT_APP_KAKAO_API_KEY;
 
   React.useEffect(() => {
+
+    if (window.Kakao && !window.Kakao.isInitialized()) {
+      window.Kakao.init(kakaoApiKey);
+    }
+
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [kakaoApiKey]);
 
   const handleClickOutside = (event: MouseEvent) => {
     if (
@@ -86,16 +92,16 @@ const ShareComponent = ({shareCount,id,title,content}:ShareProps) => {
             description: `${content}`,
             imageUrl: 'https://i.ibb.co/pwfv8nX/panda-logo.png',
             link: {
-              mobileWebUrl: domain,
-              webUrl: domain,
+              mobileWebUrl: encodeURIComponent(domain),
+              webUrl: `https://${domain}`,
             },
           },
           buttons: [
             {
               title: '웹으로 보기',
               link: {
-                mobileWebUrl: domain,
-                webUrl: domain,
+                mobileWebUrl: encodeURIComponent(domain),
+                webUrl: `https://${domain}`,
               },
             },
           ],
@@ -131,7 +137,6 @@ const ShareComponent = ({shareCount,id,title,content}:ShareProps) => {
             {active && (
               <DropdownMenu>
                 <DropdownItem
-                  href="#"
                   onClick={() => {
                     handleShare('카카오톡');
                   }}
