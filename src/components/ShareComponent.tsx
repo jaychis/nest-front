@@ -21,9 +21,6 @@ const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
   const kakaoApiKey = process.env.REACT_APP_KAKAO_API_KEY;
 
   React.useEffect(() => {
-    if (window.Kakao && !window.Kakao.isInitialized()) {
-      window.Kakao.init(kakaoApiKey);
-    }
 
     if (window.Kakao && !window.Kakao.isInitialized()) {
       window.Kakao.init(kakaoApiKey);
