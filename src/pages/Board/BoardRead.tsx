@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Card from '../../components/Card';
-import { ReadAPI } from '../api/boardApi';
+import { BoardReadAPI } from '../api/boardApi';
 import { CardType, CollectionTypes } from '../../_common/collectionTypes';
 import {
   CommentListAPI,
@@ -14,16 +14,21 @@ import { useLocation } from 'react-router-dom';
 import { LogViewedBoardAPI } from '../api/viewedBoardsApi';
 
 const BoardRead = () => {
-  const boardId: string = sessionStorage.getItem('boardId') as string;
-  const BOARD_TITLE: string = sessionStorage.getItem('boardTitle') as string;
+  const useQuery = () => {
+    const { search } = useLocation();
+    return React.useMemo(() => new URLSearchParams(search), [search]);
+  };
+
+  const query = useQuery();
+  const ID = query.get('id') as string;
   const userId: string = localStorage.getItem('id') as string;
 
   const [isBoardState, setIsBoardStateBoard] = useState<CardType>({
-    id: boardId,
+    id: ID,
     user_id: '',
     category: '',
     content: [],
-    title: BOARD_TITLE,
+    title: '',
     nickname: '',
     created_at: new Date(),
     updated_at: new Date(),
@@ -33,25 +38,15 @@ const BoardRead = () => {
   });
   const [isCommentState, setIsCommentState] = useState<CommentType[]>([]);
 
-  const useQuery = () => {
-    const { search } = useLocation();
-    return React.useMemo(() => new URLSearchParams(search), [search]);
-  };
-
-  const query = useQuery();
-  const id = query.get('id') as string;
-  const title = query.get('title');
-
   useEffect(() => {
-    if (!id && !title) return;
+    if (!ID) return;
     const readBoard = async (): Promise<void> => {
-      const commentRes = await CommentListAPI({ boardId: id });
+      const commentRes = await CommentListAPI({ boardId: ID });
       if (!commentRes) return;
       const commentResponse = commentRes.data.response;
       setIsCommentState([...commentResponse]);
-      const res = await ReadAPI({
-        id: id,
-        title: title,
+      const res = await BoardReadAPI({
+        id: ID,
       });
 
       if (!res) return;
@@ -63,11 +58,12 @@ const BoardRead = () => {
         boardId: response.id,
       });
     };
+
     readBoard();
-  }, [id, title]);
+  }, [ID]);
 
   const [writeComment, setWriteComment] = useState<CommentSubmitParams>({
-    boardId: boardId,
+    boardId: ID,
     content: '',
     nickname: (localStorage.getItem('nickname') as string) || '',
     userId: userId || '',

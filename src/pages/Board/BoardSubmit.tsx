@@ -32,7 +32,6 @@ const BoardSubmit = () => {
   const NICKNAME: string = localStorage.getItem('nickname') as string;
   const [textTitle, setTextTitle] = useState<string>('');
 
-  // const { topics, setTopics } = useCommunity();
   const [topics, setTopics] = useState<string[]>([]);
   const [tagSearchTerm, setTagSearchTerm] = useState('');
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -67,7 +66,6 @@ const BoardSubmit = () => {
           return res;
         });
         setSuggestions(filteredTopics);
-        
       };
 
       boardTagsResponse();
@@ -260,7 +258,7 @@ const BoardSubmit = () => {
 
         const response = submitRes.data.response;
         if (response) {
-          navigate(`/boards/read?id=${response.id}&title=${response.title}`);
+          navigate(`/boards/read?id=${response.id}`);
         }
       } else {
         alert('태그가 1개이상 필요합니다.');
@@ -517,19 +515,21 @@ const BoardSubmit = () => {
                             ))}
                           </Suggestions>
                         )}
-                        {tagSearchTerm && !suggestions.includes(`#${tagSearchTerm}`) && !topics.includes(`#${tagSearchTerm}`) && (
-                          <NoSuggestionWrapper>
-                            <p>
-                              등록된 태그가 없습니다. "{tagSearchTerm}"로 새
-                              태그를 추가할 수 있습니다.
-                            </p>
-                            <AddButton
-                              onClick={() => handleAddTopic(tagSearchTerm)}
-                            >
-                              "{tagSearchTerm}" 추가
-                            </AddButton>
-                          </NoSuggestionWrapper>
-                        )}
+                        {tagSearchTerm &&
+                          !suggestions.includes(`#${tagSearchTerm}`) &&
+                          !topics.includes(`#${tagSearchTerm}`) && (
+                            <NoSuggestionWrapper>
+                              <p>
+                                등록된 태그가 없습니다. "{tagSearchTerm}"로 새
+                                태그를 추가할 수 있습니다.
+                              </p>
+                              <AddButton
+                                onClick={() => handleAddTopic(tagSearchTerm)}
+                              >
+                                "{tagSearchTerm}" 추가
+                              </AddButton>
+                            </NoSuggestionWrapper>
+                          )}
                       </div>
                       <SelectedTopicWrapper>
                         {topics.map((topic, index) => {
