@@ -268,27 +268,6 @@ const BoardSubmit = () => {
     }
   };
 
-  const inputStyle = {
-    width: '100%',
-    height: '30px',
-    marginBottom: '10px',
-    marginTop: '10px',
-    paddingTop: '10px',
-    paddingBottom: '10px',
-    border: '1px solid #ddd',
-    borderRadius: '4px',
-  };
-
-  const submitButtonStyle = {
-    padding: '10px 20px',
-    backgroundColor: '#84d7fb',
-    color: 'white',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    fontWeight: 'bold',
-  };
-
   const buttonStyle = {
     padding: '10px 20px',
     margin: '0 0',
@@ -332,40 +311,12 @@ const BoardSubmit = () => {
 
   return (
     <>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          width: '67vw',
-          marginLeft: '5vh',
-          marginTop: '2vh',
-        }}
-      >
-        <div style={{ flex: 2 }}>
-          <div style={{ backgroundColor: '#fff', minHeight: '100vh' }}>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                width: '100%',
-              }}
-            >
-              <div style={{ flex: 2 }}>
-                <div
-                  style={{
-                    width: '100%',
-                    height: 'auto',
-                    padding: '10px',
-                    background: '#fff',
-                  }}
-                >
-                  <div
-                    style={{
-                      marginBottom: '20px',
-                      display: 'flex',
-                      justifyContent: 'flex-start',
-                    }}
-                  >
+      <BoardSubmitContainer>
+        <MainContentArea>
+          <FullHeightWrapper>
+            <CenteredContainer>
+              <ContentWrapper>
+                <HeaderWrapper>
                     <button
                       onClick={() => setInputType('TEXT')}
                       style={
@@ -390,33 +341,26 @@ const BoardSubmit = () => {
                     >
                       링크
                     </button>
-                  </div>
+                  </HeaderWrapper>
 
-                  <input
+                  <InputStyle
                     type="text"
                     value={searchTerm}
                     onChange={handleCommunitySearchChange}
                     placeholder="커뮤니티 검색"
-                    style={inputStyle}
-                    // Disable input if a community is selected
                   />
                   {searchResults.length > 0 && (
-                    <ul style={{ listStyleType: 'none', padding: 0 }}>
-                      {searchResults.map((result, index) => (
-                        <li
-                          key={index}
-                          onClick={() => handleCommunitySelect(result)}
-                          style={{
-                            cursor: 'pointer',
-                            padding: '8px',
-                            backgroundColor:
-                              index % 2 === 0 ? '#f9f9f9' : '#fff',
-                          }}
-                        >
-                          {result}
-                        </li>
-                      ))}
-                    </ul>
+                    <SearchCommunityList>
+                    {searchResults.map((result, index) => (
+                      <Item
+                        key={index}
+                        isEven={index % 2 === 0}
+                        onClick={() => handleCommunitySelect(result)}
+                      >
+                        {result}
+                      </Item>
+                    ))}
+                  </SearchCommunityList>
                   )}
                   {/*{searchResults.length === 0 && searchTerm && (*/}
                   {/*  <div>선택된 커뮤니티: jaychis</div>*/}
@@ -427,12 +371,11 @@ const BoardSubmit = () => {
 
                   {inputType === 'TEXT' && (
                     <>
-                      <input
+                      <InputStyle
                         name="title"
                         type="text"
                         placeholder="제목"
                         onChange={handleTextTitleChange}
-                        style={inputStyle}
                       />
                       <ReactQuill
                         value={textContent}
@@ -443,34 +386,31 @@ const BoardSubmit = () => {
                   )}
                   {inputType === 'MEDIA' && (
                     <>
-                      <input
+                      <InputStyle
                         name="title"
                         type="text"
                         placeholder="제목"
                         onChange={handleMediaTitleChange}
-                        style={inputStyle}
                       />
 
                       {previewUrls.length > 0 ? (
                         <>
                           <button onClick={imageUrlListDelete}>휴지통</button>
                           {previewUrls.map((image, index) => (
-                            <div key={index}>
-                              <img
+                            <ImagePreviewWrapper key={index}>
+                              <ImagePreview
                                 src={image}
                                 alt={`Preview image ${index}`}
-                                style={{ height: '400px', width: '400px' }}
                               />
-                            </div>
+                            </ImagePreviewWrapper>
                           ))}
                         </>
                       ) : (
                         <>
-                          <input
+                          <InputStyle
                             type={'file'}
                             multiple
                             onChange={handleFileChange}
-                            style={inputStyle}
                           />
                         </>
                       )}
@@ -478,24 +418,22 @@ const BoardSubmit = () => {
                   )}
                   {inputType === 'LINK' && (
                     <>
-                      <input
+                      <InputStyle
                         name="title"
                         type="text"
                         placeholder="제목"
                         onChange={handleLinkTitleChange}
-                        style={inputStyle}
                       />
-                      <input
+                      <InputStyle
                         type="text"
                         placeholder="링크 추가"
                         onChange={(e) => handleLinkContentChange(e)}
-                        style={inputStyle}
                       />
                     </>
                   )}
                   <Container>
                     <Form onSubmit={(e) => e.preventDefault()}>
-                      <div style={{ marginBottom: '20px' }}>
+                      
                         <Label htmlFor="topicSearch">태그 검색</Label>
                         <TopicSearchInput
                           type="text"
@@ -515,22 +453,20 @@ const BoardSubmit = () => {
                             ))}
                           </Suggestions>
                         )}
-                        {tagSearchTerm &&
-                          !suggestions.includes(`#${tagSearchTerm}`) &&
-                          !topics.includes(`#${tagSearchTerm}`) && (
-                            <NoSuggestionWrapper>
-                              <p>
-                                등록된 태그가 없습니다. "{tagSearchTerm}"로 새
-                                태그를 추가할 수 있습니다.
-                              </p>
-                              <AddButton
-                                onClick={() => handleAddTopic(tagSearchTerm)}
-                              >
-                                "{tagSearchTerm}" 추가
-                              </AddButton>
-                            </NoSuggestionWrapper>
-                          )}
-                      </div>
+                        {tagSearchTerm && !suggestions.includes(`#${tagSearchTerm}`) && !topics.includes(`#${tagSearchTerm}`) && (
+                          <NoSuggestionWrapper>
+                            <TagInfoMessage>
+                              등록된 태그가 없습니다. "{tagSearchTerm}"로 새
+                              태그를 추가할 수 있습니다.
+                            </TagInfoMessage>
+                            <AddButton
+                              onClick={() => handleAddTopic(tagSearchTerm)}
+                            >
+                              "{tagSearchTerm}" 추가
+                            </AddButton>
+                          </NoSuggestionWrapper>
+                        )}
+                      
                       <SelectedTopicWrapper>
                         {topics.map((topic, index) => {
                           return (
@@ -545,19 +481,17 @@ const BoardSubmit = () => {
                       </SelectedTopicWrapper>
                     </Form>
                   </Container>
-                  <button
+                  <SubmitButtonStyle
                     type="submit"
-                    style={submitButtonStyle}
                     onClick={(e) => handleSubmit(e)}
                   >
                     보내기
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+                  </SubmitButtonStyle>
+                  </ContentWrapper>
+            </CenteredContainer>
+          </FullHeightWrapper>
+        </MainContentArea>
+      </BoardSubmitContainer>
       <ErrorModal
         show={errorModalVisible}
         handleClose={() => setErrorModalVisible(false)}
@@ -566,6 +500,43 @@ const BoardSubmit = () => {
     </>
   );
 };
+
+
+const BoardSubmitContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 67vw;
+  margin-left: 5vh;
+  margin-top: 2vh;
+`;
+
+const MainContentArea = styled.div`
+  flex: 2;
+`;
+
+const FullHeightWrapper = styled.div`
+  background-color: #fff;
+  min-height: 100vh;
+`;
+
+const CenteredContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+`;
+
+const ContentWrapper = styled.div`
+  width: 100%;
+  height: auto;
+  padding: 10px;
+  background: #fff;
+`;
+
+const HeaderWrapper = styled.div`
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-start;
+`;
 
 const Container = styled.div`
   background-color: #ffffff;
@@ -644,6 +615,78 @@ const AddButton = styled.button`
   font-size: 14px;
   font-weight: bold;
   transition: background-color 0.3s ease;
+`;
+
+const InputStyle = styled.input`
+  width: 100%;
+  height: 30px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+`;
+
+const SubmitButtonStyle = styled.button`
+  padding: 10px 20px;
+  background-color: #84d7fb;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+`;
+
+const ButtonStyle = styled.button`
+  padding: 10px 20px;
+  margin: 0;
+  border: 1px solid #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: white;
+  color: #0079d3;
+  font-weight: bold;
+  transition: background-color 0.3s, color 0.3s;
+`;
+
+const ActiveButtonStyle = styled(ButtonStyle)`
+  background-color: #84d7fb;
+  color: white;
+  border: #84d7fb;
+`;
+
+const SearchCommunityList = styled.ul`
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+`;
+
+const Item = styled.li<{ isEven: boolean }>`
+  cursor: pointer;
+  padding: 8px;
+  background-color: ${({ isEven }) => (isEven ? '#f9f9f9' : '#fff')};
+
+  &:hover {
+    background-color: #e0e0e0; /* 선택사항: 호버 효과 추가 */
+  }
+`;
+
+const ImagePreviewWrapper = styled.div`
+
+`
+
+const ImagePreview = styled.img`
+  height: 400px;
+  width: 400px;
+  object-fit: cover; /* 선택사항: 이미지를 잘라내거나 비율 유지 */
+`;
+
+const TagInfoMessage = styled.p`
+  font-size: 16px;
+  color: #555; 
+  margin: 10px 0; 
+  line-height: 1.5; 
 `;
 
 export default BoardSubmit;
