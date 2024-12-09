@@ -143,9 +143,7 @@ const Card = ({
   };
 
   const goBoardRead = () => {
-    sessionStorage.setItem('boardId', id);
-    sessionStorage.setItem('boardTitle', title);
-    navigate(`/boards/read?id=${id}&title=${title}&content=${content}`);
+    navigate(`/boards/read?id=${id}`);
   };
 
   const fetchReactionList = async (boardId: string) => {

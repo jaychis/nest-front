@@ -74,16 +74,15 @@ export const BoardShareListAPI = ({ take, lastId, category }: ListParams) => {
   }
 };
 
-interface ReadParams {
-  readonly id: string | null;
-  readonly title: string | null;
+interface BoardReadParam {
+  readonly id: string;
 }
-export const ReadAPI = async (params: ReadParams) => {
+export const BoardReadAPI = async ({ id }: BoardReadParam) => {
   try {
-    const URL: string = `${BOARD_URL}/read`;
+    const URL: string = `${BOARD_URL}/${id}`;
 
-    const res = await client.post(URL, params);
-    console.log('READ API res : ', res);
+    const res = await client.get(URL);
+    console.log('BoardReadAPI API res : ', res);
 
     return res;
   } catch (e: any) {
