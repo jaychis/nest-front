@@ -6,23 +6,20 @@ import { errorHandling } from '../../_common/errorHandling';
 
 const USERS_URL: string = 'users';
 
-export interface UsersInquiryParams {
-  readonly nickname: string;
-  readonly take: number;
-  readonly lastId?: string | null;
+export interface UsersVerifyEmailParam {
+  readonly email: string;
 }
 
-export const UsersInquiryAPI = async ({
-  nickname,
-  take,
-  lastId,
-}: UsersInquiryParams) => {
-  let URL: string = `${USERS_URL}/inquiry?nickname=${nickname}&take=${take}`;
-  if (lastId) URL += `&lastId=${lastId}`;
+export const UsersVerifyEmailAPI = async (param: UsersVerifyEmailParam) => {
+  const URL: string = `${USERS_URL}/verify-email`;
 
-  const res = await client.get(URL);
+  try {
+    const res = await client.post(URL, param);
 
-  return res;
+    return res;
+  } catch (e: any) {
+    errorHandling({ text: 'UsersVerifyEmailAPI', error: e });
+  }
 };
 export interface ExistingEmailParams {
   readonly email: string;

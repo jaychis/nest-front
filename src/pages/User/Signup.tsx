@@ -6,6 +6,7 @@ import {
   SignupAPI,
   SignupParams,
   LoginAPI,
+  UsersVerifyEmailAPI,
 } from '../api/userApi';
 import { CollectionTypes } from '../../_common/collectionTypes';
 import {
@@ -73,6 +74,14 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
 
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [validPassword, setValidPassword] = useState<boolean>(false);
+  const [showEmailVerification, setShowEmailVerification] =
+    useState<boolean>(false);
+  const [verificationCodeCheck, setVerificationCodeCheck] =
+    useState<boolean>(false);
+  const [verificationCodeComparison, setVerificationCodeComparison] =
+    useState<string>('');
+  const [inputVerificationCodeComparison, setInputVerificationCodeComparison] =
+    useState<string>('');
 
   useEffect(() => {
     if (signup.email.length >= 12) {
@@ -85,12 +94,25 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
               ...validSignup,
               email: response,
             });
+            setShowEmailVerification(response === true);
           })
           .catch((err) => console.error(err));
       }, 1000); // 1000ms
       return () => clearTimeout(timeOutEmail);
     }
   }, [signup.email]);
+
+  const handleEmailVerification = async () => {
+    alert('Email verification process initiated.');
+
+    const response = await UsersVerifyEmailAPI({ email: signup.email });
+    if (!response) return;
+
+    const emailCode: string = response.data.response?.verification_code;
+    console.log('emailCode : ', emailCode);
+    setVerificationCodeCheck(true);
+    setVerificationCodeComparison(emailCode);
+  };
 
   useEffect(() => {
     if (signup.nickname.length >= 3) {
@@ -151,6 +173,12 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
     });
   };
 
+  const verificationCodeHandleChange = (event: CollectionTypes) => {
+    const { value } = event;
+
+    setInputVerificationCodeComparison(value);
+  };
+
   const processLogin = async () => {
     try {
       const login = { email: signup.email, password: signup.password };
@@ -173,6 +201,9 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
 
   const handleSubmit: MouseEventHandler<HTMLButtonElement> = (event) => {
     if (event) event.preventDefault();
+
+    if (!finalVerificationCodeCheck)
+      return alert('이메일 인증을 진행해주세요.');
 
     if (
       !signup.email ||
@@ -212,6 +243,20 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
     }
   };
 
+  const [finalVerificationCodeCheck, setFinalVerificationCodeCheck] =
+    useState<boolean>(false);
+  const compareVerificationCodes = async () => {
+    console.log('verificationCodeComparison : ', verificationCodeComparison);
+    console.log(
+      'inputVerificationCodeComparison : ',
+      inputVerificationCodeComparison,
+    );
+    if (verificationCodeComparison === inputVerificationCodeComparison) {
+      alert('동일');
+      setFinalVerificationCodeCheck(true);
+    }
+  };
+
   return (
     <div
       style={{
@@ -246,21 +291,51 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
             marginBottom: '10px',
           }}
         >
-          <input
-            style={styles.input}
-            placeholder="이메일 *"
-            type="email"
-            id="email"
-            name="email"
-            value={signup.email}
-            onChange={(value) =>
-              handleChange({
-                name: value.target.name,
-                value: value.target.value,
-              })
-            }
-            required
-          />
+          <div style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
+            <input
+              style={{
+                width: showEmailVerification ? '60%' : '100%',
+                padding: '10px',
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                marginRight: '10px',
+              }}
+              placeholder="이메일 *"
+              type="email"
+              id="email"
+              name="email"
+              disabled={finalVerificationCodeCheck}
+              value={signup.email}
+              onChange={(value) =>
+                handleChange({
+                  name: value.target.name,
+                  value: value.target.value,
+                })
+              }
+              required
+            />
+
+            {showEmailVerification && (
+              <>
+                <button
+                  onClick={handleEmailVerification}
+                  disabled={finalVerificationCodeCheck}
+                  style={{
+                    padding: '10px 20px',
+                    width: '40%',
+                    borderRadius: '5px',
+                    border: 'none',
+                    backgroundColor: '#84d7fb',
+                    color: 'white',
+                    cursor: 'pointer',
+                  }}
+                >
+                  이메일 인증
+                </button>
+              </>
+            )}
+          </div>
+
           {validSignup.email === null ? null : validSignup.email === true ? (
             <img
               src={vLogo}
@@ -269,7 +344,7 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
                 width: '20px',
                 height: '20px',
                 position: 'absolute',
-                right: '10px',
+                right: '165px',
                 top: '50%',
                 transform: 'translateY(-50%)',
               }}
@@ -282,7 +357,7 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
                 width: '20px',
                 height: '20px',
                 position: 'absolute',
-                right: '10px',
+                right: '17px',
                 top: '50%',
                 transform: 'translateY(-50%)',
               }}
@@ -290,6 +365,51 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
           )}
         </div>
 
+        {verificationCodeCheck && (
+          <>
+            <div
+              style={{
+                position: 'relative',
+                width: '100%',
+                marginBottom: '10px',
+              }}
+            >
+              <div
+                style={{ width: '100%', display: 'flex', alignItems: 'center' }}
+              >
+                <input
+                  style={{
+                    width: '60%',
+                    padding: '10px',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    marginRight: '10px',
+                  }}
+                  onChange={(value) =>
+                    verificationCodeHandleChange({
+                      name: value.target.name,
+                      value: value.target.value,
+                    })
+                  }
+                />
+                <button
+                  onClick={compareVerificationCodes}
+                  style={{
+                    padding: '10px 20px',
+                    width: '40%',
+                    borderRadius: '5px',
+                    border: 'none',
+                    backgroundColor: '#84d7fb',
+                    color: 'white',
+                    cursor: 'pointer',
+                  }}
+                >
+                  인증번호 확인
+                </button>
+              </div>
+            </div>
+          </>
+        )}
         <div
           style={{
             position: 'relative',
@@ -321,8 +441,8 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
                 width: '20px',
                 height: '20px',
                 position: 'absolute',
-                right: '10px',
-                top: '50%',
+                right: '17px',
+                top: '40%',
                 transform: 'translateY(-50%)',
               }}
             />
@@ -334,8 +454,8 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
                 width: '20px',
                 height: '20px',
                 position: 'absolute',
-                right: '10px',
-                top: '50%',
+                right: '17px',
+                top: '40%',
                 transform: 'translateY(-50%)',
               }}
             />
@@ -397,8 +517,8 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
                 width: '20px',
                 height: '20px',
                 position: 'absolute',
-                right: '10px',
-                top: '50%',
+                right: '17px',
+                top: '40%',
                 transform: 'translateY(-50%)',
               }}
             />
@@ -412,8 +532,8 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
                 width: '20px',
                 height: '20px',
                 position: 'absolute',
-                right: '10px',
-                top: '50%',
+                right: '17px',
+                top: '40%',
                 transform: 'translateY(-50%)',
               }}
             />
@@ -450,8 +570,8 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
                 width: '20px',
                 height: '20px',
                 position: 'absolute',
-                right: '10px',
-                top: '50%',
+                right: '17px',
+                top: '40%',
                 transform: 'translateY(-50%)',
               }}
             />
@@ -463,8 +583,8 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
                 width: '20px',
                 height: '20px',
                 position: 'absolute',
-                right: '10px',
-                top: '50%',
+                right: '17px',
+                top: '40%',
                 transform: 'translateY(-50%)',
               }}
             />
@@ -515,7 +635,7 @@ const styles = {
     borderRadius: '4px',
     marginBottom: '10px',
     boxSizing: 'border-box' as 'border-box',
-    width: '100%',
+    width: '97%',
     height: '40px',
   },
   submitButton: {
