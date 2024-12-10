@@ -150,18 +150,11 @@ export const SendEmail = async (email: string) => {
   }
 };
 
-export interface VerifyParams {
-  readonly email: string;
-  readonly verificationCode: string;
-}
 
-export const VerifyEmail = async ({
-  email,
-  verificationCode,
-}: VerifyParams) => {
+export const VerifyEmail = async (email: string) => {
   let URL = 'users/verify-email';
   try {
-    const res = await client.post(URL, { email, verificationCode });
+    const res = await client.post(URL, { email });
     return res;
   } catch (error) {
     console.error(error);
