@@ -17,6 +17,7 @@ import vLogo from '../../assets/img/v-check.png';
 import xLogo from '../../assets/img/x-check.png';
 import Alert from '../../components/Alert';
 import styled from 'styled-components';
+import { VerifyEmail } from '../api/userApi';
 
 interface Props {
   readonly onSwitchView: () => void;
@@ -74,6 +75,27 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
 
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [validPassword, setValidPassword] = useState<boolean>(false);
+  const [emailCode, setEmailCode] = useState<string>('')
+  const [verificationCode, setVerificationCode] = useState<string>('')
+  const [verifyEmail, setVerifyEmail] = useState<boolean>(false);
+  
+  const sendEmailVerificationHandler = async (email:string) => {
+    if(!email) return alert('이메일을 입력해주세요')
+    const res = await VerifyEmail(email)
+    alert('전송되었습니다.')
+    setVerificationCode(res?.data.response.verification_code)
+  }
+
+  const codeVerifyHandler = async (emailCode: string) => {
+    if(!emailCode) return alert('인증번호를 입력해주세요')
+
+    if(emailCode.trim() === verificationCode){
+      setVerifyEmail(true)
+    }
+    else{
+      alert('인증번호가 일치하지 않습니다.')
+    }
+  }
 
   useEffect(() => {
     if (signup.email.length >= 12) {
@@ -228,7 +250,6 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
         <h2>회원가입</h2>
       </TitleContainer>
 
-      <form>
         <InputContainer>
           <StyledInput
             placeholder="이메일 *"
@@ -250,8 +271,21 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
             <Icon src={xLogo} alt="x logo" />
           )}
         </InputContainer>
-
-        <InputContainer>
+        
+        {!verifyEmail ?
+         <InputContainer>
+         <StyledInput
+          style = {{width: '50%'}}
+           placeholder="인증 코드*"
+           type='text'
+           value={emailCode}
+           onChange={(value) => setEmailCode(value.target.value)}
+         />
+         <SubmitButton onClick = {() => {sendEmailVerificationHandler(signup.email)}} style = {{width: '35%', marginLeft: '2vw'}}>이메일로 받기</SubmitButton>
+        </InputContainer>
+        :
+        <>
+          <InputContainer>
           <StyledInput
             placeholder="닉네임 *"
             type="text"
@@ -333,12 +367,19 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
             <Icon src={xLogo} alt="x logo" />
           )}
         </InputContainer>
-      </form>
+         </>
+        }
 
       <ButtonContainer>
+        {!verifyEmail ?
+        <SubmitButton type="submit" onClick={() => {codeVerifyHandler(emailCode)}}>
+          확인
+        </SubmitButton> :
         <SubmitButton type="submit" onClick={handleSubmit}>
           회원가입
         </SubmitButton>
+        }
+        
       </ButtonContainer>
 
       <SwitchButtonContainer>
