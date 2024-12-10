@@ -17,7 +17,7 @@ import vLogo from '../../assets/img/v-check.png';
 import xLogo from '../../assets/img/x-check.png';
 import Alert from '../../components/Alert';
 import styled from 'styled-components';
-import { SendEmail, VerifyEmail } from '../api/userApi';
+import { VerifyEmail } from '../api/userApi';
 
 interface Props {
   readonly onSwitchView: () => void;
@@ -76,23 +76,25 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [validPassword, setValidPassword] = useState<boolean>(false);
   const [emailCode, setEmailCode] = useState<string>('')
+  const [verificationCode, setVerificationCode] = useState<string>('')
   const [verifyEmail, setVerifyEmail] = useState<boolean>(false);
   
   const sendEmailVerificationHandler = async (email:string) => {
     if(!email) return alert('이메일을 입력해주세요')
-    await SendEmail(email)
+    const res = await VerifyEmail(email)
     alert('전송되었습니다.')
+    setVerificationCode(res?.data.response.verification_code)
   }
 
-  const codeVerifyHandler = async (email: string, verificationCode:string) => {
+  const codeVerifyHandler = async (emailCode: string) => {
     if(!emailCode) return alert('인증번호를 입력해주세요')
-    
-    const res = await VerifyEmail({email, verificationCode})
 
-    if(res && res.data && res.data.response.verification){
+    if(emailCode.trim() === verificationCode){
       setVerifyEmail(true)
     }
-    else{alert('인증번호가 일치하지 않습니다.')}
+    else{
+      alert('인증번호가 일치하지 않습니다.')
+    }
   }
 
   useEffect(() => {
@@ -370,7 +372,7 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
 
       <ButtonContainer>
         {!verifyEmail ?
-        <SubmitButton type="submit" onClick={() => {codeVerifyHandler(signup.email,emailCode.trim())}}>
+        <SubmitButton type="submit" onClick={() => {codeVerifyHandler(emailCode)}}>
           확인
         </SubmitButton> :
         <SubmitButton type="submit" onClick={handleSubmit}>
