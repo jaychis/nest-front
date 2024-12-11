@@ -70,23 +70,6 @@ export interface LoginParams {
   readonly password: string;
 }
 
-// export const LoginAPI = createAsyncThunk(
-//   "LoginAPI",
-//   async (params: LoginParams) => {
-//     try {
-//       const URL: string = `${BACK_URL}/users/login`;
-//
-//       const res = await client.post(URL, params);
-//       return res.data.response;
-//     } catch (e: any) {
-//       if (!e.response) {
-//         throw error;
-//       }
-//       return isRejectedWithValue(e.response.data());
-//     }
-//   },
-// );
-
 export const LoginAPI = async (params: LoginParams) => {
   const URL: string = `${USERS_URL}/login`;
 
@@ -137,7 +120,7 @@ export const SignupAPI = async (params: SignupParams) => {
 };
 
 export const SendEmail = async (email: string) => {
-  let URL = 'users/send-email';
+  let URL = `${USERS_URL}/send-email`;
   try {
     const res = await client.post(URL, { email });
     return res;
@@ -156,7 +139,7 @@ export const VerifyEmail = async ({
   email,
   verificationCode,
 }: VerifyParams) => {
-  let URL = 'users/verify-email';
+  const URL = `${USERS_URL}/verify-email`;
   try {
     const res = await client.post(URL, { email, verificationCode });
     return res;
@@ -165,7 +148,7 @@ export const VerifyEmail = async ({
   }
 };
 
-export interface PasswordResetParsms {
+export interface PasswordResetParams {
   email: string;
   password: string;
   confirmPassword?: string;
@@ -174,8 +157,8 @@ export interface PasswordResetParsms {
 export const PasswordReset = async ({
   email,
   password,
-}: PasswordResetParsms) => {
-  let URL = 'users/password/reset';
+}: PasswordResetParams) => {
+  const URL: string = `${USERS_URL}/password/reset`;
   try {
     const res = await client.post(URL, { email, password });
     return res;
