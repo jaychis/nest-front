@@ -6,23 +6,20 @@ import { errorHandling } from '../../_common/errorHandling';
 
 const USERS_URL: string = 'users';
 
-export interface UsersInquiryParams {
-  readonly nickname: string;
-  readonly take: number;
-  readonly lastId?: string | null;
+export interface UsersVerifyEmailParam {
+  readonly email: string;
 }
 
-export const UsersInquiryAPI = async ({
-  nickname,
-  take,
-  lastId,
-}: UsersInquiryParams) => {
-  let URL: string = `${USERS_URL}/inquiry?nickname=${nickname}&take=${take}`;
-  if (lastId) URL += `&lastId=${lastId}`;
+export const UsersVerifyEmailAPI = async (param: UsersVerifyEmailParam) => {
+  const URL: string = `${USERS_URL}/verify-email`;
 
-  const res = await client.get(URL);
+  try {
+    const res = await client.post(URL, param);
 
-  return res;
+    return res;
+  } catch (e: any) {
+    errorHandling({ text: 'UsersVerifyEmailAPI', error: e });
+  }
 };
 export interface ExistingEmailParams {
   readonly email: string;
@@ -72,23 +69,6 @@ export interface LoginParams {
   readonly email: string;
   readonly password: string;
 }
-
-// export const LoginAPI = createAsyncThunk(
-//   "LoginAPI",
-//   async (params: LoginParams) => {
-//     try {
-//       const URL: string = `${BACK_URL}/users/login`;
-//
-//       const res = await client.post(URL, params);
-//       return res.data.response;
-//     } catch (e: any) {
-//       if (!e.response) {
-//         throw error;
-//       }
-//       return isRejectedWithValue(e.response.data());
-//     }
-//   },
-// );
 
 export const LoginAPI = async (params: LoginParams) => {
   const URL: string = `${USERS_URL}/login`;
@@ -140,7 +120,7 @@ export const SignupAPI = async (params: SignupParams) => {
 };
 
 export const SendEmail = async (email: string) => {
-  let URL = 'users/send-email';
+  let URL = `${USERS_URL}/send-email`;
   try {
     const res = await client.post(URL, { email });
     return res;
@@ -161,7 +141,7 @@ export const VerifyEmail = async (email: string) => {
   }
 };
 
-export interface PasswordResetParsms {
+export interface PasswordResetParams {
   email: string;
   password: string;
   confirmPassword?: string;
@@ -170,8 +150,8 @@ export interface PasswordResetParsms {
 export const PasswordReset = async ({
   email,
   password,
-}: PasswordResetParsms) => {
-  let URL = 'users/password/reset';
+}: PasswordResetParams) => {
+  const URL: string = `${USERS_URL}/password/reset`;
   try {
     const res = await client.post(URL, { email, password });
     return res;
