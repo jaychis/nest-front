@@ -17,6 +17,8 @@ import { FaComment } from 'react-icons/fa';
 import vLogo from '../../assets/img/v-check.png';
 import xLogo from '../../assets/img/x-check.png';
 import Alert from '../../components/Alert';
+import styled from 'styled-components';
+import { Input } from 'antd';
 
 interface Props {
   readonly onSwitchView: () => void;
@@ -94,7 +96,6 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
               ...validSignup,
               email: response,
             });
-            setShowEmailVerification(response === true);
           })
           .catch((err) => console.error(err));
       }, 1000); // 1000ms
@@ -103,7 +104,8 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
   }, [signup.email]);
 
   const handleEmailVerification = async () => {
-    alert('Email verification process initiated.');
+    if(!validSignup.email) return alert('사용할 수 없는 이메일 입니다.')
+    else alert('메일이 전송되었습니다.');
 
     const response = await UsersVerifyEmailAPI({ email: signup.email });
     if (!response) return;
@@ -246,32 +248,15 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
   const [finalVerificationCodeCheck, setFinalVerificationCodeCheck] =
     useState<boolean>(false);
   const compareVerificationCodes = async () => {
-    console.log('verificationCodeComparison : ', verificationCodeComparison);
-    console.log(
-      'inputVerificationCodeComparison : ',
-      inputVerificationCodeComparison,
-    );
+    
     if (verificationCodeComparison === inputVerificationCodeComparison) {
-      alert('동일');
+      alert('인증이 완료 되었습니다.');
       setFinalVerificationCodeCheck(true);
-    }
+    }else alert('번호가 일치하지 않습니다.')
   };
-
+  
   return (
-    <div
-      style={{
-        backgroundColor: '#fff',
-        borderRadius: '25px',
-        padding: '25px',
-        minWidth: '400px',
-        maxWidth: '600px',
-        width: '80%',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-      }}
-    >
+    <SignUpContainer>
       {showAlert && (
         <Alert
           message="회원가입이 완료되었습니다."
@@ -279,383 +264,245 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
           type="success"
         />
       )}
-      <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+      <Title>
         <h2>회원가입</h2>
-      </div>
+      </Title>
 
-      <form>
-        <div
-          style={{
-            position: 'relative',
-            width: '100%',
-            marginBottom: '10px',
-          }}
+      <InputContainer>
+        <StyledInput
+          width={'55%'}
+          placeholder="이메일 *"
+          type="email"
+          id="email"
+          name="email"
+          disabled={finalVerificationCodeCheck}
+          value={signup.email}
+          onChange={(value) =>
+          handleChange({
+          name: value.target.name,
+          value: value.target.value,
+          })
+          }
+          required
+        />
+        <VerificationButton
+          onClick={handleEmailVerification}
+          disabled={finalVerificationCodeCheck}
         >
-          <div style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
-            <input
-              style={{
-                width: showEmailVerification ? '60%' : '100%',
-                padding: '10px',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                marginRight: '10px',
-              }}
-              placeholder="이메일 *"
-              type="email"
-              id="email"
-              name="email"
-              disabled={finalVerificationCodeCheck}
-              value={signup.email}
-              onChange={(value) =>
-                handleChange({
-                  name: value.target.name,
-                  value: value.target.value,
-                })
-              }
-              required
-            />
+          이메일 인증
+        </VerificationButton>
 
-            {showEmailVerification && (
-              <>
-                <button
-                  onClick={handleEmailVerification}
-                  disabled={finalVerificationCodeCheck}
-                  style={{
-                    padding: '10px 20px',
-                    width: '40%',
-                    borderRadius: '5px',
-                    border: 'none',
-                    backgroundColor: '#84d7fb',
-                    color: 'white',
-                    cursor: 'pointer',
-                  }}
-                >
-                  이메일 인증
-                </button>
-              </>
-            )}
-          </div>
-
-          {validSignup.email === null ? null : validSignup.email === true ? (
-            <img
-              src={vLogo}
-              alt={'v logo'}
-              style={{
-                width: '20px',
-                height: '20px',
-                position: 'absolute',
-                right: '165px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-              }}
-            />
-          ) : (
-            <img
-              src={xLogo}
-              alt={'x logo'}
-              style={{
-                width: '20px',
-                height: '20px',
-                position: 'absolute',
-                right: '17px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-              }}
-            />
-          )}
-        </div>
-
-        {verificationCodeCheck && (
-          <>
-            <div
-              style={{
-                position: 'relative',
-                width: '100%',
-                marginBottom: '10px',
-              }}
-            >
-              <div
-                style={{ width: '100%', display: 'flex', alignItems: 'center' }}
-              >
-                <input
-                  style={{
-                    width: '60%',
-                    padding: '10px',
-                    border: '1px solid #ddd',
-                    borderRadius: '4px',
-                    marginRight: '10px',
-                  }}
-                  onChange={(value) =>
-                    verificationCodeHandleChange({
-                      name: value.target.name,
-                      value: value.target.value,
-                    })
-                  }
-                />
-                <button
-                  onClick={compareVerificationCodes}
-                  style={{
-                    padding: '10px 20px',
-                    width: '40%',
-                    borderRadius: '5px',
-                    border: 'none',
-                    backgroundColor: '#84d7fb',
-                    color: 'white',
-                    cursor: 'pointer',
-                  }}
-                >
-                  인증번호 확인
-                </button>
-              </div>
-            </div>
-          </>
-        )}
-        <div
-          style={{
-            position: 'relative',
-            width: '100%',
-            marginBottom: '10px',
-          }}
-        >
-          <input
-            style={styles.input}
+        {validSignup.email === null ? null : validSignup.email === true ? (
+        <Icon right={'41%'} src={vLogo} alt={'v logo'}/>) 
+        : (
+        <Icon right={'41%'} src={xLogo} alt={'x logo'}/>)}
+      </InputContainer>
+          
+      <InputContainer>
+          <StyledInput
+            width={'55%'}
+            placeholder="인증번호 *"
+            onChange={(value) =>
+            verificationCodeHandleChange({
+            name: value.target.name,
+            value: value.target.value,
+            })}
+          />
+          <VerificationButton
+            onClick={compareVerificationCodes}
+          >
+            인증번호 확인
+          </VerificationButton>
+      </InputContainer>
+        
+      <InputContainer>
+          <StyledInput
+            width={'95%'}
             placeholder="닉네임 *"
             type="text"
             id="nickname"
             name="nickname"
             value={signup.nickname}
             onChange={(value) =>
-              handleChange({
-                name: value.target.name,
-                value: value.target.value,
-              })
-            }
+            handleChange({
+            name: value.target.name,
+            value: value.target.value,
+            })}
             required
           />
+
           {validSignup.nickname === null ? null : validSignup.nickname ===
             true ? (
-            <img
-              src={vLogo}
-              alt={'v logo'}
-              style={{
-                width: '20px',
-                height: '20px',
-                position: 'absolute',
-                right: '17px',
-                top: '40%',
-                transform: 'translateY(-50%)',
-              }}
-            />
+            <Icon right={'10px'}src={vLogo} alt={'v logo'}/>
           ) : (
-            <img
-              src={xLogo}
-              alt={'x logo'}
-              style={{
-                width: '20px',
-                height: '20px',
-                position: 'absolute',
-                right: '17px',
-                top: '40%',
-                transform: 'translateY(-50%)',
-              }}
-            />
+            <Icon right={'10px'}src={xLogo} alt={'x logo'}/>
           )}
-        </div>
+      </InputContainer>
 
-        <div
-          style={{
-            position: 'relative',
-            width: '100%',
-            marginBottom: '10px',
-          }}
-        >
-          <input
-            style={styles.input}
-            placeholder="비밀번호 *"
-            type="password"
-            id="password"
-            name="password"
-            value={signup.password}
-            onChange={(value) =>
-              handleChange({
-                name: value.target.name,
-                value: value.target.value,
-              })
-            }
-            required
-          />
-        </div>
+      <InputContainer>
+        <StyledInput
+          width={'95%'}
+          placeholder="비밀번호 *"
+          type="password"
+          id="password"
+          name="password"
+          value={signup.password}
+          onChange={(value) =>
+          handleChange({
+          name: value.target.name,
+          value: value.target.value,
+          })
+          }
+          required
+        />
+      </InputContainer>
+            
+      <InputContainer>
+        <StyledInput
+          width={'95%'}
+          placeholder="비밀번호 확인 *"
+          type="password"
+          id="confirmPassword"
+          name="confirmPassword"
+          value={signup.confirmPassword}
+          onChange={(value) =>
+          handleChange({
+          name: value.target.name,
+          value: value.target.value,
+          })
+          }
+          required
+        />
 
-        <div
-          style={{
-            position: 'relative',
-            width: '100%',
-            marginBottom: '10px',
-          }}
-        >
-          <input
-            style={styles.input}
-            placeholder="비밀번호 확인 *"
-            type="password"
-            id="confirmPassword"
-            name="confirmPassword"
-            value={signup.confirmPassword}
-            onChange={(value) =>
-              handleChange({
-                name: value.target.name,
-                value: value.target.value,
-              })
-            }
-            required
-          />
+        {validPassword && (<Icon right={'10px'}src={vLogo} alt={'v logo'}/>)}
 
-          {validPassword && (
-            <img
-              src={vLogo}
-              alt={'v logo'}
-              style={{
-                width: '20px',
-                height: '20px',
-                position: 'absolute',
-                right: '17px',
-                top: '40%',
-                transform: 'translateY(-50%)',
-              }}
-            />
-          )}
+        {!validPassword && signup.confirmPassword.length > 0 && (<Icon right={'10px'}src={xLogo} alt={'x logo'}/> )}
+      </InputContainer>
 
-          {!validPassword && signup.confirmPassword.length > 0 && (
-            <img
-              src={xLogo}
-              alt={'x logo'}
-              style={{
-                width: '20px',
-                height: '20px',
-                position: 'absolute',
-                right: '17px',
-                top: '40%',
-                transform: 'translateY(-50%)',
-              }}
-            />
-          )}
-        </div>
+      <InputContainer>
+        <StyledInput
+          width={'95%'}
+          placeholder="전화번호 *"
+          type="text"
+          id="phone"
+          name="phone"
+          value={signup.phone}
+          onChange={(value) =>
+          handleChange({
+          name: value.target.name,
+          value: value.target.value,
+          })
+          }
+          required
+        />
+        {validSignup.phone === null ? null : validSignup.phone === true ? 
+        ( <Icon right={'10px'}src={vLogo} alt={'v logo'}/>) : 
+        ( <Icon right={'10px'}src={xLogo} alt={'x logo'}/>)}
+      </InputContainer>
 
-        <div
-          style={{
-            position: 'relative',
-            width: '100%',
-            marginBottom: '10px',
-          }}
-        >
-          <input
-            style={styles.input}
-            placeholder="전화번호 *"
-            type="text"
-            id="phone"
-            name="phone"
-            value={signup.phone}
-            onChange={(value) =>
-              handleChange({
-                name: value.target.name,
-                value: value.target.value,
-              })
-            }
-            required
-          />
-          {validSignup.phone === null ? null : validSignup.phone === true ? (
-            <img
-              src={vLogo}
-              alt={'v logo'}
-              style={{
-                width: '20px',
-                height: '20px',
-                position: 'absolute',
-                right: '17px',
-                top: '40%',
-                transform: 'translateY(-50%)',
-              }}
-            />
-          ) : (
-            <img
-              src={xLogo}
-              alt={'x logo'}
-              style={{
-                width: '20px',
-                height: '20px',
-                position: 'absolute',
-                right: '17px',
-                top: '40%',
-                transform: 'translateY(-50%)',
-              }}
-            />
-          )}
-        </div>
-      </form>
-
-      <div
-        style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}
-      >
-        <button
+      <ButtonContainer>
+        <Button
           type="submit"
-          style={styles.submitButton}
           onClick={handleSubmit}
         >
           회원가입
-        </button>
-      </div>
-      <div style={{ width: '100%', padding: '10px 0', textAlign: 'center' }}>
-        <button onClick={onSwitchView} style={styles.switchButton}>
+        </Button>
+      </ButtonContainer>
+      <ButtonContainer>
+        <Button onClick={onSwitchView}>
           로그인으로 전환
-        </button>
-      </div>
-    </div>
+        </Button>
+      </ButtonContainer>
+    </SignUpContainer>
   );
 };
 
-const styles = {
-  socialButton: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '10px',
-    border: '1px solid #ccc',
-    backgroundColor: 'white',
-    borderRadius: '10px',
-    cursor: 'pointer',
-    height: '40px',
-  },
-  socialLogo: {
-    width: '20px',
-    height: '20px',
-    marginRight: '10px',
-  },
-  input: {
-    padding: '10px',
-    border: '1px solid #ddd',
-    borderRadius: '4px',
-    marginBottom: '10px',
-    boxSizing: 'border-box' as 'border-box',
-    width: '97%',
-    height: '40px',
-  },
-  submitButton: {
-    padding: '10px 20px',
-    width: '200px',
-    borderRadius: '25px',
-    border: 'none',
-    backgroundColor: '#84d7fb',
-    color: 'white',
-    cursor: 'pointer',
-  },
-  switchButton: {
-    padding: '10px 20px',
-    width: '200px',
-    borderRadius: '25px',
-    border: 'none',
-    backgroundColor: '#000',
-    color: 'white',
-    cursor: 'pointer',
-  },
-};
+const SignUpContainer = styled.div`
+  background-color: #fff;
+  border-radius: 25px;
+  padding: 25px;
+  min-width: 400px;
+  max-width: 600px;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const Title = styled.div`
+  text-align: center;
+  margin-bottom: 20px;
+`;
+
+const InputContainer = styled.div`
+  position: relative;
+  width: 100%;
+  margin-bottom: 10px;
+`;
+
+const StyledInput = styled.input<{width: string}>`
+  width: ${(props) => props.width};
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-right: 10px;
+`;
+
+const VerificationButton = styled.button`
+  padding: 10px 20px;
+  width: 35%;
+  border-radius: 5px;
+  border: none;
+  background-color: #84d7fb;
+  color: white;
+  cursor: pointer;
+
+`
+
+const Icon = styled.img<{right: string}>`
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  right: ${(props) => (props.right)};
+  top: 50%;
+  transform: translateY(-50%);
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+`;
+
+const Button = styled.button`
+  padding: 10px 20px;
+  width: 200px;
+  border-radius: 25px;
+  border: none;
+  background-color: #84d7fb;
+  color: white;
+  cursor: pointer;
+`;
+
+const SwitchButtonContainer = styled.div`
+  width: 100%;
+  padding: 10px 0;
+  text-align: center;
+`;
+
+const SwitchButton = styled.button`
+  padding: 10px 20px;
+  width: 200px;
+  border-radius: 25px;
+  border: none;
+  background-color: #000;
+  color: white;
+  cursor: pointer;
+`;
+
+const AlertContainer = styled.div`
+  margin-bottom: 20px;
+`;
 
 export default Signup;
