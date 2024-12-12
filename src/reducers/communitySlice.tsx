@@ -1,13 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { CommunityVisibilityType } from '../_common/collectionTypes';
 
 export interface SelectCommunityParams {
   readonly id: string;
-  readonly name: string;
-  readonly description: string;
-  readonly visibility: string;
-  readonly userIds: [];
-  readonly banner: string | null;
-  readonly icon: string | null;
+  readonly name?: string | null;
+  readonly description?: string | null;
+  readonly visibility: CommunityVisibilityType;
+  readonly banner?: string | null;
+  readonly icon?: string | null;
+  readonly creator_user_id: string;
 }
 
 const initialState: SelectCommunityParams = {
@@ -17,7 +18,7 @@ const initialState: SelectCommunityParams = {
   visibility: 'PUBLIC',
   banner: null,
   icon: null,
-  userIds: []
+  creator_user_id: '',
 };
 
 const communitySlice = createSlice({
@@ -31,7 +32,7 @@ const communitySlice = createSlice({
       state.banner = action.payload.banner;
       state.icon = action.payload.icon;
       state.visibility = action.payload.visibility;
-      state.userIds = action.payload.userIds;
+      state.creator_user_id = action.payload.creator_user_id;
     },
     setCommunity(state, action: PayloadAction<SelectCommunityParams>) {
       state.id = action.payload.id;
@@ -40,7 +41,7 @@ const communitySlice = createSlice({
       state.visibility = action.payload.visibility;
       state.banner = action.payload.banner;
       state.icon = action.payload.icon;
-      state.userIds = action.payload.userIds
+      state.creator_user_id = action.payload.creator_user_id;
     },
   },
 });

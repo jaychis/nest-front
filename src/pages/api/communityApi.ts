@@ -102,7 +102,7 @@ export interface CommunityUpdateParams {
   readonly description?: string;
   readonly icon?: string;
   readonly banner?: string;
-  readonly visibility: string;
+  readonly visibility: CommunityVisibilityType;
 }
 
 export const CommunityUpdateAPI = async (params: CommunityUpdateParams) => {

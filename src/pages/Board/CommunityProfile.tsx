@@ -3,7 +3,7 @@ import logo from '../../assets/img/panda_logo.png';
 import DropDown from '../../components/Dropdown';
 import { useState, useEffect } from 'react';
 import React from 'react';
-import { CommunityUpdateAPI, CommunityUpdateParams } from '../api/communityApi';
+import { CommunityUpdateAPI } from '../api/communityApi';
 import Modal from '../../components/Modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModalState, UserModalState } from '../../reducers/modalStateSlice';
@@ -13,28 +13,34 @@ import { AwsImageUploadFunctionalityReturnType } from '../../_common/imageUpload
 import { GetSearchPeopleAPI } from '../api/searchApi';
 import vCheck from '../../assets/img/v-check.png';
 import Confirm from '../../components/Confirm';
+import { SelectCommunityParams } from '../../reducers/communitySlice';
 
 const CommunityProfile = () => {
   interface User {
-    nickname: string;
-    id: string[];
+    readonly nickname: string;
+    readonly id: string[];
   }
+  const USER_ID: string = localStorage.getItem('id') as string;
 
   const dropDownRef = React.useRef<HTMLDivElement>(null);
   const editButtonRef = React.useRef<HTMLDivElement>(null);
 
-  const selectCommunity: CommunityUpdateParams = useSelector(
+  const selectCommunity: SelectCommunityParams = useSelector(
     (state: any) => state.community,
   );
+
   const modalState: UserModalState = useSelector(
     (state: RootState) => state.modalState,
   );
+
   const dispatch = useDispatch();
   const editList: string[] = [
     '이름 변경',
     '배경 변경',
     '프로필 변경',
-    '초대하기',
+    ...(USER_ID === selectCommunity.creator_user_id
+      ? ['초대하기', '강퇴처리하기']
+      : []),
     '탈퇴하기',
   ];
   const [searchResultList, setSearchResultList] = useState<User[]>([]);
@@ -73,9 +79,10 @@ const CommunityProfile = () => {
     try {
       if (value) {
         const res = await GetSearchPeopleAPI({ query: value });
+        console.log('handleUserSearchChange res : ', res);
         if (res && res.data && res.data.response) {
           setSearchResultList(
-            res.data.response.map((user: any) => ({
+            res.data.response.map((user: User) => ({
               nickname: user.nickname,
               id: user.id,
             })),
@@ -88,7 +95,9 @@ const CommunityProfile = () => {
   };
 
   const handleClickOk = () => {
-    CommunityUpdateAPI({ ...selectCommunity });
+    // CommunityUpdateAPI({
+    //   id: selectCommunity.id,
+    // });
     alert('탈퇴 되었습니다.');
     setEditType('');
   };
@@ -215,7 +224,7 @@ const CommunityProfile = () => {
               )}
               <SubmitButton
                 onClick={() => {
-                  CommunityUpdateAPI(selectCommunity);
+                  // CommunityUpdateAPI(selectCommunity);
                   dispatch(setModalState(!modalState.modalState));
                   handleModal();
                   alert('멤버가 변경 되었습니다.');
