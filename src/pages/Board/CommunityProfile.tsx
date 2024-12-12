@@ -30,7 +30,7 @@ const CommunityProfile = () => {
     (state: RootState) => state.modalState,
   );
   const dispatch = useDispatch();
-  const editList = [
+  const editList: string[] = [
     '이름 변경',
     '배경 변경',
     '프로필 변경',
@@ -45,13 +45,10 @@ const CommunityProfile = () => {
   const [editProfile, setEditProfile] = useState<
     AwsImageUploadFunctionalityReturnType | string
   >();
-  const [editUserList, setEditUserList] = useState<string[]>(
-    selectCommunity.userIds ? [...selectCommunity.userIds] : [],
-  );
+
   const [editType, setEditType] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [view, setView] = useState<boolean>(false);
-  const [deleteUserId, setDeleteUserId] = useState<string[]>(['']);
 
   const communityEditHandler = (item: string) => {
     if (item === '초대하기' && selectCommunity.visibility === 'PUBLIC') {
@@ -90,17 +87,8 @@ const CommunityProfile = () => {
     }
   };
 
-  const handleUserSelect = (userId: string) => {
-    if (editUserList?.includes(userId)) {
-      const deleteId = editUserList.filter((prevState) => prevState !== userId);
-      setEditUserList(deleteId);
-    } else {
-      setEditUserList((prevState) => [...(prevState || []), userId]);
-    }
-  };
-
   const handleClickOk = () => {
-    CommunityUpdateAPI({ ...selectCommunity, userIds: deleteUserId });
+    CommunityUpdateAPI({ ...selectCommunity });
     alert('탈퇴 되었습니다.');
     setEditType('');
   };
@@ -128,15 +116,6 @@ const CommunityProfile = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (editType === '탈퇴하기') setIsOpen(false);
-    setDeleteUserId(
-      editUserList.filter(
-        (prevState) => prevState !== localStorage.getItem('id'),
-      ),
-    );
-  }, [editType]);
-
   return (
     <>
       <CommunityInfoContainer>
@@ -159,7 +138,8 @@ const CommunityProfile = () => {
               <SubmitButton
                 onClick={() => {
                   CommunityUpdateAPI({
-                    ...selectCommunity,
+                    id: selectCommunity.id,
+                    visibility: selectCommunity.visibility,
                     name: editCommunityName,
                   });
                   dispatch(setModalState(!modalState.modalState));
@@ -179,7 +159,8 @@ const CommunityProfile = () => {
               <SubmitButton
                 onClick={() => {
                   CommunityUpdateAPI({
-                    ...selectCommunity,
+                    id: selectCommunity.id,
+                    visibility: selectCommunity.visibility,
                     banner: editBackground as string,
                   });
                   dispatch(setModalState(!modalState.modalState));
@@ -199,7 +180,8 @@ const CommunityProfile = () => {
               <SubmitButton
                 onClick={() => {
                   CommunityUpdateAPI({
-                    ...selectCommunity,
+                    id: selectCommunity.id,
+                    visibility: selectCommunity.visibility,
                     icon: editProfile as string,
                   });
                   dispatch(setModalState(!modalState.modalState));
@@ -223,17 +205,9 @@ const CommunityProfile = () => {
                 <SearchResultList>
                   {searchResultList.map((result, index) => (
                     <>
-                      <SearchResultItem
-                        key={index}
-                        index={index}
-                        onClick={() =>
-                          handleUserSelect(result.id.toLocaleString())
-                        }
-                      >
+                      <SearchResultItem key={index} index={index}>
                         {result.nickname}
-                        {editUserList?.includes(result.id.toLocaleString()) ? (
-                          <VCheckImg src={vCheck} />
-                        ) : null}
+                        <VCheckImg src={vCheck} />
                       </SearchResultItem>
                     </>
                   ))}
@@ -241,10 +215,7 @@ const CommunityProfile = () => {
               )}
               <SubmitButton
                 onClick={() => {
-                  CommunityUpdateAPI({
-                    ...selectCommunity,
-                    userIds: editUserList,
-                  });
+                  CommunityUpdateAPI(selectCommunity);
                   dispatch(setModalState(!modalState.modalState));
                   handleModal();
                   alert('멤버가 변경 되었습니다.');

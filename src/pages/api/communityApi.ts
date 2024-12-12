@@ -12,7 +12,7 @@ export const GetCommunitiesNameAPI = async ({
   name,
 }: GetCommunitiesNameParam) => {
   try {
-    const URL: string = `${COMMUNITY_URL}/get/communities/name/${name}`;
+    const URL: string = `${COMMUNITY_URL}/get/communities/${name}`;
 
     const res = await client.get(URL);
     console.log(res);
@@ -50,14 +50,9 @@ export const CommunitySubmitAPI = async (params: CommunitySubmitParams) => {
 export interface CommunityListParams {
   readonly page: number;
   readonly take: number;
-  readonly id?: string;
 }
 
-export const CommunityListAPI = async ({
-  page,
-  take,
-  id,
-}: CommunityListParams) => {
+export const CommunityListAPI = async ({ page, take }: CommunityListParams) => {
   try {
     const URL: string = `${COMMUNITY_URL}?take=${take}&page=${page}`;
 
@@ -103,21 +98,19 @@ export const CommunityDeleteAPI = async (param: CommunityDeleteParam) => {
 
 export interface CommunityUpdateParams {
   readonly id: string;
-  readonly name: string;
-  readonly description: string;
-  readonly visibility: string;
-  readonly userIds?: string[];
+  readonly name?: string;
+  readonly description?: string;
   readonly icon?: string;
   readonly banner?: string;
+  readonly visibility: string;
 }
 
 export const CommunityUpdateAPI = async (params: CommunityUpdateParams) => {
   try {
-    console.log("userIds in API call:", params.userIds); 
     const URL: string = `${COMMUNITY_URL}/`;
 
     const res = await client.patch(URL, params);
-    console.log(res.data)
+    console.log(res.data);
     return res;
   } catch (e: any) {
     errorHandling({ text: 'CommunityUpdateAPI', error: e });
