@@ -48,19 +48,6 @@ const CardsContainer = ({ children }: ContainerProps) => {
   );
 };
 
-const submitButtonStyle = {
-  backgroundColor: 'black',
-  color: 'white',
-  border: 'none',
-  padding: '10px 20px',
-  borderRadius: '5px',
-  fontSize: '16px',
-  cursor: 'pointer',
-  transition: 'background-color 0.3s ease',
-  marginLeft: 'auto',
-  marginBottom: '15px',
-};
-
 const UsersInquiry = () => {
   const [params, setParams] = useSearchParams();
   const [list, setList] = useState<InquiryType[]>([]);
@@ -143,14 +130,12 @@ const UsersInquiry = () => {
           )}
 
           {active === 'Q&A' && (
-            <button
-              style={submitButtonStyle}
-              onClick={() => {
-                setIsopen(true);
-              }}
-            >
+            <SubmitButton
+            onClick={() => {
+            setIsopen(true);
+            }}>
               1:1 문의하기
-            </button>
+            </SubmitButton>
           )}
 
           {list.length > 0 ? (
@@ -221,4 +206,17 @@ const ActiveButton = styled(Button)`
   border-right: none;
   border-left: none;
   color: #007bff;
+`;
+
+const SubmitButton = styled.button`
+  background-color: black;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-left: auto;
+  margin-bottom: 15px;
 `;
