@@ -6,6 +6,7 @@ import { FaComment } from 'react-icons/fa';
 import Alert from '../../components/Alert';
 import { LoginAPI, LoginParams, RefreshTokenAPI } from '../api/userApi';
 import { KakaoOAuthLoginAPI, UsersNaverOAuthSignUpAPI } from '../api/oAuthApi';
+import styled from 'styled-components';
 
 type modalType = 'login' | 'signup' | 'recovery' | 'verity';
 
@@ -270,34 +271,33 @@ const Login = ({
   }, []);
 
   return (
-    <div style={styles.container}>
+    <Container>
       {showAlert && (
         <Alert
-          message="로그인이 완료되었습니다."
-          onClose={() => setShowAlert(false)}
-          type="success"
-        />
+        message="로그인이 완료되었습니다."
+        onClose={() => setShowAlert(false)}
+        type="success"
+      />
       )}
       <div>
-        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+        <Header>
           <h2>로그인</h2>
-        </div>
+        </Header>
 
-        <div style={styles.socialButtonsContainer}>
-          <button style={styles.socialButton} onClick={kakaoOauthLogin}>
-            <FaComment style={styles.socialLogo} />
-            카카오로 로그인
-          </button>
-        </div>
-        <div style={styles.orContainer}>
-          <div style={styles.orLine}></div>
-          <div style={styles.orText}>OR</div>
-          <div style={styles.orLine}></div>
-        </div>
+        <SocialButtonsContainer>
+          <SocialButton onClick={kakaoOauthLogin}>
+            <FaComment /> 카카오로 로그인
+          </SocialButton>
+        </SocialButtonsContainer>
+
+        <OrContainer>
+          <OrLine />
+          <OrText>OR</OrText>
+          <OrLine />
+        </OrContainer>
 
         <form>
-          <input
-            style={styles.input}
+          <Input
             placeholder="이메일 *"
             type="email"
             id="email"
@@ -311,165 +311,161 @@ const Login = ({
             onKeyDown={handleKeyDown}
             required
           />
-          <input
-            style={styles.input}
+          <Input
+            placeholder="비밀번호 *"
+            type="password"
+            id="password"
+            name="password"
             onChange={(value) =>
               handleChange({
                 name: value.target.name,
                 value: value.target.value,
               })
             }
-            placeholder="비밀번호 *"
-            type="password"
-            id="password"
-            name="password"
             onKeyDown={handleKeyDown}
             required
           />
-          {errorMessage && <div style={styles.errorText}>{errorMessage}</div>}
-          <div style={styles.forgotPasswordContainer}>
-            <a
-              onClick={() => {
-                onSwitchView('recovery');
-              }}
-              style={styles.forgotPasswordLink}
-            >
+          {errorMessage && <ErrorText>{errorMessage}</ErrorText>}
+          <ForgotPasswordContainer>
+            <ForgotPasswordLink onClick={() => onSwitchView('recovery')}>
               비밀번호를 잊으셨나요?
-            </a>
-          </div>
+            </ForgotPasswordLink>
+          </ForgotPasswordContainer>
         </form>
 
-        <div style={{ width: '100%', padding: '10px 0', textAlign: 'center' }}>
-          <button
-            type="submit"
-            style={styles.submitButton}
-            onClick={handleSubmit}
-          >
+        <SubmitContainer>
+          <SubmitButton type="submit" onClick={handleSubmit}>
             로그인
-          </button>
-        </div>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            marginTop: '0px',
-          }}
-        >
-          <button onClick={goSignup} style={styles.switchButton}>
-            회원가입
-          </button>
-        </div>
+          </SubmitButton>
+        </SubmitContainer>
+        <SwitchContainer>
+          <SwitchButton onClick={goSignup}>회원가입</SwitchButton>
+        </SwitchContainer>
       </div>
-    </div>
+    </Container>
   );
 };
 
-const styles = {
-  container: {
-    backgroundColor: '#fff',
-    borderRadius: '25px',
-    padding: '20px',
-    minWidth: '400px',
-    maxWidth: '600px',
-    width: '80%',
-    display: 'flex',
-    flexDirection: 'column' as 'column',
-    justifyContent: 'space-between',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-    height: '400px', // 높이를 회원가입과 맞춤
-  },
-  header: {
-    textAlign: 'center' as 'center',
-    marginBottom: '20px',
-  },
-  socialButtonsContainer: {
-    display: 'flex',
-    flexDirection: 'column' as 'column',
-    gap: '10px',
-  },
-  socialButton: {
-    display: 'flex',
-    alignItems: 'center' as 'center',
-    justifyContent: 'center' as 'center',
-    padding: '10px',
-    border: '1px solid #ccc',
-    backgroundColor: 'white',
-    borderRadius: '10px',
-    cursor: 'pointer',
-    height: '40px',
-  },
-  socialLogo: {
-    width: '20px',
-    height: '20px',
-    marginRight: '10px',
-  },
-  orContainer: {
-    display: 'flex',
-    alignItems: 'center' as 'center',
-    textAlign: 'center' as 'center',
-    color: '#aaa',
-    margin: '20px 0',
-  },
-  orLine: {
-    flex: 1,
-    height: '1px',
-    background: '#aaa',
-  },
-  orText: {
-    margin: '0 10px',
-  },
-  input: {
-    padding: '10px',
-    border: '1px solid #ddd',
-    borderRadius: '4px',
-    marginBottom: '10px',
-    boxSizing: 'border-box' as 'border-box',
-    width: '100%',
-    height: '40px',
-  },
-  forgotPasswordContainer: {
-    width: '100%',
-    padding: '10px 0',
-    textAlign: 'right' as 'right',
-  },
-  forgotPasswordLink: {
-    fontSize: '14px',
-    color: '#007BFF',
-  },
-  submitContainer: {
-    display: 'flex',
-    justifyContent: 'center' as 'center',
-    marginTop: '20px',
-  },
-  submitButton: {
-    padding: '10px 20px',
-    width: '200px',
-    borderRadius: '25px',
-    border: 'none',
-    backgroundColor: '#84d7fb',
-    color: 'white',
-    cursor: 'pointer',
-  },
-  switchContainer: {
-    width: '100%',
-    padding: '10px 0',
-    textAlign: 'center' as 'center',
-  },
-  switchButton: {
-    padding: '10px 20px',
-    width: '200px',
-    borderRadius: '25px',
-    border: 'none',
-    backgroundColor: 'red',
-    color: 'white',
-    cursor: 'pointer',
-  },
-  errorText: {
-    color: 'red',
-    textAlign: 'center' as 'center',
-    marginTop: '10px',
-    marginBottom: '10px',
-  },
-};
+const Container = styled.div`
+  background-color: #fff;
+  border-radius: 25px;
+  padding: 20px;
+  min-width: 400px;
+  max-width: 600px;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  height: 400px;
+`;
+
+const Header = styled.div`
+  text-align: center;
+  margin-bottom: 20px;
+`;
+
+const SocialButtonsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+
+const SocialButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border: 1px solid #ccc;
+  background-color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  height: 40px;
+  svg {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+  }
+`;
+
+const OrContainer = styled.div`
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #aaa;
+  margin: 20px 0;
+`;
+
+const OrLine = styled.div`
+  flex: 1;
+  height: 1px;
+  background: #aaa;
+`;
+
+const OrText = styled.div`
+  margin: 0 10px;
+`;
+
+const Input = styled.input`
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  width: 100%;
+  height: 40px;
+`;
+
+const ForgotPasswordContainer = styled.div`
+  width: 100%;
+  padding: 10px 0;
+  text-align: right;
+`;
+
+const ForgotPasswordLink = styled.a`
+  font-size: 14px;
+  color: #007bff;
+  cursor: pointer;
+`;
+
+const SubmitContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+`;
+
+const SubmitButton = styled.button`
+  padding: 10px 20px;
+  width: 200px;
+  border-radius: 25px;
+  border: none;
+  background-color: #84d7fb;
+  color: white;
+  cursor: pointer;
+`;
+
+const SwitchContainer = styled.div`
+  width: 100%;
+  padding: 10px 0;
+  text-align: center;
+`;
+
+const SwitchButton = styled.button`
+  padding: 10px 20px;
+  width: 200px;
+  border-radius: 25px;
+  border: none;
+  background-color: red;
+  color: white;
+  cursor: pointer;
+`;
+
+const ErrorText = styled.div`
+  color: red;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+`;
+
 
 export default Login;
