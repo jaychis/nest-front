@@ -27,7 +27,7 @@ const InquiryList = ({
 }: InquiryProps) => {
   const contentWrapperRef = React.useRef<HTMLDivElement>(null);
   const contentRef = React.useRef<HTMLDivElement>(null);
-  const CommentWrapperRef = React.useRef<HTMLDivElement>(null);
+  const CommentContainerRef = React.useRef<HTMLDivElement>(null);
   const CommentRef = React.useRef<HTMLDivElement>(null);
   const [isCollapse, setIsCollapse] = React.useState(false);
   const [textContent, setTextContent] = useState('');
@@ -95,7 +95,7 @@ const InquiryList = ({
     if (
       contentWrapperRef.current === null ||
       contentRef.current === null ||
-      CommentWrapperRef.current === null ||
+      CommentContainerRef.current === null ||
       CommentRef.current === null
     ) {
       return;
@@ -103,13 +103,13 @@ const InquiryList = ({
     if (contentWrapperRef.current.clientHeight > 0) {
       contentWrapperRef.current.style.height = '0';
       contentWrapperRef.current.style.margin = '0';
-      CommentWrapperRef.current.style.height = '0';
-      CommentWrapperRef.current.style.margin = '0';
+      CommentContainerRef.current.style.height = '0';
+      CommentContainerRef.current.style.margin = '0';
     } else {
       contentWrapperRef.current.style.height = `${contentRef.current.clientHeight}px`;
       contentWrapperRef.current.style.margin = '20px';
-      CommentWrapperRef.current.style.height = `${CommentRef.current.clientHeight + 30}px`;
-      CommentWrapperRef.current.style.margin = `20px`;
+      CommentContainerRef.current.style.height = `${CommentRef.current.clientHeight + 30}px`;
+      CommentContainerRef.current.style.margin = `20px`;
     }
     setIsCollapse((prev) => !prev);
   }, []);
@@ -133,80 +133,37 @@ const InquiryList = ({
         <Content ref={contentRef}>{textContent}</Content>
       </ContentWrapper>
       <hr style={{ border: '1px solid #f0f0f0', width: '95%' }} />
-      <CommentWrapper ref={CommentWrapperRef}>
+      <CommentContainer ref={CommentContainerRef}>
         {comment === undefined &&
         localStorage.getItem('nickname') === 'admin' ? (
           <Comment ref={CommentRef}>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                width: '95%',
-                margin: '10px',
-                border: '3px solid #ccc',
-                borderRadius: '30px',
-                padding: '10px',
-                marginLeft: '-0.5%',
-              }}
-            >
-              <textarea
-                style={{
-                  width: '100%',
-                  border: 'none',
-                  borderRadius: '14px',
-                  resize: 'vertical',
-                  boxSizing: 'border-box',
-                  outline: 'none',
-                }}
+            <HiddenAdminInputContainer>
+              <InputAdmin
                 value={commentContent}
                 onChange={handleCommentChange}
                 name={'content'}
-              ></textarea>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'flex-end',
-                  marginTop: '10px',
-                }}
-              >
-                <button
-                  style={{
-                    padding: '6px 12px',
-                    marginLeft: '5px',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                    fontSize: '14px',
-                    backgroundColor: '#f5f5f5',
-                    color: '#333',
-                  }}
+              ></InputAdmin>
+              <HiddenButtonContainer>
+                <StyledButton
+                color={'#333'}
+                backgroundColor={'#f5f5f5'}
                 >
                   Cancel
-                </button>
-                <button
-                  onClick={() => {
-                    submitComment();
-                  }}
-                  style={{
-                    padding: '6px 12px',
-                    marginLeft: '5px',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                    fontSize: '14px',
-                    backgroundColor: '#84d7fb',
-                    color: 'white',
-                  }}
+                </StyledButton>
+                <StyledButton
+                onClick={() => {submitComment();}}
+                backgroundColor= {'#84d7fb'}
+                color= {'white'}
                 >
                   Comment
-                </button>
-              </div>
-            </div>
+                </StyledButton>
+              </HiddenButtonContainer>
+            </HiddenAdminInputContainer>
           </Comment>
         ) : (
           <Comment ref={CommentRef}>{comment}</Comment>
         )}
-      </CommentWrapper>
+      </CommentContainer>
     </>
   );
 };
@@ -261,7 +218,7 @@ const Content = styled.div`
   font-weight: 100;
 `;
 
-const CommentWrapper = styled.div`
+const CommentContainer = styled.div`
   height: 0;
   width: 100%;
   overflow: hidden;
@@ -274,4 +231,41 @@ const CommentWrapper = styled.div`
 const Comment = styled.div`
   margin-left: 35px;
   font-weight: 100;
+`;
+
+const HiddenAdminInputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 95%;
+  margin: 10px;
+  border: 3px solid #ccc;
+  border-radius: 30px;
+  padding: 10px;
+  margin-left: -0.5%;
+`;
+
+const InputAdmin = styled.textarea`
+  width: 100%;
+  border: none;
+  border-radius: 14px;
+  resize: vertical;
+  box-sizing: border-box;
+  outline: none;
+`;
+
+const HiddenButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+`;
+
+const StyledButton = styled.button<{color:string, backgroundColor: string}>`
+  padding: 6px 12px;
+  margin-left: 5px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  background-color: ${(props) => props.backgroundColor || 'inherit'};
+  color: ${(props) => props.color || 'inherit'};
 `;
