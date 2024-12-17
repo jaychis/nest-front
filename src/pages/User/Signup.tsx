@@ -6,18 +6,18 @@ import {
   SignupAPI,
   SignupParams,
   LoginAPI,
+  UsersVerifyEmailAPI,
 } from '../api/userApi';
 import { CollectionTypes } from '../../_common/collectionTypes';
 import {
   isValidPasswordFormat,
   isValidPhoneNumber,
 } from '../../_common/passwordRegex';
-import { FaComment } from 'react-icons/fa';
 import vLogo from '../../assets/img/v-check.png';
 import xLogo from '../../assets/img/x-check.png';
 import Alert from '../../components/Alert';
 import styled from 'styled-components';
-import { SendEmail, VerifyEmail } from '../api/userApi';
+import { VerifyEmail } from '../api/userApi';
 
 interface Props {
   readonly onSwitchView: () => void;
@@ -75,25 +75,34 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
 
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [validPassword, setValidPassword] = useState<boolean>(false);
-  const [emailCode, setEmailCode] = useState<string>('')
+  const [showEmailVerification, setShowEmailVerification] =
+    useState<boolean>(false);
+  const [verificationCodeCheck, setVerificationCodeCheck] =
+    useState<boolean>(false);
+  const [verificationCodeComparison, setVerificationCodeComparison] =
+    useState<string>('');
+  const [inputVerificationCodeComparison, setInputVerificationCodeComparison] =
+    useState<string>('');
+  const [emailCode, setEmailCode] = useState<string>('');
+  const [verificationCode, setVerificationCode] = useState<string>('');
   const [verifyEmail, setVerifyEmail] = useState<boolean>(false);
-  
-  const sendEmailVerificationHandler = async (email:string) => {
-    if(!email) return alert('이메일을 입력해주세요')
-    await SendEmail(email)
-    alert('전송되었습니다.')
-  }
 
-  const codeVerifyHandler = async (email: string, verificationCode:string) => {
-    if(!emailCode) return alert('인증번호를 입력해주세요')
-    
-    const res = await VerifyEmail({email, verificationCode})
+  const sendEmailVerificationHandler = async (email: string) => {
+    if (!email) return alert('이메일을 입력해주세요');
+    const res = await VerifyEmail(email);
+    alert('전송되었습니다.');
+    setVerificationCode(res?.data.response.verification_code);
+  };
 
-    if(res && res.data && res.data.response.verification){
-      setVerifyEmail(true)
+  const codeVerifyHandler = async (emailCode: string) => {
+    if (!emailCode) return alert('인증번호를 입력해주세요');
+
+    if (emailCode.trim() === verificationCode) {
+      setVerifyEmail(true);
+    } else {
+      alert('인증번호가 일치하지 않습니다.');
     }
-    else{alert('인증번호가 일치하지 않습니다.')}
-  }
+  };
 
   useEffect(() => {
     if (signup.email.length >= 12) {
@@ -112,6 +121,19 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
       return () => clearTimeout(timeOutEmail);
     }
   }, [signup.email]);
+
+  const handleEmailVerification = async () => {
+    if (!validSignup.email) return alert('사용할 수 없는 이메일 입니다.');
+    else alert('메일이 전송되었습니다.');
+
+    const response = await UsersVerifyEmailAPI({ email: signup.email });
+    if (!response) return;
+
+    const emailCode: string = response.data.response?.verification_code;
+    console.log('emailCode : ', emailCode);
+    setVerificationCodeCheck(true);
+    setVerificationCodeComparison(emailCode);
+  };
 
   useEffect(() => {
     if (signup.nickname.length >= 3) {
@@ -172,6 +194,12 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
     });
   };
 
+  const verificationCodeHandleChange = (event: CollectionTypes) => {
+    const { value } = event;
+
+    setInputVerificationCodeComparison(value);
+  };
+
   const processLogin = async () => {
     try {
       const login = { email: signup.email, password: signup.password };
@@ -194,6 +222,9 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
 
   const handleSubmit: MouseEventHandler<HTMLButtonElement> = (event) => {
     if (event) event.preventDefault();
+
+    if (!finalVerificationCodeCheck)
+      return alert('이메일 인증을 진행해주세요.');
 
     if (
       !signup.email ||
@@ -233,6 +264,15 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
     }
   };
 
+  const [finalVerificationCodeCheck, setFinalVerificationCodeCheck] =
+    useState<boolean>(false);
+  const compareVerificationCodes = async () => {
+    if (verificationCodeComparison === inputVerificationCodeComparison) {
+      alert('인증이 완료 되었습니다.');
+      setFinalVerificationCodeCheck(true);
+    } else alert('번호가 일치하지 않습니다.');
+  };
+
   return (
     <SignUpContainer>
       {showAlert && (
@@ -244,142 +284,152 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
           />
         </AlertContainer>
       )}
-      <TitleContainer>
+      <Title>
         <h2>회원가입</h2>
-      </TitleContainer>
+      </Title>
 
-        <InputContainer>
-          <StyledInput
-            placeholder="이메일 *"
-            type="email"
-            id="email"
-            name="email"
-            value={signup.email}
-            onChange={(value) =>
-              handleChange({
-                name: value.target.name,
-                value: value.target.value,
-              })
-            }
-            required
-          />
-          {validSignup.email === null ? null : validSignup.email === true ? (
-            <Icon src={vLogo} alt="v logo" />
-          ) : (
-            <Icon src={xLogo} alt="x logo" />
-          )}
-        </InputContainer>
-        
-        {!verifyEmail ?
-         <InputContainer>
-         <StyledInput
-          style = {{width: '50%'}}
-           placeholder="인증 코드*"
-           type='text'
-           value={emailCode}
-           onChange={(value) => setEmailCode(value.target.value)}
-         />
-         <SubmitButton onClick = {() => {sendEmailVerificationHandler(signup.email)}} style = {{width: '35%', marginLeft: '2vw'}}>이메일로 받기</SubmitButton>
-        </InputContainer>
-        :
-        <>
-          <InputContainer>
-          <StyledInput
-            placeholder="닉네임 *"
-            type="text"
-            id="nickname"
-            name="nickname"
-            value={signup.nickname}
-            onChange={(value) =>
-              handleChange({
-                name: value.target.name,
-                value: value.target.value,
-              })
-            }
-            required
-          />
-          {validSignup.nickname === null ? null : validSignup.nickname ===
-            true ? (
-            <Icon src={vLogo} alt="v logo" />
-          ) : (
-            <Icon src={xLogo} alt="x logo" />
-          )}
-        </InputContainer>
+      <InputContainer>
+        <StyledInput
+          width={'55%'}
+          placeholder="이메일 *"
+          type="email"
+          id="email"
+          name="email"
+          disabled={finalVerificationCodeCheck}
+          value={signup.email}
+          onChange={(value) =>
+            handleChange({
+              name: value.target.name,
+              value: value.target.value,
+            })
+          }
+          required
+        />
+        <VerificationButton
+          onClick={handleEmailVerification}
+          disabled={finalVerificationCodeCheck}
+        >
+          이메일 인증
+        </VerificationButton>
 
-        <InputContainer>
-          <StyledInput
-            placeholder="비밀번호 *"
-            type="password"
-            id="password"
-            name="password"
-            value={signup.password}
-            onChange={(value) =>
-              handleChange({
-                name: value.target.name,
-                value: value.target.value,
-              })
-            }
-            required
-          />
-        </InputContainer>
+        {validSignup.email === null ? null : validSignup.email === true ? (
+          <Icon right={'41%'} src={vLogo} alt={'v logo'} />
+        ) : (
+          <Icon right={'41%'} src={xLogo} alt={'x logo'} />
+        )}
+      </InputContainer>
 
-        <InputContainer>
-          <StyledInput
-            placeholder="비밀번호 확인 *"
-            type="password"
-            id="confirmPassword"
-            name="confirmPassword"
-            value={signup.confirmPassword}
-            onChange={(value) =>
-              handleChange({
-                name: value.target.name,
-                value: value.target.value,
-              })
-            }
-            required
-          />
-          {validPassword && <Icon src={vLogo} alt="v logo" />}
-          {!validPassword && signup.confirmPassword.length > 0 && (
-            <Icon src={xLogo} alt="x logo" />
-          )}
-        </InputContainer>
+      <InputContainer>
+        <StyledInput
+          width={'55%'}
+          placeholder="인증번호 *"
+          onChange={(value) =>
+            verificationCodeHandleChange({
+              name: value.target.name,
+              value: value.target.value,
+            })
+          }
+        />
+        <VerificationButton onClick={compareVerificationCodes}>
+          인증번호 확인
+        </VerificationButton>
+      </InputContainer>
 
-        <InputContainer>
-          <StyledInput
-            placeholder="전화번호 *"
-            type="text"
-            id="phone"
-            name="phone"
-            value={signup.phone}
-            onChange={(value) =>
-              handleChange({
-                name: value.target.name,
-                value: value.target.value,
-              })
-            }
-            required
-          />
-          {validSignup.phone === null ? null : validSignup.phone === true ? (
-            <Icon src={vLogo} alt="v logo" />
-          ) : (
-            <Icon src={xLogo} alt="x logo" />
-          )}
-        </InputContainer>
-         </>
-        }
+      <InputContainer>
+        <StyledInput
+          width={'95%'}
+          placeholder="닉네임 *"
+          type="text"
+          id="nickname"
+          name="nickname"
+          value={signup.nickname}
+          onChange={(value) =>
+            handleChange({
+              name: value.target.name,
+              value: value.target.value,
+            })
+          }
+          required
+        />
+
+        {validSignup.nickname === null ? null : validSignup.nickname ===
+          true ? (
+          <Icon right={'10px'} src={vLogo} alt={'v logo'} />
+        ) : (
+          <Icon right={'10px'} src={xLogo} alt={'x logo'} />
+        )}
+      </InputContainer>
+
+      <InputContainer>
+        <StyledInput
+          width={'95%'}
+          placeholder="비밀번호 *"
+          type="password"
+          id="password"
+          name="password"
+          value={signup.password}
+          onChange={(value) =>
+            handleChange({
+              name: value.target.name,
+              value: value.target.value,
+            })
+          }
+          required
+        />
+      </InputContainer>
+
+      <InputContainer>
+        <StyledInput
+          width={'95%'}
+          placeholder="비밀번호 확인 *"
+          type="password"
+          id="confirmPassword"
+          name="confirmPassword"
+          value={signup.confirmPassword}
+          onChange={(value) =>
+            handleChange({
+              name: value.target.name,
+              value: value.target.value,
+            })
+          }
+          required
+        />
+
+        {validPassword && <Icon right={'10px'} src={vLogo} alt={'v logo'} />}
+
+        {!validPassword && signup.confirmPassword.length > 0 && (
+          <Icon right={'10px'} src={xLogo} alt={'x logo'} />
+        )}
+      </InputContainer>
+
+      <InputContainer>
+        <StyledInput
+          width={'95%'}
+          placeholder="전화번호 *"
+          type="text"
+          id="phone"
+          name="phone"
+          value={signup.phone}
+          onChange={(value) =>
+            handleChange({
+              name: value.target.name,
+              value: value.target.value,
+            })
+          }
+          required
+        />
+        {validSignup.phone === null ? null : validSignup.phone === true ? (
+          <Icon right={'10px'} src={vLogo} alt={'v logo'} />
+        ) : (
+          <Icon right={'10px'} src={xLogo} alt={'x logo'} />
+        )}
+      </InputContainer>
 
       <ButtonContainer>
-        {!verifyEmail ?
-        <SubmitButton type="submit" onClick={() => {codeVerifyHandler(signup.email,emailCode.trim())}}>
-          확인
-        </SubmitButton> :
-        <SubmitButton type="submit" onClick={handleSubmit}>
+        <Button type="submit" onClick={handleSubmit}>
           회원가입
-        </SubmitButton>
-        }
-        
+        </Button>
       </ButtonContainer>
-
       <SwitchButtonContainer>
         <SwitchButton onClick={onSwitchView}>로그인으로 전환</SwitchButton>
       </SwitchButtonContainer>
@@ -400,7 +450,7 @@ const SignUpContainer = styled.div`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
-const TitleContainer = styled.div`
+const Title = styled.div`
   text-align: center;
   margin-bottom: 20px;
 `;
@@ -411,21 +461,29 @@ const InputContainer = styled.div`
   margin-bottom: 10px;
 `;
 
-const StyledInput = styled.input`
+const StyledInput = styled.input<{ width: string }>`
+  width: ${(props) => props.width};
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  margin-bottom: 10px;
-  box-sizing: border-box;
-  width: 100%;
-  height: 40px;
+  margin-right: 10px;
 `;
 
-const Icon = styled.img`
+const VerificationButton = styled.button`
+  padding: 10px 20px;
+  width: 35%;
+  border-radius: 5px;
+  border: none;
+  background-color: #84d7fb;
+  color: white;
+  cursor: pointer;
+`;
+
+const Icon = styled.img<{ right: string }>`
   width: 20px;
   height: 20px;
   position: absolute;
-  right: 10px;
+  right: ${(props) => props.right};
   top: 50%;
   transform: translateY(-50%);
 `;
@@ -436,7 +494,7 @@ const ButtonContainer = styled.div`
   margin-top: 20px;
 `;
 
-const SubmitButton = styled.button`
+const Button = styled.button`
   padding: 10px 20px;
   width: 200px;
   border-radius: 25px;

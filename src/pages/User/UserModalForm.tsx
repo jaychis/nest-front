@@ -43,7 +43,7 @@ const UserModalForm = () => {
   const handleSubmitVerify = async () => {
     if (verificationCode.trim() === '') return alert('메일을 입력해주세요');
 
-    const res = await VerifyEmail({ email, verificationCode });
+    const res = await VerifyEmail(email);
 
     if (res && res.data && res.data.response.verification) {
       switchView('reset');
