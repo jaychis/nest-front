@@ -110,9 +110,29 @@ export const CommunityUpdateAPI = async (params: CommunityUpdateParams) => {
     const URL: string = `${COMMUNITY_URL}/`;
 
     const res = await client.patch(URL, params);
-    console.log(res.data);
+
     return res;
   } catch (e: any) {
     errorHandling({ text: 'CommunityUpdateAPI', error: e });
+  }
+};
+
+export interface CreateInvitationParams {
+  readonly communityId: string;
+  readonly inviteeNickname: string;
+}
+
+export const CreateInvitationAPI = async ({
+  communityId,
+  inviteeNickname,
+}: CreateInvitationParams) => {
+  try {
+    const URL: string = `${COMMUNITY_URL}/${communityId}/invitations`;
+
+    const res = await client.post(URL, { inviteeNickname });
+
+    return res;
+  } catch (e: any) {
+    errorHandling({ text: 'CreateInvitationAPI', error: e });
   }
 };

@@ -3,7 +3,7 @@ import logo from '../../assets/img/panda_logo.png';
 import DropDown from '../../components/Dropdown';
 import { useState, useEffect } from 'react';
 import React from 'react';
-import { CommunityUpdateAPI } from '../api/communityApi';
+import { CommunityUpdateAPI, CreateInvitationAPI } from '../api/communityApi';
 import Modal from '../../components/Modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModalState, UserModalState } from '../../reducers/modalStateSlice';
@@ -33,15 +33,15 @@ const CommunityProfile = () => {
     (state: RootState) => state.modalState,
   );
 
+  // USER_ID === selectCommunity.creator_user_id
   const dispatch = useDispatch();
   const editList: string[] = [
     '이름 변경',
     '배경 변경',
     '프로필 변경',
-    ...(USER_ID === selectCommunity.creator_user_id
-      ? ['초대하기', '강퇴처리하기']
-      : []),
-    '탈퇴하기',
+
+    '초대하기',
+    '강퇴처리하기',
   ];
   const [searchResultList, setSearchResultList] = useState<User[]>([]);
   const [editCommunityName, setEditCommunityName] = useState<string>('');
@@ -57,10 +57,6 @@ const CommunityProfile = () => {
   const [view, setView] = useState<boolean>(false);
 
   const communityEditHandler = (item: string) => {
-    if (item === '초대하기' && selectCommunity.visibility === 'PUBLIC') {
-      setView(false);
-      return alert('공개 커뮤니티는 유저를 초대할 수 없습니다.');
-    }
     setEditType(item);
     dispatch(setModalState(!modalState.modalState));
     handleModal();
@@ -94,19 +90,6 @@ const CommunityProfile = () => {
     }
   };
 
-  const handleClickOk = () => {
-    // CommunityUpdateAPI({
-    //   id: selectCommunity.id,
-    // });
-    alert('탈퇴 되었습니다.');
-    setEditType('');
-  };
-
-  const handleClickCancel = () => {
-    dispatch(setModalState(!modalState.modalState));
-    setEditType('');
-  };
-
   useEffect(() => {
     const handleClickOutside = (event: any) => {
       if (
@@ -124,6 +107,27 @@ const CommunityProfile = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  const [inviteeNickname, setInviteeNickname] = useState<string>('');
+  const handleChangeInviteeNickname = async ({
+    inviteeNickname,
+  }: {
+    readonly inviteeNickname: string;
+  }) => {
+    setInviteeNickname(inviteeNickname);
+  };
+  const createCommunityInvitation = async () => {
+    if (inviteeNickname === '') return alert('초대할 사람을 선택해주세요.');
+
+    const response = await CreateInvitationAPI({
+      inviteeNickname,
+      communityId: selectCommunity.id,
+    });
+    if (!response) return;
+
+    const res = response.data.response;
+    console.log('res : ', res);
+  };
 
   return (
     <>
@@ -214,7 +218,16 @@ const CommunityProfile = () => {
                 <SearchResultList>
                   {searchResultList.map((result, index) => (
                     <>
-                      <SearchResultItem key={index} index={index}>
+                      <SearchResultItem
+                        key={index}
+                        index={index}
+                        onClick={() => {
+                          console.log('createCommunityInvitation start');
+                          handleChangeInviteeNickname({
+                            inviteeNickname: result.nickname,
+                          });
+                        }}
+                      >
                         {result.nickname}
                         <VCheckImg src={vCheck} />
                       </SearchResultItem>
@@ -224,7 +237,7 @@ const CommunityProfile = () => {
               )}
               <SubmitButton
                 onClick={() => {
-                  // CommunityUpdateAPI(selectCommunity);
+                  createCommunityInvitation();
                   dispatch(setModalState(!modalState.modalState));
                   handleModal();
                   alert('멤버가 변경 되었습니다.');
@@ -235,17 +248,6 @@ const CommunityProfile = () => {
             </>
           )}
         </Modal>
-
-        {editType === '탈퇴하기' && (
-          <>
-            <Confirm
-              message={'정말 탈퇴 하시겠습니까?'}
-              title={'커뮤니티 탈퇴'}
-              onClickCancel={() => handleClickCancel()}
-              onClickOk={() => handleClickOk()}
-            />
-          </>
-        )}
 
         <ProfileCircle>
           <ProfileImage
@@ -258,23 +260,29 @@ const CommunityProfile = () => {
           <CommunityName>{selectCommunity.name}</CommunityName>
         </CommunityNameWrapper>
 
-        <EditButton
-          ref={editButtonRef}
-          onClick={() => {
-            setView(!view);
-          }}
-        >
-          <EditIcon
-            src="https://img.icons8.com/material-outlined/24/menu-2.png"
-            alt="menu-2"
-          />
-        </EditButton>
+        {USER_ID === selectCommunity.creator_user_id && (
+          <>
+            <EditButton
+              ref={editButtonRef}
+              onClick={() => {
+                setView(!view);
+              }}
+            >
+              <EditIcon
+                src="https://img.icons8.com/material-outlined/24/menu-2.png"
+                alt="menu-2"
+              />
+            </EditButton>
 
-        {view && (
-          <DropDownElement ref={dropDownRef}>
-            <DropDown menu={editList} eventHandler={communityEditHandler} />
-          </DropDownElement>
+            {view && (
+              <DropDownElement ref={dropDownRef}>
+                <DropDown menu={editList} eventHandler={communityEditHandler} />
+              </DropDownElement>
+            )}
+          </>
         )}
+
+        <JoinButton>참여하기</JoinButton>
       </CommunityInfoContainer>
     </>
   );
@@ -312,10 +320,35 @@ const CommunityName = styled.h1`
   color: #333;
 `;
 
+const JoinButton = styled.div`
+  position: absolute;
+  top: 18vh;
+  left: 50vw;
+  background-color: #0056d2;
+  color: #ffffff;
+  font-size: 1em;
+  font-weight: bold;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  cursor: pointer;
+  text-align: center;
+  outline: none;
+  width: 55px;
+
+  &:hover {
+    background-color: #0041a8;
+  }
+
+  &:active {
+    background-color: #00378b;
+  }
+`;
+
 const EditButton = styled.div`
   position: absolute;
   top: 18vh;
-  left: 55vw;
+  left: 45vw;
 `;
 
 const EditIcon = styled.img`
