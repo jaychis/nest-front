@@ -3,7 +3,13 @@ import logo from '../../assets/img/panda_logo.png';
 import DropDown from '../../components/Dropdown';
 import { useState, useEffect } from 'react';
 import React from 'react';
-import { CommunityUpdateAPI, CommunityUpdateParams } from '../api/communityApi';
+import {
+  checkMembershipAPI,
+  CommunityUpdateAPI,
+  CreateInvitationAPI,
+  joinCommunityAPI,
+  leaveCommunityAPI,
+} from '../api/communityApi';
 import Modal from '../../components/Modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModalState, UserModalState } from '../../reducers/modalStateSlice';
@@ -12,30 +18,30 @@ import DragAndDrop from '../../components/DragAndDrop';
 import { AwsImageUploadFunctionalityReturnType } from '../../_common/imageUploadFuntionality';
 import { GetSearchPeopleAPI } from '../api/searchApi';
 import vCheck from '../../assets/img/v-check.png';
-import Confirm from '../../components/Confirm';
+import { SelectCommunityParams } from '../../reducers/communitySlice';
+interface User {
+  readonly nickname: string;
+  readonly id: string[];
+}
 
 const CommunityProfile = () => {
-  interface User {
-    nickname: string;
-    id: string[];
-  }
-
+  const USER_ID: string = localStorage.getItem('id') as string;
   const dropDownRef = React.useRef<HTMLDivElement>(null);
   const editButtonRef = React.useRef<HTMLDivElement>(null);
-
-  const selectCommunity: CommunityUpdateParams = useSelector(
+  const selectCommunity: SelectCommunityParams = useSelector(
     (state: any) => state.community,
   );
   const modalState: UserModalState = useSelector(
     (state: RootState) => state.modalState,
   );
+
   const dispatch = useDispatch();
-  const editList = [
+  const editList: string[] = [
     '이름 변경',
     '배경 변경',
     '프로필 변경',
     '초대하기',
-    '탈퇴하기',
+    '강퇴처리하기',
   ];
   const [searchResultList, setSearchResultList] = useState<User[]>([]);
   const [editCommunityName, setEditCommunityName] = useState<string>('');
@@ -45,19 +51,14 @@ const CommunityProfile = () => {
   const [editProfile, setEditProfile] = useState<
     AwsImageUploadFunctionalityReturnType | string
   >();
-  const [editUserList, setEditUserList] = useState<string[]>(
-    selectCommunity.userIds ? [...selectCommunity.userIds] : [],
-  );
   const [editType, setEditType] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [view, setView] = useState<boolean>(false);
-  const [deleteUserId, setDeleteUserId] = useState<string[]>(['']);
+  const [inviteeNickname, setInviteeNickname] = useState<string>('');
+  const [isJoined, setIsJoined] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const communityEditHandler = (item: string) => {
-    if (item === '초대하기' && selectCommunity.visibility === 'PUBLIC') {
-      setView(false);
-      return alert('공개 커뮤니티는 유저를 초대할 수 없습니다.');
-    }
     setEditType(item);
     dispatch(setModalState(!modalState.modalState));
     handleModal();
@@ -69,6 +70,41 @@ const CommunityProfile = () => {
     dispatch(setModalState(!modalState.modalState));
   };
 
+  const handleJoinedButtonClick = async () => {
+    const communityId: string = selectCommunity.id;
+
+    setIsLoading(true);
+    try {
+      const status = await checkMembershipAPI({
+        communityId,
+      });
+      if (!status) return;
+
+      const { is_joined } = status.data.response;
+
+      if (is_joined) {
+        const leaveStatus = await leaveCommunityAPI({ communityId });
+        if (!leaveStatus) return;
+
+        const leave = leaveStatus.data.response;
+        setIsJoined(false);
+      } else {
+        const joinStatus = await joinCommunityAPI({ communityId });
+        if (!joinStatus) return;
+
+        const join = joinStatus.data.response;
+        setIsJoined(true);
+      }
+    } catch (error) {
+      console.error(
+        `Failed to ${isJoined ? 'leave' : 'join'} community:`,
+        error,
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleUserSearchChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
@@ -76,9 +112,10 @@ const CommunityProfile = () => {
     try {
       if (value) {
         const res = await GetSearchPeopleAPI({ query: value });
+        console.log('handleUserSearchChange res : ', res);
         if (res && res.data && res.data.response) {
           setSearchResultList(
-            res.data.response.map((user: any) => ({
+            res.data.response.map((user: User) => ({
               nickname: user.nickname,
               id: user.id,
             })),
@@ -88,26 +125,6 @@ const CommunityProfile = () => {
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const handleUserSelect = (userId: string) => {
-    if (editUserList?.includes(userId)) {
-      const deleteId = editUserList.filter((prevState) => prevState !== userId);
-      setEditUserList(deleteId);
-    } else {
-      setEditUserList((prevState) => [...(prevState || []), userId]);
-    }
-  };
-
-  const handleClickOk = () => {
-    CommunityUpdateAPI({ ...selectCommunity, userIds: deleteUserId });
-    alert('탈퇴 되었습니다.');
-    setEditType('');
-  };
-
-  const handleClickCancel = () => {
-    dispatch(setModalState(!modalState.modalState));
-    setEditType('');
   };
 
   useEffect(() => {
@@ -128,14 +145,25 @@ const CommunityProfile = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (editType === '탈퇴하기') setIsOpen(false);
-    setDeleteUserId(
-      editUserList.filter(
-        (prevState) => prevState !== localStorage.getItem('id'),
-      ),
-    );
-  }, [editType]);
+  const handleChangeInviteeNickname = async ({
+    inviteeNickname,
+  }: {
+    readonly inviteeNickname: string;
+  }) => {
+    setInviteeNickname(inviteeNickname);
+  };
+  const createCommunityInvitation = async () => {
+    if (inviteeNickname === '') return alert('초대할 사람을 선택해주세요.');
+
+    const response = await CreateInvitationAPI({
+      inviteeNickname,
+      communityId: selectCommunity.id,
+    });
+    if (!response) return;
+
+    const res = response.data.response;
+    console.log('res : ', res);
+  };
 
   return (
     <>
@@ -159,7 +187,8 @@ const CommunityProfile = () => {
               <SubmitButton
                 onClick={() => {
                   CommunityUpdateAPI({
-                    ...selectCommunity,
+                    id: selectCommunity.id,
+                    visibility: selectCommunity.visibility,
                     name: editCommunityName,
                   });
                   dispatch(setModalState(!modalState.modalState));
@@ -179,7 +208,8 @@ const CommunityProfile = () => {
               <SubmitButton
                 onClick={() => {
                   CommunityUpdateAPI({
-                    ...selectCommunity,
+                    id: selectCommunity.id,
+                    visibility: selectCommunity.visibility,
                     banner: editBackground as string,
                   });
                   dispatch(setModalState(!modalState.modalState));
@@ -199,7 +229,8 @@ const CommunityProfile = () => {
               <SubmitButton
                 onClick={() => {
                   CommunityUpdateAPI({
-                    ...selectCommunity,
+                    id: selectCommunity.id,
+                    visibility: selectCommunity.visibility,
                     icon: editProfile as string,
                   });
                   dispatch(setModalState(!modalState.modalState));
@@ -226,14 +257,15 @@ const CommunityProfile = () => {
                       <SearchResultItem
                         key={index}
                         index={index}
-                        onClick={() =>
-                          handleUserSelect(result.id.toLocaleString())
-                        }
+                        onClick={() => {
+                          console.log('createCommunityInvitation start');
+                          handleChangeInviteeNickname({
+                            inviteeNickname: result.nickname,
+                          });
+                        }}
                       >
                         {result.nickname}
-                        {editUserList?.includes(result.id.toLocaleString()) ? (
-                          <VCheckImg src={vCheck} />
-                        ) : null}
+                        <VCheckImg src={vCheck} />
                       </SearchResultItem>
                     </>
                   ))}
@@ -241,10 +273,7 @@ const CommunityProfile = () => {
               )}
               <SubmitButton
                 onClick={() => {
-                  CommunityUpdateAPI({
-                    ...selectCommunity,
-                    userIds: editUserList,
-                  });
+                  createCommunityInvitation();
                   dispatch(setModalState(!modalState.modalState));
                   handleModal();
                   alert('멤버가 변경 되었습니다.');
@@ -255,17 +284,6 @@ const CommunityProfile = () => {
             </>
           )}
         </Modal>
-
-        {editType === '탈퇴하기' && (
-          <>
-            <Confirm
-              message={'정말 탈퇴 하시겠습니까?'}
-              title={'커뮤니티 탈퇴'}
-              onClickCancel={() => handleClickCancel()}
-              onClickOk={() => handleClickOk()}
-            />
-          </>
-        )}
 
         <ProfileCircle>
           <ProfileImage
@@ -278,23 +296,35 @@ const CommunityProfile = () => {
           <CommunityName>{selectCommunity.name}</CommunityName>
         </CommunityNameWrapper>
 
-        <EditButton
-          ref={editButtonRef}
-          onClick={() => {
-            setView(!view);
-          }}
-        >
-          <EditIcon
-            src="https://img.icons8.com/material-outlined/24/menu-2.png"
-            alt="menu-2"
-          />
-        </EditButton>
+        {USER_ID === selectCommunity.creator_user_id && (
+          <>
+            <EditButton
+              ref={editButtonRef}
+              onClick={() => {
+                setView(!view);
+              }}
+            >
+              <EditIcon
+                src="https://img.icons8.com/material-outlined/24/menu-2.png"
+                alt="menu-2"
+              />
+            </EditButton>
 
-        {view && (
-          <DropDownElement ref={dropDownRef}>
-            <DropDown menu={editList} eventHandler={communityEditHandler} />
-          </DropDownElement>
+            {view && (
+              <DropDownElement ref={dropDownRef}>
+                <DropDown menu={editList} eventHandler={communityEditHandler} />
+              </DropDownElement>
+            )}
+          </>
         )}
+
+        <JoinButton
+          onClick={handleJoinedButtonClick}
+          // disabled={isLoading}
+          isJoined={isJoined}
+        >
+          {isLoading ? 'Loading...' : isJoined ? '참여중' : '참여하기'}
+        </JoinButton>
       </CommunityInfoContainer>
     </>
   );
@@ -332,10 +362,35 @@ const CommunityName = styled.h1`
   color: #333;
 `;
 
+const JoinButton = styled.div<{ isJoined: boolean }>`
+  position: absolute;
+  top: 18vh;
+  left: 50vw;
+  background-color: ${(props) => (props.isJoined ? '#cccccc' : '#0056d2')};
+  color: #ffffff;
+  font-size: 1em;
+  font-weight: bold;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  cursor: pointer;
+  text-align: center;
+  outline: none;
+  width: 55px;
+
+  &:hover {
+    background-color: ${(props) => (props.isJoined ? '#aaaaaa' : '#0041a8')};
+  }
+
+  &:active {
+    background-color: #00378b;
+  }
+`;
+
 const EditButton = styled.div`
   position: absolute;
   top: 18vh;
-  left: 55vw;
+  left: 45vw;
 `;
 
 const EditIcon = styled.img`

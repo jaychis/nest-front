@@ -47,10 +47,10 @@ const GlobalSideBar = () => {
       const response = res.data.response.current_list;
       const uniqueCommunities = response.filter(
         (community: SelectCommunityParams) => {
-          if (communityNamesSet.has(community.name)) {
+          if (communityNamesSet.has(community.name as string)) {
             return false;
           } else {
-            communityNamesSet.add(community.name);
+            communityNamesSet.add(community.name as string);
             return true;
           }
         },
@@ -68,8 +68,8 @@ const GlobalSideBar = () => {
   }, [page]);
 
   useEffect(() => {
-    const initialSet = new Set(
-      communityList.map((community) => community.name),
+    const initialSet: Set<string> = new Set(
+      communityList.map((community) => community.name as string),
     );
     setCommunityNamesSet(initialSet);
   }, [communityList]);

@@ -9,7 +9,7 @@ import {
   SendEmail,
   VerifyEmail,
   PasswordReset,
-  PasswordResetParsms,
+  PasswordResetParams,
 } from '../api/userApi';
 
 type modalType = 'login' | 'signup' | 'recovery' | 'verity' | 'reset';
@@ -23,8 +23,6 @@ const UserModalForm = () => {
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [kakaoEmail, setKakaoEmail] = useState<string>('');
   const [adminButtonCount, setAdminButtonCount] = useState<number>(0);
-  const [isAdminLoginHovered, setIsAdminLoginHovered] =
-    useState<boolean>(false);
 
   const switchView = (view: modalType) => {
     setActiveView(view);
@@ -66,31 +64,8 @@ const UserModalForm = () => {
     }
   };
 
-  const adminHiddenButton = () => setAdminButtonCount(adminButtonCount + 1);
-
   return (
     <>
-      {/*<div*/}
-      {/*  className="modalContainer"*/}
-      {/*  style={{*/}
-      {/*    width: '100px',*/}
-      {/*    height: '50px',*/}
-      {/*    display: 'flex',*/}
-      {/*    justifyContent: 'center',*/}
-      {/*    alignItems: 'center',*/}
-      {/*  }}*/}
-      {/*  onClick={adminHiddenButton}*/}
-      {/*>*/}
-      {/*  {adminButtonCount >= 5 && (*/}
-      {/*    <AdminLoginButton*/}
-      {/*      isHovered={isAdminLoginHovered}*/}
-      {/*      onMouseEnter={() => setIsAdminLoginHovered(true)}*/}
-      {/*      onMouseLeave={() => setIsAdminLoginHovered(false)}*/}
-      {/*    >*/}
-      {/*      <span style={{ fontWeight: 'bold' }}>Admin Log In</span>*/}
-      {/*    </AdminLoginButton>*/}
-      {/*  )}*/}
-      {/*</div>*/}
       <div
         className="modalContainer"
         style={{
@@ -132,7 +107,6 @@ const UserModalForm = () => {
         onClose={() => {
           setModalIsOpen(false);
         }}
-        // onSubmit={handleSubmit}
       >
         {activeView === 'login' && (
           <Login
@@ -262,16 +236,6 @@ const UserModalForm = () => {
 
 export default UserModalForm;
 
-const AdminLoginButton = styled.button<{ isHovered: boolean }>`
-  height: 100%;
-  width: 100%;
-  border: none;
-  backgroundcolor: ${(props) => (props.isHovered ? '#77C2E2' : '#84d7fb')};
-  borderradius: 30px;
-  fontweight: bold;
-  color: white;
-`;
-
 const SubmitInput = styled.input`
   min-width: 400px;
   width: 100%;
@@ -292,7 +256,7 @@ const SwitchButton = styled.button`
   cursor: pointer;
 
   &:hover {
-    background-color: #333; //
+    background-color: #333;
 `;
 
 const SubmitButton = styled.button`
