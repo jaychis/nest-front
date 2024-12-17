@@ -136,3 +136,39 @@ export const CreateInvitationAPI = async ({
     errorHandling({ text: 'CreateInvitationAPI', error: e });
   }
 };
+
+export interface JoinedParams {
+  readonly communityId: string;
+}
+
+export const checkMembershipAPI = async ({ communityId }: JoinedParams) => {
+  try {
+    const response = await client.get(
+      `${COMMUNITY_URL}/${communityId}/membership`,
+    );
+    return response;
+  } catch (e: any) {
+    errorHandling({ text: 'checkMembershipAPI', error: e });
+  }
+};
+
+export const leaveCommunityAPI = async ({ communityId }: JoinedParams) => {
+  try {
+    const response = await client.post(`${COMMUNITY_URL}/${communityId}/leave`);
+    return response;
+  } catch (e: any) {
+    errorHandling({ text: 'leaveCommunityAPI', error: e });
+  }
+};
+
+export const joinCommunityAPI = async ({ communityId }: JoinedParams) => {
+  try {
+    const response = await client.post(
+      `${COMMUNITY_URL}/${communityId}/join`,
+      {},
+    );
+    return response;
+  } catch (e: any) {
+    errorHandling({ text: 'checkMembershipAPI', error: e });
+  }
+};

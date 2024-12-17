@@ -3,7 +3,13 @@ import logo from '../../assets/img/panda_logo.png';
 import DropDown from '../../components/Dropdown';
 import { useState, useEffect } from 'react';
 import React from 'react';
-import { CommunityUpdateAPI, CreateInvitationAPI } from '../api/communityApi';
+import {
+  checkMembershipAPI,
+  CommunityUpdateAPI,
+  CreateInvitationAPI,
+  joinCommunityAPI,
+  leaveCommunityAPI,
+} from '../api/communityApi';
 import Modal from '../../components/Modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModalState, UserModalState } from '../../reducers/modalStateSlice';
@@ -12,34 +18,28 @@ import DragAndDrop from '../../components/DragAndDrop';
 import { AwsImageUploadFunctionalityReturnType } from '../../_common/imageUploadFuntionality';
 import { GetSearchPeopleAPI } from '../api/searchApi';
 import vCheck from '../../assets/img/v-check.png';
-import Confirm from '../../components/Confirm';
 import { SelectCommunityParams } from '../../reducers/communitySlice';
+interface User {
+  readonly nickname: string;
+  readonly id: string[];
+}
 
 const CommunityProfile = () => {
-  interface User {
-    readonly nickname: string;
-    readonly id: string[];
-  }
   const USER_ID: string = localStorage.getItem('id') as string;
-
   const dropDownRef = React.useRef<HTMLDivElement>(null);
   const editButtonRef = React.useRef<HTMLDivElement>(null);
-
   const selectCommunity: SelectCommunityParams = useSelector(
     (state: any) => state.community,
   );
-
   const modalState: UserModalState = useSelector(
     (state: RootState) => state.modalState,
   );
 
-  // USER_ID === selectCommunity.creator_user_id
   const dispatch = useDispatch();
   const editList: string[] = [
     '이름 변경',
     '배경 변경',
     '프로필 변경',
-
     '초대하기',
     '강퇴처리하기',
   ];
@@ -51,10 +51,12 @@ const CommunityProfile = () => {
   const [editProfile, setEditProfile] = useState<
     AwsImageUploadFunctionalityReturnType | string
   >();
-
   const [editType, setEditType] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [view, setView] = useState<boolean>(false);
+  const [inviteeNickname, setInviteeNickname] = useState<string>('');
+  const [isJoined, setIsJoined] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const communityEditHandler = (item: string) => {
     setEditType(item);
@@ -66,6 +68,41 @@ const CommunityProfile = () => {
   const handleModal = () => {
     setIsOpen(!isOpen);
     dispatch(setModalState(!modalState.modalState));
+  };
+
+  const handleJoinedButtonClick = async () => {
+    const communityId: string = selectCommunity.id;
+
+    setIsLoading(true);
+    try {
+      const status = await checkMembershipAPI({
+        communityId,
+      });
+      if (!status) return;
+
+      const { is_joined } = status.data.response;
+
+      if (is_joined) {
+        const leaveStatus = await leaveCommunityAPI({ communityId });
+        if (!leaveStatus) return;
+
+        const leave = leaveStatus.data.response;
+        setIsJoined(false);
+      } else {
+        const joinStatus = await joinCommunityAPI({ communityId });
+        if (!joinStatus) return;
+
+        const join = joinStatus.data.response;
+        setIsJoined(true);
+      }
+    } catch (error) {
+      console.error(
+        `Failed to ${isJoined ? 'leave' : 'join'} community:`,
+        error,
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleUserSearchChange = async (
@@ -108,7 +145,6 @@ const CommunityProfile = () => {
     };
   }, []);
 
-  const [inviteeNickname, setInviteeNickname] = useState<string>('');
   const handleChangeInviteeNickname = async ({
     inviteeNickname,
   }: {
@@ -282,7 +318,13 @@ const CommunityProfile = () => {
           </>
         )}
 
-        <JoinButton>참여하기</JoinButton>
+        <JoinButton
+          onClick={handleJoinedButtonClick}
+          // disabled={isLoading}
+          isJoined={isJoined}
+        >
+          {isLoading ? 'Loading...' : isJoined ? '참여중' : '참여하기'}
+        </JoinButton>
       </CommunityInfoContainer>
     </>
   );
@@ -320,11 +362,11 @@ const CommunityName = styled.h1`
   color: #333;
 `;
 
-const JoinButton = styled.div`
+const JoinButton = styled.div<{ isJoined: boolean }>`
   position: absolute;
   top: 18vh;
   left: 50vw;
-  background-color: #0056d2;
+  background-color: ${(props) => (props.isJoined ? '#cccccc' : '#0056d2')};
   color: #ffffff;
   font-size: 1em;
   font-weight: bold;
@@ -337,7 +379,7 @@ const JoinButton = styled.div`
   width: 55px;
 
   &:hover {
-    background-color: #0041a8;
+    background-color: ${(props) => (props.isJoined ? '#aaaaaa' : '#0041a8')};
   }
 
   &:active {
