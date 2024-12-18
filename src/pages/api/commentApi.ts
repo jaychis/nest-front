@@ -1,6 +1,8 @@
 import { client } from './client';
 import { errorHandling } from '../../_common/errorHandling';
 
+const COMMENT_URL: string = 'comments';
+
 export interface CommentSubmitParams {
   readonly boardId: string;
   readonly userId: string;
@@ -9,7 +11,7 @@ export interface CommentSubmitParams {
 }
 export const CommentSubmitAPI = async (params: CommentSubmitParams) => {
   try {
-    const URL: string = 'comments/';
+    const URL: string = `${COMMENT_URL}/`;
 
     const res = await client.post(URL, params);
 
@@ -24,7 +26,7 @@ export interface CommentListParam {
 }
 export const CommentListAPI = async (param: CommentListParam) => {
   try {
-    const URL: string = `comments/list`;
+    const URL: string = `${COMMENT_URL}/list`;
 
     const res = await client.post(URL, param);
 
@@ -38,14 +40,29 @@ export interface CommentInquiryParam {
   readonly userId: string;
 }
 
-export const CommentInquiryAPI = async (userId: string) => {
+export const CommentInquiryAPI = async (param: CommentInquiryParam) => {
   try {
-    const URL: string = `comments/${userId}`;
+    const URL: string = `${COMMENT_URL}/${param.userId}`;
 
     const res = await client.get(URL);
 
     return res;
   } catch (e: any) {
     errorHandling({ text: 'CommentInquiryAPI', error: e });
+  }
+};
+
+export interface CommentUsersInquiryParam {
+  readonly userId: string;
+}
+export const CommentUsersInquiryAPI = async (param: CommentInquiryParam) => {
+  try {
+    const URL: string = `${COMMENT_URL}/users/${param.userId}`;
+
+    const res = await client.get(URL);
+
+    return res;
+  } catch (e: any) {
+    errorHandling({ text: 'CommentUsersInquiryAPI', error: e });
   }
 };
