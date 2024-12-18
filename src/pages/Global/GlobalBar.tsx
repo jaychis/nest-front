@@ -107,7 +107,7 @@ const GlobalBar = () => {
 
   return (
     <div>
-      <GlobalTopBar modalState={modalState.modalState}>
+      <GlobalTopBar>
         <HamburgerMenu onClick={toggleSidebar}>
           <Bar />
           <Bar />
@@ -222,11 +222,7 @@ const GlobalBar = () => {
 
 export default GlobalBar;
 
-const GlobalTopBar = styled.nav.withConfig({
-  shouldForwardProp: (prop) => prop !== 'modalState',
-})<{
-  modalState: boolean;
-}>`
+const GlobalTopBar = styled.nav`
   position: fixed;
   display: flex;
   justify-content: space-between;
@@ -235,7 +231,7 @@ const GlobalTopBar = styled.nav.withConfig({
   padding: 0.625rem;
   border: 2px solid #d3d3d3;
   width: 100%;
-  z-index: ${(props) => (props.modalState ? -1 : 2000)};
+  z-index: 2001;
 `;
 
 const HamburgerMenu = styled.div`
