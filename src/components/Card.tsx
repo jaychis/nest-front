@@ -354,12 +354,12 @@ const CardContainer = styled.div.withConfig({
   align-items: flex-start;
   width: 100%;
   height: 100%;
-  max-height: 600px;
+  max-height: 100vh;
   max-width: 600px;
   margin: 10px;
   cursor: pointer;
   background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
-  z-index: ${(props) => (props.modalState ? -10 : 999)};
+  // z-index: ${(props) => (props.modalState ? -10 : 999)};
 
   @media (max-width: 768px) {
     margin: 0;
