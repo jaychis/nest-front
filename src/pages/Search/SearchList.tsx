@@ -13,19 +13,16 @@ import {
   CardType,
   CommunityType,
   UserType,
-  TagType
+  TagType,
 } from '../../_common/collectionTypes';
 import BoardReply, { ReplyType } from '../Board/BoardReply';
 import EmptyState from '../../components/EmptyState';
 import styled from 'styled-components';
 import UserSearchCard from '../../components/UserSearchCard';
-import { community, setCommunity } from '../../reducers/communitySlice';
-import { Navigate } from 'react-router-dom';
 import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
 import { AppDispatch } from '../../store/store';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { MainListTypes } from '../../_common/collectionTypes';
-import { Tag } from 'sanitize-html';
 
 type SearchListTypes =
   | 'BOARDS'
@@ -129,7 +126,7 @@ const SearchList = () => {
       GetSearchTagsAPI({ query: QUERY })
         .then((res): void => {
           if (!res) return;
-          const response = res.data.response
+          const response = res.data.response;
           console.log('TAGS response : ', response);
 
           setSearchTagList(response);
@@ -272,8 +269,7 @@ const SearchList = () => {
           </SortButtonContainer>
         )}
 
-        {(searchType === 'BOARDS' ||
-          searchType === 'IMAGE&VIDEO') &&
+        {(searchType === 'BOARDS' || searchType === 'IMAGE&VIDEO') &&
           searchCardList.map((ca: CardType) => {
             return (
               <>
@@ -340,12 +336,8 @@ const SearchList = () => {
           })}
 
         {searchType === 'TAGS' &&
-          searchTagList?.map((tags:TagType) => {
-            return (
-              <div>
-                {tags.name}
-              </div>
-            );
+          searchTagList?.map((tags: TagType) => {
+            return <div>{tags.name}</div>;
           })}
       </MainContainer>
     </>

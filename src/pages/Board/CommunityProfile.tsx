@@ -18,7 +18,11 @@ import DragAndDrop from '../../components/DragAndDrop';
 import { AwsImageUploadFunctionalityReturnType } from '../../_common/imageUploadFuntionality';
 import { GetSearchPeopleAPI } from '../api/searchApi';
 import vCheck from '../../assets/img/v-check.png';
-import { SelectCommunityParams } from '../../reducers/communitySlice';
+import {
+  SelectCommunityMembersType,
+  SelectCommunityParams,
+  setJoinCommunity,
+} from '../../reducers/communitySlice';
 interface User {
   readonly nickname: string;
   readonly id: string[];
@@ -31,6 +35,7 @@ const CommunityProfile = () => {
   const selectCommunity: SelectCommunityParams = useSelector(
     (state: any) => state.community,
   );
+
   const modalState: UserModalState = useSelector(
     (state: RootState) => state.modalState,
   );
@@ -55,8 +60,16 @@ const CommunityProfile = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [view, setView] = useState<boolean>(false);
   const [inviteeNickname, setInviteeNickname] = useState<string>('');
-  const [isJoined, setIsJoined] = useState<boolean>(false);
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    selectCommunity.members.map((member: SelectCommunityMembersType) => {
+      if (member.user_id === USER_ID) {
+        dispatch(setJoinCommunity({ is_joined: true }));
+      }
+    });
+  }, [selectCommunity]);
 
   const communityEditHandler = (item: string) => {
     setEditType(item);
@@ -86,18 +99,21 @@ const CommunityProfile = () => {
         const leaveStatus = await leaveCommunityAPI({ communityId });
         if (!leaveStatus) return;
 
-        const leave = leaveStatus.data.response;
-        setIsJoined(false);
+        const { delete_member } = leaveStatus.data.response;
+        console.log('delete_member : ', delete_member);
+
+        dispatch(setJoinCommunity({ is_joined: false }));
       } else {
         const joinStatus = await joinCommunityAPI({ communityId });
         if (!joinStatus) return;
 
         const join = joinStatus.data.response;
-        setIsJoined(true);
+        console.log('join : ', join);
+        dispatch(setJoinCommunity({ is_joined: true }));
       }
     } catch (error) {
       console.error(
-        `Failed to ${isJoined ? 'leave' : 'join'} community:`,
+        `Failed to ${selectCommunity.is_joined ? 'leave' : 'join'} community:`,
         error,
       );
     } finally {
@@ -321,9 +337,13 @@ const CommunityProfile = () => {
         <JoinButton
           onClick={handleJoinedButtonClick}
           // disabled={isLoading}
-          isJoined={isJoined}
+          isJoined={selectCommunity.is_joined}
         >
-          {isLoading ? 'Loading...' : isJoined ? '참여중' : '참여하기'}
+          {isLoading
+            ? 'Loading...'
+            : selectCommunity.is_joined
+              ? '참여중'
+              : '참여하기'}
         </JoinButton>
       </CommunityInfoContainer>
     </>
