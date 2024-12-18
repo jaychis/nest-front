@@ -354,7 +354,7 @@ const CardContainer = styled.div.withConfig({
   align-items: flex-start;
   width: 100%;
   height: 100%;
-  max-height: 600px;
+  max-height: 100vh;
   max-width: 600px;
   margin: 10px;
   cursor: pointer;
@@ -410,7 +410,6 @@ const NicknameWrapper = styled.div`
 
 const ContentContainer = styled.div`
   width: 100%;
-
   overflow: visible;
 `;
 
