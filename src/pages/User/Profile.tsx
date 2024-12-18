@@ -1,4 +1,4 @@
-import React, { useEffect, useState, ChangeEvent, CSSProperties } from 'react';
+import React, { useEffect, useState, ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
 import { ReduxProfileAPI } from '../api/userApi';
@@ -32,15 +32,22 @@ const Profile = () => {
 
   useEffect(() => {
     if (activeSection === 'POSTS') {
-      ExecuteBoardInquiryAPI({ id: ID }).then((res) => setMyPosts(res));
+      const postsInquiry = async (): Promise<void> => {
+        const res = await BoardInquiryAPI({ userId: ID });
+        if (!res) return;
+        const response = res.data.response;
+        setMyPosts(response);
+      };
+      postsInquiry();
     }
 
     if (activeSection === 'COMMENTS') {
       const commentInquiry = async (): Promise<void> => {
-        const res = await CommentInquiryAPI(ID);
+        const res = await CommentInquiryAPI({ userId: ID });
         if (!res) return;
 
         const response = res.data.response;
+        console.log('comments response : ', response);
         setMyComments(response);
       };
       commentInquiry();
@@ -371,52 +378,5 @@ const EditButton = styled.button`
   color: white;
   font-weight: bold;
 `;
-
-const cache: { [key: string]: any } = {};
-
-const exponentialBackoff = (retryCount: number): Promise<void> => {
-  return new Promise((resolve) =>
-    setTimeout(resolve, Math.pow(2, retryCount) * 1000),
-  );
-};
-
-async function ExecuteBoardInquiryAPI({ id }: { readonly id: string }) {
-  const URL = `boards/${id}`;
-
-  if (cache[URL]) {
-    return cache[URL];
-  }
-
-  let retryCount = 0;
-  const maxRetries = 5;
-
-  while (retryCount < maxRetries) {
-    try {
-      const res = await BoardInquiryAPI({ id });
-      const response = res.data.response;
-      console.log('profile board inquiry api response : ', response);
-
-      cache[URL] = response;
-
-      return response;
-    } catch (e: any) {
-      if (e.response && e.response.status === 429) {
-        retryCount++;
-        console.warn(`Retry ${retryCount} for ${URL} after 429 error.`);
-        await exponentialBackoff(retryCount);
-      } else if (e.response && e.response.status === 401) {
-        console.error('Unauthorized error. Redirecting to login.');
-        window.location.href = '/login'; // Adjust this to your login route
-        return;
-      } else {
-        console.error('PROFILE BOARD INQUIRY ERROR : ', e);
-        return []; // Return an empty array on error
-      }
-    }
-  }
-
-  console.error('Max retries reached. Returning empty response.');
-  return [];
-}
 
 export default Profile;

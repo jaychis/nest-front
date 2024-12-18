@@ -120,15 +120,19 @@ export const BoardSubmitAPI = async (params: SubmitParams) => {
 };
 
 export interface BoardInquiryParam {
-  readonly id: string;
+  readonly userId: string;
 }
 
 export const BoardInquiryAPI = async (param: BoardInquiryParam) => {
-  const URL: string = `${BOARD_URL}/${param.id}`;
+  try {
+    const URL: string = `${BOARD_URL}/inquiry/${param.userId}`;
 
-  const res = await client.get(URL);
+    const res = await client.get(URL);
 
-  return res;
+    return res;
+  } catch (e: any) {
+    errorHandling({ text: 'BoardInquiryAPI', error: e });
+  }
 };
 
 export const shareCountApi = async (id: string) => {

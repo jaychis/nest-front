@@ -36,7 +36,7 @@ const Profile2 = () => {
 
     if (activeSection === 'COMMENTS') {
       const commentInquiry = async (): Promise<void> => {
-        const res = await CommentInquiryAPI(ID);
+        const res = await CommentInquiryAPI({ userId: ID });
         if (!res) return;
 
         const response = res.data.response;
@@ -418,7 +418,8 @@ async function ExecuteBoardInquiryAPI({ id }: { readonly id: string }) {
 
   while (retryCount < maxRetries) {
     try {
-      const res = await BoardInquiryAPI({ id });
+      const res = await BoardInquiryAPI({ userId: id });
+      if (!res) return;
       const response = res.data.response;
       console.log('profile board inquiry api response : ', response);
 
