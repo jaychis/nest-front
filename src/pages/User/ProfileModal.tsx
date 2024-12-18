@@ -62,6 +62,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onRequestClose, but
         },
         overlay: {
           backgroundColor: 'rgba(0, 0, 0, 0.3)',
+          zIndex: '3000'
         },
       }}
     >
