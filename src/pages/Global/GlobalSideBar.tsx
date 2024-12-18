@@ -39,7 +39,6 @@ const GlobalSideBar = () => {
 
   const fetchCommunities = async (page: number) => {
     setLoading(true);
-    const id = localStorage.getItem('id') as string;
 
     try {
       const res = await CommunityListAPI({ take: 10, page });
