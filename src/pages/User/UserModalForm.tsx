@@ -256,7 +256,7 @@ const SwitchButton = styled.button`
   cursor: pointer;
 
   &:hover {
-    background-color: #333; //
+    background-color: #333;
 `;
 
 const SubmitButton = styled.button`

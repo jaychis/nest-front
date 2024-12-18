@@ -12,7 +12,7 @@ export const GetCommunitiesNameAPI = async ({
   name,
 }: GetCommunitiesNameParam) => {
   try {
-    const URL: string = `${COMMUNITY_URL}/get/communities/name/${name}`;
+    const URL: string = `${COMMUNITY_URL}/get/communities/${name}`;
 
     const res = await client.get(URL);
     console.log(res);
@@ -50,14 +50,9 @@ export const CommunitySubmitAPI = async (params: CommunitySubmitParams) => {
 export interface CommunityListParams {
   readonly page: number;
   readonly take: number;
-  readonly id?: string;
 }
 
-export const CommunityListAPI = async ({
-  page,
-  take,
-  id,
-}: CommunityListParams) => {
+export const CommunityListAPI = async ({ page, take }: CommunityListParams) => {
   try {
     const URL: string = `${COMMUNITY_URL}?take=${take}&page=${page}`;
 
@@ -103,23 +98,77 @@ export const CommunityDeleteAPI = async (param: CommunityDeleteParam) => {
 
 export interface CommunityUpdateParams {
   readonly id: string;
-  readonly name: string;
-  readonly description: string;
-  readonly visibility: string;
-  readonly userIds?: string[];
+  readonly name?: string;
+  readonly description?: string;
   readonly icon?: string;
   readonly banner?: string;
+  readonly visibility: CommunityVisibilityType;
 }
 
 export const CommunityUpdateAPI = async (params: CommunityUpdateParams) => {
   try {
-    console.log("userIds in API call:", params.userIds); 
     const URL: string = `${COMMUNITY_URL}/`;
 
     const res = await client.patch(URL, params);
-    console.log(res.data)
+
     return res;
   } catch (e: any) {
     errorHandling({ text: 'CommunityUpdateAPI', error: e });
+  }
+};
+
+export interface CreateInvitationParams {
+  readonly communityId: string;
+  readonly inviteeNickname: string;
+}
+
+export const CreateInvitationAPI = async ({
+  communityId,
+  inviteeNickname,
+}: CreateInvitationParams) => {
+  try {
+    const URL: string = `${COMMUNITY_URL}/${communityId}/invitations`;
+
+    const res = await client.post(URL, { inviteeNickname });
+
+    return res;
+  } catch (e: any) {
+    errorHandling({ text: 'CreateInvitationAPI', error: e });
+  }
+};
+
+export interface JoinedParams {
+  readonly communityId: string;
+}
+
+export const checkMembershipAPI = async ({ communityId }: JoinedParams) => {
+  try {
+    const response = await client.get(
+      `${COMMUNITY_URL}/${communityId}/membership`,
+    );
+    return response;
+  } catch (e: any) {
+    errorHandling({ text: 'checkMembershipAPI', error: e });
+  }
+};
+
+export const leaveCommunityAPI = async ({ communityId }: JoinedParams) => {
+  try {
+    const response = await client.post(`${COMMUNITY_URL}/${communityId}/leave`);
+    return response;
+  } catch (e: any) {
+    errorHandling({ text: 'leaveCommunityAPI', error: e });
+  }
+};
+
+export const joinCommunityAPI = async ({ communityId }: JoinedParams) => {
+  try {
+    const response = await client.post(
+      `${COMMUNITY_URL}/${communityId}/join`,
+      {},
+    );
+    return response;
+  } catch (e: any) {
+    errorHandling({ text: 'checkMembershipAPI', error: e });
   }
 };
