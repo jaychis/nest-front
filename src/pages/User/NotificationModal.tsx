@@ -44,6 +44,7 @@ const NotificationModal: React.FC<NotificationModalProps> = ({
       style={{
         overlay: {
           backgroundColor: "rgba(0, 0, 0, 0.5)",
+          zIndex: '3000'
         },
         content: {
           top: "70px",
