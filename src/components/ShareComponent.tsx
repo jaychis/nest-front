@@ -204,6 +204,7 @@ const DropdownMenu = styled.div`
   border-radius: 5px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   min-width: 160px;
+  z-index: 1001;
 `;
 
 const DropdownItem = styled.a`
@@ -213,6 +214,7 @@ const DropdownItem = styled.a`
   color: black;
   text-decoration: none;
   font-size: 14px;
+
   &:hover {
     background-color: #f1f1f1;
   }
@@ -224,6 +226,8 @@ const ShareWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+
 `;
 
 const ShareIcon = styled.img`
