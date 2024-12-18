@@ -1,9 +1,9 @@
 import React, { useEffect, useState, ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
-import { ReduxProfileAPI } from '../api/userApi';
+import { ReduxProfileAPI, UsersProfileAPI } from '../api/userApi';
 import { ProfileState } from '../../reducers/profileSlice';
-import { CardType } from '../../_common/collectionTypes';
+import { CardType, UserType } from '../../_common/collectionTypes';
 import Card from '../../components/Card';
 import BoardComment, { CommentType } from '../Board/BoardComment';
 import { BoardInquiryAPI } from '../api/boardApi';
@@ -58,14 +58,19 @@ const Profile = () => {
     }
 
     if (activeSection === 'PROFILE') {
-      dispatch(ReduxProfileAPI({ id: ID })).then((res) => {
-        console.log('Profile API response:', res);
-        if (res && res.payload) {
-          setNickname(res.payload.nickname);
-          setEmail(res.payload.email);
-          setPhone(res.payload.phone);
+      const userInquiry = async (): Promise<void> => {
+        const res = await UsersProfileAPI();
+        if (!res) return;
+
+        const response = res.data.response as UserType;
+        console.log('userInquiry response : ', response);
+        if (response) {
+          setNickname(response.nickname);
+          setEmail(response.email);
+          setPhone(response.phone);
         }
-      });
+      };
+      userInquiry();
     }
   }, [activeSection, ID, dispatch]);
 
@@ -245,9 +250,6 @@ const Profile = () => {
                 </InfoRow>
               </ProfileInfo>
             </ProfileContainer>
-            <EditButton onClick={isEditing ? handleSave : handleEditToggle}>
-              {isEditing ? '저장' : '수정'}
-            </EditButton>
           </Section>
         )}
       </Content>
@@ -255,7 +257,6 @@ const Profile = () => {
   );
 };
 
-// Styled Components
 const Container = styled.div`
   display: flex;
   width: 100%;
@@ -370,17 +371,6 @@ const Input = styled.input`
   border-radius: 10px;
   border: 1px solid #ccc;
   flex: 1;
-`;
-
-const EditButton = styled.button`
-  margin-top: 20px;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  background-color: #007bff;
-  color: white;
-  font-weight: bold;
 `;
 
 export default Profile;

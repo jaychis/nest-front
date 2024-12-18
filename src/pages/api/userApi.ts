@@ -41,13 +41,19 @@ export interface ExistingPhoneParams {
 export const ExistingPhoneAPI = async ({ phone }: ExistingPhoneParams) =>
   await client.get(`${USERS_URL}/existing/phone/${phone}`);
 
+export const UsersProfileAPI = async () => {
+  try {
+    const res = await client.get(`${USERS_URL}`);
+
+    return res;
+  } catch (e: any) {
+    errorHandling({ text: 'UsersProfileAPI', error: e });
+  }
+};
+
 export interface ProfileParams {
   readonly id: string;
 }
-
-export const ProfileAPI = async ({ id }: ProfileParams) =>
-  await client.get(`${USERS_URL}/profile/${id}`);
-
 export const ReduxProfileAPI = createAsyncThunk(
   'ReduxProfileAPI',
   async ({ id }: ProfileParams, thunkAPI) => {
@@ -55,7 +61,11 @@ export const ReduxProfileAPI = createAsyncThunk(
       const URL: string = `${USERS_URL}/profile/${id}`;
 
       const res = await client.get(URL);
-      return res.data.response;
+      console.log('res : ', res);
+
+      const response = res.data.response;
+      console.log('response : ', response);
+      return response;
     } catch (e: any) {
       if (!e.response) {
         throw error;
@@ -129,7 +139,6 @@ export const SendEmail = async (email: string) => {
     return null;
   }
 };
-
 
 export const VerifyEmail = async (email: string) => {
   let URL = 'users/verify-email';
