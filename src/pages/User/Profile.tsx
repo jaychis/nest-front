@@ -28,7 +28,6 @@ const Profile = () => {
   const [nickname, setNickname] = useState<string>(user.data.nickname || '');
   const [email, setEmail] = useState<string>(user.data.email || '');
   const [phone, setPhone] = useState<string>(user.data.phone || '');
-  const [boardId, setBoardId] = useState<string[]>([]);
 
   useEffect(() => {
     if (activeSection === 'POSTS') {
@@ -92,15 +91,13 @@ const Profile = () => {
   };
 
   const handleSave = () => {
-    // Implement save logic here
-    // After saving, toggle editing mode off
     setIsEditing(false);
   };
 
   return (
     <>
       <div style={styles.container}>
-        <div style={{ flex: 2, padding: '20px'}}>
+        <div style={{ flex: 2, padding: '20px' }}>
           <div style={styles.buttonContainer}>
             <button
               style={
@@ -135,13 +132,13 @@ const Profile = () => {
           {activeSection === 'POSTS' && (
             <div style={styles.section}>
               <h2 style={styles.sectionTitle}>내가 등록한 게시글</h2>
-              {myPosts.length > 0 ? (
+              {myPosts && myPosts.length > 0 ? (
                 myPosts.map((post: CardType) => (
                   <Card
-                    shareCount={post.share_count}
-                    key={post.id}
+                    shareCount={post?.share_count}
+                    key={post?.id}
                     {...post}
-                    createdAt={post.created_at}
+                    createdAt={post?.created_at}
                   />
                 ))
               ) : (
@@ -156,7 +153,7 @@ const Profile = () => {
               {myComments.length > 0 ? (
                 myComments.map((comment: CommentType) => (
                   <BoardComment
-                    key={comment.id}
+                    key={comment?.id}
                     {...comment}
                     onReplySubmit={handleReplySubmit}
                   />
