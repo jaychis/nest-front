@@ -12,6 +12,7 @@ import {
   ImageLocalPreviewUrls,
   ImageLocalPreviewUrlsReturnType,
 } from '../../_common/imageUploadFuntionality';
+import styled from 'styled-components';
 
 type ACTIVE_SECTION_TYPES = 'POSTS' | 'COMMENTS' | 'PROFILE';
 const Profile = () => {
@@ -95,308 +96,281 @@ const Profile = () => {
   };
 
   return (
-    <>
-      <div style={styles.container}>
-        <div style={{ flex: 2, padding: '20px' }}>
-          <div style={styles.buttonContainer}>
-            <button
-              style={
-                activeSection === 'POSTS' ? styles.activeButton : styles.button
-              }
-              onClick={() => setActiveSection('POSTS')}
-            >
-              내가 등록한 게시글
-            </button>
-            <button
-              style={
-                activeSection === 'COMMENTS'
-                  ? styles.activeButton
-                  : styles.button
-              }
-              onClick={() => setActiveSection('COMMENTS')}
-            >
-              내가 등록한 댓글
-            </button>
-            <button
-              style={
-                activeSection === 'PROFILE'
-                  ? styles.activeButton
-                  : styles.button
-              }
-              onClick={() => setActiveSection('PROFILE')}
-            >
-              나의 정보
-            </button>
-          </div>
+    <Container>
+      <Content>
+        <ButtonContainer>
+          <SectionButton
+            isActive={activeSection === 'POSTS'}
+            onClick={() => setActiveSection('POSTS')}
+          >
+            내가 등록한 게시글
+          </SectionButton>
+          <SectionButton
+            isActive={activeSection === 'COMMENTS'}
+            onClick={() => setActiveSection('COMMENTS')}
+          >
+            내가 등록한 댓글
+          </SectionButton>
+          <SectionButton
+            isActive={activeSection === 'PROFILE'}
+            onClick={() => setActiveSection('PROFILE')}
+          >
+            나의 정보
+          </SectionButton>
+        </ButtonContainer>
 
-          {activeSection === 'POSTS' && (
-            <div style={styles.section}>
-              <h2 style={styles.sectionTitle}>내가 등록한 게시글</h2>
-              {myPosts && myPosts.length > 0 ? (
-                myPosts.map((post: CardType) => (
-                  <Card
-                    shareCount={post?.share_count}
-                    key={post?.id}
-                    {...post}
-                    createdAt={post?.created_at}
-                  />
-                ))
-              ) : (
-                <p>등록된 포스트가 없습니다.</p>
-              )}
-            </div>
-          )}
+        {activeSection === 'POSTS' && (
+          <Section>
+            <SectionTitle>내가 등록한 게시글</SectionTitle>
+            {myPosts && myPosts.length > 0 ? (
+              myPosts.map((post: CardType) => (
+                <Card
+                  key={post?.id}
+                  shareCount={post?.share_count}
+                  createdAt={post?.created_at}
+                  {...post}
+                />
+              ))
+            ) : (
+              <p>등록된 포스트가 없습니다.</p>
+            )}
+          </Section>
+        )}
 
-          {activeSection === 'COMMENTS' && (
-            <div style={styles.section}>
-              <h2 style={styles.sectionTitle}>내가 등록한 댓글</h2>
-              {myComments.length > 0 ? (
-                myComments.map((comment: CommentType) => (
-                  <BoardComment
-                    key={comment?.id}
-                    {...comment}
-                    onReplySubmit={handleReplySubmit}
-                  />
-                ))
-              ) : (
-                <p>작성된 댓글이 없습니다.</p>
-              )}
-            </div>
-          )}
+        {activeSection === 'COMMENTS' && (
+          <Section>
+            <SectionTitle>내가 등록한 댓글</SectionTitle>
+            {myComments.length > 0 ? (
+              myComments.map((comment: CommentType) => (
+                <BoardComment
+                  key={comment?.id}
+                  {...comment}
+                  onReplySubmit={handleReplySubmit}
+                />
+              ))
+            ) : (
+              <p>작성된 댓글이 없습니다.</p>
+            )}
+          </Section>
+        )}
 
-          {activeSection === 'PROFILE' && (
-            <div style={styles.section}>
-              <h2 style={styles.sectionTitle}>프로필</h2>
-              <div style={styles.profileContainer}>
-                <div style={styles.imageUploadWrapper}>
-                  {isEditing ? (
-                    <>
-                      <input
-                        type="file"
-                        id="profilePicture"
-                        accept="image/*"
-                        onChange={handleProfilePictureChange}
-                        style={styles.hiddenFileInput}
-                      />
-                      <div
-                        style={styles.imagePreviewWrapper}
-                        onClick={() =>
-                          document.getElementById('profilePicture')?.click()
-                        }
-                      >
-                        {profilePreview ? (
-                          <img
-                            src={profilePreview}
-                            alt="Profile Preview"
-                            style={styles.imagePreview}
-                          />
-                        ) : (
-                          <div style={styles.placeholder}>프로필</div>
-                        )}
-                      </div>
-                    </>
-                  ) : (
-                    <div style={styles.imagePreviewWrapper}>
+        {activeSection === 'PROFILE' && (
+          <Section>
+            <SectionTitle>프로필</SectionTitle>
+            <ProfileContainer>
+              <ImageUploadWrapper>
+                {isEditing ? (
+                  <>
+                    <HiddenFileInput
+                      type="file"
+                      id="profilePicture"
+                      accept="image/*"
+                      onChange={handleProfilePictureChange}
+                    />
+                    <ImagePreviewWrapper
+                      onClick={() =>
+                        document.getElementById('profilePicture')?.click()
+                      }
+                    >
                       {profilePreview ? (
-                        <img
+                        <ImagePreview
                           src={profilePreview}
                           alt="Profile Preview"
-                          style={styles.imagePreview}
                         />
                       ) : (
-                        <div style={styles.placeholder}>프로필</div>
+                        <Placeholder>프로필</Placeholder>
                       )}
-                    </div>
+                    </ImagePreviewWrapper>
+                  </>
+                ) : (
+                  <ImagePreviewWrapper>
+                    {profilePreview ? (
+                      <ImagePreview
+                        src={profilePreview}
+                        alt="Profile Preview"
+                      />
+                    ) : (
+                      <Placeholder>프로필</Placeholder>
+                    )}
+                  </ImagePreviewWrapper>
+                )}
+              </ImageUploadWrapper>
+              <ProfileInfo>
+                <InfoRow>
+                  <Label>닉네임:</Label>
+                  {isEditing ? (
+                    <Input
+                      type="text"
+                      value={nickname}
+                      onChange={(e) => setNickname(e.target.value)}
+                    />
+                  ) : (
+                    <Value>{nickname || '닉네임을 입력하세요'}</Value>
                   )}
-                </div>
-                <div style={styles.profileInfo}>
-                  <div style={styles.infoRow}>
-                    <label style={styles.label}>닉네임:</label>
-                    {isEditing ? (
-                      <input
-                        type="text"
-                        value={nickname}
-                        onChange={(e) => setNickname(e.target.value)}
-                        style={styles.input}
-                      />
-                    ) : (
-                      <span style={styles.value}>
-                        {nickname || '닉네임을 입력하세요'}
-                      </span>
-                    )}
-                  </div>
-                  <div style={styles.infoRow}>
-                    <label style={styles.label}>이메일:</label>
-                    {isEditing ? (
-                      <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        style={styles.input}
-                      />
-                    ) : (
-                      <span style={styles.value}>
-                        {email || '이메일을 입력하세요'}
-                      </span>
-                    )}
-                  </div>
-                  <div style={styles.infoRow}>
-                    <label style={styles.label}>전화번호:</label>
-                    {isEditing ? (
-                      <input
-                        type="text"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        style={styles.input}
-                      />
-                    ) : (
-                      <span style={styles.value}>
-                        {phone || '전화번호를 입력하세요'}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <button
-                onClick={isEditing ? handleSave : handleEditToggle}
-                style={styles.editButton}
-              >
-                {isEditing ? '저장' : '수정'}
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-    </>
+                </InfoRow>
+                <InfoRow>
+                  <Label>이메일:</Label>
+                  {isEditing ? (
+                    <Input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  ) : (
+                    <Value>{email || '이메일을 입력하세요'}</Value>
+                  )}
+                </InfoRow>
+                <InfoRow>
+                  <Label>전화번호:</Label>
+                  {isEditing ? (
+                    <Input
+                      type="text"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                    />
+                  ) : (
+                    <Value>{phone || '전화번호를 입력하세요'}</Value>
+                  )}
+                </InfoRow>
+              </ProfileInfo>
+            </ProfileContainer>
+            <EditButton onClick={isEditing ? handleSave : handleEditToggle}>
+              {isEditing ? '저장' : '수정'}
+            </EditButton>
+          </Section>
+        )}
+      </Content>
+    </Container>
   );
 };
 
-const styles: { [key: string]: CSSProperties } = {
-  container: {
-    display: 'flex',
-    width: '100%',
-    height: '100vh',
-    justifyContent: 'center',
-  },
-  buttonContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    marginBottom: '20px',
-  },
-  button: {
-    padding: '10px 20px',
-    margin: '0 10px',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    backgroundColor: 'white',
-    color: '#333',
-    fontWeight: 'bold',
-    transition: 'background-color 0.3s, color 0.3s',
-  },
-  activeButton: {
-    padding: '10px 20px',
-    margin: '0 10px',
-    borderBottom: '2px solid #333',
-    borderTop: 'none',
-    borderRight: 'none',
-    borderLeft: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    color: '#007BFF',
-    fontWeight: 'bold',
-    transition: 'background-color 0.3s, color 0.3s',
-  },
-  section: {
-    marginBottom: '20px',
-    backgroundColor: '#fff',
-    padding: '10px',
-    borderRadius: '10px',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-    width: '100%',
-  },
-  sectionTitle: {
-    fontSize: '24px',
-    marginBottom: '10px',
-    borderBottom: '2px solid #333',
-    paddingBottom: '5px',
-  },
-  profileContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-  },
-  imageUploadWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer',
-    marginRight: '20px',
-  },
-  hiddenFileInput: {
-    display: 'none',
-  },
-  imagePreviewWrapper: {
-    width: '110px',
-    height: '110px',
-    borderRadius: '50%',
-    backgroundColor: '#E0E0E0',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-  },
-  imagePreview: {
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover',
-  },
-  placeholder: {
-    fontSize: '14px',
-    color: '#888',
-    textAlign: 'center',
-  },
-  profileInfo: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    width: '100%', // Added to ensure consistency
-  },
-  infoRow: {
-    display: 'flex',
-    alignItems: 'center',
-    marginBottom: '10px',
-  },
-  label: {
-    fontWeight: 'bold',
-    color: '#333',
-    fontSize: '18px',
-    width: '100px',
-  },
-  value: {
-    color: '#555',
-    fontSize: '18px',
-    flex: 1, // Added to ensure consistency
-  },
-  input: {
-    fontSize: '18px',
-    padding: '5px',
-    borderRadius: '10px',
-    border: '1px solid #ccc',
-    flex: 1, // Added to ensure consistency
-  },
-  editButton: {
-    marginTop: '20px',
-    padding: '10px 20px',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    backgroundColor: '#007BFF',
-    color: 'white',
-    fontWeight: 'bold',
-    transition: 'background-color 0.3s, color 0.3s',
-  },
-};
+// Styled Components
+const Container = styled.div`
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  justify-content: center;
+`;
+
+const Content = styled.div`
+  flex: 2;
+  padding: 20px;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+`;
+
+const SectionButton = styled.button<{ isActive: boolean }>`
+  padding: 10px 20px;
+  margin: 0 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  color: ${({ isActive }) => (isActive ? '#007BFF' : '#333')};
+  background-color: white;
+  border-bottom: ${({ isActive }) => (isActive ? '2px solid #333' : 'none')};
+`;
+
+const Section = styled.div`
+  margin-bottom: 20px;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const SectionTitle = styled.h2`
+  font-size: 24px;
+  margin-bottom: 10px;
+  border-bottom: 2px solid #333;
+  padding-bottom: 5px;
+`;
+
+const ProfileContainer = styled.div`
+  display: flex;
+  align-items: flex-start;
+`;
+
+const ImageUploadWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-right: 20px;
+`;
+
+const HiddenFileInput = styled.input`
+  display: none;
+`;
+
+const ImagePreviewWrapper = styled.div`
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const ImagePreview = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+`;
+
+const Placeholder = styled.div`
+  font-size: 14px;
+  color: #888;
+`;
+
+const ProfileInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`;
+
+const InfoRow = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+`;
+
+const Label = styled.label`
+  font-weight: bold;
+  color: #333;
+  font-size: 18px;
+  width: 100px;
+`;
+
+const Value = styled.span`
+  color: #555;
+  font-size: 18px;
+  flex: 1;
+`;
+
+const Input = styled.input`
+  font-size: 18px;
+  padding: 5px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  flex: 1;
+`;
+
+const EditButton = styled.button`
+  margin-top: 20px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+`;
 
 const cache: { [key: string]: any } = {};
 
@@ -409,7 +383,6 @@ const exponentialBackoff = (retryCount: number): Promise<void> => {
 async function ExecuteBoardInquiryAPI({ id }: { readonly id: string }) {
   const URL = `boards/${id}`;
 
-  // Return cached response if available
   if (cache[URL]) {
     return cache[URL];
   }
@@ -423,7 +396,6 @@ async function ExecuteBoardInquiryAPI({ id }: { readonly id: string }) {
       const response = res.data.response;
       console.log('profile board inquiry api response : ', response);
 
-      // Cache the response
       cache[URL] = response;
 
       return response;
