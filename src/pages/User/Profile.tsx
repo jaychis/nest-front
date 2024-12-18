@@ -7,7 +7,11 @@ import { CardType } from '../../_common/collectionTypes';
 import Card from '../../components/Card';
 import BoardComment, { CommentType } from '../Board/BoardComment';
 import { BoardInquiryAPI } from '../api/boardApi';
-import { CommentInquiryAPI } from '../api/commentApi';
+import {
+  CommentInquiryAPI,
+  CommentUsersInquiryAPI,
+  CommentUsersInquiryParam,
+} from '../api/commentApi';
 import {
   ImageLocalPreviewUrls,
   ImageLocalPreviewUrlsReturnType,
@@ -43,7 +47,7 @@ const Profile = () => {
 
     if (activeSection === 'COMMENTS') {
       const commentInquiry = async (): Promise<void> => {
-        const res = await CommentInquiryAPI({ userId: ID });
+        const res = await CommentUsersInquiryAPI({ userId: ID });
         if (!res) return;
 
         const response = res.data.response;
