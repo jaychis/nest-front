@@ -21,6 +21,9 @@ const GlobalSideBar = () => {
   const modalState: UserModalState = useSelector(
     (state: RootState) => state.modalState,
   );
+  const { hamburgerStatus } = useSelector(
+    (state: RootState) => state.sideBarButton,
+  );
   const [isSideHovered, setIsSideHovered] = useState<
     MainListTypes | 'CREATE_COMMUNITY' | null
   >(null);
@@ -108,7 +111,10 @@ const GlobalSideBar = () => {
   };
 
   return (
-    <GlobalSideBarContainer isModalOpen={modalState.modalState}>
+    <GlobalSideBarContainer
+      isModalOpen={modalState.modalState}
+      isOpen={hamburgerStatus}
+    >
       <div
         style={{
           padding: '6px 0',
@@ -312,7 +318,7 @@ export default GlobalSideBar;
 
 const GlobalSideBarContainer = styled.div.withConfig({
   shouldForwardProp: (prop) => prop !== 'isModalOpen',
-})<{ isModalOpen: boolean }>`
+})<{ readonly isModalOpen: boolean; readonly isOpen: boolean }>`
   display: flex;
   flex-direction: column;
   width: 200px;
@@ -329,6 +335,8 @@ const GlobalSideBarContainer = styled.div.withConfig({
   z-index: ${({ isModalOpen }) => (isModalOpen ? -1 : 1000)};
 
   @media (max-width: 768px) {
-    display: none;
+    display: ${(props) => (props.isOpen ? 'flex' : 'none')};
+    z-index: 1000;
+    position: fixed;
   }
 `;

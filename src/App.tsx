@@ -32,11 +32,13 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   const GlobalSideBarContainer = styled.div<{ readonly isOpen: boolean }>`
     width: 200px;
-    overflow: hidden;
-    transition: width 0.3s ease;
+    height: 100%;
+    position: fixed;
 
-    @media (max-width: 767px) {
-      width: ${(props) => (props.isOpen ? '200px' : '0px')};
+    @media (max-width: 768px) {
+      left: ${(props) => (props.isOpen ? '0' : '-200px')};
+      z-index: 999;
+      overflow: visible;
     }
   `;
 

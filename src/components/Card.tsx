@@ -444,7 +444,7 @@ const ButtonContainer = styled.div.withConfig({
   width: 100%;
   max-width: 800px;
   height: 100%;
-  z-index: ${(props) => (props.modalState ? -10 : 1000)};
+  z-index: ${(props) => (props.modalState ? -10 : 900)};
   margin-top: 5px;
   height: 100%;
   max-height: 80px;

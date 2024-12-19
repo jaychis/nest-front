@@ -109,9 +109,9 @@ const GlobalBar = () => {
     <div>
       <GlobalTopBar modalState={modalState.modalState}>
         <HamburgerMenu onClick={toggleSidebar}>
-          <span></span>
-          <span></span>
-          <span></span>
+          <Bar />
+          <Bar />
+          <Bar />
         </HamburgerMenu>
 
         {/* Logo and Site Name */}
@@ -253,6 +253,14 @@ const HamburgerMenu = styled.div`
       transition: all 0.3s ease;
     }
   }
+`;
+
+const Bar = styled.span`
+  display: block;
+  width: 100%;
+  height: 3px;
+  background-color: black;
+  border-radius: 3px;
 `;
 
 const LogoWrapper = styled.div.withConfig({
