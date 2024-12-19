@@ -23,7 +23,6 @@ const BoardList = () => {
   type IdType = null | string;
 
   const [list, setList] = useState<CardType[]>([]);
-  const [loading, setLoading] = useState<boolean>(false); // Move useState inside the component
   const TAKE: number = 5;
   const { buttonType }: MainListTypeState = useSelector(
     (state: RootState) => state.sideBarButton,

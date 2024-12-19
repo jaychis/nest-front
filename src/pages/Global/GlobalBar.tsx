@@ -15,6 +15,7 @@ import 'react-tooltip/dist/react-tooltip.css';
 import { Tooltip } from 'react-tooltip';
 import './GlobalBar.module.css';
 import styled from 'styled-components';
+import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
 
 const GlobalBar = () => {
   const navigate = useNavigate();
@@ -38,7 +39,14 @@ const GlobalBar = () => {
   const userButtonRef = useRef<HTMLDivElement>(null);
   const bellButtonRef = useRef<HTMLDivElement>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
-  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+    dispatch(
+      sideButtonSliceActions.setHamburgerStatus({
+        hamburgerStatus: !isSidebarOpen,
+      }),
+    );
+  };
 
   const toggleProfileModal = () => {
     setIsProfileModalOpen(!isProfileModalOpen);

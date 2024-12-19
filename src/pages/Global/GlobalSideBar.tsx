@@ -81,7 +81,7 @@ const GlobalSideBar = () => {
     }
 
     setSelectedButton(button);
-    dispatch(sideButtonSliceActions.setButtonType(button));
+    dispatch(sideButtonSliceActions.setButtonType({ buttonType: button }));
   };
 
   interface CommunityClickType {
@@ -91,7 +91,7 @@ const GlobalSideBar = () => {
     { button }: CommunityClickType,
     index: number,
   ) => {
-    dispatch(sideButtonSliceActions.setButtonType(button));
+    dispatch(sideButtonSliceActions.setButtonType({ buttonType: button }));
     dispatch(setCommunity(communityList[index]));
   };
 

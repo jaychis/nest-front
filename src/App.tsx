@@ -17,21 +17,26 @@ import CommunityCreatePage3 from './pages/Board/CommunityCreate/CommunityCreateP
 import { CommunityProvider } from './contexts/CommunityContext';
 import AdminList from './pages/Admin/AdminList';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
+import { RootState } from './store/store';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
+  const { hamburgerStatus } = useSelector(
+    (state: RootState) => state.sideBarButton,
+  );
   const LayoutContainer = styled.div`
     display: flex;
     width: 100%;
     height: 100%;
   `;
 
-  const GlobalSideBarContainer = styled.div`
+  const GlobalSideBarContainer = styled.div<{ readonly isOpen: boolean }>`
     width: 200px;
-    overflow: hidden; //
-    transition: width 0.3s ease; //
+    overflow: hidden;
+    transition: width 0.3s ease;
 
     @media (max-width: 767px) {
-      width: 0px;
+      width: ${(props) => (props.isOpen ? '200px' : '0px')};
     }
   `;
 
@@ -52,7 +57,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     <>
       <GlobalBar />
       <LayoutContainer>
-        <GlobalSideBarContainer>
+        <GlobalSideBarContainer isOpen={hamburgerStatus}>
           <GlobalSideBar />
         </GlobalSideBarContainer>
         <MainContent>{children}</MainContent>

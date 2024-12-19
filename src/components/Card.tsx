@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/img/panda_logo.png';
 import {
@@ -85,6 +85,7 @@ const Card = ({
       };
       try {
         const res = await ReactionApi(param);
+
         const status: number = res.status;
         const type = res.data.response?.type;
         if (
