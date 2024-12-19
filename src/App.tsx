@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import GlobalBar from './pages/Global/GlobalBar';
 import GlobalSideBar from './pages/Global/GlobalSideBar';
@@ -22,12 +22,13 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const LayoutContainer = styled.div`
     display: flex;
     width: 100%;
-    //min-height: 100vh;
     height: 100%;
   `;
 
   const GlobalSideBarContainer = styled.div`
     width: 200px;
+    overflow: hidden; //
+    transition: width 0.3s ease; //
 
     @media (max-width: 767px) {
       width: 0px;

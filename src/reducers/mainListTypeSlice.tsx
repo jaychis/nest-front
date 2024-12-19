@@ -3,10 +3,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface MainListTypeState {
   buttonType: MainListTypes;
+  hamburgerButton: boolean;
 }
 
 const initialState: MainListTypeState = {
   buttonType: 'HOME',
+  hamburgerButton: false,
 };
 
 export const sideButtonSlice = createSlice({
