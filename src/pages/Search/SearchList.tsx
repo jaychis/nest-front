@@ -144,7 +144,9 @@ const SearchList = () => {
   };
 
   const navigateToCommunity = (communityName: MainListTypes) => {
-    dispatch(sideButtonSliceActions.setButtonType(communityName));
+    dispatch(
+      sideButtonSliceActions.setButtonType({ buttonType: communityName }),
+    );
     navigate('/');
   };
 

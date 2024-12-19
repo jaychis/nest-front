@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import GlobalBar from './pages/Global/GlobalBar';
 import GlobalSideBar from './pages/Global/GlobalSideBar';
@@ -17,20 +17,28 @@ import CommunityCreatePage3 from './pages/Board/CommunityCreate/CommunityCreateP
 import { CommunityProvider } from './contexts/CommunityContext';
 import AdminList from './pages/Admin/AdminList';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
+import { RootState } from './store/store';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
+  const { hamburgerStatus } = useSelector(
+    (state: RootState) => state.sideBarButton,
+  );
   const LayoutContainer = styled.div`
     display: flex;
     width: 100%;
-    //min-height: 100vh;
     height: 100%;
   `;
 
-  const GlobalSideBarContainer = styled.div`
+  const GlobalSideBarContainer = styled.div<{ readonly isOpen: boolean }>`
     width: 200px;
+    height: 100%;
+    position: fixed;
 
-    @media (max-width: 767px) {
-      width: 0px;
+    @media (max-width: 768px) {
+      left: ${(props) => (props.isOpen ? '0' : '-200px')};
+      z-index: 999;
+      overflow: visible;
     }
   `;
 
@@ -51,7 +59,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     <>
       <GlobalBar />
       <LayoutContainer>
-        <GlobalSideBarContainer>
+        <GlobalSideBarContainer isOpen={hamburgerStatus}>
           <GlobalSideBar />
         </GlobalSideBarContainer>
         <MainContent>{children}</MainContent>

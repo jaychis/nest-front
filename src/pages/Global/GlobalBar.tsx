@@ -7,7 +7,7 @@ import logo from '../../assets/img/panda_logo.png';
 import ProfileModal from '../User/ProfileModal';
 import { AddSearchAPI } from '../api/searchApi';
 import NotificationModal from '../User/NotificationModal';
-import { searchQuery, setSearchResults } from '../../reducers/searchSlice';
+import { setSearchResults } from '../../reducers/searchSlice';
 import { RootState, AppDispatch } from '../../store/store';
 import debounce from 'lodash.debounce';
 import { UserModalState, setModalState } from '../../reducers/modalStateSlice';
@@ -15,6 +15,7 @@ import 'react-tooltip/dist/react-tooltip.css';
 import { Tooltip } from 'react-tooltip';
 import './GlobalBar.module.css';
 import styled from 'styled-components';
+import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
 
 const GlobalBar = () => {
   const navigate = useNavigate();
@@ -37,6 +38,15 @@ const GlobalBar = () => {
     useState<boolean>(false);
   const userButtonRef = useRef<HTMLDivElement>(null);
   const bellButtonRef = useRef<HTMLDivElement>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+    dispatch(
+      sideButtonSliceActions.setHamburgerStatus({
+        hamburgerStatus: !isSidebarOpen,
+      }),
+    );
+  };
 
   const toggleProfileModal = () => {
     setIsProfileModalOpen(!isProfileModalOpen);
@@ -79,11 +89,6 @@ const GlobalBar = () => {
     setIsNotificationModalOpen(!isNotificationModalOpen);
   };
 
-  const handleAddTopic = (topic: string) => {
-    setSearchTerm(topic);
-    navigate(`/search/list?query=${topic}`);
-  };
-
   const handleLogoClick = () => {
     window.location.href = '/';
   };
@@ -103,6 +108,12 @@ const GlobalBar = () => {
   return (
     <div>
       <GlobalTopBar modalState={modalState.modalState}>
+        <HamburgerMenu onClick={toggleSidebar}>
+          <Bar />
+          <Bar />
+          <Bar />
+        </HamburgerMenu>
+
         {/* Logo and Site Name */}
         <LogoWrapper
           logoHover={logoHover}
@@ -225,6 +236,31 @@ const GlobalTopBar = styled.nav.withConfig({
   border: 2px solid #d3d3d3;
   width: 100%;
   z-index: ${(props) => (props.modalState ? -1 : 2000)};
+`;
+
+const HamburgerMenu = styled.div`
+  display: none;
+
+  @media (max-width: 767px) {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    span {
+      width: 30px;
+      height: 3px;
+      background-color: black;
+      margin: 5px 0;
+      transition: all 0.3s ease;
+    }
+  }
+`;
+
+const Bar = styled.span`
+  display: block;
+  width: 100%;
+  height: 3px;
+  background-color: black;
+  border-radius: 3px;
 `;
 
 const LogoWrapper = styled.div.withConfig({
