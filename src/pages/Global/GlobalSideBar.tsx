@@ -170,7 +170,7 @@ const GlobalSideBar = () => {
         onClick={() => handleClick('FREQUENTSHARE')}
       >
         <Tooltip
-          image={'🌐'}
+          image={'🌍'}
           title={'퍼주기'}
           content={'사용자들이 많이 공유한 랭킹입니다.'}
         />
@@ -190,9 +190,29 @@ const GlobalSideBar = () => {
         onClick={() => handleClick('TAGMATCH')}
       >
         <Tooltip
-          image={'🌐'}
+          image={'💖'}
           title={'내가 좋아할 글'}
           content={'사용자가 좋아할 만한 태그를 가진 랭킹입니다.'}
+        />
+      </div>
+      <div
+        style={{
+          padding: '6px 0',
+          backgroundColor:
+            selectedButton === 'ALL' || isSideHovered === 'ALL'
+              ? '#f0f0f0'
+              : 'white',
+          borderRadius: '5px',
+          margin: '1px',
+        }}
+        onMouseEnter={() => setIsSideHovered('ALL')}
+        onMouseLeave={() => setIsSideHovered(null)}
+        onClick={() => handleClick('ALL')}
+      >
+        <Tooltip
+          image={'📚'}
+          title={'모든 리스트'}
+          content={'최신순으로 정렬된 랭킹입니다.'}
         />
       </div>
       {/*  */}

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   BoardListAPI,
   BoardPopularListAPI,
+  BoardRecentListAPI,
   BoardShareListAPI,
   BoardTagsRelatedAPI,
 } from '../api/boardApi';
@@ -83,6 +84,13 @@ const BoardList = () => {
             category: null,
           });
           break;
+        case 'ALL':
+          response = await BoardRecentListAPI({
+            take: TAKE,
+            lastId: id,
+            category: null,
+          });
+          break;
         default:
           response = await BoardListAPI({
             take: TAKE,
@@ -113,7 +121,8 @@ const BoardList = () => {
         {buttonType !== 'HOME' &&
           buttonType !== 'POPULAR' &&
           buttonType !== 'TAGMATCH' &&
-          buttonType !== 'FREQUENTSHARE' && (
+          buttonType !== 'FREQUENTSHARE' &&
+          buttonType !== 'ALL' && (
             <>
               <CommunityBanner />
             </>
