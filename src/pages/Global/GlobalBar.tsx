@@ -16,6 +16,7 @@ import { Tooltip } from 'react-tooltip';
 import './GlobalBar.module.css';
 import styled from 'styled-components';
 import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
+import SearchMobile from '../Search/SearchMobile';
 
 const GlobalBar = () => {
   const navigate = useNavigate();
@@ -93,6 +94,12 @@ const GlobalBar = () => {
     window.location.href = '/';
   };
 
+  const handleDetectViewPort = () => {
+    const test = window.visualViewport;
+    if(test && test.width < 426) navigate('/SearchMobile')
+    else clickSearch()
+  }
+
   useEffect(() => {
     if (isProfileModalOpen === false && modalState.modalState === true) {
       openModal();
@@ -135,7 +142,7 @@ const GlobalBar = () => {
             onChange={(e) => handleSearchChange(e)}
             onKeyDown={handleKeyDown} // 엔터 키 이벤트 추가
           />
-          <SearchIcon onClick={clickSearch} />
+          <SearchIcon onClick={handleDetectViewPort} />
         </SearchContainer>
 
         {/* Navigation Icons */}

@@ -117,7 +117,10 @@ const GlobalSideBar = () => {
   };
 
   return (
-    <GlobalSideBarContainer isModalOpen={modalState.modalState}>
+    <GlobalSideBarContainer 
+      isModalOpen={modalState.modalState}
+      isOpen={hamburgerStatus}
+    >
 
       <HomeList
         selectedButton={selectedButton}
