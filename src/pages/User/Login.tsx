@@ -249,8 +249,6 @@ const Login = ({
             localStorage.setItem('email', email);
             goSignup();
           }
-        } else {
-          alert('인증 코드가 없습니다. 다시 시도해 주세요.');
         }
       },
       { once: true },
@@ -274,10 +272,10 @@ const Login = ({
     <Container>
       {showAlert && (
         <Alert
-        message="로그인이 완료되었습니다."
-        onClose={() => setShowAlert(false)}
-        type="success"
-      />
+          message="로그인이 완료되었습니다."
+          onClose={() => setShowAlert(false)}
+          type="success"
+        />
       )}
       <div>
         <Header>
@@ -466,6 +464,5 @@ const ErrorText = styled.div`
   margin-top: 10px;
   margin-bottom: 10px;
 `;
-
 
 export default Login;
