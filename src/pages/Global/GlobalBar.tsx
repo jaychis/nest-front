@@ -96,8 +96,7 @@ const GlobalBar = () => {
 
   const handleDetectViewPort = () => {
     const test = window.visualViewport;
-    if(test && test.width < 426) navigate('/SearchMobile')
-    else clickSearch()
+    if(test && test.width < 610) navigate('/SearchMobile')
   }
 
   useEffect(() => {
@@ -140,7 +139,8 @@ const GlobalBar = () => {
             value={searchTerm}
             name={'search'}
             onChange={(e) => handleSearchChange(e)}
-            onKeyDown={handleKeyDown} // 엔터 키 이벤트 추가
+            onKeyDown={handleKeyDown}
+            onClick={handleDetectViewPort}
           />
           <SearchIcon onClick={handleDetectViewPort} />
         </SearchContainer>
@@ -297,7 +297,12 @@ const SearchContainer = styled.div`
   margin-right: 20px;
   display: flex;
   justify-content: center;
-  position: relative; /
+  position: relative; 
+
+  @media (max-width: 610px) {
+    margin: 0 0 0 0;
+    justify-content: flex-start;
+  }
 `;
 
 const SearchInput = styled.input`
@@ -309,6 +314,7 @@ const SearchInput = styled.input`
   @media (max-width: 644px) {
     width: 100%;
   }
+
 `;
 
 const SearchIcon = styled(FaSistrix)`
@@ -317,6 +323,10 @@ const SearchIcon = styled(FaSistrix)`
   height: 30px;
   margin-top: 5px;
   cursor: pointer;
+
+  @media(max-width: 610px){
+
+  }
 `;
 
 const ProfileButton = styled.div.withConfig({
