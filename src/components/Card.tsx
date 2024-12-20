@@ -357,7 +357,6 @@ const CardContainer = styled.div.withConfig({
   height: 100%;
   max-height: 1000vh;
   max-width: 600px;
-  margin: 10px;
   cursor: pointer;
   background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
   position: relative;

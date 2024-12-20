@@ -3,7 +3,12 @@ export interface CollectionTypes {
   readonly value: string;
 }
 
-export type MainListTypes = 'HOME' | 'POPULAR' | 'TAGMATCH' | 'FREQUENTSHARE';
+export type MainListTypes =
+  | 'HOME'
+  | 'POPULAR'
+  | 'TAGMATCH'
+  | 'FREQUENTSHARE'
+  | 'ALL';
 
 export type ReactionStateTypes = 'LIKE' | 'DISLIKE' | null;
 
@@ -24,8 +29,8 @@ export interface UserType {
 export interface TagType {
   readonly id: string;
   readonly name: string;
-  readonly communitiesTags?: any[]; 
-};
+  readonly communitiesTags?: any[];
+}
 
 export interface CommunityType {
   readonly id: string;
@@ -82,7 +87,5 @@ export interface InquiryType {
   readonly title: string;
   readonly update_at: Date;
 }
-
-
 
 export type CommunityVisibilityType = 'PUBLIC' | 'RESTRICTED' | 'PRIVATE';

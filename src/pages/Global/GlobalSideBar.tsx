@@ -158,7 +158,7 @@ const GlobalSideBar = () => {
         onClick={() => handleClick('FREQUENTSHARE')}
       >
         <Tooltip
-          image={'🌐'}
+          image={'🌍'}
           title={'퍼주기'}
           content={'사용자들이 많이 공유한 랭킹입니다.'}
         />
@@ -172,7 +172,7 @@ const GlobalSideBar = () => {
         onClick={() => handleClick('TAGMATCH')}
       >
         <Tooltip
-          image={'🌐'}
+          image={'💖'}
           title={'내가 좋아할 글'}
           content={'사용자가 좋아할 만한 태그를 가진 랭킹입니다.'}
         />

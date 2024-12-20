@@ -31,8 +31,8 @@ type SearchListTypes =
   | 'IMAGE&VIDEO'
   | 'PEOPLE'
   | 'TAGS';
-
 export type sortTypes = 'RECENT' | 'COMMENTS';
+
 const SearchList = () => {
   const [searchCardList, setSearchCardList] = useState<CardType[]>([]);
   const [searchCommunityList, setSearchCommunityList] = useState<
@@ -180,94 +180,66 @@ const SearchList = () => {
   };
   const NavBar = () => {
     return (
-      <div style={styles.navContainer}>
-        <div
-          style={{
-            ...styles.navItem,
-            backgroundColor: searchType === 'BOARDS' ? '#f0f0f0' : 'white',
-          }}
+      <NavContainer>
+        <NavItem
+          isActive={searchType === 'BOARDS'}
           onClick={() => NavBarStateChange({ type: 'BOARDS' })}
         >
           게시판
-        </div>
-        <div
-          style={{
-            ...styles.navItem,
-            backgroundColor: searchType === 'COMMUNITIES' ? '#f0f0f0' : 'white',
-          }}
+        </NavItem>
+        <NavItem
+          isActive={searchType === 'COMMUNITIES'}
           onClick={() => NavBarStateChange({ type: 'COMMUNITIES' })}
         >
           커뮤니티
-        </div>
-        <div
-          style={{
-            ...styles.navItem,
-            backgroundColor: searchType === 'COMMENTS' ? '#f0f0f0' : 'white',
-          }}
+        </NavItem>
+        <NavItem
+          isActive={searchType === 'COMMENTS'}
           onClick={() => NavBarStateChange({ type: 'COMMENTS' })}
         >
           댓글
-        </div>
-        <div
-          style={{
-            ...styles.navItem,
-            backgroundColor: searchType === 'IMAGE&VIDEO' ? '#f0f0f0' : 'white',
-          }}
+        </NavItem>
+        <NavItem
+          isActive={searchType === 'IMAGE&VIDEO'}
           onClick={() => NavBarStateChange({ type: 'IMAGE&VIDEO' })}
         >
           사진 & 영상
-        </div>
-
-        <div
-          style={{
-            ...styles.navItem,
-            backgroundColor: searchType === 'PEOPLE' ? '#f0f0f0' : 'white',
-          }}
+        </NavItem>
+        <NavItem
+          isActive={searchType === 'PEOPLE'}
           onClick={() => NavBarStateChange({ type: 'PEOPLE' })}
         >
           사람
-        </div>
-
-        <div
-          style={{
-            ...styles.navItem,
-            backgroundColor: searchType === 'TAGS' ? '#f0f0f0' : 'white',
-          }}
+        </NavItem>
+        <NavItem
+          isActive={searchType === 'TAGS'}
           onClick={() => NavBarStateChange({ type: 'TAGS' })}
         >
           태그
-        </div>
-      </div>
+        </NavItem>
+      </NavContainer>
     );
   };
 
   const EmptyList = () => <EmptyState />;
   return (
     <>
-      <NavBar />
       <MainContainer>
+        <NavBar />
         {(searchType === 'BOARDS' || searchType === 'IMAGE&VIDEO') && (
           <SortButtonContainer>
-            <NavItem
-              onClick={() => {
-                handleChangeSortType('RECENT');
-              }}
-              style={{
-                background: sortType === 'RECENT' ? '#f0f0f0' : 'white',
-              }}
+            <SortButton
+              isActive={sortType === 'RECENT'}
+              onClick={() => handleChangeSortType('RECENT')}
             >
               최신순
-            </NavItem>
-            <NavItem
-              onClick={() => {
-                handleChangeSortType('COMMENTS');
-              }}
-              style={{
-                background: sortType === 'COMMENTS' ? '#f0f0f0' : 'white',
-              }}
+            </SortButton>
+            <SortButton
+              isActive={sortType === 'COMMENTS'}
+              onClick={() => handleChangeSortType('COMMENTS')}
             >
               댓글순
-            </NavItem>
+            </SortButton>
           </SortButtonContainer>
         )}
 
@@ -346,8 +318,34 @@ const SearchList = () => {
   );
 };
 
+const NavContainer = styled.div`
+  display: flex;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 10px;
+`;
+
+const NavItem = styled.div<{ readonly isActive: boolean }>`
+  margin: 1vh 0 0 1vw;
+  padding: 20px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #000;
+  border-radius: 40px;
+  background-color: ${({ isActive }) => (isActive ? '#f0f0f0' : 'white')};
+`;
+
 const MainContainer = styled.div`
-  margin: 3vh 0 0 2vw;
+  margin: 0 0 0 200px;
+  max-width: calc(100% - 200px);
+  padding: 10px;
+  box-sizing: border-box;
+  overflow: hidden;
+  z-index: 1;
+
+  @media (max-width: 768px) {
+    margin: 0;
+    max-width: 100%;
+  }
 `;
 
 const SortButtonContainer = styled.div`
@@ -355,16 +353,17 @@ const SortButtonContainer = styled.div`
   justify-content: center;
   align-items: center;
   max-width: 200px;
-  margin: 10px;
+  padding: 10px;
+  gap: 20px;
 `;
 
-const NavItem = styled.div`
-  margin-right: 20px;
-  padding: 20px;
+const SortButton = styled.div<{ readonly isActive: boolean }>`
+  padding: 10px 20px;
   cursor: pointer;
   font-size: 16px;
   color: #000;
   border-radius: 40px;
+  background-color: ${({ isActive }) => (isActive ? '#f0f0f0' : 'white')};
 `;
 
 export default SearchList;
