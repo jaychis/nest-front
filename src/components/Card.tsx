@@ -355,7 +355,7 @@ const CardContainer = styled.div.withConfig({
   align-items: flex-start;
   width: 100%;
   height: 100%;
-  max-height: 100vh;
+  max-height: 1000vh;
   max-width: 600px;
   margin: 10px;
   cursor: pointer;
