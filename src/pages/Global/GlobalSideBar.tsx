@@ -322,8 +322,8 @@ const GlobalSideBarContainer = styled.div.withConfig({
   display: flex;
   flex-direction: column;
   width: 200px;
-  height: 100%; /* 전체 높이 */
-  overflow-y: auto; /* 필요한 경우 스크롤 */
+  height: 100%;
+  overflow: visible;
   background: #fff;
   margin-right: 10px;
   border-radius: 8px;
