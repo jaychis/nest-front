@@ -19,6 +19,7 @@ import AdminList from './pages/Admin/AdminList';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { RootState } from './store/store';
+import SearchMobile from './pages/Search/SearchMobile';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const { hamburgerStatus } = useSelector(
@@ -152,7 +153,14 @@ function App() {
             {/*어드민*/}
             <Route path={'/admin/list'} element={<AdminList />} />
 
-            {/* 새 라우터 */}
+            {/* 모바일 검색화면*/}
+            <Route path={'/Searchmobile'} 
+            element={
+              <Layout>
+                <SearchMobile/>
+              </Layout>
+              }/>
+
           </Routes>
         </CommunityProvider>
       </Router>

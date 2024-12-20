@@ -16,6 +16,7 @@ import { Tooltip } from 'react-tooltip';
 import './GlobalBar.module.css';
 import styled from 'styled-components';
 import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
+import SearchMobile from '../Search/SearchMobile';
 
 const GlobalBar = () => {
   const navigate = useNavigate();
@@ -93,6 +94,12 @@ const GlobalBar = () => {
     window.location.href = '/';
   };
 
+  const handleDetectViewPort = () => {
+    const test = window.visualViewport;
+    if(test && test.width < 426) navigate('/SearchMobile')
+    else clickSearch()
+  }
+
   useEffect(() => {
     if (isProfileModalOpen === false && modalState.modalState === true) {
       openModal();
@@ -107,7 +114,7 @@ const GlobalBar = () => {
 
   return (
     <div>
-      <GlobalTopBar modalState={modalState.modalState}>
+      <GlobalTopBar>
         <HamburgerMenu onClick={toggleSidebar}>
           <Bar />
           <Bar />
@@ -135,7 +142,7 @@ const GlobalBar = () => {
             onChange={(e) => handleSearchChange(e)}
             onKeyDown={handleKeyDown} // 엔터 키 이벤트 추가
           />
-          <SearchIcon onClick={clickSearch} />
+          <SearchIcon onClick={handleDetectViewPort} />
         </SearchContainer>
 
         {/* Navigation Icons */}
@@ -222,11 +229,7 @@ const GlobalBar = () => {
 
 export default GlobalBar;
 
-const GlobalTopBar = styled.nav.withConfig({
-  shouldForwardProp: (prop) => prop !== 'modalState',
-})<{
-  modalState: boolean;
-}>`
+const GlobalTopBar = styled.nav`
   position: fixed;
   display: flex;
   justify-content: space-between;
@@ -235,7 +238,7 @@ const GlobalTopBar = styled.nav.withConfig({
   padding: 0.625rem;
   border: 2px solid #d3d3d3;
   width: 100%;
-  z-index: ${(props) => (props.modalState ? -1 : 2000)};
+  z-index: 2001;
 `;
 
 const HamburgerMenu = styled.div`
