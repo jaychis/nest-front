@@ -16,7 +16,7 @@ import { Tooltip } from 'react-tooltip';
 import './GlobalBar.module.css';
 import styled from 'styled-components';
 import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
-import SearchMobile from '../Search/SearchMobile';
+import { breakpoints } from '../../_common/breakpoint';
 
 const GlobalBar = () => {
   const navigate = useNavigate();
@@ -244,7 +244,7 @@ const GlobalTopBar = styled.nav`
 const HamburgerMenu = styled.div`
   display: none;
 
-  @media (max-width: 767px) {
+  @media (max-width: ${breakpoints.mobile}) {
     display: flex;
     flex-direction: column;
     cursor: pointer;
@@ -299,7 +299,7 @@ const SearchContainer = styled.div`
   justify-content: center;
   position: relative;
 
-  @media (max-width: 767px) {
+  @media (max-width: ${breakpoints.mobile}) {
     margin: 0 0 0 0;
     justify-content: flex-end;
   }
@@ -311,7 +311,7 @@ const SearchInput = styled.input`
   border-radius: 20px;
   border: 1px solid #ccc;
 
-  @media (max-width: 767px) {
+  @media (max-width: ${breakpoints.mobile}) {
     display: none;
   }
 
@@ -324,7 +324,7 @@ const SearchIcon = styled(FaSistrix)`
   margin-top: 5px;
   cursor: pointer;
 
-  @media(max-width: 767px){
+  @media(max-width: ${breakpoints.mobile}){
     margin: 0 5px 5px 0;
   }
 `;
@@ -382,7 +382,7 @@ const PlusIcon = styled(FaPlus)`
   height: 52.5px;
   width: 24px;
 
-  @media(max-width: 767px){
+  @media(max-width: ${breakpoints.mobile}){
     margin-bottom: 2px;
   }
 `;
@@ -422,7 +422,7 @@ const InquiryIcon = styled.img`
   height: 57.5%;
   width: 57.5%;
 
-  @media(max-width: 767px){
+  @media(max-width: ${breakpoints.mobile}){
     margin-bottom: 2px;
   }
 `;
@@ -454,7 +454,7 @@ const BellIcon = styled(FaBell).withConfig({
   margin-right: 1vw;
   margin-top: 1vh;
 
-  @media(max-width: 767px){
+  @media(max-width: ${breakpoints.mobile}){
     margin-right: 8vw;
   }
 `;
