@@ -44,7 +44,7 @@ const GlobalBar = () => {
     setIsSidebarOpen(!isSidebarOpen);
     dispatch(
       sideButtonSliceActions.setHamburgerStatus({
-        hamburgerStatus: !isSidebarOpen,
+        hamburgerState: !isSidebarOpen,
       }),
     );
   };
@@ -96,7 +96,7 @@ const GlobalBar = () => {
 
   const handleDetectViewPort = () => {
     const test = window.visualViewport;
-    if(test && test.width < 767) navigate('/SearchMobile')
+    if(test && test.width < 610) navigate('/SearchMobile')
   }
 
   useEffect(() => {
@@ -297,7 +297,7 @@ const SearchContainer = styled.div`
   margin-right: 20px;
   display: flex;
   justify-content: center;
-  position: relative; 
+  position: relative;
 
   @media (max-width: 767px) {
     margin: 0 0 0 0;

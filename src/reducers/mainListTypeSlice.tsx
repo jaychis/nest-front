@@ -5,13 +5,13 @@ export interface MainListTypeState {
   buttonType: MainListTypes;
 }
 
-export interface HamburgerStatus {
-  readonly hamburgerStatus: boolean;
+export interface HamburgerState {
+  readonly hamburgerState: boolean;
 }
 
 const initialState = {
   buttonType: 'HOME' as MainListTypes,
-  hamburgerStatus: false,
+  hamburgerState: false,
 };
 
 export const sideButtonSlice = createSlice({
@@ -21,11 +21,11 @@ export const sideButtonSlice = createSlice({
     setButtonType: (state, action: PayloadAction<MainListTypeState>) => {
       state.buttonType = action.payload.buttonType;
     },
-    setHamburgerStatus: (state, action: PayloadAction<HamburgerStatus>) => {
-      state.hamburgerStatus = action.payload.hamburgerStatus;
+    setHamburgerStatus: (state, action: PayloadAction<HamburgerState>) => {
+      state.hamburgerState = action.payload.hamburgerState;
     },
-    hamburgerStatus: (state, action: PayloadAction<HamburgerStatus>) => {
-      state.hamburgerStatus = action.payload.hamburgerStatus;
+    hamburgerStatus: (state, action: PayloadAction<HamburgerState>) => {
+      state.hamburgerState = action.payload.hamburgerState;
     },
   },
 });

@@ -13,7 +13,7 @@ import { UserModalState } from '../../reducers/modalStateSlice';
 import logo from '../../assets/img/panda_logo.png';
 import { CommunityListAPI } from '../api/communityApi';
 import Tooltip from '../../components/Tooltip';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 interface HomeListProps {
   selectedButton?: string;
@@ -21,13 +21,12 @@ interface HomeListProps {
 }
 
 const GlobalSideBar = () => {
-  
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const modalState: UserModalState = useSelector(
     (state: RootState) => state.modalState,
   );
-  const { hamburgerStatus } = useSelector(
+  const { hamburgerState } = useSelector(
     (state: RootState) => state.sideBarButton,
   );
   const [isSideHovered, setIsSideHovered] = useState<
@@ -82,7 +81,20 @@ const GlobalSideBar = () => {
     setCommunityNamesSet(initialSet);
   }, [communityList]);
 
-  const handleClick = (button: MainListTypes) => {
+  interface CommunityClickType {
+    button: MainListTypes;
+  }
+  const sendDispatchSideBtn = async ({
+    button,
+  }: {
+    readonly button: MainListTypes;
+  }) => {
+    dispatch(sideButtonSliceActions.setButtonType({ buttonType: button }));
+    dispatch(
+      sideButtonSliceActions.setHamburgerStatus({ hamburgerState: false }),
+    );
+  };
+  const handleClick = async (button: MainListTypes) => {
     if (button === 'TAGMATCH' && !(localStorage.getItem('id') as string)) {
       alert('회원가입 유저에게 제공되는 기능입니다.');
 
@@ -90,18 +102,15 @@ const GlobalSideBar = () => {
     }
 
     setSelectedButton(button);
-    dispatch(sideButtonSliceActions.setButtonType({ buttonType: button }));
+    await sendDispatchSideBtn({ button });
   };
 
-  interface CommunityClickType {
-    button: MainListTypes;
-  }
-  const handleCommunityClick = (
+  const handleCommunityClick = async (
     { button }: CommunityClickType,
     index: number,
   ) => {
-    dispatch(sideButtonSliceActions.setButtonType({ buttonType: button }));
     dispatch(setCommunity(communityList[index]));
+    await sendDispatchSideBtn({ button });
   };
 
   const handleLoadMore = () => {
@@ -117,11 +126,10 @@ const GlobalSideBar = () => {
   };
 
   return (
-    <GlobalSideBarContainer 
+    <GlobalSideBarContainer
       isModalOpen={modalState.modalState}
-      isOpen={hamburgerStatus}
+      isOpen={hamburgerState}
     >
-
       <HomeList
         selectedButton={selectedButton}
         isSideHovered={isSideHovered}
@@ -129,11 +137,11 @@ const GlobalSideBar = () => {
         onMouseLeave={() => setIsSideHovered(null)}
         onClick={() => handleClick('HOME')}
       >
-      <Tooltip
-        image={'🏠'}
-        title={'홈'}
-        content={'사용자들이 좋아요를 많이 누른 랭킹순입니다.'}
-      />
+        <Tooltip
+          image={'🏠'}
+          title={'홈'}
+          content={'사용자들이 좋아요를 많이 누른 랭킹순입니다.'}
+        />
       </HomeList>
 
       <MostCommentedList
@@ -177,8 +185,10 @@ const GlobalSideBar = () => {
           content={'사용자가 좋아할 만한 태그를 가진 랭킹입니다.'}
         />
       </TagMatchList>
-      
-      <div style={{ fontWeight: 'bold', paddingLeft: '10px', fontSize: '1rem' }}>
+
+      <div
+        style={{ fontWeight: 'bold', paddingLeft: '10px', fontSize: '1rem' }}
+      >
         RECENT
       </div>
       <div style={{ padding: '5px 0 10px 10px' }}>
@@ -189,7 +199,6 @@ const GlobalSideBar = () => {
           <span style={{ marginLeft: '6px', fontSize: '1rem' }}>r/korea</span>
         </div>
       </div>
-      
 
       <CommunitySection>커뮤니티</CommunitySection>
 
@@ -214,8 +223,10 @@ const GlobalSideBar = () => {
                     alt={'community icon'}
                     onClick={() =>
                       handleCommunityClick(
-                        {button: community.name,} as CommunityClickType,index,
-                      )}
+                        { button: community.name } as CommunityClickType,
+                        index,
+                      )
+                    }
                   />
                   <CommunityName
                     onClick={() =>
@@ -235,9 +246,9 @@ const GlobalSideBar = () => {
 
         {communityList.length > displayCount && (
           <ButtonWrapper>
-            <ShowMoreButton 
-              onClick={handleLoadMore} 
-              disabled={loading} 
+            <ShowMoreButton
+              onClick={handleLoadMore}
+              disabled={loading}
               isLoading={loading}
             >
               {loading ? '로딩 중...' : '더 보기'}
@@ -250,6 +261,24 @@ const GlobalSideBar = () => {
 };
 
 export default GlobalSideBar;
+
+const slideIn = keyframes`
+    from {
+      transform: translateX(-100%);
+    } 
+    to {
+      transform: translateX(0);
+    }
+`;
+
+const slideOut = keyframes`
+    from {
+      transform: translateX(0);
+    } 
+    to {
+      transform: translateX(-100%);
+    }
+`;
 
 const GlobalSideBarContainer = styled.div.withConfig({
   shouldForwardProp: (prop) => prop !== 'isModalOpen',
@@ -269,15 +298,15 @@ const GlobalSideBarContainer = styled.div.withConfig({
   position: fixed;
   z-index: ${({ isModalOpen }) => (isModalOpen ? -1 : 1000)};
 
-  @media (max-width: 1439px) {
-    display: ${(props) => (props.isOpen ? 'flex' : 'none')};
+  @media (max-width: 768px) {
     z-index: 1000;
     position: fixed;
   }
 `;
 
 const HomeList = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'selectedButton' && prop !== 'isSideHovered',
+  shouldForwardProp: (prop) =>
+    prop !== 'selectedButton' && prop !== 'isSideHovered',
 })<HomeListProps>`
   padding: 6px 0;
   background-color: ${({ selectedButton, isSideHovered }) =>
@@ -288,7 +317,8 @@ const HomeList = styled.div.withConfig({
 `;
 
 const MostCommentedList = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'selectedButton' && prop !== 'isSideHovered',
+  shouldForwardProp: (prop) =>
+    prop !== 'selectedButton' && prop !== 'isSideHovered',
 })<HomeListProps>`
   padding: 6px 0;
   background-color: ${({ selectedButton, isSideHovered }) =>
@@ -300,7 +330,8 @@ const MostCommentedList = styled.div.withConfig({
 `;
 
 const FrequentShareList = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'selectedButton' && prop !== 'isSideHovered',
+  shouldForwardProp: (prop) =>
+    prop !== 'selectedButton' && prop !== 'isSideHovered',
 })<HomeListProps>`
   padding: 6px 0;
   background-color: ${({ selectedButton, isSideHovered }) =>
@@ -312,7 +343,8 @@ const FrequentShareList = styled.div.withConfig({
 `;
 
 const TagMatchList = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'selectedButton' && prop !== 'isSideHovered',
+  shouldForwardProp: (prop) =>
+    prop !== 'selectedButton' && prop !== 'isSideHovered',
 })<HomeListProps>`
   padding: 6px 0;
   background-color: ${({ selectedButton, isSideHovered }) =>
