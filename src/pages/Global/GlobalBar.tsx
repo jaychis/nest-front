@@ -96,7 +96,7 @@ const GlobalBar = () => {
 
   const handleDetectViewPort = () => {
     const test = window.visualViewport;
-    if(test && test.width < 610) navigate('/SearchMobile')
+    if(test && test.width < 767) navigate('/SearchMobile')
   }
 
   useEffect(() => {
