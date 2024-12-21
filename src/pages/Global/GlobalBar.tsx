@@ -44,7 +44,7 @@ const GlobalBar = () => {
     setIsSidebarOpen(!isSidebarOpen);
     dispatch(
       sideButtonSliceActions.setHamburgerStatus({
-        hamburgerStatus: !isSidebarOpen,
+        hamburgerState: !isSidebarOpen,
       }),
     );
   };
@@ -96,8 +96,8 @@ const GlobalBar = () => {
 
   const handleDetectViewPort = () => {
     const test = window.visualViewport;
-    if(test && test.width < 610) navigate('/SearchMobile')
-  }
+    if (test && test.width < 610) navigate('/SearchMobile');
+  };
 
   useEffect(() => {
     if (isProfileModalOpen === false && modalState.modalState === true) {
@@ -297,7 +297,7 @@ const SearchContainer = styled.div`
   margin-right: 20px;
   display: flex;
   justify-content: center;
-  position: relative; 
+  position: relative;
 
   @media (max-width: 610px) {
     margin: 0 0 0 0;
@@ -314,7 +314,6 @@ const SearchInput = styled.input`
   @media (max-width: 644px) {
     width: 100%;
   }
-
 `;
 
 const SearchIcon = styled(FaSistrix)`
@@ -324,8 +323,7 @@ const SearchIcon = styled(FaSistrix)`
   margin-top: 5px;
   cursor: pointer;
 
-  @media(max-width: 610px){
-
+  @media (max-width: 610px) {
   }
 `;
 
