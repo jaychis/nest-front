@@ -53,9 +53,14 @@ const BoardReply = (re: ReplyType) => {
 
       try {
         const res = await ReactionApi(param);
+        if (!res) return;
+
         const resType = res.data.response?.type;
-        if (resType === undefined) setReplyIsReaction(null);
-        else setReplyIsReaction(resType);
+        if (resType === undefined) {
+          setReplyIsReaction(null);
+        } else {
+          setReplyIsReaction(resType);
+        }
       } catch (err) {
         console.error(err);
       }

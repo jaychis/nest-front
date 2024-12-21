@@ -78,14 +78,15 @@ const Card = ({
 
   const reactionButton = async (userReaction: ReactionStateTypes) => {
     if (userReaction !== null) {
-      const param: ReactionParams = {
+      const params: ReactionParams = {
         boardId: id,
         userId: USER_ID,
         type: userReaction,
         reactionTarget: 'BOARD',
       };
       try {
-        const res = await ReactionApi(param);
+        const res = await ReactionApi(params);
+        if (!res) return;
 
         const status: number = res.status;
         const type = res.data.response?.type;
