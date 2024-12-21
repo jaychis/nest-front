@@ -13,7 +13,7 @@ import { UserModalState } from '../../reducers/modalStateSlice';
 import logo from '../../assets/img/panda_logo.png';
 import { CommunityListAPI } from '../api/communityApi';
 import Tooltip from '../../components/Tooltip';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 const GlobalSideBar = () => {
   const navigate = useNavigate();
@@ -76,7 +76,20 @@ const GlobalSideBar = () => {
     setCommunityNamesSet(initialSet);
   }, [communityList]);
 
-  const handleClick = (button: MainListTypes) => {
+  interface CommunityClickType {
+    button: MainListTypes;
+  }
+  const sendDispatchSideBtn = async ({
+    button,
+  }: {
+    readonly button: MainListTypes;
+  }) => {
+    dispatch(sideButtonSliceActions.setButtonType({ buttonType: button }));
+    dispatch(
+      sideButtonSliceActions.setHamburgerStatus({ hamburgerStatus: false }),
+    );
+  };
+  const handleClick = async (button: MainListTypes) => {
     if (button === 'TAGMATCH' && !(localStorage.getItem('id') as string)) {
       alert('회원가입 유저에게 제공되는 기능입니다.');
 
@@ -84,18 +97,15 @@ const GlobalSideBar = () => {
     }
 
     setSelectedButton(button);
-    dispatch(sideButtonSliceActions.setButtonType({ buttonType: button }));
+    await sendDispatchSideBtn({ button });
   };
 
-  interface CommunityClickType {
-    button: MainListTypes;
-  }
-  const handleCommunityClick = (
+  const handleCommunityClick = async (
     { button }: CommunityClickType,
     index: number,
   ) => {
-    dispatch(sideButtonSliceActions.setButtonType({ buttonType: button }));
     dispatch(setCommunity(communityList[index]));
+    await sendDispatchSideBtn({ button });
   };
 
   const handleLoadMore = () => {
@@ -336,6 +346,24 @@ const GlobalSideBar = () => {
 
 export default GlobalSideBar;
 
+const slideIn = keyframes`
+    from {
+      transform: translateX(-100%);
+    } 
+    to {
+      transform: translateX(0);
+    }
+`;
+
+const slideOut = keyframes`
+    from {
+      transform: translateX(0);
+    } 
+    to {
+      transform: translateX(-100%);
+    }
+`;
+
 const GlobalSideBarContainer = styled.div.withConfig({
   shouldForwardProp: (prop) => prop !== 'isModalOpen',
 })<{ readonly isModalOpen: boolean; readonly isOpen: boolean }>`
@@ -353,6 +381,7 @@ const GlobalSideBarContainer = styled.div.withConfig({
   margin-top: 90px;
   position: fixed;
   z-index: ${({ isModalOpen }) => (isModalOpen ? -1 : 1000)};
+  animation: ${({ isOpen }) => (isOpen ? slideIn : slideOut)} 0.25s forwards;
 
   @media (max-width: 768px) {
     display: ${(props) => (props.isOpen ? 'flex' : 'none')};
