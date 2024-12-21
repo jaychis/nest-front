@@ -12,6 +12,7 @@ import BoardComment, { CommentType } from './BoardComment';
 import BoardReply, { ReplyType } from './BoardReply';
 import { useLocation } from 'react-router-dom';
 import { LogViewedBoardAPI } from '../api/viewedBoardsApi';
+import { breakpoints } from '../../_common/breakpoint';
 
 const BoardRead = () => {
   const useQuery = () => {
@@ -188,23 +189,29 @@ export default BoardRead;
 const BoardReadContainer = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
   width: 100%;
-  align-items: flex-start;
   height: auto;
-
+  box-sizing: border-box;
+  background-color: red;
   overflow-x: hidden;
 `;
 
 const CardContainer = styled.div`
-  flex: 1;
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
+  max-width: 600px;
+  width: 100%;
   height: auto;
+  padding: 20px;
+  background-color: blue;
+  box-sizing: border-box;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${breakpoints.mobile}) {
     max-width: 95%;
+    padding: 10px;
   }
 `;
 
@@ -212,15 +219,15 @@ const CommentSection = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 560px;
-  margin: 10px;
+  max-width: 600px;
   border: 3px solid #ccc;
   border-radius: 30px;
-  padding: 10px;
+  padding: 20px;
+  box-sizing: border-box;
 
-  @media (max-width: 767px) {
-    max-width: 450px;
-    margin: 10px 0px;
+  @media (max-width: ${breakpoints.mobile}) {
+    max-width: 100%;
+    padding: 10px;
   }
 `;
 
@@ -266,7 +273,7 @@ const CommentsContainer = styled.div`
   width: 100%;
   max-width: 560px;
 
-  @media (max-width: 767px) {
+  @media (max-width: ${breakpoints.mobile}) {
     max-width: 450px;
     margin: 10px 0px;
   }

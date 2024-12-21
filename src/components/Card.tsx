@@ -356,11 +356,14 @@ const CardContainer = styled.div.withConfig({
   width: 100%;
   height: 100%;
   max-height: 1000vh;
-  max-width: 600px;
   cursor: pointer;
-  background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
+  padding: 20px;
+  background-color: orange;
+  // background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
   position: relative;
-  
+  object-fit: contain;
+  box-sizing: border-box;
+
   @media (max-width: 768px) {
     margin: 0;
   }
@@ -373,7 +376,6 @@ const MediaContainer = styled.div`
   background: #606060;
   text-align: center;
   border: 2px solid darkgray;
-  //object-fit: contain;
   border-radius: 20px;
   margin: 10px auto;
 `;
