@@ -15,6 +15,7 @@ import EmptyState from '../../components/EmptyState';
 import { useInView } from 'react-intersection-observer';
 import CommunityBanner from './CommunityBanner';
 import styled from 'styled-components';
+import { breakpoints } from '../../_common/breakpoint';
 
 const BoardList = () => {
   interface AllListParams {
@@ -162,12 +163,10 @@ const MainContainer = styled.div`
   justify-content: flex-start;
   width: 100%;
   box-sizing: border-box;
-  margin-left: 1%;
-  margin-top: 1%;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${breakpoints.mobile}) {
     margin-left: 0;
-    max-width: 600px;
+    max-width: 100%;
   }
 `;
 
@@ -176,9 +175,8 @@ const CardsContainer = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 800px; /* Set an appropriate max width */
+  max-width: 600px;
   box-sizing: border-box;
-  padding: 0 20px; /* Add left and right padding */
 `;
 
 const InvisibleRefContainer = styled.div`

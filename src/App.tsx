@@ -20,8 +20,9 @@ import styled, { keyframes } from 'styled-components';
 import { useSelector } from 'react-redux';
 import { RootState } from './store/store';
 import SearchMobile from './pages/Search/SearchMobile';
+import { breakpoints } from './_common/breakpoint';
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+const Layout = ({ children }: { readonly children: React.ReactNode }) => {
   const { hamburgerState } = useSelector(
     (state: RootState) => state.sideBarButton,
   );
@@ -58,7 +59,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     height: 100%;
     position: fixed;
 
-    @media (max-width: 768px) {
+    @media (max-width: ${breakpoints.mobile}) {
       left: ${(props) => (props.isOpen ? '0' : '-200px')};
       z-index: 999;
       overflow: visible;
@@ -78,10 +79,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     padding-top: 10px;
     overflow: auto;
 
-    @media (max-width: 767px) {
-      margin-left: 0;
-      max-width: 600px;
-      padding-top: 10px;
+    @media (max-width: ${breakpoints.mobile}) {
+      margin: 80px 0 0 0;
+      max-width: 100%;
     }
   `;
 

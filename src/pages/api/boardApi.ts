@@ -95,7 +95,6 @@ export const BoardReadAPI = async ({ id }: BoardReadParam) => {
     const URL: string = `${BOARD_URL}/${id}`;
 
     const res = await client.get(URL);
-    console.log('BoardReadAPI API res : ', res);
 
     return res;
   } catch (e: any) {
