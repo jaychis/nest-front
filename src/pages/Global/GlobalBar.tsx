@@ -17,6 +17,7 @@ import './GlobalBar.module.css';
 import styled from 'styled-components';
 import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
 import SearchMobile from '../Search/SearchMobile';
+import { breakpoints } from '../../_common/breakpoint';
 
 const GlobalBar = () => {
   const navigate = useNavigate();
@@ -96,8 +97,8 @@ const GlobalBar = () => {
 
   const handleDetectViewPort = () => {
     const test = window.visualViewport;
-    if(test && test.width < 610) navigate('/SearchMobile')
-  }
+    if (test && test.width < 610) navigate('/SearchMobile');
+  };
 
   useEffect(() => {
     if (isProfileModalOpen === false && modalState.modalState === true) {
@@ -244,7 +245,7 @@ const GlobalTopBar = styled.nav`
 const HamburgerMenu = styled.div`
   display: none;
 
-  @media (max-width: 767px) {
+  @media (max-width: ${breakpoints.mobile}) {
     display: flex;
     flex-direction: column;
     cursor: pointer;
@@ -269,7 +270,7 @@ const Bar = styled.span`
 const LogoWrapper = styled.div.withConfig({
   shouldForwardProp: (prop) => prop !== 'logoHover',
 })<{
-  logoHover: boolean;
+  readonly logoHover: boolean;
 }>`
   display: flex;
   align-items: center;
@@ -286,7 +287,7 @@ const LogoImage = styled.img`
 const SiteName = styled.span`
   margin-left: 0.625rem; /* 10px을 rem으로 변환 */
 
-  @media (max-width: 644px) {
+  @media (max-width: ${breakpoints.mobile}) {
     display: none;
   }
 `;
@@ -299,9 +300,9 @@ const SearchContainer = styled.div`
   justify-content: center;
   position: relative;
 
-  @media (max-width: 767px) {
+  @media (max-width: ${breakpoints.mobile}) {
     margin: 0 0 0 0;
-    justify-content: flex-end;
+    justify-content: flex-start;
   }
 `;
 
@@ -311,10 +312,9 @@ const SearchInput = styled.input`
   border-radius: 20px;
   border: 1px solid #ccc;
 
-  @media (max-width: 767px) {
-    display: none;
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 100%;
   }
-
 `;
 
 const SearchIcon = styled(FaSistrix)`
@@ -324,7 +324,7 @@ const SearchIcon = styled(FaSistrix)`
   margin-top: 5px;
   cursor: pointer;
 
-  @media(max-width: 767px){
+  @media (max-width: 767px) {
     margin: 0 5px 5px 0;
   }
 `;
@@ -332,7 +332,7 @@ const SearchIcon = styled(FaSistrix)`
 const ProfileButton = styled.div.withConfig({
   shouldForwardProp: (prop) => prop !== 'userHover',
 })<{
-  userHover: boolean;
+  readonly userHover: boolean;
 }>`
   display: flex;
   align-items: center;
@@ -356,7 +356,7 @@ const ProfileImage = styled.img`
 const PostButtonContainer = styled.div.withConfig({
   shouldForwardProp: (prop) => prop !== 'plusHover',
 })<{
-  plusHover: boolean;
+  readonly plusHover: boolean;
 }>`
   display: flex;
   align-items: center;
@@ -371,7 +371,7 @@ const PostButtonContainer = styled.div.withConfig({
 const SubmitButton = styled.button.withConfig({
   shouldForwardProp: (prop) => prop !== 'plusHover',
 })<{
-  plusHover: boolean;
+  readonly plusHover: boolean;
 }>`
   border: none;
   background: ${(props) => (props.plusHover ? '#D3D3D3' : 'white')};
@@ -382,7 +382,7 @@ const PlusIcon = styled(FaPlus)`
   height: 52.5px;
   width: 24px;
 
-  @media(max-width: 767px){
+  @media (max-width: 767px) {
     margin-bottom: 2px;
   }
 `;
@@ -390,7 +390,7 @@ const PlusIcon = styled(FaPlus)`
 const InquiryButtonContainer = styled.div.withConfig({
   shouldForwardProp: (prop) => prop !== 'inquiryHover',
 })<{
-  inquiryHover: boolean;
+  readonly inquiryHover: boolean;
 }>`
   display: flex;
   align-items: center;
@@ -404,7 +404,7 @@ const InquiryButtonContainer = styled.div.withConfig({
 const InquiryButton = styled.button.withConfig({
   shouldForwardProp: (prop) => prop !== 'inquiryHover',
 })<{
-  inquiryHover: boolean;
+  readonly inquiryHover: boolean;
 }>`
   display: flex;
   align-items: center;
@@ -422,7 +422,7 @@ const InquiryIcon = styled.img`
   height: 57.5%;
   width: 57.5%;
 
-  @media(max-width: 767px){
+  @media (max-width: ${breakpoints.mobile}) {
     margin-bottom: 2px;
   }
 `;
@@ -430,7 +430,7 @@ const InquiryIcon = styled.img`
 const NotificationButtonContainer = styled.div.withConfig({
   shouldForwardProp: (prop) => prop !== 'bellHover',
 })<{
-  bellHover: boolean;
+  readonly bellHover: boolean;
 }>`
   display: flex;
   align-items: center;
@@ -446,7 +446,7 @@ const NotificationButtonContainer = styled.div.withConfig({
 const BellIcon = styled(FaBell).withConfig({
   shouldForwardProp: (prop) => prop !== 'bellHover',
 })<{
-  bellHover: boolean;
+  readonly bellHover: boolean;
 }>`
   color: ${(props) => (props.bellHover ? 'white' : 'black')};
   width: 25px;
@@ -454,7 +454,7 @@ const BellIcon = styled(FaBell).withConfig({
   margin-right: 1vw;
   margin-top: 1vh;
 
-  @media(max-width: 767px){
+  @media (max-width: ${breakpoints.mobile}) {
     margin-right: 8vw;
   }
 `;

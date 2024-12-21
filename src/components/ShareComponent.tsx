@@ -6,6 +6,7 @@ import instagram from '../assets/img/instagram.png';
 import twitter from '../assets/img/twitter.png';
 import facebook from '../assets/img/facebook.png';
 import copy from '../assets/img/copy.png';
+import { breakpoints } from '../_common/breakpoint';
 
 interface ShareProps {
   readonly shareCount: number;
@@ -21,7 +22,6 @@ const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
   const kakaoApiKey = process.env.REACT_APP_KAKAO_API_KEY;
 
   React.useEffect(() => {
-
     if (window.Kakao && !window.Kakao.isInitialized()) {
       window.Kakao.init(kakaoApiKey);
     }
@@ -136,7 +136,7 @@ const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
               src="https://img.icons8.com/ios/50/forward-arrow.png"
               alt="Share Icon"
             />
-            <ShareCountTag>{shareCount}</ShareCountTag>
+            {/*<ShareCountTag>{shareCount}</ShareCountTag>*/}
           </ShareButton>
           {active && (
             <DropdownMenu>
@@ -227,7 +227,6 @@ const ShareWrapper = styled.div`
   justify-content: center;
   align-items: center;
   position: relative;
-
 `;
 
 const ShareIcon = styled.img`
@@ -241,7 +240,7 @@ const ShareIcon = styled.img`
 const ShareButton = styled.button.withConfig({
   shouldForwardProp: (prop) => prop !== 'isHovered',
 })<{
-  isHovered: boolean;
+  readonly isHovered: boolean;
 }>`
   display: flex;
   align-items: center;
@@ -250,13 +249,12 @@ const ShareButton = styled.button.withConfig({
   background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
   border: 1px solid gray;
   height: 40px;
-  width: 80px;
+  width: 45px;
   border-radius: 30px;
   margin-left: -7px;
   cursor: pointer;
 
-  @media (max-width: 768px) {
-    width: 65px;
+  @media (max-width: ${breakpoints.mobile}) {
     height: 40px;
     font-size: 10px;
     margin-left: 5px;
