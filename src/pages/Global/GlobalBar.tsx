@@ -301,7 +301,7 @@ const SearchContainer = styled.div`
 
   @media (max-width: 767px) {
     margin: 0 0 0 0;
-    justify-content: flex-start;
+    justify-content: flex-end;
   }
 `;
 
@@ -311,8 +311,8 @@ const SearchInput = styled.input`
   border-radius: 20px;
   border: 1px solid #ccc;
 
-  @media (max-width: 787px) {
-    width: 100%;
+  @media (max-width: 767px) {
+    display: none;
   }
 
 `;
@@ -323,6 +323,10 @@ const SearchIcon = styled(FaSistrix)`
   height: 30px;
   margin-top: 5px;
   cursor: pointer;
+
+  @media(max-width: 767px){
+    margin: 0 5px 5px 0;
+  }
 `;
 
 const ProfileButton = styled.div.withConfig({
@@ -339,7 +343,7 @@ const ProfileButton = styled.div.withConfig({
   background: ${(props) => (props.userHover ? '#D3D3D3' : 'transparent')};
   cursor: pointer;
   position: relative;
-  margin-top: 0.5vh;
+  margin-top: 1vh;
 `;
 
 const ProfileImage = styled.img`
@@ -375,8 +379,12 @@ const SubmitButton = styled.button.withConfig({
 `;
 
 const PlusIcon = styled(FaPlus)`
-  height: 30px;
-  width: 15px;
+  height: 52.5px;
+  width: 24px;
+
+  @media(max-width: 767px){
+    margin-bottom: 2px;
+  }
 `;
 
 const InquiryButtonContainer = styled.div.withConfig({
@@ -406,11 +414,17 @@ const InquiryButton = styled.button.withConfig({
   border-radius: 25px;
   background: ${(props) => (props.inquiryHover ? '#D3D3D3' : 'white')};
   cursor: pointer;
+  height: 60px;
+  width: 60px;
 `;
 
 const InquiryIcon = styled.img`
-  height: 55%;
-  width: 55%;
+  height: 57.5%;
+  width: 57.5%;
+
+  @media(max-width: 767px){
+    margin-bottom: 2px;
+  }
 `;
 
 const NotificationButtonContainer = styled.div.withConfig({
@@ -426,7 +440,7 @@ const NotificationButtonContainer = styled.div.withConfig({
   height: 50px;
   background: ${(props) => (props.bellHover ? '#D3D3D3' : 'transparent')};
   cursor: pointer;
-  margin-right: 30px;
+  margin-right: 2vw;
 `;
 
 const BellIcon = styled(FaBell).withConfig({
@@ -435,8 +449,14 @@ const BellIcon = styled(FaBell).withConfig({
   bellHover: boolean;
 }>`
   color: ${(props) => (props.bellHover ? 'white' : 'black')};
-  width: 20px;
-  height: 20px;
+  width: 25px;
+  height: 25px;
+  margin-right: 1vw;
+  margin-top: 1vh;
+
+  @media(max-width: 767px){
+    margin-right: 8vw;
+  }
 `;
 
 const LoginStatusView = styled.div`
