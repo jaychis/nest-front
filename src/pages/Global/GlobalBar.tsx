@@ -315,6 +315,7 @@ const SearchInput = styled.input`
   @media (max-width: ${breakpoints.mobile}) {
     width: 100%;
   }
+
 `;
 
 const SearchIcon = styled(FaSistrix)`
@@ -324,7 +325,7 @@ const SearchIcon = styled(FaSistrix)`
   margin-top: 5px;
   cursor: pointer;
 
-  @media (max-width: 767px) {
+  @media(max-width: ${breakpoints.mobile}){
     margin: 0 5px 5px 0;
   }
 `;
@@ -382,7 +383,7 @@ const PlusIcon = styled(FaPlus)`
   height: 52.5px;
   width: 24px;
 
-  @media (max-width: 767px) {
+  @media(max-width: ${breakpoints.mobile}){
     margin-bottom: 2px;
   }
 `;
