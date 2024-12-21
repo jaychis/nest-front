@@ -299,9 +299,8 @@ const SearchContainer = styled.div`
   justify-content: center;
   position: relative;
 
-  @media (max-width: 610px) {
+  @media (max-width: 787px) {
     margin: 0 0 0 0;
-    justify-content: flex-start;
   }
 `;
 
@@ -311,7 +310,7 @@ const SearchInput = styled.input`
   border-radius: 20px;
   border: 1px solid #ccc;
 
-  @media (max-width: 644px) {
+  @media (max-width: 787px) {
     width: 100%;
   }
 `;
@@ -322,9 +321,6 @@ const SearchIcon = styled(FaSistrix)`
   height: 30px;
   margin-top: 5px;
   cursor: pointer;
-
-  @media (max-width: 610px) {
-  }
 `;
 
 const ProfileButton = styled.div.withConfig({
