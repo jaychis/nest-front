@@ -15,6 +15,7 @@ import {
 import logo from '../../assets/img/panda_logo.png';
 import { ReplyType } from './BoardReply';
 import { ReplySubmitAPI, ReplySubmitParams } from '../api/replyApi';
+import { breakpoints } from '../../_common/breakpoint';
 
 export interface CommentType {
   readonly id: string;
@@ -142,33 +143,44 @@ const BoardComment = (co: BoardCommentProps) => {
       </CommentContent>
 
       <CommentActions>
-        <ActionButton
-          isActive={isCommentReaction === 'LIKE'}
-          onMouseEnter={() => setIsCardCommentUpHovered(true)}
-          onMouseLeave={() => setIsCardCommentUpHovered(false)}
-          onClick={() => reactionCommentButton('LIKE')}
-        >
-          좋아요
-        </ActionButton>
+        <ReactionWrapper>
+          <ActionButton
+            isActive={isCommentReaction === 'LIKE'}
+            onMouseEnter={() => setIsCardCommentUpHovered(true)}
+            onMouseLeave={() => setIsCardCommentUpHovered(false)}
+            onClick={() => reactionCommentButton('LIKE')}
+          >
+            좋아요
+          </ActionButton>
 
-        <ReactionCount>{isCardCommentCount}</ReactionCount>
+          <ReactionCount>{isCardCommentCount}</ReactionCount>
 
-        <ActionButton
-          isActive={isCommentReaction === 'DISLIKE'}
-          onMouseEnter={() => setIsCardCommentDownHovered(true)}
-          onMouseLeave={() => setIsCardCommentDownHovered(false)}
-          onClick={() => reactionCommentButton('DISLIKE')}
-        >
-          싫어요
-        </ActionButton>
+          <ActionButton
+            isActive={isCommentReaction === 'DISLIKE'}
+            onMouseEnter={() => setIsCardCommentDownHovered(true)}
+            onMouseLeave={() => setIsCardCommentDownHovered(false)}
+            onClick={() => reactionCommentButton('DISLIKE')}
+          >
+            싫어요
+          </ActionButton>
+        </ReactionWrapper>
 
-        <ActionButton
-          onMouseEnter={() => setIsCardCommentReplyHovered(true)}
-          onMouseLeave={() => setIsCardCommentReplyHovered(false)}
-          onClick={() => setIsCommentReplyButton(!isCommentReplyButton)}
-        >
-          답글
-        </ActionButton>
+        <CommentWrapper>
+          {/*<ActionButton*/}
+          {/*  onMouseEnter={() => setIsCardCommentReplyHovered(true)}*/}
+          {/*  onMouseLeave={() => setIsCardCommentReplyHovered(false)}*/}
+          {/*  onClick={() => setIsCommentReplyButton(!isCommentReplyButton)}*/}
+          {/*>*/}
+          {/*  답글*/}
+          {/*</ActionButton>*/}
+          <CommentButton
+            isHovered={isCardCommentReplyHovered}
+            onMouseEnter={() => setIsCardCommentReplyHovered(true)}
+            onMouseLeave={() => setIsCardCommentReplyHovered(false)}
+          >
+            답글
+          </CommentButton>
+        </CommentWrapper>
       </CommentActions>
 
       {isCommentReplyButton && (
@@ -201,8 +213,6 @@ const CommentContainer = styled.div`
   display: flex;
   flex-direction: column;
   font-family: Arial, sans-serif;
-  margin-bottom: 10px;
-  margin-right: 5%;
 `;
 
 const CommentHeader = styled.div`
@@ -225,8 +235,10 @@ const CommentContent = styled.div<{ isHovered: boolean }>`
   background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
   border-radius: 10px;
   padding: 8px;
-  width: 85%;
+  width: 100%;
   text-align: justify;
+  object-fit: contain;
+  box-sizing: border-box;
 `;
 
 const CommentActions = styled.div`
@@ -234,17 +246,36 @@ const CommentActions = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
   width: 100%;
-  margin-bottom: 10px;
+  margin: 5px 0;
 `;
 
-const ActionButton = styled.button<{ isActive?: boolean }>`
+const ReactionWrapper = styled.div`
+  margin-right: 5px;
+  border-radius: 30px;
+  width: 160px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 120px;
+  }
+`;
+
+const ActionButton = styled.button<{ readonly isActive?: boolean }>`
   border: ${(props) => (props.isActive ? '2px solid blue' : '1px solid gray')};
   background-color: ${(props) => (props.isActive ? '#c9c6c5' : '#f5f5f5')};
-  width: 65px;
-  height: 30px;
+  width: 100%;
+  height: 100%;
   border-radius: 30px;
   cursor: pointer;
-  margin-right: 10px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 50px;
+    height: 40px;
+    font-size: 10px;
+  }
 `;
 
 const ReactionCount = styled.span`
@@ -298,4 +329,36 @@ const SubmitButton = styled.button`
   font-size: 14px;
   background-color: #007bff;
   color: white;
+`;
+
+const CommentWrapper = styled.div`
+  width: 75px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 45px;
+    margin-right: 7px;
+  }
+`;
+
+const CommentButton = styled.button.withConfig({
+  shouldForwardProp: (prop) => prop !== 'isHovered',
+})<{
+  readonly isHovered: boolean;
+}>`
+  border: 1px solid gray;
+  background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
+  height: 100%;
+  width: 100%;
+  border-radius: 30px;
+  cursor: pointer;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 45px;
+    height: 40px;
+    font-size: 10px;
+  }
 `;

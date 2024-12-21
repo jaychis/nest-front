@@ -20,6 +20,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import styled from 'styled-components';
 import ShareComponent from './ShareComponent';
+import { breakpoints } from '../_common/breakpoint';
 
 const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
   try {
@@ -346,8 +347,8 @@ const Card = ({
 const CardContainer = styled.div.withConfig({
   shouldForwardProp: (prop) => !['isHovered', 'modalState'].includes(prop),
 })<{
-  isHovered: boolean;
-  modalState: boolean;
+  readonly isHovered: boolean;
+  readonly modalState: boolean;
 }>`
   display: flex;
   flex-direction: column;
@@ -358,13 +359,12 @@ const CardContainer = styled.div.withConfig({
   max-height: 1000vh;
   cursor: pointer;
   padding: 20px;
-  background-color: orange;
-  // background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
+  background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
   position: relative;
   object-fit: contain;
   box-sizing: border-box;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${breakpoints.mobile}) {
     margin: 0;
   }
 `;
@@ -437,7 +437,7 @@ const VideoContainer = styled.div`
 const ButtonContainer = styled.div.withConfig({
   shouldForwardProp: (prop) => prop !== 'modalState',
 })<{
-  modalState: boolean;
+  readonly modalState: boolean;
 }>`
   display: flex;
   justify-content: flex-start;
@@ -446,7 +446,6 @@ const ButtonContainer = styled.div.withConfig({
   max-width: 800px;
   height: 100%;
   margin-top: 5px;
-  height: 100%;
   max-height: 80px;
 `;
 
@@ -459,7 +458,7 @@ const ReactionWrapper = styled.div`
   justify-content: center;
   align-items: center;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${breakpoints.mobile}) {
     width: 120px;
   }
 `;
@@ -467,8 +466,8 @@ const ReactionWrapper = styled.div`
 const LikeButton = styled.button.withConfig({
   shouldForwardProp: (prop) => !['isLiked', 'isHovered'].includes(prop),
 })<{
-  isLiked: boolean;
-  isHovered: boolean;
+  readonly isLiked: boolean;
+  readonly isHovered: boolean;
 }>`
   border: ${(props) => (props.isLiked ? '2px solid blue' : '1px solid gray')};
   background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
@@ -477,7 +476,7 @@ const LikeButton = styled.button.withConfig({
   border-radius: 30px;
   cursor: pointer;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${breakpoints.mobile}) {
     width: 50px;
     height: 40px;
     font-size: 10px;
@@ -489,7 +488,7 @@ const ReactionCount = styled.span`
   width: 10px;
   height: 10px;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${breakpoints.mobile}) {
     margin: 5px;
   }
 `;
@@ -497,8 +496,8 @@ const ReactionCount = styled.span`
 const DisLikeButton = styled.button.withConfig({
   shouldForwardProp: (prop) => !['isDisliked', 'isHovered'].includes(prop),
 })<{
-  isDisliked: boolean;
-  isHovered: boolean;
+  readonly isDisliked: boolean;
+  readonly isHovered: boolean;
 }>`
   border: ${(props) => (props.isDisliked ? '1px solid red' : '1px solid gray')};
   background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
@@ -507,7 +506,7 @@ const DisLikeButton = styled.button.withConfig({
   border-radius: 30px;
   cursor: pointer;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${breakpoints.mobile}) {
     width: 50px;
     height: 40px;
     font-size: 10px;
@@ -521,7 +520,7 @@ const CommentWrapper = styled.div`
   justify-content: center;
   align-items: center;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${breakpoints.mobile}) {
     width: 45px;
     margin-right: 7px;
   }
@@ -530,7 +529,7 @@ const CommentWrapper = styled.div`
 const CommentButton = styled.button.withConfig({
   shouldForwardProp: (prop) => prop !== 'isHovered',
 })<{
-  isHovered: boolean;
+  readonly isHovered: boolean;
 }>`
   border: 1px solid gray;
   background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
@@ -539,7 +538,7 @@ const CommentButton = styled.button.withConfig({
   border-radius: 30px;
   cursor: pointer;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${breakpoints.mobile}) {
     width: 45px;
     height: 40px;
     font-size: 10px;
@@ -555,15 +554,15 @@ const ScirpWrapper = styled.div`
   justify-content: center;
   align-items: center;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${breakpoints.mobile}) {
     margin-left: 0px;
   }
 `;
 
 const ScripButton = styled.button.withConfig({
-  shouldForwardProp: (prop) => prop !== 'isHovered', // isHovered를 DOM에 전달하지 않음
+  shouldForwardProp: (prop) => prop !== 'isHovered',
 })<{
-  isHovered: boolean; // isHovered 타입 정의
+  readonly isHovered: boolean;
 }>`
   display: flex;
   align-items: center;
@@ -575,7 +574,7 @@ const ScripButton = styled.button.withConfig({
   border-radius: 30px;
   cursor: pointer;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${breakpoints.mobile}) {
     width: 65px;
     height: 40px;
     font-size: 10px;

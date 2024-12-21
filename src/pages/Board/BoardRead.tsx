@@ -193,7 +193,6 @@ const BoardReadContainer = styled.div`
   width: 100%;
   height: auto;
   box-sizing: border-box;
-  background-color: red;
   overflow-x: hidden;
 `;
 
@@ -206,7 +205,6 @@ const CardContainer = styled.div`
   width: 100%;
   height: auto;
   padding: 20px;
-  background-color: blue;
   box-sizing: border-box;
 
   @media (max-width: ${breakpoints.mobile}) {
@@ -269,19 +267,15 @@ const CommentButton = styled.button`
 `;
 
 const CommentsContainer = styled.div`
-  margin-top: 20px;
+  margin-top: 10px;
   width: 100%;
-  max-width: 560px;
 
   @media (max-width: ${breakpoints.mobile}) {
-    max-width: 450px;
     margin: 10px 0px;
   }
 `;
 
-const CommentContainer = styled.div`
-  margin-bottom: 15px;
-`;
+const CommentContainer = styled.div``;
 
 const RepliesWrapper = styled.div`
   margin-left: 40px;

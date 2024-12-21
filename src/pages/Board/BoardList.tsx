@@ -180,7 +180,6 @@ const CardsContainer = styled.div`
   max-width: 600px;
   box-sizing: border-box;
   padding: 20px;
-  background-color: aqua;
 `;
 
 const InvisibleRefContainer = styled.div`

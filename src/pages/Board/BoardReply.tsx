@@ -11,6 +11,7 @@ import {
 } from '../api/reactionApi';
 import styled from 'styled-components';
 import logo from '../../assets/img/panda_logo.png';
+import { breakpoints } from '../../_common/breakpoint';
 
 export interface ReplyType {
   readonly id: string;
@@ -93,40 +94,42 @@ const BoardReply = (re: ReplyType) => {
         {re.content}
       </ReplyContent>
       <ReactionContainer>
-        <LikeReactionButton
-          isCommentReaction={isReplyReaction}
-          onMouseEnter={() => setIsCardReplyUpHovered(true)}
-          onMouseLeave={() => setIsCardReplyUpHovered(false)}
-          onClick={() => reactionReplyButton('LIKE')}
-          isHovered={isCardReplyUpHovered}
-        >
-          좋아요
-        </LikeReactionButton>
-        <ReactionCount>{isCardReplyCount}</ReactionCount>
-        <DisLikeReactionButton
-          isCommentReaction={isReplyReaction}
-          onMouseEnter={() => setIsCardReplyDownHovered(true)}
-          onMouseLeave={() => setIsCardReplyDownHovered(false)}
-          onClick={() => reactionReplyButton('DISLIKE')}
-          isHovered={isCardReplyDownHovered}
-        >
-          싫어요
-        </DisLikeReactionButton>
-        <ShareButton
-          isHovered={isCardReplyShareHovered}
-          onMouseEnter={() => setIsCardReplyShareHovered(true)}
-          onMouseLeave={() => setIsCardReplyShareHovered(false)}
-        >
-          공유
-        </ShareButton>
-        <SendButton
-          isHovered={isCardReplySendHovered}
-          onMouseEnter={() => setIsCardReplySendHovered(true)}
-          onMouseLeave={() => setIsCardReplySendHovered(false)}
-          onClick={() => alert('BoardReply Button Click')}
-        >
-          보내기
-        </SendButton>
+        <ReactionWrapper>
+          <LikeReactionButton
+            isCommentReaction={isReplyReaction}
+            onMouseEnter={() => setIsCardReplyUpHovered(true)}
+            onMouseLeave={() => setIsCardReplyUpHovered(false)}
+            onClick={() => reactionReplyButton('LIKE')}
+            isHovered={isCardReplyUpHovered}
+          >
+            좋아요
+          </LikeReactionButton>
+          <ReactionCount>{isCardReplyCount}</ReactionCount>
+          <DisLikeReactionButton
+            isCommentReaction={isReplyReaction}
+            onMouseEnter={() => setIsCardReplyDownHovered(true)}
+            onMouseLeave={() => setIsCardReplyDownHovered(false)}
+            onClick={() => reactionReplyButton('DISLIKE')}
+            isHovered={isCardReplyDownHovered}
+          >
+            싫어요
+          </DisLikeReactionButton>
+        </ReactionWrapper>
+        {/*<ShareButton*/}
+        {/*  isHovered={isCardReplyShareHovered}*/}
+        {/*  onMouseEnter={() => setIsCardReplyShareHovered(true)}*/}
+        {/*  onMouseLeave={() => setIsCardReplyShareHovered(false)}*/}
+        {/*>*/}
+        {/*  공유*/}
+        {/*</ShareButton>*/}
+        {/*<SendButton*/}
+        {/*  isHovered={isCardReplySendHovered}*/}
+        {/*  onMouseEnter={() => setIsCardReplySendHovered(true)}*/}
+        {/*  onMouseLeave={() => setIsCardReplySendHovered(false)}*/}
+        {/*  onClick={() => alert('BoardReply Button Click')}*/}
+        {/*>*/}
+        {/*  보내기*/}
+        {/*</SendButton>*/}
       </ReactionContainer>
       {isReplyReplyButton && (
         <ReplyInputContainer>
@@ -147,7 +150,10 @@ const ReplyContainer = styled.div`
   display: flex;
   flex-direction: column;
   font-family: Arial, sans-serif;
-  margin-bottom: 10px;
+
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
 `;
 
 const ReplyHeader = styled.div`
@@ -173,14 +179,34 @@ const ReplyContent = styled.div<{ isHovered: boolean }>`
   padding: 8px;
   width: 100%;
   margin-top: 4px;
+
+  object-fit: contain;
+  box-sizing: border-box;
 `;
 
 const ReactionContainer = styled.div`
   display: flex;
   justify-content: flex-start;
-  align-items: center;
-  margin-bottom: 10px;
+  align-items: flex-start;
   width: 100%;
+  max-width: 800px;
+  height: 100%;
+  margin-top: 5px;
+  max-height: 80px;
+`;
+
+const ReactionWrapper = styled.div`
+  margin-right: 5px;
+  border-radius: 30px;
+  width: 160px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 140px;
+  }
 `;
 
 const LikeReactionButton = styled.button<{
@@ -192,10 +218,16 @@ const LikeReactionButton = styled.button<{
 
   margin-right: 10px;
   border-radius: 20px;
-  width: 65px;
-  height: 30px;
+  width: 100%;
+  height: 100%;
   background-color: ${(props) => (props.isHovered ? '#c9c6c5' : '#f5f5f5')};
   cursor: pointer;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 45px;
+    height: 40px;
+    font-size: 10px;
+  }
 `;
 
 const DisLikeReactionButton = styled.button<{
@@ -207,10 +239,16 @@ const DisLikeReactionButton = styled.button<{
 
   margin-right: 10px;
   border-radius: 20px;
-  width: 65px;
-  height: 30px;
+  width: 100%;
+  height: 100%;
   background-color: ${(props) => (props.isHovered ? '#c9c6c5' : '#f5f5f5')};
   cursor: pointer;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 45px;
+    height: 40px;
+    font-size: 10px;
+  }
 `;
 
 const ReactionCount = styled.span`
