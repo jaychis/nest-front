@@ -96,7 +96,7 @@ const GlobalBar = () => {
 
   const handleDetectViewPort = () => {
     const test = window.visualViewport;
-    if(test && test.width < 610) navigate('/SearchMobile')
+    if(test && test.width < 767) navigate('/SearchMobile')
   }
 
   useEffect(() => {
@@ -299,7 +299,7 @@ const SearchContainer = styled.div`
   justify-content: center;
   position: relative; 
 
-  @media (max-width: 610px) {
+  @media (max-width: 767px) {
     margin: 0 0 0 0;
     justify-content: flex-start;
   }
@@ -323,10 +323,6 @@ const SearchIcon = styled(FaSistrix)`
   height: 30px;
   margin-top: 5px;
   cursor: pointer;
-
-  @media(max-width: 610px){
-
-  }
 `;
 
 const ProfileButton = styled.div.withConfig({
