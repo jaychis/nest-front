@@ -506,12 +506,19 @@ const BoardSubmitContainer = styled.div`
   display: flex;
   justify-content: center;
   width: 67vw;
-  margin-left: 5vh;
+  margin-left: 30vw;
   margin-top: 2vh;
 
-  @media (max-width: 768px) {
-    width: 115vw;
+  @media (max-width: 767px) {
+    width: 110vw;
+    margin: 0;
   }
+
+  @media (min-width: 768px) and (max-width: 1440px) {
+    width: 80%;
+    margin-left: 15vw;
+  }
+
 `;
 
 const MainContentArea = styled.div`
@@ -545,7 +552,6 @@ const HeaderWrapper = styled.div`
 const Container = styled.div`
   background-color: #ffffff;
   padding: 20px;
-  max-width: 1180px;
   height: auto;
   margin: 45px auto 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);

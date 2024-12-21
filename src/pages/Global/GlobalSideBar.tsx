@@ -269,7 +269,7 @@ const GlobalSideBarContainer = styled.div.withConfig({
   position: fixed;
   z-index: ${({ isModalOpen }) => (isModalOpen ? -1 : 1000)};
 
-  @media (max-width: 768px) {
+  @media (max-width: 1439px) {
     display: ${(props) => (props.isOpen ? 'flex' : 'none')};
     z-index: 1000;
     position: fixed;
