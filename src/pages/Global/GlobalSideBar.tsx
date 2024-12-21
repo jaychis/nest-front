@@ -13,7 +13,8 @@ import { UserModalState } from '../../reducers/modalStateSlice';
 import logo from '../../assets/img/panda_logo.png';
 import { CommunityListAPI } from '../api/communityApi';
 import Tooltip from '../../components/Tooltip';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
+import { breakpoints } from '../../_common/breakpoint';
 
 interface HomeListProps {
   selectedButton?: string;
@@ -185,20 +186,25 @@ const GlobalSideBar = () => {
           content={'사용자가 좋아할 만한 태그를 가진 랭킹입니다.'}
         />
       </TagMatchList>
-
-      <div
-        style={{ fontWeight: 'bold', paddingLeft: '10px', fontSize: '1rem' }}
+      <AllListSection
+        selectedButton={selectedButton}
+        isSideHovered={isSideHovered}
+        onMouseEnter={() => setIsSideHovered('ALL')}
+        onMouseLeave={() => setIsSideHovered(null)}
+        onClick={() => handleClick('ALL')}
       >
-        RECENT
-      </div>
-      <div style={{ padding: '5px 0 10px 10px' }}>
-        <div
-          style={{ display: 'flex', alignItems: 'center', marginBottom: '6px' }}
-        >
-          <span style={{ fontSize: '1.3rem' }}>🇰🇷</span>
-          <span style={{ marginLeft: '6px', fontSize: '1rem' }}>r/korea</span>
-        </div>
-      </div>
+        <Tooltip
+          image="📚"
+          title="모든 리스트"
+          content="최신순으로 정렬된 랭킹입니다."
+        />
+      </AllListSection>
+
+      <RecentSection>RECENT</RecentSection>
+      <RecentItem>
+        <span>🇰🇷</span>
+        <span>r/korea</span>
+      </RecentItem>
 
       <CommunitySection>커뮤니티</CommunitySection>
 
@@ -262,24 +268,6 @@ const GlobalSideBar = () => {
 
 export default GlobalSideBar;
 
-const slideIn = keyframes`
-    from {
-      transform: translateX(-100%);
-    } 
-    to {
-      transform: translateX(0);
-    }
-`;
-
-const slideOut = keyframes`
-    from {
-      transform: translateX(0);
-    } 
-    to {
-      transform: translateX(-100%);
-    }
-`;
-
 const GlobalSideBarContainer = styled.div.withConfig({
   shouldForwardProp: (prop) => prop !== 'isModalOpen',
 })<{ readonly isModalOpen: boolean; readonly isOpen: boolean }>`
@@ -298,7 +286,8 @@ const GlobalSideBarContainer = styled.div.withConfig({
   position: fixed;
   z-index: ${({ isModalOpen }) => (isModalOpen ? -1 : 1000)};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${breakpoints.mobile}) {
+    display: ${(props) => (props.isOpen ? 'flex' : 'none')};
     z-index: 1000;
     position: fixed;
   }
@@ -401,7 +390,7 @@ const CommunityName = styled.span`
 
 const ShowMoreButton = styled.button.withConfig({
   shouldForwardProp: (prop) => prop !== 'isLoading',
-})<{isLoading:boolean}>`
+})<{ isLoading: boolean }>`
   padding: 8px 16px;
   border-radius: 5px;
   background-color: #0079d3;
@@ -419,4 +408,37 @@ const ButtonWrapper = styled.div`
   display: flex;
   justify-content: center;
   margin: 10px;
+`;
+
+const RecentSection = styled.div`
+  font-weight: bold;
+  padding-left: 10px;
+  font-size: 1rem;
+`;
+
+const RecentItem = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+  padding: 5px 0 10px 10px;
+
+  span {
+    font-size: 1.3rem;
+
+    &:nth-child(2) {
+      margin-left: 6px;
+      font-size: 1rem;
+    }
+  }
+`;
+
+const AllListSection = styled.div<{
+  selectedButton: string;
+  isSideHovered: string | null;
+}>`
+  padding: 6px 0;
+  background-color: ${({ selectedButton, isSideHovered }) =>
+    selectedButton === 'ALL' || isSideHovered === 'ALL' ? '#f0f0f0' : 'white'};
+  border-radius: 5px;
+  margin: 1px;
 `;
