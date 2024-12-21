@@ -16,6 +16,7 @@ import { Tooltip } from 'react-tooltip';
 import './GlobalBar.module.css';
 import styled from 'styled-components';
 import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
+import SearchMobile from '../Search/SearchMobile';
 
 const GlobalBar = () => {
   const navigate = useNavigate();
@@ -93,6 +94,11 @@ const GlobalBar = () => {
     window.location.href = '/';
   };
 
+  const handleDetectViewPort = () => {
+    const test = window.visualViewport;
+    if(test && test.width < 610) navigate('/SearchMobile')
+  }
+
   useEffect(() => {
     if (isProfileModalOpen === false && modalState.modalState === true) {
       openModal();
@@ -107,7 +113,7 @@ const GlobalBar = () => {
 
   return (
     <div>
-      <GlobalTopBar modalState={modalState.modalState}>
+      <GlobalTopBar>
         <HamburgerMenu onClick={toggleSidebar}>
           <Bar />
           <Bar />
@@ -133,9 +139,10 @@ const GlobalBar = () => {
             value={searchTerm}
             name={'search'}
             onChange={(e) => handleSearchChange(e)}
-            onKeyDown={handleKeyDown} // 엔터 키 이벤트 추가
+            onKeyDown={handleKeyDown}
+            onClick={handleDetectViewPort}
           />
-          <SearchIcon onClick={clickSearch} />
+          <SearchIcon onClick={handleDetectViewPort} />
         </SearchContainer>
 
         {/* Navigation Icons */}
@@ -222,11 +229,7 @@ const GlobalBar = () => {
 
 export default GlobalBar;
 
-const GlobalTopBar = styled.nav.withConfig({
-  shouldForwardProp: (prop) => prop !== 'modalState',
-})<{
-  modalState: boolean;
-}>`
+const GlobalTopBar = styled.nav`
   position: fixed;
   display: flex;
   justify-content: space-between;
@@ -235,7 +238,7 @@ const GlobalTopBar = styled.nav.withConfig({
   padding: 0.625rem;
   border: 2px solid #d3d3d3;
   width: 100%;
-  z-index: ${(props) => (props.modalState ? -1 : 2000)};
+  z-index: 2001;
 `;
 
 const HamburgerMenu = styled.div`
@@ -294,7 +297,12 @@ const SearchContainer = styled.div`
   margin-right: 20px;
   display: flex;
   justify-content: center;
-  position: relative; /
+  position: relative; 
+
+  @media (max-width: 610px) {
+    margin: 0 0 0 0;
+    justify-content: flex-start;
+  }
 `;
 
 const SearchInput = styled.input`
@@ -306,6 +314,7 @@ const SearchInput = styled.input`
   @media (max-width: 644px) {
     width: 100%;
   }
+
 `;
 
 const SearchIcon = styled(FaSistrix)`
@@ -314,6 +323,10 @@ const SearchIcon = styled(FaSistrix)`
   height: 30px;
   margin-top: 5px;
   cursor: pointer;
+
+  @media(max-width: 610px){
+
+  }
 `;
 
 const ProfileButton = styled.div.withConfig({
