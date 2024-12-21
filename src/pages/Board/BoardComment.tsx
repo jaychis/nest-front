@@ -213,6 +213,7 @@ const CommentContainer = styled.div`
   display: flex;
   flex-direction: column;
   font-family: Arial, sans-serif;
+  padding: 0 15px;
 `;
 
 const CommentHeader = styled.div`
@@ -287,7 +288,7 @@ const ReactionCount = styled.span`
 const ReplyBox = styled.div`
   display: flex;
   flex-direction: column;
-  width: 80%;
+  width: 100%;
   margin: 10px;
   border: 3px solid #ccc;
   border-radius: 30px;

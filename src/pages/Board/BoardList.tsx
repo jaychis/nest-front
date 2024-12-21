@@ -163,12 +163,10 @@ const MainContainer = styled.div`
   justify-content: flex-start;
   width: 100%;
   box-sizing: border-box;
-  margin-left: 1%;
-  margin-top: 1%;
 
   @media (max-width: ${breakpoints.mobile}) {
     margin-left: 0;
-    max-width: 600px;
+    max-width: 100%;
   }
 `;
 
@@ -179,7 +177,6 @@ const CardsContainer = styled.div`
   width: 100%;
   max-width: 600px;
   box-sizing: border-box;
-  padding: 20px;
 `;
 
 const InvisibleRefContainer = styled.div`

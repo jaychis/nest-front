@@ -80,9 +80,8 @@ const Layout = ({ children }: { readonly children: React.ReactNode }) => {
     overflow: auto;
 
     @media (max-width: ${breakpoints.mobile}) {
-      margin-left: 0;
-      max-width: 600px;
-      padding-top: 10px;
+      margin: 80px 0 0 0;
+      max-width: 100%;
     }
   `;
 

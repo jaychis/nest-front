@@ -174,8 +174,8 @@ const BoardRead = () => {
             }
           />
           <ButtonGroup>
-            <CancelButton>Cancel</CancelButton>
-            <CommentButton onClick={commentWrite}>Comment</CommentButton>
+            <CancelButton>취소</CancelButton>
+            <CommentButton onClick={commentWrite}>댓글</CommentButton>
           </ButtonGroup>
         </CommentSection>
         {isCommentState?.length > 0 ? renderComments(isCommentState) : null}
@@ -204,12 +204,10 @@ const CardContainer = styled.div`
   max-width: 600px;
   width: 100%;
   height: auto;
-  padding: 20px;
   box-sizing: border-box;
 
   @media (max-width: ${breakpoints.mobile}) {
-    max-width: 95%;
-    padding: 10px;
+    max-width: 100%;
   }
 `;
 
@@ -220,12 +218,11 @@ const CommentSection = styled.div`
   max-width: 600px;
   border: 3px solid #ccc;
   border-radius: 30px;
-  padding: 20px;
+  padding: 5px 15px;
   box-sizing: border-box;
 
   @media (max-width: ${breakpoints.mobile}) {
-    max-width: 100%;
-    padding: 10px;
+    max-width: 95%;
   }
 `;
 
@@ -269,10 +266,6 @@ const CommentButton = styled.button`
 const CommentsContainer = styled.div`
   margin-top: 10px;
   width: 100%;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    margin: 10px 0px;
-  }
 `;
 
 const CommentContainer = styled.div``;
@@ -283,4 +276,5 @@ const RepliesWrapper = styled.div`
 
 const RepliesContainer = styled.div`
   margin-top: 10px;
+  padding: 0 15px;
 `;
