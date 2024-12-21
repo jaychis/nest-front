@@ -12,10 +12,17 @@ body {
       monospace;
   }
 
-  @media(max-width: 768px){
+  @media(max-width: 1024px){
     body{
       font-size: 12px;
       zoom: 0.75;
       transform-origin: top left;
     }
+
+  @media(min-width: 1025px) and (max-width: 1440px){
+    body{
+      zoom: 0.90;
+    }
+  }
+
   }

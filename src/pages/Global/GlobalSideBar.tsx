@@ -262,6 +262,24 @@ const GlobalSideBar = () => {
 
 export default GlobalSideBar;
 
+const slideIn = keyframes`
+    from {
+      transform: translateX(-100%);
+    } 
+    to {
+      transform: translateX(0);
+    }
+`;
+
+const slideOut = keyframes`
+    from {
+      transform: translateX(0);
+    } 
+    to {
+      transform: translateX(-100%);
+    }
+`;
+
 const GlobalSideBarContainer = styled.div.withConfig({
   shouldForwardProp: (prop) => prop !== 'isModalOpen',
 })<{ readonly isModalOpen: boolean; readonly isOpen: boolean }>`
@@ -383,7 +401,7 @@ const CommunityName = styled.span`
 
 const ShowMoreButton = styled.button.withConfig({
   shouldForwardProp: (prop) => prop !== 'isLoading',
-})<{ readonly isLoading: boolean }>`
+})<{isLoading:boolean}>`
   padding: 8px 16px;
   border-radius: 5px;
   background-color: #0079d3;

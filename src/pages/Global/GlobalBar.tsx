@@ -96,8 +96,8 @@ const GlobalBar = () => {
 
   const handleDetectViewPort = () => {
     const test = window.visualViewport;
-    if (test && test.width < 610) navigate('/SearchMobile');
-  };
+    if(test && test.width < 610) navigate('/SearchMobile')
+  }
 
   useEffect(() => {
     if (isProfileModalOpen === false && modalState.modalState === true) {
@@ -299,8 +299,9 @@ const SearchContainer = styled.div`
   justify-content: center;
   position: relative;
 
-  @media (max-width: 787px) {
+  @media (max-width: 767px) {
     margin: 0 0 0 0;
+    justify-content: flex-start;
   }
 `;
 
@@ -313,6 +314,7 @@ const SearchInput = styled.input`
   @media (max-width: 787px) {
     width: 100%;
   }
+
 `;
 
 const SearchIcon = styled(FaSistrix)`
