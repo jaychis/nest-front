@@ -75,7 +75,7 @@ const Layout = ({ children }: { readonly children: React.ReactNode }) => {
 
   const MainContent = styled.div`
     flex: 1;
-    margin-top: 80px;
+    margin: 80px 0 0 200px;
     padding-top: 10px;
     overflow: auto;
 

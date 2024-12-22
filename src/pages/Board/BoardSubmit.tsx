@@ -20,6 +20,7 @@ import ErrorModal from '../../_common/ErrorModal';
 import DeleteButton from '../../components/Buttons/DeleteButton';
 import styled from 'styled-components';
 import { TagListAPI } from '../api/tagApi';
+import { breakpoints } from '../../_common/breakpoint';
 
 const BoardSubmit = () => {
   const navigate = useNavigate();
@@ -312,186 +313,166 @@ const BoardSubmit = () => {
   return (
     <>
       <BoardSubmitContainer>
-        <MainContentArea>
-          <FullHeightWrapper>
-            <CenteredContainer>
-              <ContentWrapper>
-                <HeaderWrapper>
-                  <button
-                    onClick={() => setInputType('TEXT')}
-                    style={
-                      inputType === 'TEXT' ? activeButtonStyle : buttonStyle
-                    }
-                  >
-                    텍스트
-                  </button>
-                  <button
-                    onClick={() => setInputType('MEDIA')}
-                    style={
-                      inputType === 'MEDIA' ? activeButtonStyle : buttonStyle
-                    }
-                  >
-                    이미지 & 비디오
-                  </button>
-                  <button
-                    onClick={() => setInputType('LINK')}
-                    style={
-                      inputType === 'LINK' ? activeButtonStyle : buttonStyle
-                    }
-                  >
-                    링크
-                  </button>
-                </HeaderWrapper>
+        <ContentWrapper>
+          <HeaderWrapper>
+            <button
+              onClick={() => setInputType('TEXT')}
+              style={inputType === 'TEXT' ? activeButtonStyle : buttonStyle}
+            >
+              텍스트
+            </button>
+            <button
+              onClick={() => setInputType('MEDIA')}
+              style={inputType === 'MEDIA' ? activeButtonStyle : buttonStyle}
+            >
+              이미지 & 비디오
+            </button>
+            <button
+              onClick={() => setInputType('LINK')}
+              style={inputType === 'LINK' ? activeButtonStyle : buttonStyle}
+            >
+              링크
+            </button>
+          </HeaderWrapper>
 
-                <InputStyle
-                  type="text"
-                  value={searchTerm}
-                  onChange={handleCommunitySearchChange}
-                  placeholder="커뮤니티 검색"
-                />
-                {searchResults.length > 0 && (
-                  <SearchCommunityList>
-                    {searchResults.map((result, index) => (
-                      <Item
-                        key={index}
-                        isEven={index % 2 === 0}
-                        onClick={() => handleCommunitySelect(result)}
-                      >
-                        {result}
-                      </Item>
-                    ))}
-                  </SearchCommunityList>
-                )}
-                {/*{searchResults.length === 0 && searchTerm && (*/}
-                {/*  <div>선택된 커뮤니티: jaychis</div>*/}
-                {/*)}*/}
-                {selectedCommunity && (
-                  <div>선택된 커뮤니티: {selectedCommunity}</div>
-                )}
-
-                {inputType === 'TEXT' && (
-                  <>
-                    <InputStyle
-                      name="title"
-                      type="text"
-                      placeholder="제목"
-                      onChange={handleTextTitleChange}
-                    />
-                    <ReactQuill
-                      value={textContent}
-                      onChange={handleEditorChange}
-                      style={{ height: '400px' }}
-                    />
-                  </>
-                )}
-                {inputType === 'MEDIA' && (
-                  <>
-                    <InputStyle
-                      name="title"
-                      type="text"
-                      placeholder="제목"
-                      onChange={handleMediaTitleChange}
-                    />
-
-                    {previewUrls.length > 0 ? (
-                      <>
-                        <button onClick={imageUrlListDelete}>휴지통</button>
-                        {previewUrls.map((image, index) => (
-                          <ImagePreviewWrapper key={index}>
-                            <ImagePreview
-                              src={image}
-                              alt={`Preview image ${index}`}
-                            />
-                          </ImagePreviewWrapper>
-                        ))}
-                      </>
-                    ) : (
-                      <>
-                        <InputStyle
-                          type={'file'}
-                          multiple
-                          onChange={handleFileChange}
-                        />
-                      </>
-                    )}
-                  </>
-                )}
-                {inputType === 'LINK' && (
-                  <>
-                    <InputStyle
-                      name="title"
-                      type="text"
-                      placeholder="제목"
-                      onChange={handleLinkTitleChange}
-                    />
-                    <InputStyle
-                      type="text"
-                      placeholder="링크 추가"
-                      onChange={(e) => handleLinkContentChange(e)}
-                    />
-                  </>
-                )}
-                <Container>
-                  <Form onSubmit={(e) => e.preventDefault()}>
-                    <Label htmlFor="topicSearch">태그 검색</Label>
-                    <TopicSearchInput
-                      type="text"
-                      id="topicSearch"
-                      value={tagSearchTerm}
-                      onChange={handleSearchChange}
-                    />
-                    {suggestions.length > 0 && (
-                      <Suggestions>
-                        {suggestions.map((suggestion, index) => (
-                          <Suggestion
-                            key={index}
-                            onClick={() => handleAddTopic(suggestion)}
-                          >
-                            {suggestion}
-                          </Suggestion>
-                        ))}
-                      </Suggestions>
-                    )}
-                    {tagSearchTerm &&
-                      !suggestions.includes(`#${tagSearchTerm}`) &&
-                      !topics.includes(`#${tagSearchTerm}`) && (
-                        <NoSuggestionWrapper>
-                          <TagInfoMessage>
-                            등록된 태그가 없습니다. "{tagSearchTerm}"로 새
-                            태그를 추가할 수 있습니다.
-                          </TagInfoMessage>
-                          <AddButton
-                            onClick={() => handleAddTopic(tagSearchTerm)}
-                          >
-                            "{tagSearchTerm}" 추가
-                          </AddButton>
-                        </NoSuggestionWrapper>
-                      )}
-
-                    <SelectedTopicWrapper>
-                      {topics.map((topic, index) => {
-                        return (
-                          <TopicItem key={index}>
-                            <TopicText>{topic}</TopicText>
-                            <DeleteButton
-                              onClick={() => handleRemoveTopic(index)}
-                            />
-                          </TopicItem>
-                        );
-                      })}
-                    </SelectedTopicWrapper>
-                  </Form>
-                </Container>
-                <SubmitButtonStyle
-                  type="submit"
-                  onClick={(e) => handleSubmit(e)}
+          <InputStyle
+            type="text"
+            value={searchTerm}
+            onChange={handleCommunitySearchChange}
+            placeholder="커뮤니티 검색"
+          />
+          {searchResults.length > 0 && (
+            <SearchCommunityList>
+              {searchResults.map((result, index) => (
+                <Item
+                  key={index}
+                  isEven={index % 2 === 0}
+                  onClick={() => handleCommunitySelect(result)}
                 >
-                  보내기
-                </SubmitButtonStyle>
-              </ContentWrapper>
-            </CenteredContainer>
-          </FullHeightWrapper>
-        </MainContentArea>
+                  {result}
+                </Item>
+              ))}
+            </SearchCommunityList>
+          )}
+          {selectedCommunity && (
+            <div style={{ marginTop: '5px' }}>
+              선택된 커뮤니티: {selectedCommunity}
+            </div>
+          )}
+
+          {inputType === 'TEXT' && (
+            <>
+              <InputStyle
+                name="title"
+                type="text"
+                placeholder="제목"
+                onChange={handleTextTitleChange}
+              />
+              <ReactQuill
+                value={textContent}
+                onChange={handleEditorChange}
+                style={{ height: '400px' }}
+              />
+            </>
+          )}
+          {inputType === 'MEDIA' && (
+            <>
+              <InputStyle
+                name="title"
+                type="text"
+                placeholder="제목"
+                onChange={handleMediaTitleChange}
+              />
+
+              {previewUrls.length > 0 ? (
+                <>
+                  <button onClick={imageUrlListDelete}>휴지통</button>
+                  {previewUrls.map((image, index) => (
+                    <ImagePreviewWrapper key={index}>
+                      <ImagePreview
+                        src={image}
+                        alt={`Preview image ${index}`}
+                      />
+                    </ImagePreviewWrapper>
+                  ))}
+                </>
+              ) : (
+                <>
+                  <InputStyle
+                    type={'file'}
+                    multiple
+                    onChange={handleFileChange}
+                  />
+                </>
+              )}
+            </>
+          )}
+          {inputType === 'LINK' && (
+            <>
+              <InputStyle
+                name="title"
+                type="text"
+                placeholder="제목"
+                onChange={handleLinkTitleChange}
+              />
+              <InputStyle
+                type="text"
+                placeholder="링크 추가"
+                onChange={(e) => handleLinkContentChange(e)}
+              />
+            </>
+          )}
+          <Container>
+            <Form onSubmit={(e) => e.preventDefault()}>
+              <Label htmlFor="topicSearch">태그 검색</Label>
+              <TopicSearchInput
+                type="text"
+                id="topicSearch"
+                value={tagSearchTerm}
+                onChange={handleSearchChange}
+              />
+              {suggestions.length > 0 && (
+                <Suggestions>
+                  {suggestions.map((suggestion, index) => (
+                    <Suggestion
+                      key={index}
+                      onClick={() => handleAddTopic(suggestion)}
+                    >
+                      {suggestion}
+                    </Suggestion>
+                  ))}
+                </Suggestions>
+              )}
+              {tagSearchTerm &&
+                !suggestions.includes(`#${tagSearchTerm}`) &&
+                !topics.includes(`#${tagSearchTerm}`) && (
+                  <NoSuggestionWrapper>
+                    <TagInfoMessage>
+                      등록된 태그가 없습니다. "{tagSearchTerm}"로 새 태그를
+                      추가할 수 있습니다.
+                    </TagInfoMessage>
+                    <AddButton onClick={() => handleAddTopic(tagSearchTerm)}>
+                      "{tagSearchTerm}" 추가
+                    </AddButton>
+                  </NoSuggestionWrapper>
+                )}
+
+              <SelectedTopicWrapper>
+                {topics.map((topic, index) => {
+                  return (
+                    <TopicItem key={index}>
+                      <TopicText>{topic}</TopicText>
+                      <DeleteButton onClick={() => handleRemoveTopic(index)} />
+                    </TopicItem>
+                  );
+                })}
+              </SelectedTopicWrapper>
+            </Form>
+          </Container>
+          <SubmitButtonStyle type="submit" onClick={(e) => handleSubmit(e)}>
+            보내기
+          </SubmitButtonStyle>
+        </ContentWrapper>
       </BoardSubmitContainer>
       <ErrorModal
         show={errorModalVisible}
@@ -503,44 +484,34 @@ const BoardSubmit = () => {
 };
 
 const BoardSubmitContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  width: 67vw;
-  margin-left: 30vw;
-  margin-top: 2vh;
+  width: 80%;
+  height: 100%;
+  overflow: hidden;
 
-  @media (max-width: 767px) {
-    width: 110vw;
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 100%;
     margin: 0;
   }
 
-  @media (min-width: 768px) and (max-width: 1440px) {
+  @media (min-width: ${breakpoints.mobile}) and (max-width: ${breakpoints.desktop}) {
     width: 80%;
     margin-left: 15vw;
   }
-
-`;
-
-const MainContentArea = styled.div`
-  flex: 2;
-`;
-
-const FullHeightWrapper = styled.div`
-  background-color: #fff;
-  min-height: 100vh;
-`;
-
-const CenteredContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  width: 100%;
 `;
 
 const ContentWrapper = styled.div`
+  transform: translate(12%);
   width: 100%;
   height: auto;
   padding: 10px;
   background-color: #fff;
+  box-sizing: border-box;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 100%;
+    margin: 0;
+    transform: translate(0);
+  }
 `;
 
 const HeaderWrapper = styled.div`
@@ -636,6 +607,7 @@ const InputStyle = styled.input`
   padding-bottom: 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  box-sizing: border-box;
 `;
 
 const SubmitButtonStyle = styled.button`
@@ -648,36 +620,18 @@ const SubmitButtonStyle = styled.button`
   font-weight: bold;
 `;
 
-const ButtonStyle = styled.button`
-  padding: 10px 20px;
-  margin: 0;
-  border: 1px solid #fff;
-  border-radius: 4px;
-  cursor: pointer;
-  background-color: white;
-  color: #0079d3;
-  font-weight: bold;
-  transition:
-    background-color 0.3s,
-    color 0.3s;
-`;
-
-const ActiveButtonStyle = styled(ButtonStyle)`
-  background-color: #84d7fb;
-  color: white;
-  border: #84d7fb;
-`;
-
 const SearchCommunityList = styled.ul`
   list-style-type: none;
   padding: 0;
   margin: 0;
+  box-sizing: border-box;
 `;
 
-const Item = styled.li<{ isEven: boolean }>`
+const Item = styled.li<{ readonly isEven: boolean }>`
   cursor: pointer;
   padding: 8px;
   background-color: ${({ isEven }) => (isEven ? '#f9f9f9' : '#fff')};
+  box-sizing: border-box;
 
   &:hover {
     background-color: #e0e0e0; /* 선택사항: 호버 효과 추가 */
