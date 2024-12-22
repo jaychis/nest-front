@@ -242,7 +242,6 @@ const GlobalTopBar = styled.nav`
 `;
 
 const HamburgerMenu = styled.div`
-  display: none;
 
   @media (max-width: ${breakpoints.mobile}) {
     display: flex;
@@ -253,7 +252,6 @@ const HamburgerMenu = styled.div`
       height: 3px;
       background-color: black;
       margin: 5px 0;
-      transition: all 0.3s ease;
     }
   }
 `;
@@ -298,10 +296,11 @@ const SearchContainer = styled.div`
   display: flex;
   justify-content: center;
   position: relative;
-
+  display: flex;
+  
   @media (max-width: ${breakpoints.mobile}) {
     margin: 0 0 0 0;
-    justify-content: flex-start;
+    justify-content: flex-end;
   }
 `;
 
@@ -312,7 +311,7 @@ const SearchInput = styled.input`
   border: 1px solid #ccc;
 
   @media (max-width: ${breakpoints.mobile}) {
-    width: 100%;
+    display: none;
   }
 
 `;

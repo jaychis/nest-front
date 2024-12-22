@@ -129,7 +129,7 @@ const Item = styled.div`
 
 const Number = styled.span`
   display: inline-block;
-  width: 25px;
+  width: 30px;
 `
 
 const SearchInput = styled.input`

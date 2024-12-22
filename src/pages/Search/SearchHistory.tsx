@@ -30,7 +30,7 @@ const SearchHistory = () => {
 
     return(
         <HistoryContainer>
-            {searchHistoryList.sort().slice(0,4).map((list, index) => {return(
+            {searchHistoryList.sort().slice(0,3).map((list, index) => {return(
                 <Item key={index}>
                     <Text>{list}</Text>
                 </Item>
@@ -56,7 +56,7 @@ const Item = styled.div`
     border: 1px solid #84d7fb;
     border-radius: 25px;
     height: 7vh;
-    max-width: 25vw;
+    max-width: 28vw;
     overflow: hidden;
     box-sizing: border-box;
 `;
