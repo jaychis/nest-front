@@ -47,8 +47,8 @@ const GlobalBar = () => {
   const handleScroll = () => {
     const currentScrollY = window.scrollY;
 
-    if (currentScrollY > lastScrollY && currentScrollY > 50) {
-      // 화면을 내릴 때, 특정 위치(50px 이상)에서 Top Bar 숨김
+    if (currentScrollY > lastScrollY && currentScrollY > 30) {
+      // 화면을 내릴 때, 특정 위치(30px 이상)에서 Top Bar 숨김
       setIsVisible(false);
     } else {
       // 화면을 올릴 때 Top Bar 표시
@@ -121,8 +121,8 @@ const GlobalBar = () => {
 
   const handleDetectViewPort = () => {
     const test = window.visualViewport;
-    if(test && test.width < 767) navigate('/SearchMobile')
-  }
+    if (test && test.width < 767) navigate('/SearchMobile');
+  };
 
   useEffect(() => {
     if (isProfileModalOpen === false && modalState.modalState === true) {
