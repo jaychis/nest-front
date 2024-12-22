@@ -269,9 +269,13 @@ const GlobalTopBar = styled.nav<TopBarProps>`
   width: 100%;
   z-index: 2001;
 
-  transform: ${({ isVisible }) =>
-    isVisible ? 'translateY(0)' : 'translateY(-100%)'};
+  transform: translateY(0);
   transition: transform 0.27s ease-in-out;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    transform: ${({ isVisible }) =>
+      isVisible ? 'translateY(0)' : 'translateY(-100%)'};
+  }
 `;
 
 const HamburgerMenu = styled.div`
