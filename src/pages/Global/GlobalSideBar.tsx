@@ -283,7 +283,7 @@ const GlobalSideBarContainer = styled.div.withConfig({
   border-top: none;
   margin-top: 90px;
   position: fixed;
-  z-index: ${({ isModalOpen }) => (isModalOpen ? -1 : 1000)};
+  z-index: 2001;
 
   @media (max-width: ${breakpoints.mobile}) {
     z-index: 1000;

@@ -40,31 +40,6 @@ const GlobalBar = () => {
   const userButtonRef = useRef<HTMLDivElement>(null);
   const bellButtonRef = useRef<HTMLDivElement>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
-
-  const [isVisible, setIsVisible] = useState<boolean>(true);
-  const [lastScrollY, setLastScrollY] = useState<number>(0);
-
-  const handleScroll = () => {
-    const currentScrollY = window.scrollY;
-
-    if (currentScrollY > lastScrollY && currentScrollY > 30) {
-      // 화면을 내릴 때, 특정 위치(30px 이상)에서 Top Bar 숨김
-      setIsVisible(false);
-    } else {
-      // 화면을 올릴 때 Top Bar 표시
-      setIsVisible(true);
-    }
-
-    setLastScrollY(currentScrollY);
-  };
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [lastScrollY]);
-
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
     dispatch(
@@ -121,8 +96,8 @@ const GlobalBar = () => {
 
   const handleDetectViewPort = () => {
     const test = window.visualViewport;
-    if (test && test.width < 767) navigate('/SearchMobile');
-  };
+    if(test && test.width < 767) navigate('/SearchMobile')
+  }
 
   useEffect(() => {
     if (isProfileModalOpen === false && modalState.modalState === true) {
@@ -138,7 +113,7 @@ const GlobalBar = () => {
 
   return (
     <div>
-      <GlobalTopBar isVisible={isVisible}>
+      <GlobalTopBar>
         <HamburgerMenu onClick={toggleSidebar}>
           <Bar />
           <Bar />
@@ -254,11 +229,7 @@ const GlobalBar = () => {
 
 export default GlobalBar;
 
-interface TopBarProps {
-  readonly isVisible: boolean;
-}
-
-const GlobalTopBar = styled.nav<TopBarProps>`
+const GlobalTopBar = styled.nav`
   position: fixed;
   display: flex;
   justify-content: space-between;
@@ -268,14 +239,6 @@ const GlobalTopBar = styled.nav<TopBarProps>`
   border: 2px solid #d3d3d3;
   width: 100%;
   z-index: 2001;
-
-  transform: translateY(0);
-  transition: transform 0.27s ease-in-out;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    transform: ${({ isVisible }) =>
-      isVisible ? 'translateY(0)' : 'translateY(-100%)'};
-  }
 `;
 
 const HamburgerMenu = styled.div`
@@ -350,6 +313,7 @@ const SearchInput = styled.input`
   @media (max-width: ${breakpoints.mobile}) {
     display: none;
   }
+
 `;
 
 const SearchIcon = styled(FaSistrix)`
@@ -359,7 +323,7 @@ const SearchIcon = styled(FaSistrix)`
   margin-top: 5px;
   cursor: pointer;
 
-  @media (max-width: ${breakpoints.mobile}) {
+  @media(max-width: ${breakpoints.mobile}){
     margin: 0 5px 5px 0;
   }
 `;
@@ -417,7 +381,7 @@ const PlusIcon = styled(FaPlus)`
   height: 52.5px;
   width: 24px;
 
-  @media (max-width: ${breakpoints.mobile}) {
+  @media(max-width: ${breakpoints.mobile}){
     margin-bottom: 2px;
   }
 `;
