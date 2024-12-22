@@ -12,6 +12,7 @@ import {
 import styled from 'styled-components';
 import logo from '../../assets/img/panda_logo.png';
 import { breakpoints } from '../../_common/breakpoint';
+import { handleReaction } from '../../_common/handleUserReaction';
 
 export interface ReplyType {
   readonly id: string;
@@ -26,7 +27,6 @@ export interface ReplyType {
 
 const BoardReply = (re: ReplyType) => {
   const [isHovered, setIsHovered] = useState<boolean>(false);
-  const [isCardReplyCount, setIsCardReplyCount] = useState<number>(0);
   const [isCardReplyUpHovered, setIsCardReplyUpHovered] =
     useState<boolean>(false);
   const [isCardReplyDownHovered, setIsCardReplyDownHovered] =
@@ -35,19 +35,26 @@ const BoardReply = (re: ReplyType) => {
     useState<boolean>(false);
   const [isCardReplySendHovered, setIsCardReplySendHovered] =
     useState<boolean>(false);
-  const [isReplyReaction, setReplyIsReaction] =
-    useState<ReactionStateTypes>(null);
+
   const [isReplyReplyButton, setIsReplyReplyButton] = useState<boolean>(false);
 
   const ID: string = re.id;
   const USER_ID: string = localStorage.getItem('id') as string;
 
-  const reactionReplyButton = async (type: ReactionStateTypes) => {
-    if (type !== null) {
+  const [localCount, setLocalCount] = useState<number>(0);
+  const [isReplyReaction, setReplyIsReaction] =
+    useState<ReactionStateTypes>(null);
+  const [isCardReplyCount, setIsCardReplyCount] = useState<number>(0);
+
+  const reactionReplyButton = async (userReaction: ReactionStateTypes) => {
+    console.log('userReaction : ', userReaction);
+    console.log('isReplyReaction : ', isReplyReaction);
+    console.log('localCount : ', localCount);
+    if (userReaction !== null) {
       const param: ReactionParams = {
         boardId: ID,
         userId: USER_ID,
-        type,
+        type: userReaction,
         reactionTarget: 'REPLY',
       };
 
@@ -55,17 +62,27 @@ const BoardReply = (re: ReplyType) => {
         const res = await ReactionApi(param);
         if (!res) return;
 
-        const resType = res.data.response?.type;
-        if (resType === undefined) {
-          setReplyIsReaction(null);
-        } else {
-          setReplyIsReaction(resType);
+        const status: number = res.status;
+        if (status === 201) {
+          await handleReaction({
+            localCount,
+            userReaction,
+            isReaction: isReplyReaction,
+            setIsReaction: setReplyIsReaction,
+            isCardCount: isCardReplyCount,
+            setIsCardCount: setIsCardReplyCount,
+          });
         }
       } catch (err) {
         console.error(err);
       }
     }
   };
+  useEffect(() => {
+    if (localCount < 0) {
+      setLocalCount(0);
+    }
+  }, [localCount]);
 
   useEffect(() => {
     ReactionListAPI({ boardId: ID })
@@ -80,7 +97,12 @@ const BoardReply = (re: ReplyType) => {
 
     ReactionCountAPI({ boardId: ID })
       .then((res) => {
-        setIsCardReplyCount(res.data.response.count);
+        const resCount = res.data.response;
+
+        const count: number =
+          resCount.board_score < 0 ? 0 : resCount.board_score;
+        setIsCardReplyCount(count);
+        setIsCardReplyCount(count);
       })
       .catch((err) => console.error('BoardReply ReactionCountAPI err : ', err));
   }, [isReplyReaction]);
@@ -120,21 +142,6 @@ const BoardReply = (re: ReplyType) => {
             싫어요
           </DisLikeReactionButton>
         </ReactionWrapper>
-        {/*<ShareButton*/}
-        {/*  isHovered={isCardReplyShareHovered}*/}
-        {/*  onMouseEnter={() => setIsCardReplyShareHovered(true)}*/}
-        {/*  onMouseLeave={() => setIsCardReplyShareHovered(false)}*/}
-        {/*>*/}
-        {/*  공유*/}
-        {/*</ShareButton>*/}
-        {/*<SendButton*/}
-        {/*  isHovered={isCardReplySendHovered}*/}
-        {/*  onMouseEnter={() => setIsCardReplySendHovered(true)}*/}
-        {/*  onMouseLeave={() => setIsCardReplySendHovered(false)}*/}
-        {/*  onClick={() => alert('BoardReply Button Click')}*/}
-        {/*>*/}
-        {/*  보내기*/}
-        {/*</SendButton>*/}
       </ReactionContainer>
       {isReplyReplyButton && (
         <ReplyInputContainer>
@@ -225,11 +232,11 @@ const LikeReactionButton = styled.button<{
   border-radius: 20px;
   width: 100%;
   height: 100%;
-  background-color: ${(props) => (props.isHovered ? '#c9c6c5' : '#f5f5f5')};
+  background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
   cursor: pointer;
 
   @media (max-width: ${breakpoints.mobile}) {
-    width: 45px;
+    width: 50px;
     height: 40px;
     font-size: 10px;
   }
@@ -246,11 +253,11 @@ const DisLikeReactionButton = styled.button<{
   border-radius: 20px;
   width: 100%;
   height: 100%;
-  background-color: ${(props) => (props.isHovered ? '#c9c6c5' : '#f5f5f5')};
+  background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
   cursor: pointer;
 
   @media (max-width: ${breakpoints.mobile}) {
-    width: 45px;
+    width: 50px;
     height: 40px;
     font-size: 10px;
   }
@@ -260,28 +267,6 @@ const ReactionCount = styled.span`
   margin: 0 10px;
   width: 10px;
   height: 10px;
-`;
-
-const ShareButton = styled.button<{ isHovered: boolean }>`
-  border: none;
-  padding: 10px;
-  margin-right: 10px;
-  border-radius: 20px;
-  width: 65px;
-  height: 30px;
-  background-color: ${(props) => (props.isHovered ? '#c9c6c5' : '#f5f5f5')};
-  cursor: pointer;
-`;
-
-const SendButton = styled.button<{ isHovered: boolean }>`
-  border: none;
-  padding: 10px;
-  margin-right: 10px;
-  border-radius: 20px;
-  width: 65px;
-  height: 30px;
-  background-color: ${(props) => (props.isHovered ? '#c9c6c5' : '#f5f5f5')};
-  cursor: pointer;
 `;
 
 const ReplyInputContainer = styled.div`

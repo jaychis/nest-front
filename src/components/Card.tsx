@@ -21,6 +21,7 @@ import { RootState } from '../store/store';
 import styled from 'styled-components';
 import ShareComponent from './ShareComponent';
 import { breakpoints } from '../_common/breakpoint';
+import { handleReaction } from '../_common/handleUserReaction';
 
 const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
   try {
@@ -89,55 +90,15 @@ const Card = ({
         if (!res) return;
 
         const status: number = res.status;
-        const type = res.data.response?.type;
-        if (
-          userReaction === 'DISLIKE' &&
-          isReaction === 'DISLIKE' &&
-          localCount === 0
-        ) {
-          setIsReaction(null);
-        } else if (
-          userReaction === 'LIKE' &&
-          isReaction === 'DISLIKE' &&
-          localCount === 0
-        ) {
-          setIsReaction('LIKE');
-          setIsCardCount((prevCount) => prevCount + 1);
-        } else if (userReaction === 'LIKE' && isReaction === 'LIKE') {
-          setIsReaction(null);
-          setIsCardCount((prevCount) => prevCount - 1);
-        } else if (userReaction === 'LIKE' && isReaction === 'DISLIKE') {
-          setIsReaction('LIKE');
-          setIsCardCount((prevCount) => prevCount + 2);
-        } else if (userReaction === 'LIKE' && isReaction === null) {
-          setIsReaction('LIKE');
-          setIsCardCount((prevCount) => prevCount + 1);
-        } else if (
-          userReaction === 'DISLIKE' &&
-          isReaction === null &&
-          localCount === 0
-        ) {
-          setIsReaction('DISLIKE');
-        } else if (
-          userReaction === 'DISLIKE' &&
-          isReaction === 'LIKE' &&
-          isCardCount === 1
-        ) {
-          setIsReaction('DISLIKE');
-          setIsCardCount((prev) => prev - 1);
-        } else if (
-          userReaction === 'DISLIKE' &&
-          isReaction === null &&
-          localCount != 0
-        ) {
-          setIsReaction('DISLIKE');
-          setIsCardCount((prevCount) => prevCount - 1);
-        } else if (userReaction === 'DISLIKE' && isReaction === 'DISLIKE') {
-          setIsReaction(null);
-          setIsCardCount((prevCount) => prevCount + 1);
-        } else if (userReaction === 'DISLIKE' && isReaction === 'LIKE') {
-          setIsReaction('DISLIKE');
-          setIsCardCount((prevCount) => prevCount - 2);
+        if (status === 201) {
+          await handleReaction({
+            localCount,
+            userReaction,
+            isReaction,
+            setIsReaction,
+            isCardCount,
+            setIsCardCount,
+          });
         }
       } catch (err) {
         console.error(err);

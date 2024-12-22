@@ -15,6 +15,7 @@ import logo from '../../assets/img/panda_logo.png';
 import { ReplyType } from './BoardReply';
 import { ReplySubmitAPI, ReplySubmitParams } from '../api/replyApi';
 import { breakpoints } from '../../_common/breakpoint';
+import { handleReaction } from '../../_common/handleUserReaction';
 
 export interface CommentType {
   readonly id: string;
@@ -52,9 +53,6 @@ const BoardComment = (co: BoardCommentProps) => {
   const [isCardCommentCount, setIsCardCommentCount] = useState<number>(0);
 
   const reactionCommentButton = async (userReaction: ReactionStateTypes) => {
-    console.log('userReaction : ', userReaction);
-    console.log('isCommentReaction : ', isCommentReaction);
-    console.log('localCount : ', localCount);
     if (userReaction !== null) {
       const params: ReactionParams = {
         boardId: ID,
@@ -66,61 +64,17 @@ const BoardComment = (co: BoardCommentProps) => {
       try {
         const res = await ReactionApi(params);
         if (!res) return;
-        console.log('res : ', res);
 
         const status: number = res.status;
-        const type = res.data.response?.type;
-        if (
-          userReaction === 'DISLIKE' &&
-          isCommentReaction === 'DISLIKE' &&
-          localCount === 0
-        ) {
-          setCommentIsReaction(null);
-        } else if (
-          userReaction === 'LIKE' &&
-          isCommentReaction === 'DISLIKE' &&
-          localCount === 0
-        ) {
-          setCommentIsReaction('LIKE');
-          setIsCardCommentCount((prevCount) => prevCount + 1);
-        } else if (userReaction === 'LIKE' && isCommentReaction === 'LIKE') {
-          setCommentIsReaction(null);
-          setIsCardCommentCount((prevCount) => prevCount - 1);
-        } else if (userReaction === 'LIKE' && isCommentReaction === 'DISLIKE') {
-          setCommentIsReaction('LIKE');
-          setIsCardCommentCount((prevCount) => prevCount + 2);
-        } else if (userReaction === 'LIKE' && isCommentReaction === null) {
-          setCommentIsReaction('LIKE');
-          setIsCardCommentCount((prevCount) => prevCount + 1);
-        } else if (
-          userReaction === 'DISLIKE' &&
-          isCommentReaction === null &&
-          localCount === 0
-        ) {
-          setCommentIsReaction('DISLIKE');
-        } else if (
-          userReaction === 'DISLIKE' &&
-          isCommentReaction === 'LIKE' &&
-          isCardCommentCount === 1
-        ) {
-          setCommentIsReaction('DISLIKE');
-          setIsCardCommentCount((prev) => prev - 1);
-        } else if (
-          userReaction === 'DISLIKE' &&
-          isCommentReaction === null &&
-          localCount != 0
-        ) {
-          setCommentIsReaction('DISLIKE');
-          setIsCardCommentCount((prevCount) => prevCount - 1);
-        } else if (
-          userReaction === 'DISLIKE' &&
-          isCommentReaction === 'DISLIKE'
-        ) {
-          setCommentIsReaction(null);
-          setIsCardCommentCount((prevCount) => prevCount + 1);
-        } else if (userReaction === 'DISLIKE' && isCommentReaction === 'LIKE') {
-          setCommentIsReaction('DISLIKE');
-          setIsCardCommentCount((prevCount) => prevCount - 2);
+        if (status === 201) {
+          await handleReaction({
+            localCount,
+            userReaction,
+            isReaction: isCommentReaction,
+            setIsReaction: setCommentIsReaction,
+            isCardCount: isCardCommentCount,
+            setIsCardCount: setIsCardCommentCount,
+          });
         }
       } catch (err) {
         console.error(err);
@@ -338,7 +292,7 @@ const LikeButton = styled.button.withConfig({
   readonly isHovered: boolean;
 }>`
   border: ${(props) => (props.isLiked ? '2px solid blue' : '1px solid gray')};
-  background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
+  background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
   width: 100%;
   height: 100%;
   border-radius: 30px;
@@ -364,7 +318,7 @@ const DisLikeButton = styled.button.withConfig({
   readonly isHovered: boolean;
 }>`
   border: ${(props) => (props.isDisliked ? '1px solid red' : '1px solid gray')};
-  background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
+  background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
   width: 100%;
   height: 100%;
   border-radius: 30px;
