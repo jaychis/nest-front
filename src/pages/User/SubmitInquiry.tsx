@@ -79,7 +79,7 @@ const SubmitInquiry: React.FC<SubmitModalProps> = ({ isopen, setIsopen }) => {
         style={{
           content: {
             width: '50%',
-            height: '70%',
+            height: '85vh',
             margin: 'auto',
             padding: '20px',
             background: 'white',
@@ -89,6 +89,7 @@ const SubmitInquiry: React.FC<SubmitModalProps> = ({ isopen, setIsopen }) => {
           },
           overlay: {
             backgroundColor: 'rgba(0, 0, 0, 0.30)',
+            zIndex: 2002,
           },
         }}
       >

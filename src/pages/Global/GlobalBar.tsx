@@ -16,7 +16,6 @@ import { Tooltip } from 'react-tooltip';
 import './GlobalBar.module.css';
 import styled from 'styled-components';
 import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
-import SearchMobile from '../Search/SearchMobile';
 import { breakpoints } from '../../_common/breakpoint';
 
 const GlobalBar = () => {
