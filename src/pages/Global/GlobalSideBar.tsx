@@ -97,13 +97,12 @@ const GlobalSideBar = () => {
   };
   const handleClick = async (button: MainListTypes) => {
     if (button === 'TAGMATCH' && !(localStorage.getItem('id') as string)) {
-      alert('회원가입 유저에게 제공되는 기능입니다.');
-
-      return;
+      return alert('회원가입 유저에게 제공되는 기능입니다.');
     }
 
     setSelectedButton(button);
     await sendDispatchSideBtn({ button });
+    navigate('/');
   };
 
   const handleCommunityClick = async (

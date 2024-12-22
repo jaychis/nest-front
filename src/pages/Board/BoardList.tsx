@@ -62,6 +62,7 @@ const BoardList = () => {
             category: null,
           });
           break;
+
         case 'POPULAR':
           response = await BoardPopularListAPI({
             take: TAKE,
@@ -78,6 +79,7 @@ const BoardList = () => {
             userId: localStorage.getItem('id') as string,
           });
           break;
+
         case 'FREQUENTSHARE':
           response = await BoardShareListAPI({
             take: TAKE,
@@ -85,6 +87,7 @@ const BoardList = () => {
             category: null,
           });
           break;
+
         case 'ALL':
           response = await BoardRecentListAPI({
             take: TAKE,
@@ -92,6 +95,7 @@ const BoardList = () => {
             category: null,
           });
           break;
+
         default:
           response = await BoardListAPI({
             take: TAKE,

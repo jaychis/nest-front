@@ -1,13 +1,11 @@
 import React, { MouseEventHandler, useEffect, useState } from 'react';
-
 import { CollectionTypes } from '../../_common/collectionTypes';
 import { isValidPasswordFormat } from '../../_common/passwordRegex';
 import { FaComment } from 'react-icons/fa';
 import Alert from '../../components/Alert';
 import { LoginAPI, LoginParams, RefreshTokenAPI } from '../api/userApi';
-import { KakaoOAuthLoginAPI, UsersNaverOAuthSignUpAPI } from '../api/oAuthApi';
+import { KakaoOAuthLoginAPI } from '../api/oAuthApi';
 import styled from 'styled-components';
-
 type modalType = 'login' | 'signup' | 'recovery' | 'verity';
 
 interface Props {
@@ -16,8 +14,6 @@ interface Props {
   readonly kakaoEmail: string;
   readonly setKakaoEmail: (state: string) => void;
 }
-type OAuthReturnType = 'NEW_USER' | 'EXITING_USER';
-
 const Login = ({
   onSwitchView,
   modalIsOpen,
@@ -30,7 +26,6 @@ const Login = ({
   });
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [showAlert, setShowAlert] = useState<boolean>(false);
-  const [errorModalVisible, setErrorModalVisible] = useState<boolean>(false); // State for ErrorModal
 
   const setLoginProcess = ({
     id,
@@ -99,7 +94,6 @@ const Login = ({
             localStorage.setItem('access_token', access_token);
             localStorage.setItem('refresh_token', refresh_token);
 
-            // Retry the original request
             const retryRes = await LoginAPI(login);
             const retryResponse = retryRes.data.response;
             const { id, nickname } = retryResponse;
@@ -132,42 +126,6 @@ const Login = ({
     if (event.key === 'Enter') {
       event.preventDefault(); // 기본 동작 방지
       processLogin();
-    }
-  };
-
-  const naverOauthLogin = async () => {
-    console.log('naverOauthLogin check');
-    // alert("naverOauthLogin check");
-
-    const res = await UsersNaverOAuthSignUpAPI();
-    if (!res) return;
-
-    console.log('naverAuthLogin res : ', res);
-    const TYPE: OAuthReturnType = res.data.response.type;
-
-    if (TYPE === 'NEW_USER') {
-      // 이메일 가지고 있고, 회원가입시 해당 이메일이 회원가입창에 입력될 수 있도록
-      console.log(
-        ' res.data.response.profile.email : ',
-        res.data.response.profile.email,
-      );
-      const EMAIL: string = res.data.response.profile.email as string;
-      console.log('EMAIL : ', EMAIL);
-
-      // onSwitchView();
-    } else if (TYPE === 'EXITING_USER') {
-      const loginProfile = await UsersNaverOAuthSignUpAPI();
-      if (!loginProfile) return;
-      console.log('loginProfile : ', loginProfile);
-      const { id, nickname, access_token, refresh_token } =
-        loginProfile.data.response;
-
-      setLoginProcess({
-        id,
-        nickname,
-        access_token,
-        refresh_token,
-      });
     }
   };
 
