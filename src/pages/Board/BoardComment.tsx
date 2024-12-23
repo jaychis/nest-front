@@ -249,6 +249,8 @@ const Avatar = styled.img`
 `;
 
 const Nickname = styled.div`
+  display: flex;
+  align-items: center;
   font-weight: bold;
   color: #333;
 `;
