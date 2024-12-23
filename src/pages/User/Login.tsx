@@ -306,6 +306,7 @@ const Container = styled.div`
   justify-content: space-between;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   height: 400px;
+   z-index: 2005;
 `;
 
 const Header = styled.div`
