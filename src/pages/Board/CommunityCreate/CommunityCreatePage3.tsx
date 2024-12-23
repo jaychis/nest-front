@@ -16,8 +16,8 @@ import vCheck from '../../../assets/img/v-check.png';
 
 const CommunityCreatePage3: FC = () => {
   interface User {
-    nickname: string;
-    id: string[];
+    readonly nickname: string;
+    readonly id: string[];
   }
 
   const navigate = useNavigate();
@@ -79,26 +79,27 @@ const CommunityCreatePage3: FC = () => {
   };
 
   const [isCommunity, setIsCommunity] = useState<{
-      readonly name: string;
-      readonly description: string;
-      readonly banner?: string | null;
-      readonly icon?: string | null;
-      readonly visibility: CommunityVisibilityType;
-      readonly topics: string[];
-      readonly id?: string[];
+    readonly name: string;
+    readonly description: string;
+    readonly banner?: string | null;
+    readonly icon?: string | null;
+    readonly visibility: CommunityVisibilityType;
+    readonly topics: string[];
+    readonly id?: string[];
   }>({
-      name: communityName,
-      description: description,
-      banner: banner,
-      icon: icon,
-      visibility: visibility,
-      topics: [],
-      id: [],
+    name: communityName,
+    description: description,
+    banner: banner,
+    icon: icon,
+    visibility: visibility,
+    topics: [],
+    id: [],
   });
 
   const handleSubmit = async (): Promise<void> => {
-    if(!isCommunity.name || !isCommunity.description) return alert('커뮤니티 이름과 설명은 필수 입력 사항입니다')
-      
+    if (!isCommunity.name || !isCommunity.description)
+      return alert('커뮤니티 이름과 설명은 필수 입력 사항입니다');
+
     const params: CommunitySubmitParams = {
       name: isCommunity.name,
       description: isCommunity.description,
@@ -106,13 +107,11 @@ const CommunityCreatePage3: FC = () => {
       icon: isCommunity.icon,
       visibility: isCommunity.visibility,
     };
-    console.log('params : ', params);
 
     const coRes = await CommunitySubmitAPI(params);
 
     if (!coRes) return;
     const coResponse = await coRes.data.response;
-    console.log('community Submit coResponse : ', coResponse);
 
     const tagResponse = [];
     if (topics.length > 0) {
@@ -121,10 +120,10 @@ const CommunityCreatePage3: FC = () => {
         communityId: coResponse.id,
       });
       if (!tagRes) return;
-      console.log('tagRes : ', tagRes);
+
       tagResponse.push(tagRes.data.response);
     }
-    console.log('tagResponse : ', tagResponse);
+
     setIsCommunity({
       ...coResponse,
       topic: tagResponse,

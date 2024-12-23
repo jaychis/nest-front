@@ -61,10 +61,8 @@ export const ReduxProfileAPI = createAsyncThunk(
       const URL: string = `${USERS_URL}/profile/${id}`;
 
       const res = await client.get(URL);
-      console.log('res : ', res);
-
       const response = res.data.response;
-      console.log('response : ', response);
+
       return response;
     } catch (e: any) {
       if (!e.response) {
@@ -151,9 +149,9 @@ export const VerifyEmail = async (email: string) => {
 };
 
 export interface PasswordResetParams {
-  email: string;
-  password: string;
-  confirmPassword?: string;
+  readonly email: string;
+  readonly password: string;
+  readonly confirmPassword?: string;
 }
 
 export const PasswordReset = async ({

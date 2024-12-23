@@ -1,5 +1,7 @@
 import { client } from './client';
 
+const S3_URL: string = 's3';
+
 export interface GetPresignedUrlParams {
   readonly key: string;
   readonly expires?: number;
@@ -7,11 +9,10 @@ export interface GetPresignedUrlParams {
 
 export const getPresignedUrlAPI = async (params: GetPresignedUrlParams) => {
   try {
-    const URL: string = 's3/presigned-url';
+    const URL: string = `${S3_URL}/presigned-url`;
     console.log('URL : ', URL);
 
     const res = await client.post(URL, params);
-    console.log('getPresignedUrlAPI res : ', res);
 
     return res;
   } catch (e: any) {
@@ -25,11 +26,9 @@ export interface AWSImageDeleteParams {
 }
 
 export const AWSImageDeleteAPI = async ({ urls }: AWSImageDeleteParams) => {
-  const URL: string = 's3/';
-  console.log('URL : ', URL);
-  console.log('urls : ', urls);
+  const URL: string = `${S3_URL}/`;
+
   const keys: string[] = urls.map((url: string) => url.split('.com/')[1]); // URL에서 파일 경로 추출
-  console.log('keys : ', keys);
 
   const param: { keys: string[] } = {
     keys,

@@ -100,7 +100,6 @@ const CommunityProfile = () => {
         if (!leaveStatus) return;
 
         const { delete_member } = leaveStatus.data.response;
-        console.log('delete_member : ', delete_member);
 
         dispatch(setJoinCommunity({ is_joined: false }));
       } else {
@@ -108,7 +107,7 @@ const CommunityProfile = () => {
         if (!joinStatus) return;
 
         const join = joinStatus.data.response;
-        console.log('join : ', join);
+
         dispatch(setJoinCommunity({ is_joined: true }));
       }
     } catch (error) {
@@ -128,7 +127,7 @@ const CommunityProfile = () => {
     try {
       if (value) {
         const res = await GetSearchPeopleAPI({ query: value });
-        console.log('handleUserSearchChange res : ', res);
+
         if (res && res.data && res.data.response) {
           setSearchResultList(
             res.data.response.map((user: User) => ({
@@ -178,7 +177,6 @@ const CommunityProfile = () => {
     if (!response) return;
 
     const res = response.data.response;
-    console.log('res : ', res);
   };
 
   return (
