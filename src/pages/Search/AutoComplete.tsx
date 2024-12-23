@@ -1,29 +1,50 @@
-import { useState, useEffect } from "react";
-import { GetSearchBoardsAPI } from "../api/searchApi";
+import { useState, useEffect,useCallback } from "react";
+import { GetSearchCommunitiesAPI } from "../api/searchApi";
 import styled from "styled-components";
 import 돋보기 from '../../assets/img/icons8-돋보기-50.png'
 import { sortTypes } from "./SearchList";
+import debounce from "lodash.debounce";
+import logo from '../../assets/img/panda_logo.png'
 
 interface AutoProps {
     readonly query: string
 }
 
+interface Community {
+    name: string;
+    icon: string;
+  }
+
 const AutoComplete = ({query}:AutoProps) => {
 
     const sortType:sortTypes = 'RECENT'
-    const [searchList, setSearchList] = useState<string[]>([]);
+    const [searchList, setSearchList] = useState<Community[]>([]);
 
-    useEffect(() => {
-        const searchBoard = async () => {
-            const res = await GetSearchBoardsAPI({query, sortType})
-            if(res && res.data && res.data.response){
-                setSearchList(res.data.response.map((board: any) => board.title))
-            }
-            console.log(searchList)
+    const searchBoard = useCallback(
+        debounce(async (query: string) => {
+          const res = await GetSearchCommunitiesAPI({ query });
+          if (res?.data?.response) {
+            setSearchList(
+              res.data.response.map((community: any) => ({
+                name: community.name,
+                icon: community.icon,
+              }))
+            );
+          }
+          console.log(searchList);
+          console.log('test')
+        }, 300), 
+        []
+      );
+      
+      useEffect(() => {
+        if (query) {
+          searchBoard(query);
         }
-        searchBoard()
-    },[query])
-
+        return () => {
+          searchBoard.cancel();
+        };
+      }, [query, searchBoard]);
 
     return(
         <AutoCompleteContainer>
@@ -34,9 +55,10 @@ const AutoComplete = ({query}:AutoProps) => {
                 </Text>
             </SearchTermWrapper>
             
-            {searchList.map((list, index) => (
+            {searchList.slice(0,5).map((list, index) => (
             <AutoCompleteList key={index}>
-                <Text>{list}</Text>
+                <Icon src = {logo}/>
+                <Text>{list.name}</Text>
                 <Hr/>
             </AutoCompleteList>
         ))}
@@ -48,7 +70,7 @@ export default AutoComplete
 
 const AutoCompleteContainer = styled.div`
     display: flex;
-    margin: 2vh 0 0 2vw;
+    margin: 0 0 0 2vw;
     flex-direction: column;
 `
 
