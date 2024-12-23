@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 const SearchHistory = () => {
 
-    const [searchHistoryList, setSearchHistoryList] = useState<string[]>(['']);
+    const [searchHistoryList, setSearchHistoryList] = useState<string[]>([]);
 
     const getSearchHistory = () => {
         const history = localStorage.getItem('searchHistory'); 
@@ -30,11 +30,12 @@ const SearchHistory = () => {
 
     return(
         <HistoryContainer>
-            {searchHistoryList.sort().slice(0,3).map((list, index) => {return(
+            {searchHistoryList ? 
+            searchHistoryList.sort().slice(0,3).map((list, index) => {return(
                 <Item key={index}>
                     <Text>{list}</Text>
-                </Item>
-            )})}
+                </Item>)}) :
+            null}
         </HistoryContainer>
     )
 }
@@ -43,15 +44,13 @@ const SearchHistory = () => {
 const HistoryContainer = styled.div`
     display: flex;
     width: 90%;
-    margin-top: 3vh;
-    margin-left: 5vw;
 `
 
 const Item = styled.div`
     font-size: 1.2rem;
-    display: flex; /* Flex 사용 */
-    justify-content: center; /* 가로 중앙 정렬 */
-    align-items: center; /* 세로 중앙 정렬 */
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
     margin-right: 5vw;
     border: 1px solid #84d7fb;
     border-radius: 25px;

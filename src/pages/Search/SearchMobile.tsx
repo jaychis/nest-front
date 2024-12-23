@@ -4,6 +4,7 @@ import { AddSearchAPI, GetTopTenSearchesAPI } from '../api/searchApi';
 import { useNavigate } from 'react-router-dom';
 import SearchHistory from './SearchHistory';
 import AutoComplete from './AutoComplete';
+import arrow from '../../assets/img/icons8-뒤로-32.png'
 
 const SearchMobile = () => {
   const [isTopTenList, setIsTopTenList] = useState([]);
@@ -71,21 +72,20 @@ const SearchMobile = () => {
   return (
     <MobileSearchContainer>
       <SearchHeader>
-      <SearchInput
-            type="search"
-            placeholder="Search"
-            value={searchTerm}
-            name={'search'}
-            onChange={(e) => handleSearchChange(e)}
-            onKeyDown={handleKeyDown}
-      />
-      {searchTerm ? <AutoComplete query = {searchTerm}/> : <SearchHistory/>}
-      
-        <HeaderTitle>실시간 검색어 TOP 10</HeaderTitle>
-        <hr />
+        <Icon src = {arrow}/>
+        <SearchInput
+          type="search"
+          placeholder="Search"
+          value={searchTerm}
+          name={'search'}
+          onChange={(e) => handleSearchChange(e)}
+          onKeyDown={handleKeyDown}
+        />
       </SearchHeader>
 
       <SearchBody>
+      {searchTerm ? <AutoComplete query = {searchTerm}/> : <SearchHistory/>}
+        <Title>실시간 검색어 TOP 10</Title>
         {isTopTenList.map((list: { readonly query: string }, index) => {
           return (
             <>
@@ -109,11 +109,14 @@ const MobileSearchContainer = styled.div`
 `;
 
 const SearchHeader = styled.div`
+  display: flex;
+  flex-direction: row;
   margin: 5vh 0 0 5vw;
   width: 95%;
+  align-items:center;
 `;
 
-const HeaderTitle = styled.h1`
+const Title = styled.h1`
   font-size: 2rem;
 `;
 
@@ -135,10 +138,18 @@ const Number = styled.span`
 `
 
 const SearchInput = styled.input`
-  width: 100%;
+  display: flex;
+  width: 90%;
   padding: 10px;
   border-radius: 20px;
   border: 1px solid #ccc;
 `;
+
+const Icon = styled.img`
+  display: flex;
+  width: 30px;
+  height: 30px;
+  margin-right: 2vw;
+`
 
 export default SearchMobile;
