@@ -5,12 +5,7 @@ import Login from './Login';
 import Signup from './Signup';
 import PassWordReset from '../../components/PasswordReset';
 import styled from 'styled-components';
-import {
-  SendEmail,
-  VerifyEmail,
-  PasswordReset,
-  PasswordResetParams,
-} from '../api/userApi';
+import { SendEmail, VerifyEmail, PasswordReset } from '../api/userApi';
 
 type modalType = 'login' | 'signup' | 'recovery' | 'verity' | 'reset';
 const UserModalForm = () => {
@@ -22,7 +17,6 @@ const UserModalForm = () => {
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [kakaoEmail, setKakaoEmail] = useState<string>('');
-  const [adminButtonCount, setAdminButtonCount] = useState<number>(0);
 
   const switchView = (view: modalType) => {
     setActiveView(view);
@@ -74,8 +68,8 @@ const UserModalForm = () => {
           width: '70px',
           height: '50px',
           display: 'flex',
-          justifyContent: 'center', // 가로 중앙 정렬
-          alignItems: 'center', // 세로 중앙 정렬
+          justifyContent: 'center',
+          alignItems: 'center',
           borderRadius: '30px',
         }}
       >
@@ -270,6 +264,6 @@ const SubmitButton = styled.button`
   margin-bottom: 10px;
 
   &:hover {
-    background-color: #72c2e9; // 예시: 호버 시 색상 변경
+    background-color: #72c2e9;
   }
 `;

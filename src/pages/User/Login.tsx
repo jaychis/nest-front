@@ -143,14 +143,6 @@ const Login = ({
   };
   const REDIRECT_URI = REDIRECT_URLS[env] as string;
 
-  useEffect(() => {
-    console.log('KAKAO_CLIENT_ID : ', KAKAO_CLIENT_ID);
-    console.log('REDIRECT_URI : ', REDIRECT_URI);
-    console.log(
-      `process.env.REACT_APP_NODE_ENV ${process.env.REACT_APP_NODE_ENV}`,
-    );
-  });
-
   const goSignup = () => onSwitchView('signup');
 
   const kakaoOauthLogin = () => {

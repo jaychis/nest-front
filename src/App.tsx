@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './App.css';
 import GlobalBar from './pages/Global/GlobalBar';
 import GlobalSideBar from './pages/Global/GlobalSideBar';
@@ -61,11 +61,11 @@ const Layout = ({ children }: { readonly children: React.ReactNode }) => {
 
     @media (max-width: ${breakpoints.mobile}) {
       left: ${(props) => (props.isOpen ? '0' : '-200px')};
-      z-index: 999;
+      z-index: 50;
       overflow: visible;
       animation: ${({ isOpen }) => (isOpen ? slideIn : slideOut)} 0.25s forwards;
 
-      visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
+      // visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
       opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
       transition:
         opacity 0.5s,
