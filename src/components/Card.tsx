@@ -261,22 +261,24 @@ const Card = ({
           </CommentWrapper>
 
           {/* 공유 */}
-          <ShareComponent
-            shareCount={shareCount}
-            title={title}
-            content={content}
-            id={id}
-          />
+          <ShareWrapper>
+            <ShareComponent
+              shareCount={shareCount}
+              title={title}
+              content={content}
+              id={id}
+            />
+          </ShareWrapper>
 
-          <ScirpWrapper>
-            <ScripButton
-              isHovered={isCardSendHovered}
-              onMouseEnter={() => setIsCardSendHovered(true)}
-              onMouseLeave={() => setIsCardSendHovered(false)}
-            >
-              보내기
-            </ScripButton>
-          </ScirpWrapper>
+          {/*<ScirpWrapper>*/}
+          {/*  <ScripButton*/}
+          {/*    isHovered={isCardSendHovered}*/}
+          {/*    onMouseEnter={() => setIsCardSendHovered(true)}*/}
+          {/*    onMouseLeave={() => setIsCardSendHovered(false)}*/}
+          {/*  >*/}
+          {/*    보내기*/}
+          {/*  </ScripButton>*/}
+          {/*</ScirpWrapper>*/}
           {/*<div*/}
           {/*  style={{*/}
           {/*    marginLeft: "auto", // 자동 여백을 사용하여 오른쪽 정렬*/}
@@ -508,8 +510,16 @@ const CommentButton = styled.button.withConfig({
   }
 `;
 
+const ShareWrapper = styled.div`
+  width: 45px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 5px;
+`;
+
 const ScirpWrapper = styled.div`
-  margin-left: -7px;
   border-radius: 30px;
   width: 75px;
   height: 40px;
