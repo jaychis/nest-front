@@ -15,6 +15,7 @@ import {
 import vLogo from '../../assets/img/v-check.png';
 import xLogo from '../../assets/img/x-check.png';
 import Alert from '../../components/Alert';
+import styled from 'styled-components';
 
 interface Props {
   readonly onSwitchView: () => void;
@@ -212,20 +213,7 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
   };
 
   return (
-    <div
-      style={{
-        backgroundColor: '#fff',
-        borderRadius: '25px',
-        padding: '25px',
-        minWidth: '400px',
-        maxWidth: '600px',
-        width: '80%',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-      }}
-    >
+    <Container>
       {showAlert && (
         <Alert
           message="회원가입이 완료되었습니다."
@@ -233,20 +221,12 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
           type="success"
         />
       )}
-      <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+      <Title>
         <h2>회원가입</h2>
-      </div>
-
+      </Title>
       <form>
-        <div
-          style={{
-            position: 'relative',
-            width: '100%',
-            marginBottom: '10px',
-          }}
-        >
-          <input
-            style={styles.input}
+        <InputWrapper>
+          <Input
             placeholder="이메일 *"
             type="email"
             id="email"
@@ -260,44 +240,16 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
             }
             required
           />
-          {validSignup.email === null ? null : validSignup.email === true ? (
-            <img
-              src={vLogo}
-              alt={'v logo'}
-              style={{
-                width: '20px',
-                height: '20px',
-                position: 'absolute',
-                right: '10px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-              }}
-            />
-          ) : (
-            <img
-              src={xLogo}
-              alt={'x logo'}
-              style={{
-                width: '20px',
-                height: '20px',
-                position: 'absolute',
-                right: '10px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-              }}
+          {validSignup.email !== null && (
+            <ValidationLogo
+              src={validSignup.email ? vLogo : xLogo}
+              alt="validation logo"
             />
           )}
-        </div>
+        </InputWrapper>
 
-        <div
-          style={{
-            position: 'relative',
-            width: '100%',
-            marginBottom: '10px',
-          }}
-        >
-          <input
-            style={styles.input}
+        <InputWrapper>
+          <Input
             placeholder="닉네임 *"
             type="text"
             id="nickname"
@@ -311,45 +263,16 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
             }
             required
           />
-          {validSignup.nickname === null ? null : validSignup.nickname ===
-            true ? (
-            <img
-              src={vLogo}
-              alt={'v logo'}
-              style={{
-                width: '20px',
-                height: '20px',
-                position: 'absolute',
-                right: '10px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-              }}
-            />
-          ) : (
-            <img
-              src={xLogo}
-              alt={'x logo'}
-              style={{
-                width: '20px',
-                height: '20px',
-                position: 'absolute',
-                right: '10px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-              }}
+          {validSignup.nickname !== null && (
+            <ValidationLogo
+              src={validSignup.nickname ? vLogo : xLogo}
+              alt="validation logo"
             />
           )}
-        </div>
+        </InputWrapper>
 
-        <div
-          style={{
-            position: 'relative',
-            width: '100%',
-            marginBottom: '10px',
-          }}
-        >
-          <input
-            style={styles.input}
+        <InputWrapper>
+          <Input
             placeholder="비밀번호 *"
             type="password"
             id="password"
@@ -363,17 +286,10 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
             }
             required
           />
-        </div>
+        </InputWrapper>
 
-        <div
-          style={{
-            position: 'relative',
-            width: '100%',
-            marginBottom: '10px',
-          }}
-        >
-          <input
-            style={styles.input}
+        <InputWrapper>
+          <Input
             placeholder="비밀번호 확인 *"
             type="password"
             id="confirmPassword"
@@ -387,47 +303,16 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
             }
             required
           />
-
           {validPassword && (
-            <img
-              src={vLogo}
-              alt={'v logo'}
-              style={{
-                width: '20px',
-                height: '20px',
-                position: 'absolute',
-                right: '10px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-              }}
-            />
+            <ValidationLogo src={vLogo} alt="validation logo" />
           )}
-
           {!validPassword && signup.confirmPassword.length > 0 && (
-            <img
-              src={xLogo}
-              alt={'x logo'}
-              style={{
-                width: '20px',
-                height: '20px',
-                position: 'absolute',
-                right: '10px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-              }}
-            />
+            <ValidationLogo src={xLogo} alt="validation logo" />
           )}
-        </div>
+        </InputWrapper>
 
-        <div
-          style={{
-            position: 'relative',
-            width: '100%',
-            marginBottom: '10px',
-          }}
-        >
-          <input
-            style={styles.input}
+        <InputWrapper>
+          <Input
             placeholder="전화번호 *"
             type="text"
             id="phone"
@@ -441,100 +326,100 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
             }
             required
           />
-          {validSignup.phone === null ? null : validSignup.phone === true ? (
-            <img
-              src={vLogo}
-              alt={'v logo'}
-              style={{
-                width: '20px',
-                height: '20px',
-                position: 'absolute',
-                right: '10px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-              }}
-            />
-          ) : (
-            <img
-              src={xLogo}
-              alt={'x logo'}
-              style={{
-                width: '20px',
-                height: '20px',
-                position: 'absolute',
-                right: '10px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-              }}
+          {validSignup.phone !== null && (
+            <ValidationLogo
+              src={validSignup.phone ? vLogo : xLogo}
+              alt="validation logo"
             />
           )}
-        </div>
+        </InputWrapper>
       </form>
 
-      <div
-        style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}
-      >
-        <button
-          type="submit"
-          style={styles.submitButton}
-          onClick={handleSubmit}
-        >
+      <ButtonWrapper>
+        <SubmitButton type="submit" onClick={handleSubmit}>
           회원가입
-        </button>
-      </div>
-      <div style={{ width: '100%', padding: '10px 0', textAlign: 'center' }}>
-        <button onClick={onSwitchView} style={styles.switchButton}>
-          로그인으로 전환
-        </button>
-      </div>
-    </div>
+        </SubmitButton>
+      </ButtonWrapper>
+
+      <SwitchButtonWrapper>
+        <SwitchButton onClick={onSwitchView}>로그인으로 전환</SwitchButton>
+      </SwitchButtonWrapper>
+    </Container>
   );
 };
 
-const styles = {
-  socialButton: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '10px',
-    border: '1px solid #ccc',
-    backgroundColor: 'white',
-    borderRadius: '10px',
-    cursor: 'pointer',
-    height: '40px',
-  },
-  socialLogo: {
-    width: '20px',
-    height: '20px',
-    marginRight: '10px',
-  },
-  input: {
-    padding: '10px',
-    border: '1px solid #ddd',
-    borderRadius: '4px',
-    marginBottom: '10px',
-    boxSizing: 'border-box' as 'border-box',
-    width: '100%',
-    height: '40px',
-  },
-  submitButton: {
-    padding: '10px 20px',
-    width: '200px',
-    borderRadius: '25px',
-    border: 'none',
-    backgroundColor: '#84d7fb',
-    color: 'white',
-    cursor: 'pointer',
-  },
-  switchButton: {
-    padding: '10px 20px',
-    width: '200px',
-    borderRadius: '25px',
-    border: 'none',
-    backgroundColor: '#000',
-    color: 'white',
-    cursor: 'pointer',
-  },
-};
+const Container = styled.div`
+  background-color: #fff;
+  border-radius: 25px;
+  padding: 15px;
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const Title = styled.div`
+  text-align: center;
+  margin-bottom: 20px;
+`;
+
+const InputWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  margin-bottom: 10px;
+`;
+
+const Input = styled.input`
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  width: 100%;
+  height: 40px;
+`;
+
+const ValidationLogo = styled.img`
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+`;
+
+const SubmitButton = styled.button`
+  padding: 10px 20px;
+  width: 200px;
+  border-radius: 25px;
+  border: none;
+  background-color: #84d7fb;
+  color: white;
+  cursor: pointer;
+`;
+
+const SwitchButtonWrapper = styled.div`
+  width: 100%;
+  padding: 10px 0;
+  text-align: center;
+`;
+
+const SwitchButton = styled.button`
+  padding: 10px 20px;
+  width: 200px;
+  border-radius: 25px;
+  border: none;
+  background-color: #000;
+  color: white;
+  cursor: pointer;
+`;
 
 export default Signup;

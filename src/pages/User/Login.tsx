@@ -298,15 +298,11 @@ const Container = styled.div`
   background-color: #fff;
   border-radius: 25px;
   padding: 20px;
-  min-width: 400px;
-  max-width: 600px;
-  width: 80%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  height: 400px;
-   z-index: 2005;
+  z-index: 2001;
 `;
 
 const Header = styled.div`

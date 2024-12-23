@@ -60,40 +60,19 @@ const UserModalForm = () => {
 
   return (
     <>
-      <div
-        className="modalContainer"
-        style={{
-          marginRight: '30px',
-          // marginLeft: "5px",
-          width: '70px',
-          height: '50px',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          borderRadius: '30px',
-        }}
-      >
-        <button
+      <ButtonWrapper>
+        <LoginButton
           onClick={() => {
             setModalIsOpen(true);
             setActiveView('login');
           }}
-          style={{
-            height: '100%',
-            width: '100%',
-            border: 'none',
-            backgroundColor: isLoginHovered ? '#77C2E2' : '#84d7fb',
-            borderRadius: '30px',
-            fontWeight: 'bold',
-            color: 'white',
-          }}
-          className="my-component"
+          isLoginHovered={isLoginHovered}
           onMouseEnter={() => setIsLoginHovered(true)}
           onMouseLeave={() => setIsLoginHovered(false)}
         >
           <span style={{ fontWeight: '10000' }}>Log In</span>
-        </button>
-      </div>
+        </LoginButton>
+      </ButtonWrapper>
 
       <Modal
         buttonLabel={activeView}
@@ -230,19 +209,43 @@ const UserModalForm = () => {
 
 export default UserModalForm;
 
+const ButtonWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 30px;
+`;
+
+const LoginButton = styled.button<{ readonly isLoginHovered: boolean }>`
+  height: 50px;
+  width: 80px;
+  border: none;
+  background-color: ${(props) =>
+    props.isLoginHovered ? '#77C2E2' : '#84d7fb'};
+  border-radius: 30px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  span {
+    font-weight: 10000;
+  }
+`;
+
 const SubmitInput = styled.input`
-  min-width: 400px;
   width: 100%;
   border: 1px solid #ddd;
   border-radius: 4px;
   margin-bottom: 10px;
   box-sizing: border-box;
-  height: 40px;
+  height: 100%;
 `;
 
 const SwitchButton = styled.button`
   padding: 10px 20px;
-  width: 200px;
   border-radius: 25px;
   border: none;
   background-color: #000;
@@ -251,11 +254,11 @@ const SwitchButton = styled.button`
 
   &:hover {
     background-color: #333;
+  }
 `;
 
 const SubmitButton = styled.button`
   padding: 10px 20px;
-  width: 200px;
   border-radius: 25px;
   border: none;
   background-color: #84d7fb;
