@@ -486,7 +486,7 @@ const BoardSubmit = () => {
 const BoardSubmitContainer = styled.div`
   width: 80%;
   height: 100%;
-  overflow: hidden;
+  overflow: visible;
 
   @media (max-width: ${breakpoints.mobile}) {
     width: 100%;
