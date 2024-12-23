@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { AddSearchAPI, GetTopTenSearchesAPI } from '../api/searchApi';
 import { useNavigate } from 'react-router-dom';
 import SearchHistory from './SearchHistory';
+import AutoComplete from './AutoComplete';
 
 const SearchMobile = () => {
   const [isTopTenList, setIsTopTenList] = useState([]);
@@ -78,7 +79,8 @@ const SearchMobile = () => {
             onChange={(e) => handleSearchChange(e)}
             onKeyDown={handleKeyDown}
       />
-      <SearchHistory/>
+      {searchTerm ? <AutoComplete query = {searchTerm}/> : <SearchHistory/>}
+      
         <HeaderTitle>실시간 검색어 TOP 10</HeaderTitle>
         <hr />
       </SearchHeader>
