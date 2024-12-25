@@ -560,7 +560,6 @@ const HrTag = styled.hr`
   background-color: #f0f0f0;
   margin: 5px 0;
   width: 100%;
-  max-width: 600px;
 `;
 
 export default Card;
