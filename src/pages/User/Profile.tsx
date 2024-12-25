@@ -17,6 +17,7 @@ import {
   ImageLocalPreviewUrlsReturnType,
 } from '../../_common/imageUploadFuntionality';
 import styled from 'styled-components';
+import { breakpoints } from '../../_common/breakpoint';
 
 type ACTIVE_SECTION_TYPES = 'POSTS' | 'COMMENTS' | 'PROFILE';
 const Profile = () => {
@@ -113,93 +114,80 @@ const Profile = () => {
 
   return (
     <Container>
-      <Content>
-        <ButtonContainer>
-          <SectionButton
-            isActive={activeSection === 'POSTS'}
-            onClick={() => setActiveSection('POSTS')}
-          >
-            내가 등록한 게시글
-          </SectionButton>
-          <SectionButton
-            isActive={activeSection === 'COMMENTS'}
-            onClick={() => setActiveSection('COMMENTS')}
-          >
-            내가 등록한 댓글
-          </SectionButton>
-          <SectionButton
-            isActive={activeSection === 'PROFILE'}
-            onClick={() => setActiveSection('PROFILE')}
-          >
-            나의 정보
-          </SectionButton>
-        </ButtonContainer>
+      <ButtonContainer>
+        <SectionButton
+          isActive={activeSection === 'POSTS'}
+          onClick={() => setActiveSection('POSTS')}
+        >
+          내가 등록한 게시글
+        </SectionButton>
+        <SectionButton
+          isActive={activeSection === 'COMMENTS'}
+          onClick={() => setActiveSection('COMMENTS')}
+        >
+          내가 등록한 댓글
+        </SectionButton>
+        <SectionButton
+          isActive={activeSection === 'PROFILE'}
+          onClick={() => setActiveSection('PROFILE')}
+        >
+          나의 정보
+        </SectionButton>
+      </ButtonContainer>
 
-        {activeSection === 'POSTS' && (
-          <Section>
-            <SectionTitle>내가 등록한 게시글</SectionTitle>
-            {myPosts && myPosts.length > 0 ? (
-              myPosts.map((post: CardType) => (
-                <Card
-                  key={post?.id}
-                  shareCount={post?.share_count}
-                  createdAt={post?.created_at}
-                  {...post}
-                />
-              ))
-            ) : (
-              <p>등록된 포스트가 없습니다.</p>
-            )}
-          </Section>
-        )}
+      {activeSection === 'POSTS' && (
+        <Section>
+          <SectionTitle>내가 등록한 게시글</SectionTitle>
+          {myPosts && myPosts.length > 0 ? (
+            myPosts.map((post: CardType) => (
+              <Card
+                key={post?.id}
+                shareCount={post?.share_count}
+                createdAt={post?.created_at}
+                {...post}
+              />
+            ))
+          ) : (
+            <p>등록된 포스트가 없습니다.</p>
+          )}
+        </Section>
+      )}
 
-        {activeSection === 'COMMENTS' && (
-          <Section>
-            <SectionTitle>내가 등록한 댓글</SectionTitle>
-            {myComments.length > 0 ? (
-              myComments.map((comment: CommentType) => (
-                <BoardComment
-                  key={comment?.id}
-                  {...comment}
-                  onReplySubmit={handleReplySubmit}
-                />
-              ))
-            ) : (
-              <p>작성된 댓글이 없습니다.</p>
-            )}
-          </Section>
-        )}
+      {activeSection === 'COMMENTS' && (
+        <Section>
+          <SectionTitle>내가 등록한 댓글</SectionTitle>
+          {myComments.length > 0 ? (
+            myComments.map((comment: CommentType) => (
+              <BoardComment
+                key={comment?.id}
+                {...comment}
+                onReplySubmit={handleReplySubmit}
+              />
+            ))
+          ) : (
+            <p>작성된 댓글이 없습니다.</p>
+          )}
+        </Section>
+      )}
 
-        {activeSection === 'PROFILE' && (
-          <Section>
-            <SectionTitle>프로필</SectionTitle>
-            <ProfileContainer>
-              <ImageUploadWrapper>
-                {isEditing ? (
-                  <>
-                    <HiddenFileInput
-                      type="file"
-                      id="profilePicture"
-                      accept="image/*"
-                      onChange={handleProfilePictureChange}
-                    />
-                    <ImagePreviewWrapper
-                      onClick={() =>
-                        document.getElementById('profilePicture')?.click()
-                      }
-                    >
-                      {profilePreview ? (
-                        <ImagePreview
-                          src={profilePreview}
-                          alt="Profile Preview"
-                        />
-                      ) : (
-                        <Placeholder>프로필</Placeholder>
-                      )}
-                    </ImagePreviewWrapper>
-                  </>
-                ) : (
-                  <ImagePreviewWrapper>
+      {activeSection === 'PROFILE' && (
+        <Section>
+          <SectionTitle>프로필</SectionTitle>
+          <ProfileContainer>
+            <ImageUploadWrapper>
+              {isEditing ? (
+                <>
+                  <HiddenFileInput
+                    type="file"
+                    id="profilePicture"
+                    accept="image/*"
+                    onChange={handleProfilePictureChange}
+                  />
+                  <ImagePreviewWrapper
+                    onClick={() =>
+                      document.getElementById('profilePicture')?.click()
+                    }
+                  >
                     {profilePreview ? (
                       <ImagePreview
                         src={profilePreview}
@@ -209,64 +197,74 @@ const Profile = () => {
                       <Placeholder>프로필</Placeholder>
                     )}
                   </ImagePreviewWrapper>
+                </>
+              ) : (
+                <ImagePreviewWrapper>
+                  {profilePreview ? (
+                    <ImagePreview src={profilePreview} alt="Profile Preview" />
+                  ) : (
+                    <Placeholder>프로필</Placeholder>
+                  )}
+                </ImagePreviewWrapper>
+              )}
+            </ImageUploadWrapper>
+            <ProfileInfo>
+              <InfoRow>
+                <Label>닉네임:</Label>
+                {isEditing ? (
+                  <Input
+                    type="text"
+                    value={nickname}
+                    onChange={(e) => setNickname(e.target.value)}
+                  />
+                ) : (
+                  <Value>{nickname || '닉네임을 입력하세요'}</Value>
                 )}
-              </ImageUploadWrapper>
-              <ProfileInfo>
-                <InfoRow>
-                  <Label>닉네임:</Label>
-                  {isEditing ? (
-                    <Input
-                      type="text"
-                      value={nickname}
-                      onChange={(e) => setNickname(e.target.value)}
-                    />
-                  ) : (
-                    <Value>{nickname || '닉네임을 입력하세요'}</Value>
-                  )}
-                </InfoRow>
-                <InfoRow>
-                  <Label>이메일:</Label>
-                  {isEditing ? (
-                    <Input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
-                  ) : (
-                    <Value>{email || '이메일을 입력하세요'}</Value>
-                  )}
-                </InfoRow>
-                <InfoRow>
-                  <Label>전화번호:</Label>
-                  {isEditing ? (
-                    <Input
-                      type="text"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                    />
-                  ) : (
-                    <Value>{phone || '전화번호를 입력하세요'}</Value>
-                  )}
-                </InfoRow>
-              </ProfileInfo>
-            </ProfileContainer>
-          </Section>
-        )}
-      </Content>
+              </InfoRow>
+              <InfoRow>
+                <Label>이메일:</Label>
+                {isEditing ? (
+                  <Input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                ) : (
+                  <Value>{email || '이메일을 입력하세요'}</Value>
+                )}
+              </InfoRow>
+              <InfoRow>
+                <Label>전화번호:</Label>
+                {isEditing ? (
+                  <Input
+                    type="text"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                  />
+                ) : (
+                  <Value>{phone || '전화번호를 입력하세요'}</Value>
+                )}
+              </InfoRow>
+            </ProfileInfo>
+          </ProfileContainer>
+        </Section>
+      )}
     </Container>
   );
 };
 
 const Container = styled.div`
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
   width: 100%;
-  height: 100vh;
-  justify-content: center;
-`;
+  box-sizing: border-box;
 
-const Content = styled.div`
-  flex: 2;
-  padding: 20px;
+  @media (max-width: ${breakpoints.mobile}) {
+    margin-left: 0;
+    max-width: 100%;
+  }
 `;
 
 const ButtonContainer = styled.div`
@@ -275,7 +273,7 @@ const ButtonContainer = styled.div`
   margin-bottom: 20px;
 `;
 
-const SectionButton = styled.button<{ isActive: boolean }>`
+const SectionButton = styled.button<{ readonly isActive: boolean }>`
   padding: 10px 20px;
   margin: 0 10px;
   border: none;
@@ -288,11 +286,12 @@ const SectionButton = styled.button<{ isActive: boolean }>`
 `;
 
 const Section = styled.div`
-  margin-bottom: 20px;
   background-color: #fff;
-  padding: 10px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 600px;
+  box-sizing: border-box;
 `;
 
 const SectionTitle = styled.h2`

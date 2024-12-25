@@ -23,6 +23,7 @@ import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
 import { AppDispatch } from '../../store/store';
 import { useDispatch } from 'react-redux';
 import { MainListTypes } from '../../_common/collectionTypes';
+import { breakpoints } from '../../_common/breakpoint';
 
 type SearchListTypes =
   | 'BOARDS'
@@ -54,7 +55,6 @@ const SearchList = () => {
         .then((res): void => {
           if (!res) return;
           const response = res.data.response;
-          console.log('BOARDS response : ', sortType, response);
 
           setSearchCardList(response);
         })
@@ -68,7 +68,6 @@ const SearchList = () => {
         .then((res): void => {
           if (!res) return;
           const response = res.data.response;
-          console.log('community response : ', response);
 
           setSearchCommunityList(response);
         })
@@ -83,7 +82,6 @@ const SearchList = () => {
           if (!res) return;
 
           const response = res.data.response;
-          console.log('COMMENTS response : ', response);
 
           setSearchReplyList(response);
         })
@@ -98,7 +96,6 @@ const SearchList = () => {
           if (!res) return;
 
           const response = res.data.response;
-          console.log('IMAGE&VIDEO response : ', response);
 
           setSearchCardList(response);
         })
@@ -113,7 +110,6 @@ const SearchList = () => {
           if (!res) return;
 
           const response = res.data.response;
-          console.log('PEOPLE response : ', response);
 
           setSearchUserList(response);
         })
@@ -163,21 +159,7 @@ const SearchList = () => {
     if (type === 'PEOPLE') setSearchType('PEOPLE');
     if (type === 'TAGS') setSearchType('TAGS');
   };
-  const styles = {
-    navContainer: {
-      display: 'flex',
-      borderBottom: '1px solid #e0e0e0',
-      padding: '10px',
-    },
-    navItem: {
-      margin: '1vh 0 0 1vw',
-      padding: '20px',
-      cursor: 'pointer',
-      fontSize: '16px',
-      color: '#000',
-      borderRadius: '40px',
-    },
-  };
+
   const NavBar = () => {
     return (
       <NavContainer>
@@ -342,7 +324,7 @@ const MainContainer = styled.div`
   overflow: hidden;
   z-index: 1;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${breakpoints.mobile}) {
     margin: 0;
     max-width: 100%;
   }

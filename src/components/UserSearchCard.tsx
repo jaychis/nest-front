@@ -27,7 +27,6 @@ const UserSearchCard = ({
     });
     if (!urls) return;
     setProfilePreview(urls.previewUrls[0]);
-    // setProfilePicture(urls.fileList[0]);
   };
 
   return (
