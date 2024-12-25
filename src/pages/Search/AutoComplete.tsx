@@ -57,7 +57,7 @@ const AutoComplete = ({query}:AutoProps) => {
             
             {searchList.slice(0,5).map((list, index) => (
             <AutoCompleteList key={index}>
-                <Icon src = {list.icon}/>
+                {!list.icon ? <Icon src = {logo}/> : <Icon src = {list.icon}/>}
                 <Text>{list.name}</Text>
                 
             </AutoCompleteList>
