@@ -16,24 +16,20 @@ import Tooltip from '../../components/Tooltip';
 import styled from 'styled-components';
 import { breakpoints } from '../../_common/breakpoint';
 
-interface HomeListProps {
-  selectedButton?: string;
-  isSideHovered: string | null;
-}
-
 const GlobalSideBar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const modalState: UserModalState = useSelector(
     (state: RootState) => state.modalState,
   );
-  const { hamburgerState } = useSelector(
+  const { hamburgerState, buttonType } = useSelector(
     (state: RootState) => state.sideBarButton,
   );
   const [isSideHovered, setIsSideHovered] = useState<
     MainListTypes | 'CREATE_COMMUNITY' | null
   >(null);
-  const [selectedButton, setSelectedButton] = useState<MainListTypes>('HOME');
+  const [selectedButton, setSelectedButton] =
+    useState<MainListTypes>(buttonType);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const isLoggedIn = !!localStorage.getItem('access_token');
@@ -83,19 +79,16 @@ const GlobalSideBar = () => {
   }, [communityList]);
 
   interface CommunityClickType {
-    button: MainListTypes;
-  }
-  const sendDispatchSideBtn = async ({
-    button,
-  }: {
     readonly button: MainListTypes;
-  }) => {
+  }
+  const sendDispatchSideBtn = async ({ button }: CommunityClickType) => {
     dispatch(sideButtonSliceActions.setButtonType({ buttonType: button }));
     dispatch(
-      sideButtonSliceActions.setHamburgerStatus({ hamburgerState: false }),
+      sideButtonSliceActions.setHamburgerState({ hamburgerState: false }),
     );
   };
   const handleClick = async (button: MainListTypes) => {
+    console.log('isSideHovered : ', isSideHovered);
     if (button === 'TAGMATCH' && !(localStorage.getItem('id') as string)) {
       return alert('회원가입 유저에게 제공되는 기능입니다.');
     }
@@ -288,62 +281,63 @@ const GlobalSideBarContainer = styled.div.withConfig({
   @media (max-width: ${breakpoints.mobile}) {
     z-index: 1000;
     position: fixed;
-    transition: 
-        height 0.35s ease,
-        margin 0.35s ease,
-        width 0.35s ease;
+    transition:
+      height 0.35s ease,
+      margin 0.35s ease,
+      width 0.35s ease;
   }
 `;
 
-const HomeList = styled.div.withConfig({
-  shouldForwardProp: (prop) =>
-    prop !== 'selectedButton' && prop !== 'isSideHovered',
-})<HomeListProps>`
+const HomeList = styled.div<{
+  readonly selectedButton: string;
+  readonly isSideHovered: string | null;
+}>`
   padding: 6px 0;
   background-color: ${({ selectedButton, isSideHovered }) =>
     selectedButton === 'HOME' || isSideHovered === 'HOME'
       ? '#f0f0f0'
       : 'white'};
   border-radius: 5px;
+  cursor: pointer;
 `;
 
-const MostCommentedList = styled.div.withConfig({
-  shouldForwardProp: (prop) =>
-    prop !== 'selectedButton' && prop !== 'isSideHovered',
-})<HomeListProps>`
+const MostCommentedList = styled.div<{
+  readonly selectedButton: string;
+  readonly isSideHovered: string | null;
+}>`
   padding: 6px 0;
   background-color: ${({ selectedButton, isSideHovered }) =>
     selectedButton === 'POPULAR' || isSideHovered === 'POPULAR'
       ? '#f0f0f0'
       : 'white'};
   border-radius: 5px;
-  margin: 1px;
+  cursor: pointer;
 `;
 
-const FrequentShareList = styled.div.withConfig({
-  shouldForwardProp: (prop) =>
-    prop !== 'selectedButton' && prop !== 'isSideHovered',
-})<HomeListProps>`
+const FrequentShareList = styled.div<{
+  readonly selectedButton: string;
+  readonly isSideHovered: string | null;
+}>`
   padding: 6px 0;
   background-color: ${({ selectedButton, isSideHovered }) =>
     selectedButton === 'FREQUENTSHARE' || isSideHovered === 'FREQUENTSHARE'
       ? '#f0f0f0'
       : 'white'};
   border-radius: 5px;
-  margin: 1px;
+  cursor: pointer;
 `;
 
-const TagMatchList = styled.div.withConfig({
-  shouldForwardProp: (prop) =>
-    prop !== 'selectedButton' && prop !== 'isSideHovered',
-})<HomeListProps>`
+const TagMatchList = styled.div<{
+  readonly selectedButton: string;
+  readonly isSideHovered: string | null;
+}>`
   padding: 6px 0;
   background-color: ${({ selectedButton, isSideHovered }) =>
     selectedButton === 'TAGMATCH' || isSideHovered === 'TAGMATCH'
       ? '#f0f0f0'
       : 'white'};
   border-radius: 5px;
-  margin: 1px;
+  cursor: pointer;
 `;
 
 const CommunitySection = styled.div`
@@ -352,11 +346,11 @@ const CommunitySection = styled.div`
   font-size: 14px;
 `;
 
-const CreateCommunityItem = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'isSideHovered',
-})<HomeListProps>`
+const CreateCommunityItem = styled.div<{
+  readonly isSideHovered: string | null;
+}>`
   display: flex;
-  align-items: center;
+  lign-items: center;
   padding: 8px 0;
   background-color: ${({ isSideHovered }) =>
     isSideHovered === 'CREATE_COMMUNITY' ? '#f0f0f0' : 'white'};
@@ -392,7 +386,7 @@ const CommunityName = styled.span`
 
 const ShowMoreButton = styled.button.withConfig({
   shouldForwardProp: (prop) => prop !== 'isLoading',
-})<{ isLoading: boolean }>`
+})<{ readonly isLoading: boolean }>`
   padding: 8px 16px;
   border-radius: 5px;
   background-color: #0079d3;
@@ -435,8 +429,8 @@ const RecentItem = styled.div`
 `;
 
 const AllListSection = styled.div<{
-  selectedButton: string;
-  isSideHovered: string | null;
+  readonly selectedButton: string;
+  readonly isSideHovered: string | null;
 }>`
   padding: 6px 0;
   background-color: ${({ selectedButton, isSideHovered }) =>
