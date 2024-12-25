@@ -383,8 +383,12 @@ const ProfileImage = styled.img`
 const CommunityNameWrapper = styled.div`
   top: 40vh;
   display: flex;
-  margin-top: 2vh;
+  margin-top: 9vh;
   margin-left: 1vw;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    margin-top: 2vh;
+  }
 `;
 
 const CommunityName = styled.h1`
@@ -394,7 +398,7 @@ const CommunityName = styled.h1`
 
 const JoinButton = styled.div<{ readonly isJoined: boolean }>`
   position: absolute;
-  top: 18vh;
+  top: 11vh;
   left: 50vw;
   background-color: ${(props) => (props.isJoined ? '#cccccc' : '#0056d2')};
   color: #ffffff;
