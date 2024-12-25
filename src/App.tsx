@@ -186,9 +186,7 @@ function App() {
             <Route
               path={'/Searchmobile'}
               element={
-                <Layout>
-                  <SearchMobile />
-                </Layout>
+                <SearchMobile/>
               }
             />
           </Routes>
