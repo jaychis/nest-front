@@ -57,9 +57,9 @@ const AutoComplete = ({query}:AutoProps) => {
             
             {searchList.slice(0,5).map((list, index) => (
             <AutoCompleteList key={index}>
-                <Icon src = {logo}/>
+                <Icon src = {list.icon}/>
                 <Text>{list.name}</Text>
-                <Hr/>
+                
             </AutoCompleteList>
         ))}
         </AutoCompleteContainer>
@@ -89,17 +89,10 @@ const Icon = styled.img`
     width: 30px;
     height: 30px;
     margin-right: 2vw;
+    border-radius: 25px;
 `
 
 const AutoCompleteList = styled.div`
     display: flex;
-    flex-direction: column;
-    margin-left: 11vw;
-`;
-
-const Hr = styled.hr`
-    width: 80%; 
-    border: none; 
-    border-top: 1px solid #ccc; 
-    margin: -1vh 0 0 0; 
+    align-items: center;
 `;
