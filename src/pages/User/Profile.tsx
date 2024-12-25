@@ -17,6 +17,7 @@ import {
   ImageLocalPreviewUrlsReturnType,
 } from '../../_common/imageUploadFuntionality';
 import styled from 'styled-components';
+import { breakpoints } from '../../_common/breakpoint';
 
 type ACTIVE_SECTION_TYPES = 'POSTS' | 'COMMENTS' | 'PROFILE';
 const Profile = () => {
@@ -254,25 +255,25 @@ const Profile = () => {
 
 const Container = styled.div`
   display: flex;
-  width: 100%;
-  height: 100%;
-  align-items: center;
   flex-direction: column;
+  align-items: center;
   justify-content: flex-start;
+  width: 100%;
+  box-sizing: border-box;
 
-  padding: 20px;
-  background-color: red;
+  @media (max-width: ${breakpoints.mobile}) {
+    margin-left: 0;
+    max-width: 100%;
+  }
 `;
 
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
-
-  background-color: violet;
 `;
 
-const SectionButton = styled.button<{ isActive: boolean }>`
+const SectionButton = styled.button<{ readonly isActive: boolean }>`
   padding: 10px 20px;
   margin: 0 10px;
   border: none;
@@ -285,14 +286,12 @@ const SectionButton = styled.button<{ isActive: boolean }>`
 `;
 
 const Section = styled.div`
-  margin-bottom: 20px;
-  padding: 10px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  //background-color: #fff;
-  background-color: blue;
-  max-width: 60%;
-  max-height: 100%;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 600px;
+  box-sizing: border-box;
 `;
 
 const SectionTitle = styled.h2`
