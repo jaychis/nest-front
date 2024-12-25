@@ -1,8 +1,7 @@
 import React, { FormEvent, useEffect, useState, useRef } from 'react';
 import { BoardSubmitAPI, SubmitParams } from '../api/boardApi';
 import { useNavigate } from 'react-router-dom';
-import 'react-quill/dist/quill.snow.css';
-import ReactQuill from 'react-quill';
+import SubmitText from '../../components/SubmitText';
 import 'react-markdown-editor-lite/lib/index.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -31,8 +30,7 @@ const BoardSubmit = () => {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const ID: string = localStorage.getItem('id') as string;
   const NICKNAME: string = localStorage.getItem('nickname') as string;
-  const [textTitle, setTextTitle] = useState<string>('');
-
+  const [textTitle, setTextTitle] = useState<string>('');  
   const [topics, setTopics] = useState<string[]>([]);
   const [tagSearchTerm, setTagSearchTerm] = useState('');
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -368,10 +366,10 @@ const BoardSubmit = () => {
                 placeholder="제목"
                 onChange={handleTextTitleChange}
               />
-              <ReactQuill
-                value={textContent}
-                onChange={handleEditorChange}
-                style={{ height: '400px' }}
+              <SubmitText
+                text={textContent}
+                eventHandler={handleEditorChange}
+                height={'400px'}
               />
             </>
           )}
