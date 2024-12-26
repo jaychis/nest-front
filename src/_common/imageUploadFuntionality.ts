@@ -4,10 +4,12 @@ import { AWSImageRegistAPI, getPresignedUrlAPI } from '../pages/api/awsApi';
 type ImageLocalPreviewUrlsInputType = {
   readonly event: React.ChangeEvent<HTMLInputElement>;
 };
+
 export type ImageLocalPreviewUrlsReturnType = {
   readonly previewUrls: string[];
   readonly fileList: File[];
 } | null;
+
 export const ImageLocalPreviewUrls = async ({
   event,
 }: ImageLocalPreviewUrlsInputType): Promise<ImageLocalPreviewUrlsReturnType> => {
@@ -33,6 +35,7 @@ type ImageLocalPreviewUrlsDelete = {
   readonly urls: string[];
 };
 export type ImageLocalPreviewUrlsDeleteType = string[] | null;
+
 export const ImageLocalPreviewUrlsDelete = async ({
   urls,
 }: ImageLocalPreviewUrlsDelete): Promise<ImageLocalPreviewUrlsDeleteType> => {
@@ -47,12 +50,13 @@ export const ImageLocalPreviewUrlsDelete = async ({
 type AwsImageUploadFunctionalityInputType = {
   readonly fileList: File[];
 };
+
 export type AwsImageUploadFunctionalityReturnType = {
   readonly imageUrls: string[];
 } | null;
-export const AwsImageUploadFunctionality = async ({
-  fileList,
-}: AwsImageUploadFunctionalityInputType): Promise<AwsImageUploadFunctionalityReturnType> => {
+
+export const AwsImageUploadFunctionality = 
+async ({fileList,}: AwsImageUploadFunctionalityInputType): Promise<AwsImageUploadFunctionalityReturnType> => {
   const files: File[] = Array.from(fileList);
 
   const uploadImageUrlList = files.map(async (file: File) => {
