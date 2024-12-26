@@ -1,23 +1,23 @@
 import React, { useEffect, useState, ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
-import { ReduxProfileAPI, UsersProfileAPI } from '../api/userApi';
+import { UsersProfileAPI } from '../api/userApi';
 import { ProfileState } from '../../reducers/profileSlice';
 import { CardType, UserType } from '../../_common/collectionTypes';
 import Card from '../../components/Card';
 import BoardComment, { CommentType } from '../Board/BoardComment';
 import { BoardInquiryAPI } from '../api/boardApi';
-import {
-  CommentInquiryAPI,
-  CommentUsersInquiryAPI,
-  CommentUsersInquiryParam,
-} from '../api/commentApi';
+import { CommentUsersInquiryAPI } from '../api/commentApi';
 import {
   ImageLocalPreviewUrls,
+  ImageLocalPreviewUrlsDelete,
+  ImageLocalPreviewUrlsDeleteType,
   ImageLocalPreviewUrlsReturnType,
 } from '../../_common/imageUploadFuntionality';
 import styled from 'styled-components';
 import { breakpoints } from '../../_common/breakpoint';
+import TRASH from '../../assets/img/trash.png';
+import SAVE from '../../assets/img/save.png';
 
 type ACTIVE_SECTION_TYPES = 'POSTS' | 'COMMENTS' | 'PROFILE';
 const Profile = () => {
@@ -29,11 +29,45 @@ const Profile = () => {
     useState<ACTIVE_SECTION_TYPES>('POSTS');
   const ID: string = (localStorage.getItem('id') as string) || '';
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
-  const [profilePreview, setProfilePreview] = useState<string | null>(null);
+  const [profilePreview, setProfilePreview] = useState<string[]>([]);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [nickname, setNickname] = useState<string>(user.data.nickname || '');
   const [email, setEmail] = useState<string>(user.data.email || '');
   const [phone, setPhone] = useState<string>(user.data.phone || '');
+
+  const imageUrlListDelete = async () => {
+    const res: ImageLocalPreviewUrlsDeleteType =
+      await ImageLocalPreviewUrlsDelete({ urls: profilePreview });
+    if (!res) return;
+
+    setProfilePreview(res);
+  };
+
+  const handleProfilePictureChange = async (
+    e: ChangeEvent<HTMLInputElement>,
+  ) => {
+    alert('click');
+    const urls: ImageLocalPreviewUrlsReturnType = await ImageLocalPreviewUrls({
+      event: e,
+    });
+    if (!urls) return;
+
+    console.log('urls : ', urls);
+
+    setProfilePreview(urls.previewUrls);
+    setProfilePicture(urls.fileList[0]);
+  };
+
+  const profileImageSave = async () => {
+    alert('profileImageSave');
+  };
+
+  useEffect(() => {
+    console.log('isEditing : ', isEditing);
+  }, [isEditing]);
+  useEffect(() => {
+    console.log('profilePreview : ', profilePreview);
+  }, [profilePreview]);
 
   useEffect(() => {
     if (activeSection === 'POSTS') {
@@ -52,7 +86,7 @@ const Profile = () => {
         if (!res) return;
 
         const response = res.data.response;
-        console.log('comments response : ', response);
+
         setMyComments(response);
       };
       commentInquiry();
@@ -75,43 +109,24 @@ const Profile = () => {
     }
   }, [activeSection, ID, dispatch]);
 
-  useEffect(() => {
-    if (profilePicture && typeof profilePicture !== 'string') {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfilePreview(reader.result as string);
-      };
-      reader.readAsDataURL(profilePicture);
-    } else if (typeof profilePicture === 'string') {
-      setProfilePreview(profilePicture);
-    } else {
-      setProfilePreview(null);
-    }
-  }, [profilePicture]);
-
-  const handleProfilePictureChange = async (
-    e: ChangeEvent<HTMLInputElement>,
-  ) => {
-    const urls: ImageLocalPreviewUrlsReturnType = await ImageLocalPreviewUrls({
-      event: e,
-    });
-    if (!urls) return;
-    setProfilePreview(urls.previewUrls[0]);
-    setProfilePicture(urls.fileList[0]);
-  };
-
+  // useEffect(() => {
+  //   if (profilePicture && typeof profilePicture !== 'string') {
+  //     const reader = new FileReader();
+  //
+  //     const result = reader.result as string;
+  //     reader.onloadend = () => {
+  //       setProfilePreview([result]);
+  //     };
+  //     reader.readAsDataURL(profilePicture);
+  //   } else if (typeof profilePicture === 'string') {
+  //     setProfilePreview(profilePicture);
+  //   } else {
+  //     setProfilePreview([]);
+  //   }
+  // }, [profilePicture]);
   const handleReplySubmit = (reply: any) => {
     // Implement reply submit logic here
   };
-
-  const handleEditToggle = () => {
-    setIsEditing((prev) => !prev);
-  };
-
-  const handleSave = () => {
-    setIsEditing(false);
-  };
-
   return (
     <Container>
       <ButtonContainer>
@@ -175,39 +190,47 @@ const Profile = () => {
           <SectionTitle>프로필</SectionTitle>
           <ProfileContainer>
             <ImageUploadWrapper>
-              {isEditing ? (
-                <>
-                  <HiddenFileInput
-                    type="file"
-                    id="profilePicture"
-                    accept="image/*"
-                    onChange={handleProfilePictureChange}
-                  />
-                  <ImagePreviewWrapper
-                    onClick={() =>
-                      document.getElementById('profilePicture')?.click()
-                    }
-                  >
-                    {profilePreview ? (
-                      <ImagePreview
-                        src={profilePreview}
-                        alt="Profile Preview"
-                      />
-                    ) : (
-                      <Placeholder>프로필</Placeholder>
-                    )}
-                  </ImagePreviewWrapper>
-                </>
-              ) : (
-                <ImagePreviewWrapper>
-                  {profilePreview ? (
-                    <ImagePreview src={profilePreview} alt="Profile Preview" />
-                  ) : (
-                    <Placeholder>프로필</Placeholder>
-                  )}
-                </ImagePreviewWrapper>
-              )}
+              <HiddenFileInput
+                type="file"
+                id="profilePicture"
+                accept="image/*"
+                onChange={handleProfilePictureChange}
+              />
+
+              <ImagePreviewWrapper
+                onClick={() => {
+                  document.getElementById('profilePicture')?.click();
+                }}
+              >
+                {profilePreview.length > 0 ? (
+                  <>
+                    <ImagePreview
+                      src={profilePreview[0]}
+                      alt="Profile Preview"
+                    />
+                    <SaveButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        profileImageSave();
+                      }}
+                    >
+                      <ImageIcon src={SAVE} alt={'Save Icon'} />
+                    </SaveButton>
+                    <TrashButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        imageUrlListDelete();
+                      }}
+                    >
+                      <ImageIcon src={TRASH} alt="Trash Icon" />
+                    </TrashButton>
+                  </>
+                ) : (
+                  <Placeholder>프로필2</Placeholder>
+                )}
+              </ImagePreviewWrapper>
             </ImageUploadWrapper>
+
             <ProfileInfo>
               <InfoRow>
                 <Label>닉네임:</Label>
@@ -312,6 +335,8 @@ const ImageUploadWrapper = styled.div`
   justify-content: center;
   cursor: pointer;
   margin-right: 20px;
+
+  background-color: blue;
 `;
 
 const HiddenFileInput = styled.input`
@@ -326,12 +351,15 @@ const ImagePreviewWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  position: relative;
 `;
 
 const ImagePreview = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 50%;
 `;
 
 const Placeholder = styled.div`
@@ -370,6 +398,38 @@ const Input = styled.input`
   border-radius: 10px;
   border: 1px solid #ccc;
   flex: 1;
+`;
+
+const TrashButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: absolute;
+  bottom: 2px;
+  right: -2px;
+`;
+
+const SaveButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: absolute;
+  bottom: 2px;
+  left: -2px;
+`;
+
+const ImageIcon = styled.img`
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
 `;
 
 export default Profile;
