@@ -28,7 +28,6 @@ const Profile = () => {
   const [activeSection, setActiveSection] =
     useState<ACTIVE_SECTION_TYPES>('POSTS');
   const ID: string = (localStorage.getItem('id') as string) || '';
-  const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [profilePreview, setProfilePreview] = useState<string[]>([]);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [nickname, setNickname] = useState<string>(user.data.nickname || '');
@@ -55,7 +54,6 @@ const Profile = () => {
     console.log('urls : ', urls);
 
     setProfilePreview(urls.previewUrls);
-    setProfilePicture(urls.fileList[0]);
   };
 
   const profileImageSave = async () => {
@@ -103,27 +101,18 @@ const Profile = () => {
           setNickname(response.nickname);
           setEmail(response.email);
           setPhone(response.phone);
+
+          const userProfile = response.users_profile[0].profile_image;
+          if (userProfile !== null) {
+            alert('profile');
+            setProfilePreview([userProfile]);
+          }
         }
       };
       userInquiry();
     }
   }, [activeSection, ID, dispatch]);
 
-  // useEffect(() => {
-  //   if (profilePicture && typeof profilePicture !== 'string') {
-  //     const reader = new FileReader();
-  //
-  //     const result = reader.result as string;
-  //     reader.onloadend = () => {
-  //       setProfilePreview([result]);
-  //     };
-  //     reader.readAsDataURL(profilePicture);
-  //   } else if (typeof profilePicture === 'string') {
-  //     setProfilePreview(profilePicture);
-  //   } else {
-  //     setProfilePreview([]);
-  //   }
-  // }, [profilePicture]);
   const handleReplySubmit = (reply: any) => {
     // Implement reply submit logic here
   };

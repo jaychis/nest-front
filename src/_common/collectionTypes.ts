@@ -14,6 +14,15 @@ export type ReactionStateTypes = 'LIKE' | 'DISLIKE' | null;
 
 export type BoardType = 'TEXT' | 'LINK' | 'MEDIA' | 'YOUTUBE';
 
+export interface UsersProfileType {
+  readonly id: string;
+  readonly user_id: string;
+  readonly profile_image: string | null;
+  readonly created_at: Date;
+  readonly updated_at: Date;
+  readonly deleted_at: Date | null;
+}
+
 export interface UserType {
   readonly id: string;
   readonly email: string;
@@ -24,6 +33,7 @@ export interface UserType {
   readonly created_at: Date;
   readonly updated_at: Date;
   readonly deleted_at: Date | null;
+  readonly users_profile: UsersProfileType[];
 }
 
 export interface TagType {
