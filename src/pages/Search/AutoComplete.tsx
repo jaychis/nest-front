@@ -57,9 +57,8 @@ const AutoComplete = ({query}:AutoProps) => {
             
             {searchList.slice(0,5).map((list, index) => (
             <AutoCompleteList key={index}>
-                {!list.icon ? <Icon src = {logo}/> : <Icon src = {list.icon}/>}
+                {!list.icon ? <Icon src = {logo} style={{border: '1px solid black'}}/> : <Icon src = {list.icon}/>}
                 <Text>{list.name}</Text>
-                
             </AutoCompleteList>
         ))}
         </AutoCompleteContainer>
@@ -81,7 +80,6 @@ const Text = styled.p`
 const SearchTermWrapper = styled.div`
     display: flex;
     align-items: center;
-    margin-bottom: -2vh;
 `
 
 const Icon = styled.img`
@@ -90,6 +88,7 @@ const Icon = styled.img`
     height: 30px;
     margin-right: 2vw;
     border-radius: 25px;
+    padding: 1px;
 `
 
 const AutoCompleteList = styled.div`
