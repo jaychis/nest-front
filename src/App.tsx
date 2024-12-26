@@ -21,6 +21,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from './store/store';
 import SearchMobile from './pages/Search/SearchMobile';
 import { breakpoints } from './_common/breakpoint';
+import MobilePrivacyPolicyPage from './components/MobilePrivacyPolicyPage';
 
 const Layout = ({ children }: { readonly children: React.ReactNode }) => {
   const { hamburgerState } = useSelector(
@@ -183,11 +184,11 @@ function App() {
             <Route path={'/admin/list'} element={<AdminList />} />
 
             {/* 모바일 검색화면*/}
+            <Route path={'/Searchmobile'} element={<SearchMobile />} />
+
             <Route
-              path={'/Searchmobile'}
-              element={
-                <SearchMobile/>
-              }
+              path={'/privacy-policy/mobile'}
+              element={<MobilePrivacyPolicyPage />}
             />
           </Routes>
         </CommunityProvider>
