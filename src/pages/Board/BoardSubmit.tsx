@@ -34,6 +34,7 @@ const BoardSubmit = () => {
   const [topics, setTopics] = useState<string[]>([]);
   const [tagSearchTerm, setTagSearchTerm] = useState('');
   const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [image, setImage] = useState<File[]>([]);
 
   const handleRemoveTopic = (index: number) => {
     const newTopics = topics.filter((_, i) => i !== index);
@@ -368,8 +369,10 @@ const BoardSubmit = () => {
               />
               <SubmitText
                 text={textContent}
-                eventHandler={handleEditorChange}
+                setText={handleEditorChange}
                 height={'400px'}
+                image={image}
+                setImage={setImage}
               />
             </>
           )}
