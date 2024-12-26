@@ -1,7 +1,7 @@
 import React, { FormEvent, useEffect, useState, useRef } from 'react';
 import { BoardSubmitAPI, SubmitParams } from '../api/boardApi';
 import { useNavigate } from 'react-router-dom';
-import SubmitText from '../../components/SubmitText';
+import SubmitQuill from '../../components/SubmitQuill';
 import 'react-markdown-editor-lite/lib/index.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -35,6 +35,8 @@ const BoardSubmit = () => {
   const [tagSearchTerm, setTagSearchTerm] = useState('');
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [image, setImage] = useState<File[]>([]);
+  const [textContent, setTextContent] = useState<string[]>(['']); // 서버에 보내기 위한 변수
+  const [contentPreview, setContentPreview] = useState<string>(''); // ReactQuill에서 사용자에게 보여주기 위한 변수
 
   const handleRemoveTopic = (index: number) => {
     const newTopics = topics.filter((_, i) => i !== index);
@@ -109,13 +111,6 @@ const BoardSubmit = () => {
     setLinkTitle(value);
   };
 
-  const [textContent, setTextContent] = useState<string>('');
-  const handleEditorChange = (content: string) => {
-    setTextContent(content);
-  };
-
-  useEffect(() => console.log('textContent : ', textContent), [textContent]);
-
   const adjustEditorHeight = () => {
     if (editorRef.current) {
       const editorElement = editorRef.current.editor;
@@ -129,6 +124,7 @@ const BoardSubmit = () => {
 
   useEffect(() => {
     adjustEditorHeight();
+    console.log(textContent)
   }, [textContent]);
 
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
@@ -213,7 +209,7 @@ const BoardSubmit = () => {
           return;
         }
         title = textTitle;
-        content = [textContent];
+        content = textContent;
       }
 
       if (inputType === 'MEDIA') {
@@ -367,12 +363,10 @@ const BoardSubmit = () => {
                 placeholder="제목"
                 onChange={handleTextTitleChange}
               />
-              <SubmitText
-                text={textContent}
-                setText={handleEditorChange}
+              <SubmitQuill
+                content={textContent}
+                setContent={setTextContent}
                 height={'400px'}
-                image={image}
-                setImage={setImage}
               />
             </>
           )}

@@ -56,7 +56,6 @@ const Card = ({
   const [isReaction, setIsReaction] = useState<ReactionStateTypes>(null);
   const [shareContent, setShareContent] = useState<string>('');
   const [isSmallScreen, setIsSmallScreen] = useState(false);
-
   const modalState: UserModalState = useSelector(
     (state: RootState) => state.modalState,
   );
@@ -76,6 +75,27 @@ const Card = ({
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  const safeHtml = (content: string) => {
+    return sanitizeHtml(content, {
+      allowedTags: ['img', 'a'], // 허용할 태그
+      allowedAttributes: { 
+        img: ['src', 'srcset', 'alt', 'title', 'width', 'height', 'loading', 'style'], // 'style' 추가
+        a: ['href']
+      },
+      transformTags: {
+        img: (tagName, attribs) => {
+          return {
+            tagName: 'img',
+            attribs: {
+              ...attribs,
+              style: 'width: 40%; height: auto; display: block; margin: 0 auto;'
+            }
+          };
+        }
+      }
+    });
+  };
 
   const reactionButton = async (userReaction: ReactionStateTypes) => {
     if (userReaction !== null) {
@@ -189,9 +209,9 @@ const Card = ({
             <TextContainer>
               {content?.map((co, index) => {
                 return (
-                  <div
+                  <Contentwrapper
                     key={`${id}-${index}`}
-                    dangerouslySetInnerHTML={{ __html: sanitizeHtml(co) }}
+                    dangerouslySetInnerHTML={{ __html: safeHtml(co) }}
                   />
                 );
               })}
@@ -389,7 +409,17 @@ const TextContainer = styled.div`
   text-align: left;
   white-space: normal;
   word-break: break-word;
-  width: 100%;
+  width: 100%; 
+`;
+
+const Contentwrapper = styled.div`
+  max-width: 100% !important;
+  max-height: 100% !important;
+  img {
+    max-width: 70% !important;
+    height: auto !important;
+    display: block !important;
+  }
 `;
 
 const VideoContainer = styled.div`
