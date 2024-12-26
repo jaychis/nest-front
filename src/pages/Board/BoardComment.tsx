@@ -30,7 +30,7 @@ export interface CommentType {
 }
 
 interface BoardCommentProps extends CommentType {
-  onReplySubmit: (reply: ReplyType) => void;
+  readonly onReplySubmit: (reply: ReplyType) => void;
 }
 
 const BoardComment = (co: BoardCommentProps) => {
@@ -147,10 +147,6 @@ const BoardComment = (co: BoardCommentProps) => {
       })
       .catch((err) => console.error(err));
   }, [isCommentReaction]);
-
-  useEffect(() => {
-    console.log('isCommentReplyButton : ', isCommentReplyButton);
-  }, [isCommentReplyButton]);
 
   return (
     <CommentContainer>
