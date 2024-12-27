@@ -86,6 +86,7 @@ export interface BoardProps {
   readonly createdAt: Date;
   readonly type: BoardType;
   readonly shareCount: number;
+  readonly userId: string;
 }
 
 export interface InquiryType {

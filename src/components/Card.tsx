@@ -22,6 +22,7 @@ import styled from 'styled-components';
 import ShareComponent from './ShareComponent';
 import { breakpoints } from '../_common/breakpoint';
 import { handleReaction } from '../_common/handleUserReaction';
+import { UsersGetProfileAPI } from '../pages/api/usresProfileApi';
 
 const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
   try {
@@ -43,6 +44,7 @@ const Card = ({
   title,
   type,
   shareCount,
+  userId,
 }: BoardProps) => {
   const navigate = useNavigate();
   const [isCardCount, setIsCardCount] = useState<number>(0);
@@ -59,6 +61,7 @@ const Card = ({
   const modalState: UserModalState = useSelector(
     (state: RootState) => state.modalState,
   );
+  const [isProfile, setIsProfile] = useState<string | null>(null);
 
   const USER_ID: string = localStorage.getItem('id') as string;
 
@@ -79,9 +82,18 @@ const Card = ({
   const safeHtml = (content: string) => {
     return sanitizeHtml(content, {
       allowedTags: ['img', 'a'], // 허용할 태그
-      allowedAttributes: { 
-        img: ['src', 'srcset', 'alt', 'title', 'width', 'height', 'loading', 'style'], // 'style' 추가
-        a: ['href']
+      allowedAttributes: {
+        img: [
+          'src',
+          'srcset',
+          'alt',
+          'title',
+          'width',
+          'height',
+          'loading',
+          'style',
+        ], // 'style' 추가
+        a: ['href'],
       },
       transformTags: {
         img: (tagName, attribs) => {
@@ -89,11 +101,12 @@ const Card = ({
             tagName: 'img',
             attribs: {
               ...attribs,
-              style: 'width: 40%; height: auto; display: block; margin: 0 auto;'
-            }
+              style:
+                'width: 40%; height: auto; display: block; margin: 0 auto;',
+            },
           };
-        }
-      }
+        },
+      },
     });
   };
 
@@ -161,12 +174,28 @@ const Card = ({
     }
   };
 
+  const fetchCardProfile = async () => {
+    try {
+      const response = await UsersGetProfileAPI({ userId: userId });
+
+      if (!response) return;
+
+      const profileImage: null | string = response.data.response.profile_image;
+      profileImage === null ? setIsProfile(null) : setIsProfile(profileImage);
+    } catch (e: any) {
+      console.error(e);
+    }
+  };
+
   const debouncedFetchReactionList = debounce(fetchReactionList, 300);
   const debouncedFetchReactionCount = debounce(fetchReactionCount, 300);
+  const debouncedFetchCardProfile = debounce(fetchCardProfile, 300);
 
   useEffect(() => {
     debouncedFetchReactionList(id);
     debouncedFetchReactionCount(id);
+    debouncedFetchCardProfile();
+
     const temp = extractTextFromHTML(content[0]);
     setShareContent(temp);
   }, []);
@@ -193,7 +222,7 @@ const Card = ({
       >
         {/* Card Image */}
         <LogoContainer>
-          <LogoImg src={logo} />
+          <LogoImg src={isProfile ? isProfile : logo} />
           <NicknameWrapper
             onClick={() => navigate(`/users/inquiry?nickname=${nickname}`)}
           >
@@ -411,7 +440,7 @@ const TextContainer = styled.div`
   text-align: left;
   white-space: normal;
   word-break: break-word;
-  width: 100%; 
+  width: 100%;
 `;
 
 const Contentwrapper = styled.div`

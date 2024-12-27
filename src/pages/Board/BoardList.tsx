@@ -95,7 +95,7 @@ const BoardList = () => {
             category: null,
           });
           break;
-        
+
         default:
           response = await BoardListAPI({
             take: TAKE,
@@ -106,7 +106,7 @@ const BoardList = () => {
       }
 
       const res = response?.data?.response;
-      console.log(res)
+      console.log(res);
       if (!res) return;
       const newCards = res.current_list;
       setList((prevList) => [...prevList, ...newCards]);
@@ -147,6 +147,7 @@ const BoardList = () => {
                     content={el.content}
                     type={el.type}
                     shareCount={el.share_count}
+                    userId={el.user_id}
                   />
                 </React.Fragment>
               );

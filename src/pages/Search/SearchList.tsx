@@ -135,8 +135,8 @@ const SearchList = () => {
 
   useEffect(() => {
     const viewport = window.visualViewport;
-    if(viewport && viewport.width < 767) setSearchType('COMMUNITIES')
-  },[])
+    if (viewport && viewport.width < 767) setSearchType('COMMUNITIES');
+  }, []);
 
   const handleChangeSortType = (sortType: sortTypes) => {
     setSortType(sortType);
@@ -241,6 +241,7 @@ const SearchList = () => {
                   createdAt={ca.created_at}
                   type={ca.type}
                   shareCount={ca.share_count}
+                  userId={ca.user_id}
                 />
               </>
             );

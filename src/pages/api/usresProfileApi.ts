@@ -20,3 +20,18 @@ export const UsersProfilePictureAPI = async (
     errorHandling({ text: 'UsersProfilePictureAPI', error: e });
   }
 };
+
+export interface UsersGetProfileParam {
+  readonly userId: string;
+}
+export const UsersGetProfileAPI = async ({ userId }: UsersGetProfileParam) => {
+  const URL: string = `${USERS_PROFILE_URL}/${userId}`;
+
+  try {
+    const res = await client.get(URL);
+
+    return res;
+  } catch (e: any) {
+    errorHandling({ text: 'UsersGetProfileAPI', error: e });
+  }
+};

@@ -151,6 +151,7 @@ const Profile = () => {
                 key={post?.id}
                 shareCount={post?.share_count}
                 createdAt={post?.created_at}
+                userId={post?.user_id}
                 {...post}
               />
             ))

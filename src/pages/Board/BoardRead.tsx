@@ -159,6 +159,7 @@ const BoardRead = () => {
             content={isBoardState.content}
             type={isBoardState.type}
             shareCount={isBoardState.share_count}
+            userId={isBoardState.user_id}
           />
         )}
         <CommentSection>
