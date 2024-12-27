@@ -52,6 +52,7 @@ const BoardRead = () => {
 
       if (!res) return;
       const response = res.data.response;
+
       setIsBoardStateBoard(response);
 
       await LogViewedBoardAPI({

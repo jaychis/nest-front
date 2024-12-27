@@ -106,7 +106,6 @@ const BoardList = () => {
       }
 
       const res = response?.data?.response;
-      console.log(res);
       if (!res) return;
       const newCards = res.current_list;
       setList((prevList) => [...prevList, ...newCards]);

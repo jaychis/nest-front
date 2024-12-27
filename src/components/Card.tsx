@@ -174,7 +174,7 @@ const Card = ({
     }
   };
 
-  const fetchCardProfile = async () => {
+  const fetchCardProfile = async (userId: string) => {
     try {
       const response = await UsersGetProfileAPI({ userId: userId });
 
@@ -192,13 +192,16 @@ const Card = ({
   const debouncedFetchCardProfile = debounce(fetchCardProfile, 300);
 
   useEffect(() => {
-    debouncedFetchReactionList(id);
-    debouncedFetchReactionCount(id);
-    debouncedFetchCardProfile();
+    const startFunc = async () => {
+      await debouncedFetchReactionList(id);
+      await debouncedFetchReactionCount(id);
+      await debouncedFetchCardProfile(userId);
+    };
+    startFunc();
 
     const temp = extractTextFromHTML(content[0]);
     setShareContent(temp);
-  }, []);
+  }, [userId, id]);
 
   useEffect(() => {
     if (localCount < 0) {

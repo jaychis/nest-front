@@ -25,7 +25,7 @@ export interface UsersGetProfileParam {
   readonly userId: string;
 }
 export const UsersGetProfileAPI = async ({ userId }: UsersGetProfileParam) => {
-  const URL: string = `${USERS_PROFILE_URL}/${userId}`;
+  const URL: string = `${USERS_PROFILE_URL}/inquiry?userId=${userId}`;
 
   try {
     const res = await client.get(URL);
