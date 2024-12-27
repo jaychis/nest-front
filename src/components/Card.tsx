@@ -175,9 +175,9 @@ const Card = ({
   };
 
   const fetchCardProfile = async (userId: string) => {
+    if (!userId) return;
     try {
       const response = await UsersGetProfileAPI({ userId: userId });
-
       if (!response) return;
 
       const profileImage: null | string = response.data.response.profile_image;

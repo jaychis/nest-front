@@ -21,8 +21,8 @@ const BoardRead = () => {
   };
 
   const query = useQuery();
-  const ID = query.get('id') as string;
-  const userId: string = localStorage.getItem('id') as string;
+  const ID: string = query.get('id') as string;
+  const USER_Id: string = localStorage.getItem('id') as string;
 
   const [isBoardState, setIsBoardStateBoard] = useState<CardType>({
     id: ID,
@@ -55,10 +55,12 @@ const BoardRead = () => {
 
       setIsBoardStateBoard(response);
 
-      await LogViewedBoardAPI({
-        userId: response.user_id,
+      const logViewBoard = await LogViewedBoardAPI({
+        userId: USER_Id,
         boardId: response.id,
       });
+      if (!logViewBoard) return;
+      const resLogViewBoard = logViewBoard.data.response;
     };
 
     readBoard();
@@ -68,7 +70,7 @@ const BoardRead = () => {
     boardId: ID,
     content: '',
     nickname: (localStorage.getItem('nickname') as string) || '',
-    userId: userId || '',
+    userId: USER_Id || '',
   });
 
   const commentHandleChange = (event: CollectionTypes) => {
