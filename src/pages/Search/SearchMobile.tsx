@@ -72,7 +72,7 @@ const SearchMobile = () => {
   return (
     <MobileSearchContainer>
       <SearchHeader>
-        <Icon src = {arrow}/>
+        <Icon src = {arrow} onClick={() => {navigate(-1)}}/>
         <SearchInput
           type="search"
           placeholder="Search"

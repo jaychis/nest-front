@@ -133,7 +133,10 @@ const SearchList = () => {
     }
   }, [searchType, QUERY, sortType]); // QUERY를 의존성 배열에 추가하여 쿼리 변경 시 재실행
 
-  useEffect(() => console.log('searchType : ', searchType), [searchType]);
+  useEffect(() => {
+    const viewport = window.visualViewport;
+    if(viewport && viewport.width < 767) setSearchType('COMMUNITIES')
+  },[])
 
   const handleChangeSortType = (sortType: sortTypes) => {
     setSortType(sortType);
