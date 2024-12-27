@@ -1,10 +1,11 @@
 import { useState,useEffect } from "react";
 import styled from "styled-components";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const SearchHistory = () => {
 
     const [searchHistoryList, setSearchHistoryList] = useState<string[]>([]);
-
+    const navigate = useNavigate();
     const getSearchHistory = () => {
         const history = localStorage.getItem('searchHistory'); 
         if (!history) return;
@@ -32,7 +33,7 @@ const SearchHistory = () => {
         <HistoryContainer>
             {searchHistoryList ? 
             searchHistoryList.sort().slice(0,3).map((list, index) => {return(
-                <Item key={index}>
+                <Item key={index} onClick={() => {navigate(`/search/list?query=${list}`)}}>
                     <Text>{list}</Text>
                 </Item>)}) :
             null}
