@@ -24,6 +24,7 @@ import { AppDispatch } from '../../store/store';
 import { useDispatch } from 'react-redux';
 import { MainListTypes } from '../../_common/collectionTypes';
 import { breakpoints } from '../../_common/breakpoint';
+import CommunitySearchCard from '../../components/CommunitySearchCard';
 
 type SearchListTypes =
   | 'BOARDS'
@@ -110,6 +111,7 @@ const SearchList = () => {
           if (!res) return;
 
           const response = res.data.response;
+          console.log('GetSearchPeopleAPI response : ', response);
 
           setSearchUserList(response);
         })
@@ -272,7 +274,7 @@ const SearchList = () => {
                 <UserSearchCard
                   nickname={user.nickname}
                   email={user.email}
-                  profileImage={''}
+                  profileImage={user?.users_profile}
                 />
               </>
             );
@@ -286,7 +288,7 @@ const SearchList = () => {
                   navigateToCommunity(community.name as MainListTypes);
                 }}
               >
-                <UserSearchCard
+                <CommunitySearchCard
                   nickname={community.name}
                   profileImage={community.icon}
                   email={community.description}
