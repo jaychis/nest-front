@@ -5,6 +5,7 @@ import 돋보기 from '../../assets/img/icons8-돋보기-50.png'
 import { sortTypes } from "./SearchList";
 import debounce from "lodash.debounce";
 import logo from '../../assets/img/panda_logo.png'
+import { useNavigate } from "react-router-dom";
 
 interface AutoProps {
     readonly query: string
@@ -19,6 +20,7 @@ const AutoComplete = ({query}:AutoProps) => {
 
     const sortType:sortTypes = 'RECENT'
     const [searchList, setSearchList] = useState<Community[]>([]);
+    const navigate = useNavigate();
 
     const searchBoard = useCallback(
         debounce(async (query: string) => {
@@ -31,8 +33,6 @@ const AutoComplete = ({query}:AutoProps) => {
               }))
             );
           }
-          console.log(searchList);
-          console.log('test')
         }, 300), 
         []
       );
@@ -48,7 +48,7 @@ const AutoComplete = ({query}:AutoProps) => {
 
     return(
         <AutoCompleteContainer>
-            <SearchTermWrapper>
+            <SearchTermWrapper onClick={() => {navigate(`/search/list?query=${query}`)}}>
                 <Icon src = {돋보기}/> 
                 <Text>
                     {query}
@@ -56,7 +56,7 @@ const AutoComplete = ({query}:AutoProps) => {
             </SearchTermWrapper>
             
             {searchList.slice(0,5).map((list, index) => (
-            <AutoCompleteList key={index}>
+            <AutoCompleteList key={index} onClick={() => {navigate(`/search/list?query=${list.name}`)}}>
                 {!list.icon ? <Icon src = {logo} style={{border: '1px solid black'}}/> : <Icon src = {list.icon}/>}
                 <Text>{list.name}</Text>
             </AutoCompleteList>
