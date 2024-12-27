@@ -9,6 +9,7 @@ import BoardComment, { CommentType } from '../Board/BoardComment';
 import { BoardInquiryAPI } from '../api/boardApi';
 import { CommentUsersInquiryAPI } from '../api/commentApi';
 import {
+  AwsImageUploadFunctionality,
   ImageLocalPreviewUrls,
   ImageLocalPreviewUrlsDelete,
   ImageLocalPreviewUrlsDeleteType,
@@ -18,6 +19,7 @@ import styled from 'styled-components';
 import { breakpoints } from '../../_common/breakpoint';
 import TRASH from '../../assets/img/trash.png';
 import SAVE from '../../assets/img/save.png';
+import { UsersProfilePictureAPI } from '../api/usresProfileApi';
 
 type ACTIVE_SECTION_TYPES = 'POSTS' | 'COMMENTS' | 'PROFILE';
 const Profile = () => {
@@ -29,6 +31,7 @@ const Profile = () => {
     useState<ACTIVE_SECTION_TYPES>('POSTS');
   const ID: string = (localStorage.getItem('id') as string) || '';
   const [profilePreview, setProfilePreview] = useState<string[]>([]);
+  const [profileList, setProfileList] = useState<File[]>([]);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [nickname, setNickname] = useState<string>(user.data.nickname || '');
   const [email, setEmail] = useState<string>(user.data.email || '');
@@ -45,27 +48,29 @@ const Profile = () => {
   const handleProfilePictureChange = async (
     e: ChangeEvent<HTMLInputElement>,
   ) => {
-    alert('click');
     const urls: ImageLocalPreviewUrlsReturnType = await ImageLocalPreviewUrls({
       event: e,
     });
     if (!urls) return;
 
-    console.log('urls : ', urls);
-
     setProfilePreview(urls.previewUrls);
+    setProfileList(urls.fileList);
   };
 
   const profileImageSave = async () => {
-    alert('profileImageSave');
-  };
+    const profileImageList = await AwsImageUploadFunctionality({
+      fileList: profileList,
+    });
+    const profileImage =
+      profileImageList === null ? null : profileImageList.imageUrls[0];
 
-  useEffect(() => {
-    console.log('isEditing : ', isEditing);
-  }, [isEditing]);
-  useEffect(() => {
-    console.log('profilePreview : ', profilePreview);
-  }, [profilePreview]);
+    const response = await UsersProfilePictureAPI({ profileImage });
+    if (!response) return;
+
+    const res = response.data.response.profile_image;
+
+    res === null ? setProfilePreview([]) : setProfilePreview([res]);
+  };
 
   useEffect(() => {
     if (activeSection === 'POSTS') {
@@ -96,7 +101,6 @@ const Profile = () => {
         if (!res) return;
 
         const response = res.data.response as UserType;
-        console.log('userInquiry response : ', response);
         if (response) {
           setNickname(response.nickname);
           setEmail(response.email);
@@ -104,7 +108,6 @@ const Profile = () => {
 
           const userProfile = response.users_profile[0].profile_image;
           if (userProfile !== null) {
-            alert('profile');
             setProfilePreview([userProfile]);
           }
         }
@@ -191,20 +194,21 @@ const Profile = () => {
                   document.getElementById('profilePicture')?.click();
                 }}
               >
+                <SaveButton
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    profileImageSave();
+                  }}
+                >
+                  <ImageIcon src={SAVE} alt={'Save Icon'} />
+                </SaveButton>
                 {profilePreview.length > 0 ? (
                   <>
                     <ImagePreview
                       src={profilePreview[0]}
                       alt="Profile Preview"
                     />
-                    <SaveButton
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        profileImageSave();
-                      }}
-                    >
-                      <ImageIcon src={SAVE} alt={'Save Icon'} />
-                    </SaveButton>
+
                     <TrashButton
                       onClick={(e) => {
                         e.stopPropagation();
@@ -215,7 +219,7 @@ const Profile = () => {
                     </TrashButton>
                   </>
                 ) : (
-                  <Placeholder>프로필2</Placeholder>
+                  <Placeholder>프로필</Placeholder>
                 )}
               </ImagePreviewWrapper>
             </ImageUploadWrapper>
@@ -324,8 +328,6 @@ const ImageUploadWrapper = styled.div`
   justify-content: center;
   cursor: pointer;
   margin-right: 20px;
-
-  background-color: blue;
 `;
 
 const HiddenFileInput = styled.input`
