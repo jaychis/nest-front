@@ -95,7 +95,7 @@ const BoardList = () => {
             category: null,
           });
           break;
-
+        
         default:
           response = await BoardListAPI({
             take: TAKE,
@@ -106,6 +106,7 @@ const BoardList = () => {
       }
 
       const res = response?.data?.response;
+      console.log(res)
       if (!res) return;
       const newCards = res.current_list;
       setList((prevList) => [...prevList, ...newCards]);
