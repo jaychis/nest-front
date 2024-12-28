@@ -22,7 +22,10 @@ import styled from 'styled-components';
 import ShareComponent from './ShareComponent';
 import { breakpoints } from '../_common/breakpoint';
 import { handleReaction } from '../_common/handleUserReaction';
-import { UsersGetProfileAPI } from '../pages/api/usresProfileApi';
+import {
+  fetchProfileImage,
+  FetchProfileImageType,
+} from '../_common/fetchCardProfile';
 
 const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
   try {
@@ -175,16 +178,10 @@ const Card = ({
   };
 
   const fetchCardProfile = async (userId: string) => {
-    if (!userId) return;
-    try {
-      const response = await UsersGetProfileAPI({ userId: userId });
-      if (!response) return;
-
-      const profileImage: null | string = response.data.response.profile_image;
-      profileImage === null ? setIsProfile(null) : setIsProfile(profileImage);
-    } catch (e: any) {
-      console.error(e);
-    }
+    const profileImage: FetchProfileImageType = await fetchProfileImage({
+      userId,
+    });
+    !profileImage ? setIsProfile(null) : setIsProfile(profileImage);
   };
 
   const debouncedFetchReactionList = debounce(fetchReactionList, 300);

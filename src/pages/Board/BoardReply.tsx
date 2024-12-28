@@ -13,6 +13,10 @@ import styled from 'styled-components';
 import logo from '../../assets/img/panda_logo.png';
 import { breakpoints } from '../../_common/breakpoint';
 import { handleReaction } from '../../_common/handleUserReaction';
+import {
+  fetchProfileImage,
+  FetchProfileImageType,
+} from '../../_common/fetchCardProfile';
 
 export interface ReplyType {
   readonly id: string;
@@ -47,9 +51,6 @@ const BoardReply = (re: ReplyType) => {
   const [isCardReplyCount, setIsCardReplyCount] = useState<number>(0);
 
   const reactionReplyButton = async (userReaction: ReactionStateTypes) => {
-    console.log('userReaction : ', userReaction);
-    console.log('isReplyReaction : ', isReplyReaction);
-    console.log('localCount : ', localCount);
     if (userReaction !== null) {
       const param: ReactionParams = {
         boardId: ID,
@@ -78,6 +79,22 @@ const BoardReply = (re: ReplyType) => {
       }
     }
   };
+
+  const [isProfile, setIsProfile] = useState<string | null>(null);
+  const fetchReplyProfile = async ({ userId }: { readonly userId: string }) => {
+    const profileImage: FetchProfileImageType = await fetchProfileImage({
+      userId,
+    });
+
+    !profileImage ? setIsProfile(null) : setIsProfile(profileImage);
+  };
+  useEffect(() => {
+    const startFunc = async () => {
+      await fetchReplyProfile({ userId: re.user_id });
+    };
+    startFunc();
+  }, [re.user_id]);
+
   useEffect(() => {
     if (localCount < 0) {
       setLocalCount(0);
@@ -110,7 +127,10 @@ const BoardReply = (re: ReplyType) => {
   return (
     <ReplyContainer>
       <ReplyHeader>
-        <Avatar src={logo} alt={`${re.nickname}'s avatar`} />
+        <Avatar
+          src={isProfile ? isProfile : logo}
+          alt={`${re.nickname}'s avatar`}
+        />
         <Nickname>{re.nickname}</Nickname>
       </ReplyHeader>
       <ReplyContent

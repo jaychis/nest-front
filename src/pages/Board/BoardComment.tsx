@@ -16,6 +16,10 @@ import { ReplyType } from './BoardReply';
 import { ReplySubmitAPI, ReplySubmitParams } from '../api/replyApi';
 import { breakpoints } from '../../_common/breakpoint';
 import { handleReaction } from '../../_common/handleUserReaction';
+import {
+  fetchProfileImage,
+  FetchProfileImageType,
+} from '../../_common/fetchCardProfile';
 
 export interface CommentType {
   readonly id: string;
@@ -43,7 +47,6 @@ const BoardComment = (co: BoardCommentProps) => {
     useState<boolean>(false);
   const [isCommentReplyButton, setIsCommentReplyButton] =
     useState<boolean>(false);
-
   const USER_ID: string = localStorage.getItem('id') as string;
   const ID: string = co.id;
 
@@ -81,6 +84,25 @@ const BoardComment = (co: BoardCommentProps) => {
       }
     }
   };
+
+  const [isProfile, setIsProfile] = useState<string | null>(null);
+  const fetchCommentProfile = async ({
+    userId,
+  }: {
+    readonly userId: string;
+  }) => {
+    const profileImage: FetchProfileImageType = await fetchProfileImage({
+      userId,
+    });
+    !profileImage ? setIsProfile(null) : setIsProfile(profileImage);
+  };
+  useEffect(() => {
+    const startFunc = async () => {
+      await fetchCommentProfile({ userId: co.user_id });
+    };
+    startFunc();
+  }, [co.user_id]);
+
   useEffect(() => {
     if (localCount < 0) {
       setLocalCount(0);
@@ -151,7 +173,10 @@ const BoardComment = (co: BoardCommentProps) => {
   return (
     <CommentContainer>
       <CommentHeader>
-        <Avatar src={logo} alt={`${co.nickname}'s avatar`} />
+        <Avatar
+          src={isProfile ? isProfile : logo}
+          alt={`${co.nickname}'s avatar`}
+        />
         <Nickname>{co.nickname}</Nickname>
       </CommentHeader>
 
@@ -240,7 +265,7 @@ const CommentHeader = styled.div`
 const Avatar = styled.img`
   width: 40px;
   height: 40px;
-  border-radius: 30%;
+  border-radius: 50%;
   margin-right: 18px;
 `;
 

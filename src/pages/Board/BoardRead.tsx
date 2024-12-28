@@ -112,7 +112,17 @@ const BoardRead = () => {
     return (
       <RepliesContainer>
         {replies.map((re: ReplyType) => (
-          <BoardReply key={re.id} {...re} />
+          <BoardReply
+            key={re.id}
+            id={re.id}
+            comment_id={re.comment_id}
+            user_id={re.user_id}
+            content={re.content}
+            nickname={re.nickname}
+            created_at={re.created_at}
+            updated_at={re.updated_at}
+            deleted_at={re.deleted_at}
+          />
         ))}
       </RepliesContainer>
     );
