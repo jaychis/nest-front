@@ -78,7 +78,7 @@ const Card = ({
 
   const safeHtml = (content: string) => {
     return sanitizeHtml(content, {
-      allowedTags: ['img', 'a'], // 허용할 태그
+      allowedTags: ['img', 'a', 'br', 'p', 'div'], // 허용할 태그
       allowedAttributes: { 
         img: ['src', 'srcset', 'alt', 'title', 'width', 'height', 'loading', 'style'], // 'style' 추가
         a: ['href']
