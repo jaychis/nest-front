@@ -9,10 +9,9 @@ import { UserModalState } from '../../reducers/modalStateSlice';
 import styled from 'styled-components';
 
 type SelectTapTypes = 'topSearches' | 'recentBoards';
-
 type RecentViewedPost = {
-  id: string;
-  title: string;
+  readonly id: string;
+  readonly title: string;
 };
 
 const RightSideBar = () => {
@@ -34,7 +33,6 @@ const RightSideBar = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const isLoggedIn = !!localStorage.getItem('access_token');
-  // Debounced fetch function
 
   const debouncedFetchTopTenList = debounce(async () => {
     try {

@@ -1,29 +1,23 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import styled from 'styled-components';
 import {
   ImageLocalPreviewUrls,
   ImageLocalPreviewUrlsReturnType,
 } from '../_common/imageUploadFuntionality';
-import { UsersProfileType } from '../_common/collectionTypes';
 
-interface UserSearchCardParams {
+interface CommunitySearchCardParams {
   readonly nickname: string;
   readonly email?: string;
-  readonly profileImage: UsersProfileType[];
+  readonly profileImage?: null | string;
 }
 
-const UserSearchCard = ({
+const CommunitySearchCard = ({
   nickname,
   email,
   profileImage,
-}: UserSearchCardParams) => {
+}: CommunitySearchCardParams) => {
   const [profilePreview, setProfilePreview] = useState<string | null>(null);
   const [isCardHovered, setIsCardHovered] = useState<boolean>(false);
-
-  useEffect(() => {
-    console.log('UserSearchCard');
-    console.log('profileImage : ', profileImage);
-  }, []);
 
   const handleProfilePictureChange = async (
     e: ChangeEvent<HTMLInputElement>,
@@ -51,11 +45,14 @@ const UserSearchCard = ({
             onChange={handleProfilePictureChange}
           />
           <ImagePreviewWrapper>
-            <ImagePreview
-              src={profileImage[0].profile_image || profilePreview || undefined}
-              alt="Profile Preview"
-            />
-            )
+            {profilePreview ? (
+              <ImagePreview
+                src={profileImage ? profileImage : profilePreview}
+                alt="Profile Preview"
+              />
+            ) : (
+              <Placeholder>프로필</Placeholder>
+            )}
           </ImagePreviewWrapper>
         </ImageUploadWrapper>
 
@@ -68,7 +65,7 @@ const UserSearchCard = ({
   );
 };
 
-export default UserSearchCard;
+export default CommunitySearchCard;
 
 const CardContainer = styled.div<{
   readonly isHovered: boolean;

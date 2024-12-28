@@ -13,7 +13,6 @@ export const LogViewedBoardAPI = async (params: LogViewedBoardParams) => {
     const URL: string = `${ViewedBoardsURL}/`;
 
     const res = await client.post(URL, params);
-
     return res;
   } catch (e: any) {
     errorHandling({ text: 'LogViewedBoardAPI', error: e });

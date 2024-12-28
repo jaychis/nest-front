@@ -24,6 +24,7 @@ export const ImageLocalPreviewUrls = async ({
   const previewUrls: string[] = files.map((file: File) =>
     URL.createObjectURL(file),
   );
+  console.log('previewUrls : ', previewUrls);
 
   return {
     fileList: files,
@@ -40,7 +41,7 @@ export const ImageLocalPreviewUrlsDelete = async ({
   urls,
 }: ImageLocalPreviewUrlsDelete): Promise<ImageLocalPreviewUrlsDeleteType> => {
   if (urls.length === 0) {
-    alert('삭제할 이미지가 업습니다.');
+    alert('삭제할 이미지가 없습니다.');
     return null;
   }
 
@@ -66,21 +67,18 @@ async ({fileList,}: AwsImageUploadFunctionalityInputType): Promise<AwsImageUploa
       const expires = 60;
 
       const res = await getPresignedUrlAPI({ key, expires });
-      console.log('Presigned URL API Response : ', res);
 
       if (res.data && res.data.response && res.data.response.url) {
         const presignedUrl = res.data.response.url;
-        console.log('presignedUrl: ', presignedUrl);
 
         const uploadResult = await AWSImageRegistAPI({
           url: presignedUrl,
           file,
         });
-        console.log('uploadResult : ', uploadResult);
 
         if (uploadResult.ok) {
           const imageUrl = presignedUrl.split('?')[0];
-          console.log('imageUrl : ', imageUrl);
+
           return imageUrl;
         } else {
           const errorText = await uploadResult.clone().text();
@@ -98,7 +96,6 @@ async ({fileList,}: AwsImageUploadFunctionalityInputType): Promise<AwsImageUploa
       console.error('Error during file upload: ', error);
     }
   });
-  console.log('uploadImageUrlList : ', uploadImageUrlList);
 
   try {
     const imageUrls: string[] = await Promise.all(uploadImageUrlList);

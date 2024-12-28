@@ -47,7 +47,6 @@ const Profile2 = () => {
 
     if (activeSection === 'PROFILE') {
       dispatch(ReduxProfileAPI({ id: ID })).then((res) => {
-        console.log('Profile API response:', res);
         if (res && res.payload) {
           setNickname(res.payload.nickname);
           setEmail(res.payload.email);
@@ -137,6 +136,7 @@ const Profile2 = () => {
                   <Card
                     shareCount={post?.share_count}
                     key={post?.id}
+                    userId={post?.user_id}
                     {...post}
                     createdAt={post?.created_at}
                   />

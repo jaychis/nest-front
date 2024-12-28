@@ -22,6 +22,10 @@ import styled from 'styled-components';
 import ShareComponent from './ShareComponent';
 import { breakpoints } from '../_common/breakpoint';
 import { handleReaction } from '../_common/handleUserReaction';
+import {
+  fetchProfileImage,
+  FetchProfileImageType,
+} from '../_common/fetchCardProfile';
 
 const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
   try {
@@ -43,6 +47,7 @@ const Card = ({
   title,
   type,
   shareCount,
+  userId,
 }: BoardProps) => {
   const navigate = useNavigate();
   const [isCardCount, setIsCardCount] = useState<number>(0);
@@ -59,6 +64,7 @@ const Card = ({
   const modalState: UserModalState = useSelector(
     (state: RootState) => state.modalState,
   );
+  const [isProfile, setIsProfile] = useState<string | null>(null);
 
   const USER_ID: string = localStorage.getItem('id') as string;
 
@@ -89,11 +95,12 @@ const Card = ({
             tagName: 'img',
             attribs: {
               ...attribs,
-              style: 'width: 40%; height: auto; display: block; margin: 0 auto;'
-            }
+              style:
+                'width: 40%; height: auto; display: block; margin: 0 auto;',
+            },
           };
-        }
-      }
+        },
+      },
     });
   };
 
@@ -161,15 +168,28 @@ const Card = ({
     }
   };
 
+  const fetchCardProfile = async (userId: string) => {
+    const profileImage: FetchProfileImageType = await fetchProfileImage({
+      userId,
+    });
+    !profileImage ? setIsProfile(null) : setIsProfile(profileImage);
+  };
+
   const debouncedFetchReactionList = debounce(fetchReactionList, 300);
   const debouncedFetchReactionCount = debounce(fetchReactionCount, 300);
+  const debouncedFetchCardProfile = debounce(fetchCardProfile, 300);
 
   useEffect(() => {
-    debouncedFetchReactionList(id);
-    debouncedFetchReactionCount(id);
+    const startFunc = async () => {
+      await debouncedFetchReactionList(id);
+      await debouncedFetchReactionCount(id);
+      await debouncedFetchCardProfile(userId);
+    };
+    startFunc();
+
     const temp = extractTextFromHTML(content[0]);
     setShareContent(temp);
-  }, []);
+  }, [userId, id]);
 
   useEffect(() => {
     if (localCount < 0) {
@@ -193,7 +213,7 @@ const Card = ({
       >
         {/* Card Image */}
         <LogoContainer>
-          <LogoImg src={logo} />
+          <LogoImg src={isProfile ? isProfile : logo} />
           <NicknameWrapper
             onClick={() => navigate(`/users/inquiry?nickname=${nickname}`)}
           >
@@ -281,22 +301,24 @@ const Card = ({
           </CommentWrapper>
 
           {/* 공유 */}
-          <ShareComponent
-            shareCount={shareCount}
-            title={title}
-            content={content}
-            id={id}
-          />
+          <ShareWrapper>
+            <ShareComponent
+              shareCount={shareCount}
+              title={title}
+              content={content}
+              id={id}
+            />
+          </ShareWrapper>
 
-          <ScirpWrapper>
-            <ScripButton
-              isHovered={isCardSendHovered}
-              onMouseEnter={() => setIsCardSendHovered(true)}
-              onMouseLeave={() => setIsCardSendHovered(false)}
-            >
-              보내기
-            </ScripButton>
-          </ScirpWrapper>
+          {/*<ScirpWrapper>*/}
+          {/*  <ScripButton*/}
+          {/*    isHovered={isCardSendHovered}*/}
+          {/*    onMouseEnter={() => setIsCardSendHovered(true)}*/}
+          {/*    onMouseLeave={() => setIsCardSendHovered(false)}*/}
+          {/*  >*/}
+          {/*    보내기*/}
+          {/*  </ScripButton>*/}
+          {/*</ScirpWrapper>*/}
           {/*<div*/}
           {/*  style={{*/}
           {/*    marginLeft: "auto", // 자동 여백을 사용하여 오른쪽 정렬*/}
@@ -409,7 +431,7 @@ const TextContainer = styled.div`
   text-align: left;
   white-space: normal;
   word-break: break-word;
-  width: 100%; 
+  width: 100%;
 `;
 
 const Contentwrapper = styled.div`
@@ -538,8 +560,16 @@ const CommentButton = styled.button.withConfig({
   }
 `;
 
+const ShareWrapper = styled.div`
+  width: 45px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 5px;
+`;
+
 const ScirpWrapper = styled.div`
-  margin-left: -7px;
   border-radius: 30px;
   width: 75px;
   height: 40px;
@@ -580,7 +610,6 @@ const HrTag = styled.hr`
   background-color: #f0f0f0;
   margin: 5px 0;
   width: 100%;
-  max-width: 600px;
 `;
 
 export default Card;

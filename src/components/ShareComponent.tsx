@@ -221,8 +221,8 @@ const DropdownItem = styled.a`
 `;
 
 const ShareWrapper = styled.div`
-  width: 15%;
-  height: 40px;
+  height: 100%;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -230,11 +230,17 @@ const ShareWrapper = styled.div`
 `;
 
 const ShareIcon = styled.img`
-  width: 30px !important;
+  width: 40px !important;
   height: 30px !important;
   object-fit: contain !important;
   border-radius: 45% !important;
-  margin-right: 10px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 30px !important;
+    height: 18px !important;
+    object-fit: contain !important;
+    border-radius: 45% !important;
+  }
 `;
 
 const ShareButton = styled.button.withConfig({
@@ -248,23 +254,20 @@ const ShareButton = styled.button.withConfig({
   gap: 8px;
   background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
   border: 1px solid gray;
-  height: 40px;
-  width: 45px;
+  height: 100%;
+  width: 100%;
   border-radius: 30px;
-  margin-left: -7px;
   cursor: pointer;
 
+  object-fit: cover;
   @media (max-width: ${breakpoints.mobile}) {
-    height: 40px;
     font-size: 10px;
-    margin-left: 5px;
-    margin-right: 7px;
   }
 `;
 
 const ShareImageTag = styled.img`
-  height: 20px;
-  width: 23px;
+  height: 100%;
+  width: 100%;
 `;
 
 const ShareCountTag = styled.p`

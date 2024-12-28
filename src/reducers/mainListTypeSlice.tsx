@@ -2,7 +2,7 @@ import { MainListTypes } from '../_common/collectionTypes';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface MainListTypeState {
-  buttonType: MainListTypes;
+  readonly buttonType: MainListTypes;
 }
 
 export interface HamburgerState {
@@ -21,10 +21,13 @@ export const sideButtonSlice = createSlice({
     setButtonType: (state, action: PayloadAction<MainListTypeState>) => {
       state.buttonType = action.payload.buttonType;
     },
-    setHamburgerStatus: (state, action: PayloadAction<HamburgerState>) => {
+    buttonType: (state, action: PayloadAction<MainListTypeState>) => {
+      state.buttonType = action.payload.buttonType;
+    },
+    setHamburgerState: (state, action: PayloadAction<HamburgerState>) => {
       state.hamburgerState = action.payload.hamburgerState;
     },
-    hamburgerStatus: (state, action: PayloadAction<HamburgerState>) => {
+    hamburgerState: (state, action: PayloadAction<HamburgerState>) => {
       state.hamburgerState = action.payload.hamburgerState;
     },
   },

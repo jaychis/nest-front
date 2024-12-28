@@ -64,7 +64,7 @@ const GlobalBar = () => {
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
     dispatch(
-      sideButtonSliceActions.setHamburgerStatus({
+      sideButtonSliceActions.setHamburgerState({
         hamburgerState: !isSidebarOpen,
       }),
     );
@@ -149,7 +149,7 @@ const GlobalBar = () => {
           onClick={handleLogoClick}
         >
           <LogoImage src={logo} alt="Logo" />
-          <SiteName>{'제이치스 jaychis.com'}</SiteName>
+          <SiteName>{'제이치스'}</SiteName>
         </LogoWrapper>
 
         {/* Search Bar */}
