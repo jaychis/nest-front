@@ -2,6 +2,7 @@ import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
 import { AwsImageUploadFunctionality } from "../_common/imageUploadFuntionality";
 import { useRef, useMemo } from "react";
+import sanitizeHtml from 'sanitize-html';
 
 interface Props {
   readonly setContent: (item: string[] | ((prev: string[]) => string[])) => void;
@@ -9,7 +10,7 @@ interface Props {
   readonly height: string;
 }
 
-const SubmitQuill = ({setContent, content, height}: Props) => {
+const SubmitQuill = ({ setContent, content, height }: Props) => {
   const quillRef = useRef<ReactQuill>(null);
 
   const handleImageUpload = () => {
@@ -55,12 +56,24 @@ const SubmitQuill = ({setContent, content, height}: Props) => {
     },
   }), []);
 
+  const handleChange = (value: string) => {
+    // 줄바꿈을 <br>로 변환
+    const sanitizedContent = sanitizeHtml(value, {
+      allowedTags: ['br', 'img', 'p', 'a', 'b', 'i', 'u', 'strike'],
+      allowedAttributes: {
+        img: ['src', 'alt', 'title', 'width', 'height', 'loading', 'style'],
+        a: ['href']
+      }
+    });
+    setContent(sanitizedContent.split('<br>'));
+  };
+
   return (
     <ReactQuill
       ref={quillRef}
       style={{ height: height }}
-      onChange={(content) => setContent(content.split('<br />'))}
-      value={content.join('<br />')}
+      onChange={handleChange}
+      value={content.join('<br>')}
       modules={modules}
     />
   );
