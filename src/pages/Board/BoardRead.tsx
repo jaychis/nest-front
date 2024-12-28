@@ -21,8 +21,8 @@ const BoardRead = () => {
   };
 
   const query = useQuery();
-  const ID = query.get('id') as string;
-  const userId: string = localStorage.getItem('id') as string;
+  const ID: string = query.get('id') as string;
+  const USER_Id: string = localStorage.getItem('id') as string;
 
   const [isBoardState, setIsBoardStateBoard] = useState<CardType>({
     id: ID,
@@ -52,12 +52,15 @@ const BoardRead = () => {
 
       if (!res) return;
       const response = res.data.response;
+
       setIsBoardStateBoard(response);
 
-      await LogViewedBoardAPI({
-        userId: response.user_id,
+      const logViewBoard = await LogViewedBoardAPI({
+        userId: USER_Id,
         boardId: response.id,
       });
+      if (!logViewBoard) return;
+      const resLogViewBoard = logViewBoard.data.response;
     };
 
     readBoard();
@@ -67,7 +70,7 @@ const BoardRead = () => {
     boardId: ID,
     content: '',
     nickname: (localStorage.getItem('nickname') as string) || '',
-    userId: userId || '',
+    userId: USER_Id || '',
   });
 
   const commentHandleChange = (event: CollectionTypes) => {
@@ -109,7 +112,17 @@ const BoardRead = () => {
     return (
       <RepliesContainer>
         {replies.map((re: ReplyType) => (
-          <BoardReply key={re.id} {...re} />
+          <BoardReply
+            key={re.id}
+            id={re.id}
+            comment_id={re.comment_id}
+            user_id={re.user_id}
+            content={re.content}
+            nickname={re.nickname}
+            created_at={re.created_at}
+            updated_at={re.updated_at}
+            deleted_at={re.deleted_at}
+          />
         ))}
       </RepliesContainer>
     );
@@ -159,6 +172,7 @@ const BoardRead = () => {
             content={isBoardState.content}
             type={isBoardState.type}
             shareCount={isBoardState.share_count}
+            userId={isBoardState.user_id}
           />
         )}
         <CommentSection>

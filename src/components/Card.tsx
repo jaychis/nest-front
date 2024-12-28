@@ -22,6 +22,10 @@ import styled from 'styled-components';
 import ShareComponent from './ShareComponent';
 import { breakpoints } from '../_common/breakpoint';
 import { handleReaction } from '../_common/handleUserReaction';
+import {
+  fetchProfileImage,
+  FetchProfileImageType,
+} from '../_common/fetchCardProfile';
 
 const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
   try {
@@ -43,6 +47,7 @@ const Card = ({
   title,
   type,
   shareCount,
+  userId,
 }: BoardProps) => {
   const navigate = useNavigate();
   const [isCardCount, setIsCardCount] = useState<number>(0);
@@ -59,6 +64,16 @@ const Card = ({
   const modalState: UserModalState = useSelector(
     (state: RootState) => state.modalState,
   );
+  const [isProfile, setIsProfile] = useState<string | null>(null);
+  const mediaExtensions = {
+    image: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'ico', 'tiff', 'tif', 'heif', 'heic', 'avif'],
+    video: ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv']
+  };
+  
+  const isMediaType = (url: string, type: 'image' | 'video'): boolean => {
+    const ext = url.split('.').pop()?.toLowerCase();
+    return ext ? mediaExtensions[type].includes(ext) : false;
+  };
 
   const USER_ID: string = localStorage.getItem('id') as string;
 
@@ -78,7 +93,7 @@ const Card = ({
 
   const safeHtml = (content: string) => {
     return sanitizeHtml(content, {
-      allowedTags: ['img', 'a'], // 허용할 태그
+      allowedTags: ['img', 'a', 'br', 'p', 'div'], // 허용할 태그
       allowedAttributes: { 
         img: ['src', 'srcset', 'alt', 'title', 'width', 'height', 'loading', 'style'], // 'style' 추가
         a: ['href']
@@ -89,11 +104,12 @@ const Card = ({
             tagName: 'img',
             attribs: {
               ...attribs,
-              style: 'width: 40%; height: auto; display: block; margin: 0 auto;'
-            }
+              style:
+                'width: 40%; height: auto; display: block; margin: 0 auto;',
+            },
           };
-        }
-      }
+        },
+      },
     });
   };
 
@@ -161,15 +177,28 @@ const Card = ({
     }
   };
 
+  const fetchCardProfile = async (userId: string) => {
+    const profileImage: FetchProfileImageType = await fetchProfileImage({
+      userId,
+    });
+    !profileImage ? setIsProfile(null) : setIsProfile(profileImage);
+  };
+
   const debouncedFetchReactionList = debounce(fetchReactionList, 300);
   const debouncedFetchReactionCount = debounce(fetchReactionCount, 300);
+  const debouncedFetchCardProfile = debounce(fetchCardProfile, 300);
 
   useEffect(() => {
-    debouncedFetchReactionList(id);
-    debouncedFetchReactionCount(id);
+    const startFunc = async () => {
+      await debouncedFetchReactionList(id);
+      await debouncedFetchReactionCount(id);
+      await debouncedFetchCardProfile(userId);
+    };
+    startFunc();
+
     const temp = extractTextFromHTML(content[0]);
     setShareContent(temp);
-  }, []);
+  }, [userId, id]);
 
   useEffect(() => {
     if (localCount < 0) {
@@ -193,7 +222,7 @@ const Card = ({
       >
         {/* Card Image */}
         <LogoContainer>
-          <LogoImg src={logo} />
+          <LogoImg src={isProfile ? isProfile : logo} />
           <NicknameWrapper
             onClick={() => navigate(`/users/inquiry?nickname=${nickname}`)}
           >
@@ -218,12 +247,23 @@ const Card = ({
             </TextContainer>
           ) : type === 'MEDIA' ? (
             <MediaContainer>
-              {content.map((image, index) => (
-                <ImagePreview
-                  key={`${id}-${index}`}
-                  src={image}
-                  alt={`Preview image ${index}`}
-                />
+              {content.map((url, index) => (
+                <>
+                {isMediaType(url,'image') ?
+                <Image
+                key={`${id}-${index}`}
+                src={url}
+                alt={`Preview image ${index}`}/> : 
+                <Video
+                  key={index}
+                  controls
+                  preload="metadata"
+                >
+                  <source src={url} />
+                </Video>}
+                
+                </>
+                
               ))}
             </MediaContainer>
           ) : (
@@ -365,7 +405,7 @@ const MediaContainer = styled.div`
   margin: 10px auto;
 `;
 
-const ImagePreview = styled.img`
+const Image = styled.img`
   max-width: 700px;
   max-height: 400px;
   width: 100%;
@@ -374,6 +414,16 @@ const ImagePreview = styled.img`
   display: block;
   object-fit: contain;
 `;
+
+const Video = styled.video`
+  max-width: 700px;
+  max-height: 400px;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  display: block;
+  object-fit: contain;
+`
 
 const LogoContainer = styled.div`
   display: flex;
@@ -411,14 +461,16 @@ const TextContainer = styled.div`
   text-align: left;
   white-space: normal;
   word-break: break-word;
-  width: 100%; 
+  width: 100%;
 `;
 
 const Contentwrapper = styled.div`
   max-width: 100% !important;
   max-height: 100% !important;
+
   img {
     max-width: 70% !important;
+    max-height: 450px !important;
     height: auto !important;
     display: block !important;
   }
@@ -590,7 +642,6 @@ const HrTag = styled.hr`
   background-color: #f0f0f0;
   margin: 5px 0;
   width: 100%;
-  max-width: 600px;
 `;
 
 export default Card;

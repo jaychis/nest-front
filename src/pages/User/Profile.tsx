@@ -1,22 +1,25 @@
 import React, { useEffect, useState, ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
-import { ReduxProfileAPI, UsersProfileAPI } from '../api/userApi';
+import { UsersProfileAPI } from '../api/userApi';
 import { ProfileState } from '../../reducers/profileSlice';
 import { CardType, UserType } from '../../_common/collectionTypes';
 import Card from '../../components/Card';
 import BoardComment, { CommentType } from '../Board/BoardComment';
 import { BoardInquiryAPI } from '../api/boardApi';
+import { CommentUsersInquiryAPI } from '../api/commentApi';
 import {
-  CommentInquiryAPI,
-  CommentUsersInquiryAPI,
-  CommentUsersInquiryParam,
-} from '../api/commentApi';
-import {
+  AwsImageUploadFunctionality,
   ImageLocalPreviewUrls,
+  ImageLocalPreviewUrlsDelete,
+  ImageLocalPreviewUrlsDeleteType,
   ImageLocalPreviewUrlsReturnType,
 } from '../../_common/imageUploadFuntionality';
 import styled from 'styled-components';
+import { breakpoints } from '../../_common/breakpoint';
+import TRASH from '../../assets/img/trash.png';
+import SAVE from '../../assets/img/save.png';
+import { UsersProfilePictureAPI } from '../api/usresProfileApi';
 
 type ACTIVE_SECTION_TYPES = 'POSTS' | 'COMMENTS' | 'PROFILE';
 const Profile = () => {
@@ -27,12 +30,47 @@ const Profile = () => {
   const [activeSection, setActiveSection] =
     useState<ACTIVE_SECTION_TYPES>('POSTS');
   const ID: string = (localStorage.getItem('id') as string) || '';
-  const [profilePicture, setProfilePicture] = useState<File | null>(null);
-  const [profilePreview, setProfilePreview] = useState<string | null>(null);
+  const [profilePreview, setProfilePreview] = useState<string[]>([]);
+  const [profileList, setProfileList] = useState<File[]>([]);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [nickname, setNickname] = useState<string>(user.data.nickname || '');
   const [email, setEmail] = useState<string>(user.data.email || '');
   const [phone, setPhone] = useState<string>(user.data.phone || '');
+
+  const imageUrlListDelete = async () => {
+    const res: ImageLocalPreviewUrlsDeleteType =
+      await ImageLocalPreviewUrlsDelete({ urls: profilePreview });
+    if (!res) return;
+
+    setProfilePreview(res);
+  };
+
+  const handleProfilePictureChange = async (
+    e: ChangeEvent<HTMLInputElement>,
+  ) => {
+    const urls: ImageLocalPreviewUrlsReturnType = await ImageLocalPreviewUrls({
+      event: e,
+    });
+    if (!urls) return;
+
+    setProfilePreview(urls.previewUrls);
+    setProfileList(urls.fileList);
+  };
+
+  const profileImageSave = async () => {
+    const profileImageList = await AwsImageUploadFunctionality({
+      fileList: profileList,
+    });
+    const profileImage =
+      profileImageList === null ? null : profileImageList.imageUrls[0];
+
+    const response = await UsersProfilePictureAPI({ profileImage });
+    if (!response) return;
+
+    const res = response.data.response.profile_image;
+
+    res === null ? setProfilePreview([]) : setProfilePreview([res]);
+  };
 
   useEffect(() => {
     if (activeSection === 'POSTS') {
@@ -51,7 +89,7 @@ const Profile = () => {
         if (!res) return;
 
         const response = res.data.response;
-        console.log('comments response : ', response);
+
         setMyComments(response);
       };
       commentInquiry();
@@ -63,210 +101,187 @@ const Profile = () => {
         if (!res) return;
 
         const response = res.data.response as UserType;
-        console.log('userInquiry response : ', response);
         if (response) {
           setNickname(response.nickname);
           setEmail(response.email);
           setPhone(response.phone);
+
+          const userProfile = response.users_profile[0].profile_image;
+          if (userProfile !== null) {
+            setProfilePreview([userProfile]);
+          }
         }
       };
       userInquiry();
     }
   }, [activeSection, ID, dispatch]);
 
-  useEffect(() => {
-    if (profilePicture && typeof profilePicture !== 'string') {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfilePreview(reader.result as string);
-      };
-      reader.readAsDataURL(profilePicture);
-    } else if (typeof profilePicture === 'string') {
-      setProfilePreview(profilePicture);
-    } else {
-      setProfilePreview(null);
-    }
-  }, [profilePicture]);
-
-  const handleProfilePictureChange = async (
-    e: ChangeEvent<HTMLInputElement>,
-  ) => {
-    const urls: ImageLocalPreviewUrlsReturnType = await ImageLocalPreviewUrls({
-      event: e,
-    });
-    if (!urls) return;
-    setProfilePreview(urls.previewUrls[0]);
-    setProfilePicture(urls.fileList[0]);
-  };
-
   const handleReplySubmit = (reply: any) => {
     // Implement reply submit logic here
   };
-
-  const handleEditToggle = () => {
-    setIsEditing((prev) => !prev);
-  };
-
-  const handleSave = () => {
-    setIsEditing(false);
-  };
-
   return (
     <Container>
-      <Content>
-        <ButtonContainer>
-          <SectionButton
-            isActive={activeSection === 'POSTS'}
-            onClick={() => setActiveSection('POSTS')}
-          >
-            내가 등록한 게시글
-          </SectionButton>
-          <SectionButton
-            isActive={activeSection === 'COMMENTS'}
-            onClick={() => setActiveSection('COMMENTS')}
-          >
-            내가 등록한 댓글
-          </SectionButton>
-          <SectionButton
-            isActive={activeSection === 'PROFILE'}
-            onClick={() => setActiveSection('PROFILE')}
-          >
-            나의 정보
-          </SectionButton>
-        </ButtonContainer>
+      <ButtonContainer>
+        <SectionButton
+          isActive={activeSection === 'POSTS'}
+          onClick={() => setActiveSection('POSTS')}
+        >
+          내가 등록한 게시글
+        </SectionButton>
+        <SectionButton
+          isActive={activeSection === 'COMMENTS'}
+          onClick={() => setActiveSection('COMMENTS')}
+        >
+          내가 등록한 댓글
+        </SectionButton>
+        <SectionButton
+          isActive={activeSection === 'PROFILE'}
+          onClick={() => setActiveSection('PROFILE')}
+        >
+          나의 정보
+        </SectionButton>
+      </ButtonContainer>
 
-        {activeSection === 'POSTS' && (
-          <Section>
-            <SectionTitle>내가 등록한 게시글</SectionTitle>
-            {myPosts && myPosts.length > 0 ? (
-              myPosts.map((post: CardType) => (
-                <Card
-                  key={post?.id}
-                  shareCount={post?.share_count}
-                  createdAt={post?.created_at}
-                  {...post}
-                />
-              ))
-            ) : (
-              <p>등록된 포스트가 없습니다.</p>
-            )}
-          </Section>
-        )}
+      {activeSection === 'POSTS' && (
+        <Section>
+          <SectionTitle>내가 등록한 게시글</SectionTitle>
+          {myPosts && myPosts.length > 0 ? (
+            myPosts.map((post: CardType) => (
+              <Card
+                key={post?.id}
+                shareCount={post?.share_count}
+                createdAt={post?.created_at}
+                userId={post?.user_id}
+                {...post}
+              />
+            ))
+          ) : (
+            <p>등록된 포스트가 없습니다.</p>
+          )}
+        </Section>
+      )}
 
-        {activeSection === 'COMMENTS' && (
-          <Section>
-            <SectionTitle>내가 등록한 댓글</SectionTitle>
-            {myComments.length > 0 ? (
-              myComments.map((comment: CommentType) => (
-                <BoardComment
-                  key={comment?.id}
-                  {...comment}
-                  onReplySubmit={handleReplySubmit}
-                />
-              ))
-            ) : (
-              <p>작성된 댓글이 없습니다.</p>
-            )}
-          </Section>
-        )}
+      {activeSection === 'COMMENTS' && (
+        <Section>
+          <SectionTitle>내가 등록한 댓글</SectionTitle>
+          {myComments.length > 0 ? (
+            myComments.map((comment: CommentType) => (
+              <BoardComment
+                key={comment?.id}
+                {...comment}
+                onReplySubmit={handleReplySubmit}
+              />
+            ))
+          ) : (
+            <p>작성된 댓글이 없습니다.</p>
+          )}
+        </Section>
+      )}
 
-        {activeSection === 'PROFILE' && (
-          <Section>
-            <SectionTitle>프로필</SectionTitle>
-            <ProfileContainer>
-              <ImageUploadWrapper>
-                {isEditing ? (
+      {activeSection === 'PROFILE' && (
+        <Section>
+          <SectionTitle>프로필</SectionTitle>
+          <ProfileContainer>
+            <ImageUploadWrapper>
+              <HiddenFileInput
+                type="file"
+                id="profilePicture"
+                accept="image/*"
+                onChange={handleProfilePictureChange}
+              />
+
+              <ImagePreviewWrapper
+                onClick={() => {
+                  document.getElementById('profilePicture')?.click();
+                }}
+              >
+                <SaveButton
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    profileImageSave();
+                  }}
+                >
+                  <ImageIcon src={SAVE} alt={'Save Icon'} />
+                </SaveButton>
+                {profilePreview.length > 0 ? (
                   <>
-                    <HiddenFileInput
-                      type="file"
-                      id="profilePicture"
-                      accept="image/*"
-                      onChange={handleProfilePictureChange}
+                    <ImagePreview
+                      src={profilePreview[0]}
+                      alt="Profile Preview"
                     />
-                    <ImagePreviewWrapper
-                      onClick={() =>
-                        document.getElementById('profilePicture')?.click()
-                      }
+
+                    <TrashButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        imageUrlListDelete();
+                      }}
                     >
-                      {profilePreview ? (
-                        <ImagePreview
-                          src={profilePreview}
-                          alt="Profile Preview"
-                        />
-                      ) : (
-                        <Placeholder>프로필</Placeholder>
-                      )}
-                    </ImagePreviewWrapper>
+                      <ImageIcon src={TRASH} alt="Trash Icon" />
+                    </TrashButton>
                   </>
                 ) : (
-                  <ImagePreviewWrapper>
-                    {profilePreview ? (
-                      <ImagePreview
-                        src={profilePreview}
-                        alt="Profile Preview"
-                      />
-                    ) : (
-                      <Placeholder>프로필</Placeholder>
-                    )}
-                  </ImagePreviewWrapper>
+                  <Placeholder>프로필</Placeholder>
                 )}
-              </ImageUploadWrapper>
-              <ProfileInfo>
-                <InfoRow>
-                  <Label>닉네임:</Label>
-                  {isEditing ? (
-                    <Input
-                      type="text"
-                      value={nickname}
-                      onChange={(e) => setNickname(e.target.value)}
-                    />
-                  ) : (
-                    <Value>{nickname || '닉네임을 입력하세요'}</Value>
-                  )}
-                </InfoRow>
-                <InfoRow>
-                  <Label>이메일:</Label>
-                  {isEditing ? (
-                    <Input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
-                  ) : (
-                    <Value>{email || '이메일을 입력하세요'}</Value>
-                  )}
-                </InfoRow>
-                <InfoRow>
-                  <Label>전화번호:</Label>
-                  {isEditing ? (
-                    <Input
-                      type="text"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                    />
-                  ) : (
-                    <Value>{phone || '전화번호를 입력하세요'}</Value>
-                  )}
-                </InfoRow>
-              </ProfileInfo>
-            </ProfileContainer>
-          </Section>
-        )}
-      </Content>
+              </ImagePreviewWrapper>
+            </ImageUploadWrapper>
+
+            <ProfileInfo>
+              <InfoRow>
+                <Label>닉네임:</Label>
+                {isEditing ? (
+                  <Input
+                    type="text"
+                    value={nickname}
+                    onChange={(e) => setNickname(e.target.value)}
+                  />
+                ) : (
+                  <Value>{nickname || '닉네임을 입력하세요'}</Value>
+                )}
+              </InfoRow>
+              <InfoRow>
+                <Label>이메일:</Label>
+                {isEditing ? (
+                  <Input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                ) : (
+                  <Value>{email || '이메일을 입력하세요'}</Value>
+                )}
+              </InfoRow>
+              <InfoRow>
+                <Label>전화번호:</Label>
+                {isEditing ? (
+                  <Input
+                    type="text"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                  />
+                ) : (
+                  <Value>{phone || '전화번호를 입력하세요'}</Value>
+                )}
+              </InfoRow>
+            </ProfileInfo>
+          </ProfileContainer>
+        </Section>
+      )}
     </Container>
   );
 };
 
 const Container = styled.div`
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
   width: 100%;
-  height: 100vh;
-  justify-content: center;
-`;
+  box-sizing: border-box;
 
-const Content = styled.div`
-  flex: 2;
-  padding: 20px;
+  @media (max-width: ${breakpoints.mobile}) {
+    margin-left: 0;
+    max-width: 100%;
+  }
 `;
 
 const ButtonContainer = styled.div`
@@ -275,7 +290,7 @@ const ButtonContainer = styled.div`
   margin-bottom: 20px;
 `;
 
-const SectionButton = styled.button<{ isActive: boolean }>`
+const SectionButton = styled.button<{ readonly isActive: boolean }>`
   padding: 10px 20px;
   margin: 0 10px;
   border: none;
@@ -288,11 +303,12 @@ const SectionButton = styled.button<{ isActive: boolean }>`
 `;
 
 const Section = styled.div`
-  margin-bottom: 20px;
   background-color: #fff;
-  padding: 10px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 600px;
+  box-sizing: border-box;
 `;
 
 const SectionTitle = styled.h2`
@@ -327,12 +343,15 @@ const ImagePreviewWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  position: relative;
 `;
 
 const ImagePreview = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 50%;
 `;
 
 const Placeholder = styled.div`
@@ -371,6 +390,38 @@ const Input = styled.input`
   border-radius: 10px;
   border: 1px solid #ccc;
   flex: 1;
+`;
+
+const TrashButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: absolute;
+  bottom: 2px;
+  right: -2px;
+`;
+
+const SaveButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: absolute;
+  bottom: 2px;
+  left: -2px;
+`;
+
+const ImageIcon = styled.img`
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
 `;
 
 export default Profile;

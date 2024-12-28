@@ -64,7 +64,7 @@ const GlobalBar = () => {
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
     dispatch(
-      sideButtonSliceActions.setHamburgerStatus({
+      sideButtonSliceActions.setHamburgerState({
         hamburgerState: !isSidebarOpen,
       }),
     );

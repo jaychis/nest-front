@@ -1,8 +1,9 @@
 import styled from 'styled-components';
-import logo from '../../assets/img/logo.png';
 import CommunityProfile from './CommunityProfile';
 import { SelectCommunityParams } from '../../reducers/communitySlice';
 import { useSelector } from 'react-redux';
+import { breakpoints } from '../../_common/breakpoint';
+import BANNER from '../../assets/img/community_banner.png';
 
 const CommunityBanner = () => {
   const selectCommunity: SelectCommunityParams = useSelector(
@@ -13,7 +14,7 @@ const CommunityBanner = () => {
     <>
       <BackgroundContainer>
         <BackgroundImage
-          src={selectCommunity.banner === null ? logo : selectCommunity.banner}
+          src={selectCommunity?.banner || BANNER}
           alt="Description"
         />
         <CommunityProfile />
@@ -25,8 +26,12 @@ const CommunityBanner = () => {
 const BackgroundContainer = styled.div`
   display: flex;
   width: 100%;
-  height: 40vh;
-  margin-bottom: 10vh;
+  height: 15vh;
+  margin-bottom: 20vh;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    height: 12vh;
+  }
 `;
 
 const BackgroundImage = styled.img`
