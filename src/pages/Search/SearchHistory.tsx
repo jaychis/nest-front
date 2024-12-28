@@ -1,11 +1,12 @@
 import { useState,useEffect } from "react";
 import styled from "styled-components";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const SearchHistory = () => {
 
     const [searchHistoryList, setSearchHistoryList] = useState<string[]>([]);
     const navigate = useNavigate();
+    
     const getSearchHistory = () => {
         const history = localStorage.getItem('searchHistory'); 
         if (!history) return;

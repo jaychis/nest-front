@@ -65,6 +65,15 @@ const Card = ({
     (state: RootState) => state.modalState,
   );
   const [isProfile, setIsProfile] = useState<string | null>(null);
+  const mediaExtensions = {
+    image: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'ico', 'tiff', 'tif', 'heif', 'heic', 'avif'],
+    video: ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv']
+  };
+  
+  const isMediaType = (url: string, type: 'image' | 'video'): boolean => {
+    const ext = url.split('.').pop()?.toLowerCase();
+    return ext ? mediaExtensions[type].includes(ext) : false;
+  };
 
   const USER_ID: string = localStorage.getItem('id') as string;
 
@@ -238,12 +247,23 @@ const Card = ({
             </TextContainer>
           ) : type === 'MEDIA' ? (
             <MediaContainer>
-              {content.map((image, index) => (
-                <ImagePreview
-                  key={`${id}-${index}`}
-                  src={image}
-                  alt={`Preview image ${index}`}
-                />
+              {content.map((url, index) => (
+                <>
+                {isMediaType(url,'image') ?
+                <Image
+                key={`${id}-${index}`}
+                src={url}
+                alt={`Preview image ${index}`}/> : 
+                <Video
+                  key={index}
+                  controls
+                  preload="metadata"
+                >
+                  <source src={url} />
+                </Video>}
+                
+                </>
+                
               ))}
             </MediaContainer>
           ) : (
@@ -385,7 +405,7 @@ const MediaContainer = styled.div`
   margin: 10px auto;
 `;
 
-const ImagePreview = styled.img`
+const Image = styled.img`
   max-width: 700px;
   max-height: 400px;
   width: 100%;
@@ -394,6 +414,16 @@ const ImagePreview = styled.img`
   display: block;
   object-fit: contain;
 `;
+
+const Video = styled.video`
+  max-width: 700px;
+  max-height: 400px;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  display: block;
+  object-fit: contain;
+`
 
 const LogoContainer = styled.div`
   display: flex;
@@ -437,8 +467,10 @@ const TextContainer = styled.div`
 const Contentwrapper = styled.div`
   max-width: 100% !important;
   max-height: 100% !important;
+
   img {
     max-width: 70% !important;
+    max-height: 450px !important;
     height: auto !important;
     display: block !important;
   }
