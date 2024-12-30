@@ -43,7 +43,7 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
     confirmPassword: '',
     phone: '',
   });
-
+  
   const [validSignup, setValidSignup] = useState<ValidSignupType>({
     email: null,
     phone: null,
@@ -73,6 +73,10 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
 
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [validPassword, setValidPassword] = useState<boolean>(false);
+
+  useEffect(() => {
+    console.log(signup.nickname)
+  },[signup.nickname])
 
   useEffect(() => {
     if (signup.email.length >= 12) {
@@ -196,7 +200,6 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
       SignupAPI(signup)
         .then((res): void => {
           const response = res.data.response;
-          localStorage.removeItem('email');
 
           if (res.status === 201 && response) {
             setShowAlert(true);

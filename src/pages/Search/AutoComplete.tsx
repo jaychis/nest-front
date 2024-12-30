@@ -6,6 +6,9 @@ import { sortTypes } from "./SearchList";
 import debounce from "lodash.debounce";
 import logo from '../../assets/img/panda_logo.png'
 import { useNavigate } from "react-router-dom";
+import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
+import { AppDispatch } from '../../store/store';
+import { useDispatch } from 'react-redux';
 
 interface AutoProps {
     readonly query: string
@@ -16,12 +19,20 @@ interface Community {
     icon: string;
   }
 
+type SearchListTypes =
+| 'BOARDS'
+| 'COMMUNITIES'
+| 'COMMENTS'
+| 'IMAGE&VIDEO'
+| 'PEOPLE'
+| 'TAGS';
+
 const AutoComplete = ({query}:AutoProps) => {
 
-    const sortType:sortTypes = 'RECENT'
     const [searchList, setSearchList] = useState<Community[]>([]);
     const navigate = useNavigate();
-
+    const dispatch = useDispatch<AppDispatch>();
+    
     const searchBoard = useCallback(
         debounce(async (query: string) => {
           const res = await GetSearchCommunitiesAPI({ query });
