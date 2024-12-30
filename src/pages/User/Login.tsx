@@ -233,7 +233,11 @@ const Login = ({
         </Header>
 
         <SocialButtonsContainer>
-          <SocialButton onClick={kakaoOauthLogin}>
+          <SocialButton
+            onClick={() => {
+              kakaoOauthLogin();
+            }}
+          >
             <FaComment /> 카카오로 로그인
           </SocialButton>
         </SocialButtonsContainer>
