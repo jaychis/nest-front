@@ -171,7 +171,7 @@ const Login = ({
         if (code) {
           const response = await KakaoOAuthLoginAPI({ code });
           if (!response) return;
-
+          
           const {
             id,
             nickname,
@@ -205,7 +205,6 @@ const Login = ({
     );
   };
 
-  // 리다이렉션 페이지에서 부모 창으로 데이터를 전달하는 useEffect
   useEffect(() => {
     if (window.opener) {
       const urlParams = new URLSearchParams(window.location.search);
