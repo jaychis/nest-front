@@ -506,7 +506,7 @@ const ReactionWrapper = styled.div`
   align-items: center;
 
   @media (max-width: ${breakpoints.mobile}) {
-    width: 120px;
+    max-width: 130px;
   }
 `;
 
@@ -524,7 +524,7 @@ const LikeButton = styled.button.withConfig({
   cursor: pointer;
 
   @media (max-width: ${breakpoints.mobile}) {
-    width: 50px;
+    width: 60px;
     height: 40px;
     font-size: 10px;
   }
@@ -536,7 +536,8 @@ const ReactionCount = styled.span`
   height: 10px;
 
   @media (max-width: ${breakpoints.mobile}) {
-    margin: 5px;
+    margin: 3px;
+    text-align: center;
   }
 `;
 
@@ -554,7 +555,7 @@ const DisLikeButton = styled.button.withConfig({
   cursor: pointer;
 
   @media (max-width: ${breakpoints.mobile}) {
-    width: 50px;
+    width: 60px;
     height: 40px;
     font-size: 10px;
   }

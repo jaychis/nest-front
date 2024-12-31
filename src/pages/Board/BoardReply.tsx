@@ -138,7 +138,7 @@ const BoardReply = (re: ReplyType) => {
         onMouseLeave={() => setIsHovered(false)}
         isHovered={isHovered}
       >
-        {re.content}
+       <Pre>{re.content}</Pre> 
       </ReplyContent>
       <ReactionContainer>
         <ReactionWrapper>
@@ -329,5 +329,10 @@ const CommentButton = styled(CancelButton)`
   background-color: #007bff;
   color: white;
 `;
+
+const Pre = styled.pre`
+    font-size: 1rem;
+    font-family: 'MyFont';
+`
 
 export default BoardReply;
