@@ -185,7 +185,7 @@ const BoardComment = (co: BoardCommentProps) => {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <Pre>{co.content}</Pre>
+        {co.content}
       </CommentContent>
 
       <CommentActions>
@@ -256,6 +256,8 @@ const CommentContainer = styled.div`
   flex-direction: column;
   font-family: Arial, sans-serif;
   padding: 0 15px;
+  width: 100%;
+  white-space: pre-wrap;
 `;
 
 const CommentHeader = styled.div`
@@ -433,7 +435,4 @@ const CommentButton = styled.button.withConfig({
   }
 `;
 
-const Pre = styled.pre`
-    font-size: 1rem;
-    font-family: 'MyFont';
-`
+
