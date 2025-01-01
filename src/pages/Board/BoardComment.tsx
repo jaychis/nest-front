@@ -185,7 +185,7 @@ const BoardComment = (co: BoardCommentProps) => {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        {co.content}
+        <Pre>{co.content}</Pre>
       </CommentContent>
 
       <CommentActions>
@@ -432,3 +432,8 @@ const CommentButton = styled.button.withConfig({
     font-size: 10px;
   }
 `;
+
+const Pre = styled.pre`
+    font-size: 1rem;
+    font-family: 'MyFont';
+`
