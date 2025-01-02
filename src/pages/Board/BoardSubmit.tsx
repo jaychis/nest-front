@@ -391,12 +391,21 @@ const BoardSubmit = () => {
                 </>
               ) : (
                 <>
+                <CustomInput>
+                <CustomLabel 
+                  htmlFor="file"
+                  style={{borderRadius:'14px'}}  
+                >
+                  이미지 업로드
                   <InputStyle
-                    style={{paddingBottom: '30px'}}
-                    type={'file'}
-                    multiple
-                    onChange={handleFileChange}
+                  type="file"
+                  id="file"
+                  style={{display: 'none'}}
+                  multiple
+                  onChange={handleFileChange}
                   />
+                </CustomLabel>
+                </CustomInput>
                 </>
               )}
             </>
@@ -646,5 +655,21 @@ const TagInfoMessage = styled.p`
   margin: 10px 0;
   line-height: 1.5;
 `;
+
+const CustomInput = styled.div`
+  display: flex;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 16px;
+`
+
+const CustomLabel = styled.label`
+  padding: 10px;
+  background-color: #84d7fb;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-family: Arial, Helvetica, sans-serif;
+`
 
 export default BoardSubmit;
