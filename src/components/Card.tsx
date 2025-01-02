@@ -506,7 +506,7 @@ const ReactionWrapper = styled.div`
   align-items: center;
 
   @media (max-width: ${breakpoints.mobile}) {
-    max-width: 130px;
+    max-width: 170px;
   }
 `;
 
