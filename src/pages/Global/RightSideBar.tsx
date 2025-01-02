@@ -9,10 +9,9 @@ import { UserModalState } from '../../reducers/modalStateSlice';
 import styled from 'styled-components';
 
 type SelectTapTypes = 'topSearches' | 'recentBoards';
-
 type RecentViewedPost = {
-  id: string;
-  title: string;
+  readonly id: string;
+  readonly title: string;
 };
 
 const RightSideBar = () => {
@@ -34,7 +33,6 @@ const RightSideBar = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const isLoggedIn = !!localStorage.getItem('access_token');
-  // Debounced fetch function
 
   const debouncedFetchTopTenList = debounce(async () => {
     try {
@@ -140,9 +138,9 @@ const RightSideBar = () => {
                         <Rank>{index + 1}</Rank>
                         <Query>{search.query}</Query>
                       </div>
-                      <Details>
-                        <Count>{search.count}</Count>
-                      </Details>
+                      {/*<Details>*/}
+                      {/*  <Count>{search.count}</Count>*/}
+                      {/*</Details>*/}
                     </ListItem>
                   ),
                 )
@@ -188,8 +186,8 @@ const RightSideBarContainer = styled.div`
   margin-left: auto;
   margin-right: 20px;
 
-  @media (max-width: 767px) {
-    display: none; // 모바일에서 숨김
+  @media (max-width: 610px) {
+    display: none;
   }
 `;
 

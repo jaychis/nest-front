@@ -13,12 +13,10 @@ import {
   isValidPasswordFormat,
   isValidPhoneNumber,
 } from '../../_common/passwordRegex';
-import { FaComment } from 'react-icons/fa';
 import vLogo from '../../assets/img/v-check.png';
 import xLogo from '../../assets/img/x-check.png';
 import Alert from '../../components/Alert';
 import styled from 'styled-components';
-import { Input } from 'antd';
 import { VerifyEmail } from '../api/userApi';
 
 interface Props {

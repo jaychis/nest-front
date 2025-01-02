@@ -74,6 +74,19 @@ export const BoardShareListAPI = ({ take, lastId, category }: ListParams) => {
   }
 };
 
+export const BoardRecentListAPI = ({ take, lastId, category }: ListParams) => {
+  let URL: string = `${BOARD_URL}/list/all?take=${take}`;
+
+  if (lastId) URL += `&lastId=${lastId}`;
+  if (category) URL += `&category=${category}`;
+
+  try {
+    const res = client.get(URL);
+    return res;
+  } catch (e: any) {
+    errorHandling({ text: 'BoardRecentListAPI', error: e });
+  }
+};
 interface BoardReadParam {
   readonly id: string;
 }
@@ -82,7 +95,6 @@ export const BoardReadAPI = async ({ id }: BoardReadParam) => {
     const URL: string = `${BOARD_URL}/${id}`;
 
     const res = await client.get(URL);
-    console.log('BoardReadAPI API res : ', res);
 
     return res;
   } catch (e: any) {

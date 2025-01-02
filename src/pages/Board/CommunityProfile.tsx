@@ -23,6 +23,7 @@ import {
   SelectCommunityParams,
   setJoinCommunity,
 } from '../../reducers/communitySlice';
+import { breakpoints } from '../../_common/breakpoint';
 interface User {
   readonly nickname: string;
   readonly id: string[];
@@ -100,7 +101,6 @@ const CommunityProfile = () => {
         if (!leaveStatus) return;
 
         const { delete_member } = leaveStatus.data.response;
-        console.log('delete_member : ', delete_member);
 
         dispatch(setJoinCommunity({ is_joined: false }));
       } else {
@@ -108,7 +108,7 @@ const CommunityProfile = () => {
         if (!joinStatus) return;
 
         const join = joinStatus.data.response;
-        console.log('join : ', join);
+
         dispatch(setJoinCommunity({ is_joined: true }));
       }
     } catch (error) {
@@ -128,7 +128,7 @@ const CommunityProfile = () => {
     try {
       if (value) {
         const res = await GetSearchPeopleAPI({ query: value });
-        console.log('handleUserSearchChange res : ', res);
+
         if (res && res.data && res.data.response) {
           setSearchResultList(
             res.data.response.map((user: User) => ({
@@ -178,7 +178,6 @@ const CommunityProfile = () => {
     if (!response) return;
 
     const res = response.data.response;
-    console.log('res : ', res);
   };
 
   return (
@@ -352,9 +351,14 @@ const CommunityProfile = () => {
 
 const CommunityInfoContainer = styled.div`
   display: flex;
-  top: 35vh;
-  left: 25%;
+  top: 20vh;
+  left: 20%;
   position: absolute;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    top: 20vh;
+    left: 5%;
+  }
 `;
 
 const ProfileCircle = styled.div`
@@ -363,6 +367,11 @@ const ProfileCircle = styled.div`
   border-radius: 75px;
   display: flex;
   border: 2px solid black;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 100px;
+    height: 100px;
+  }
 `;
 
 const ProfileImage = styled.img`
@@ -374,7 +383,12 @@ const ProfileImage = styled.img`
 const CommunityNameWrapper = styled.div`
   top: 40vh;
   display: flex;
-  margin-top: 14vh;
+  margin-top: 9vh;
+  margin-left: 1vw;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    margin-top: 2vh;
+  }
 `;
 
 const CommunityName = styled.h1`
@@ -382,9 +396,9 @@ const CommunityName = styled.h1`
   color: #333;
 `;
 
-const JoinButton = styled.div<{ isJoined: boolean }>`
+const JoinButton = styled.div<{ readonly isJoined: boolean }>`
   position: absolute;
-  top: 18vh;
+  top: 11vh;
   left: 50vw;
   background-color: ${(props) => (props.isJoined ? '#cccccc' : '#0056d2')};
   color: #ffffff;
@@ -404,6 +418,11 @@ const JoinButton = styled.div<{ isJoined: boolean }>`
 
   &:active {
     background-color: #00378b;
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    top: 5vh;
+    left: 85vw;
   }
 `;
 
@@ -461,7 +480,7 @@ const SearchResultList = styled.ul`
   padding: 0;
 `;
 
-const SearchResultItem = styled.li<{ index: number }>`
+const SearchResultItem = styled.li<{ readonly index: number }>`
   display: flex;
   align-items: center;
   cursor: pointer;

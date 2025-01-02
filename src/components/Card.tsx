@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/img/panda_logo.png';
 import {
@@ -20,6 +20,12 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import styled from 'styled-components';
 import ShareComponent from './ShareComponent';
+import { breakpoints } from '../_common/breakpoint';
+import { handleReaction } from '../_common/handleUserReaction';
+import {
+  fetchProfileImage,
+  FetchProfileImageType,
+} from '../_common/fetchCardProfile';
 
 const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
   try {
@@ -41,6 +47,7 @@ const Card = ({
   title,
   type,
   shareCount,
+  userId,
 }: BoardProps) => {
   const navigate = useNavigate();
   const [isCardCount, setIsCardCount] = useState<number>(0);
@@ -54,10 +61,19 @@ const Card = ({
   const [isReaction, setIsReaction] = useState<ReactionStateTypes>(null);
   const [shareContent, setShareContent] = useState<string>('');
   const [isSmallScreen, setIsSmallScreen] = useState(false);
-
   const modalState: UserModalState = useSelector(
     (state: RootState) => state.modalState,
   );
+  const [isProfile, setIsProfile] = useState<string | null>(null);
+  const mediaExtensions = {
+    image: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'ico', 'tiff', 'tif', 'heif', 'heic', 'avif'],
+    video: ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv']
+  };
+
+  const isMediaType = (url: string, type: 'image' | 'video'): boolean => {
+    const ext = url.split('.').pop()?.toLowerCase();
+    return ext ? mediaExtensions[type].includes(ext) : false;
+  };
 
   const USER_ID: string = localStorage.getItem('id') as string;
 
@@ -75,66 +91,50 @@ const Card = ({
     };
   }, []);
 
+  const safeHtml = (content: string) => {
+    return sanitizeHtml(content, {
+      allowedTags: ['img', 'a', 'br', 'p', 'div'], // 허용할 태그
+      allowedAttributes: {
+        img: ['src', 'srcset', 'alt', 'title', 'width', 'height', 'loading', 'style'],
+        a: ['href']
+      },
+      transformTags: {
+        img: (tagName, attribs) => {
+          return {
+            tagName: 'img',
+            attribs: {
+              ...attribs,
+              style:
+                'width: 40%; height: auto; display: block; margin: 0 auto;',
+            },
+          };
+        },
+      },
+    });
+  };
+
   const reactionButton = async (userReaction: ReactionStateTypes) => {
     if (userReaction !== null) {
-      const param: ReactionParams = {
+      const params: ReactionParams = {
         boardId: id,
         userId: USER_ID,
         type: userReaction,
         reactionTarget: 'BOARD',
       };
       try {
-        const res = await ReactionApi(param);
+        const res = await ReactionApi(params);
+        if (!res) return;
+
         const status: number = res.status;
-        const type = res.data.response?.type;
-        if (
-          userReaction === 'DISLIKE' &&
-          isReaction === 'DISLIKE' &&
-          localCount === 0
-        ) {
-          setIsReaction(null);
-        } else if (
-          userReaction === 'LIKE' &&
-          isReaction === 'DISLIKE' &&
-          localCount === 0
-        ) {
-          setIsReaction('LIKE');
-          setIsCardCount((prevCount) => prevCount + 1);
-        } else if (userReaction === 'LIKE' && isReaction === 'LIKE') {
-          setIsReaction(null);
-          setIsCardCount((prevCount) => prevCount - 1);
-        } else if (userReaction === 'LIKE' && isReaction === 'DISLIKE') {
-          setIsReaction('LIKE');
-          setIsCardCount((prevCount) => prevCount + 2);
-        } else if (userReaction === 'LIKE' && isReaction === null) {
-          setIsReaction('LIKE');
-          setIsCardCount((prevCount) => prevCount + 1);
-        } else if (
-          userReaction === 'DISLIKE' &&
-          isReaction === null &&
-          localCount === 0
-        ) {
-          setIsReaction('DISLIKE');
-        } else if (
-          userReaction === 'DISLIKE' &&
-          isReaction === 'LIKE' &&
-          isCardCount === 1
-        ) {
-          setIsReaction('DISLIKE');
-          setIsCardCount((prev) => prev - 1);
-        } else if (
-          userReaction === 'DISLIKE' &&
-          isReaction === null &&
-          localCount != 0
-        ) {
-          setIsReaction('DISLIKE');
-          setIsCardCount((prevCount) => prevCount - 1);
-        } else if (userReaction === 'DISLIKE' && isReaction === 'DISLIKE') {
-          setIsReaction(null);
-          setIsCardCount((prevCount) => prevCount + 1);
-        } else if (userReaction === 'DISLIKE' && isReaction === 'LIKE') {
-          setIsReaction('DISLIKE');
-          setIsCardCount((prevCount) => prevCount - 2);
+        if (status === 201) {
+          await handleReaction({
+            localCount,
+            userReaction,
+            isReaction,
+            setIsReaction,
+            isCardCount,
+            setIsCardCount,
+          });
         }
       } catch (err) {
         console.error(err);
@@ -177,12 +177,25 @@ const Card = ({
     }
   };
 
+  const fetchCardProfile = async (userId: string) => {
+    const profileImage: FetchProfileImageType = await fetchProfileImage({
+      userId,
+    });
+    !profileImage ? setIsProfile(null) : setIsProfile(profileImage);
+  };
+
   const debouncedFetchReactionList = debounce(fetchReactionList, 300);
   const debouncedFetchReactionCount = debounce(fetchReactionCount, 300);
+  const debouncedFetchCardProfile = debounce(fetchCardProfile, 300);
 
   useEffect(() => {
-    debouncedFetchReactionList(id);
-    debouncedFetchReactionCount(id);
+    const startFunc = async () => {
+      await debouncedFetchReactionList(id);
+      await debouncedFetchReactionCount(id);
+      await debouncedFetchCardProfile(userId);
+    };
+    startFunc();
+
     const temp = extractTextFromHTML(content[0]);
     setShareContent(temp);
   }, []);
@@ -209,7 +222,7 @@ const Card = ({
       >
         {/* Card Image */}
         <LogoContainer>
-          <LogoImg src={logo} />
+          <LogoImg src={isProfile ? isProfile : logo} />
           <NicknameWrapper
             onClick={() => navigate(`/users/inquiry?nickname=${nickname}`)}
           >
@@ -225,21 +238,32 @@ const Card = ({
             <TextContainer>
               {content?.map((co, index) => {
                 return (
-                  <div
+                  <Contentwrapper
                     key={`${id}-${index}`}
-                    dangerouslySetInnerHTML={{ __html: sanitizeHtml(co) }}
+                    dangerouslySetInnerHTML={{ __html: safeHtml(co) }}
                   />
                 );
               })}
             </TextContainer>
           ) : type === 'MEDIA' ? (
             <MediaContainer>
-              {content.map((image, index) => (
-                <ImagePreview
-                  key={`${id}-${index}`}
-                  src={image}
-                  alt={`Preview image ${index}`}
-                />
+              {content.map((url, index) => (
+                <>
+                {isMediaType(url,'image') ?
+                <Image
+                key={`${id}-${index}`}
+                src={url}
+                alt={`Preview image ${index}`}/> :
+                <Video
+                  key={index}
+                  controls
+                  preload="metadata"
+                >
+                  <source src={url} />
+                </Video>}
+
+                </>
+
               ))}
             </MediaContainer>
           ) : (
@@ -297,22 +321,24 @@ const Card = ({
           </CommentWrapper>
 
           {/* 공유 */}
-          <ShareComponent
-            shareCount={shareCount}
-            title={title}
-            content={content}
-            id={id}
-          />
+          <ShareWrapper>
+            <ShareComponent
+              shareCount={shareCount}
+              title={title}
+              content={content}
+              id={id}
+            />
+          </ShareWrapper>
 
-          <ScirpWrapper>
-            <ScripButton
-              isHovered={isCardSendHovered}
-              onMouseEnter={() => setIsCardSendHovered(true)}
-              onMouseLeave={() => setIsCardSendHovered(false)}
-            >
-              보내기
-            </ScripButton>
-          </ScirpWrapper>
+          {/*<ScirpWrapper>*/}
+          {/*  <ScripButton*/}
+          {/*    isHovered={isCardSendHovered}*/}
+          {/*    onMouseEnter={() => setIsCardSendHovered(true)}*/}
+          {/*    onMouseLeave={() => setIsCardSendHovered(false)}*/}
+          {/*  >*/}
+          {/*    보내기*/}
+          {/*  </ScripButton>*/}
+          {/*</ScirpWrapper>*/}
           {/*<div*/}
           {/*  style={{*/}
           {/*    marginLeft: "auto", // 자동 여백을 사용하여 오른쪽 정렬*/}
@@ -345,8 +371,8 @@ const Card = ({
 const CardContainer = styled.div.withConfig({
   shouldForwardProp: (prop) => !['isHovered', 'modalState'].includes(prop),
 })<{
-  isHovered: boolean;
-  modalState: boolean;
+  readonly isHovered: boolean;
+  readonly modalState: boolean;
 }>`
   display: flex;
   flex-direction: column;
@@ -354,14 +380,16 @@ const CardContainer = styled.div.withConfig({
   align-items: flex-start;
   width: 100%;
   height: 100%;
-  max-height: 100vh;
-  max-width: 600px;
-  margin: 10px;
+  max-height: 1000vh;
   cursor: pointer;
+  padding: 0 15px;
   background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
   position: relative;
+  object-fit: contain;
+  box-sizing: border-box;
+  border-radius: 30px;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${breakpoints.mobile}) {
     margin: 0;
   }
 `;
@@ -373,12 +401,11 @@ const MediaContainer = styled.div`
   background: #606060;
   text-align: center;
   border: 2px solid darkgray;
-  //object-fit: contain;
   border-radius: 20px;
   margin: 10px auto;
 `;
 
-const ImagePreview = styled.img`
+const Image = styled.img`
   max-width: 700px;
   max-height: 400px;
   width: 100%;
@@ -387,6 +414,16 @@ const ImagePreview = styled.img`
   display: block;
   object-fit: contain;
 `;
+
+const Video = styled.video`
+  max-width: 700px;
+  max-height: 400px;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  display: block;
+  object-fit: contain;
+`
 
 const LogoContainer = styled.div`
   display: flex;
@@ -427,6 +464,18 @@ const TextContainer = styled.div`
   width: 100%;
 `;
 
+const Contentwrapper = styled.div`
+  max-width: 100% !important;
+  max-height: 100% !important;
+
+  img {
+    max-width: 70% !important;
+    max-height: 450px !important;
+    height: auto !important;
+    display: block !important;
+  }
+`;
+
 const VideoContainer = styled.div`
   border-radius: 20px;
   overflow: hidden;
@@ -435,7 +484,7 @@ const VideoContainer = styled.div`
 const ButtonContainer = styled.div.withConfig({
   shouldForwardProp: (prop) => prop !== 'modalState',
 })<{
-  modalState: boolean;
+  readonly modalState: boolean;
 }>`
   display: flex;
   justify-content: flex-start;
@@ -444,7 +493,6 @@ const ButtonContainer = styled.div.withConfig({
   max-width: 800px;
   height: 100%;
   margin-top: 5px;
-  height: 100%;
   max-height: 80px;
 `;
 
@@ -457,16 +505,16 @@ const ReactionWrapper = styled.div`
   justify-content: center;
   align-items: center;
 
-  @media (max-width: 768px) {
-    width: 120px;
+  @media (max-width: ${breakpoints.mobile}) {
+    max-width: 130px;
   }
 `;
 
 const LikeButton = styled.button.withConfig({
   shouldForwardProp: (prop) => !['isLiked', 'isHovered'].includes(prop),
 })<{
-  isLiked: boolean;
-  isHovered: boolean;
+  readonly isLiked: boolean;
+  readonly isHovered: boolean;
 }>`
   border: ${(props) => (props.isLiked ? '2px solid blue' : '1px solid gray')};
   background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
@@ -475,8 +523,8 @@ const LikeButton = styled.button.withConfig({
   border-radius: 30px;
   cursor: pointer;
 
-  @media (max-width: 768px) {
-    width: 50px;
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 60px;
     height: 40px;
     font-size: 10px;
   }
@@ -487,16 +535,17 @@ const ReactionCount = styled.span`
   width: 10px;
   height: 10px;
 
-  @media (max-width: 768px) {
-    margin: 5px;
+  @media (max-width: ${breakpoints.mobile}) {
+    margin: 3px;
+    text-align: center;
   }
 `;
 
 const DisLikeButton = styled.button.withConfig({
   shouldForwardProp: (prop) => !['isDisliked', 'isHovered'].includes(prop),
 })<{
-  isDisliked: boolean;
-  isHovered: boolean;
+  readonly isDisliked: boolean;
+  readonly isHovered: boolean;
 }>`
   border: ${(props) => (props.isDisliked ? '1px solid red' : '1px solid gray')};
   background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
@@ -505,8 +554,8 @@ const DisLikeButton = styled.button.withConfig({
   border-radius: 30px;
   cursor: pointer;
 
-  @media (max-width: 768px) {
-    width: 50px;
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 60px;
     height: 40px;
     font-size: 10px;
   }
@@ -519,7 +568,7 @@ const CommentWrapper = styled.div`
   justify-content: center;
   align-items: center;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${breakpoints.mobile}) {
     width: 45px;
     margin-right: 7px;
   }
@@ -528,7 +577,7 @@ const CommentWrapper = styled.div`
 const CommentButton = styled.button.withConfig({
   shouldForwardProp: (prop) => prop !== 'isHovered',
 })<{
-  isHovered: boolean;
+  readonly isHovered: boolean;
 }>`
   border: 1px solid gray;
   background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
@@ -537,15 +586,23 @@ const CommentButton = styled.button.withConfig({
   border-radius: 30px;
   cursor: pointer;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${breakpoints.mobile}) {
     width: 45px;
     height: 40px;
     font-size: 10px;
   }
 `;
 
+const ShareWrapper = styled.div`
+  width: 45px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 5px;
+`;
+
 const ScirpWrapper = styled.div`
-  margin-left: -7px;
   border-radius: 30px;
   width: 75px;
   height: 40px;
@@ -553,15 +610,15 @@ const ScirpWrapper = styled.div`
   justify-content: center;
   align-items: center;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${breakpoints.mobile}) {
     margin-left: 0px;
   }
 `;
 
 const ScripButton = styled.button.withConfig({
-  shouldForwardProp: (prop) => prop !== 'isHovered', // isHovered를 DOM에 전달하지 않음
+  shouldForwardProp: (prop) => prop !== 'isHovered',
 })<{
-  isHovered: boolean; // isHovered 타입 정의
+  readonly isHovered: boolean;
 }>`
   display: flex;
   align-items: center;
@@ -573,7 +630,7 @@ const ScripButton = styled.button.withConfig({
   border-radius: 30px;
   cursor: pointer;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${breakpoints.mobile}) {
     width: 65px;
     height: 40px;
     font-size: 10px;
@@ -586,7 +643,6 @@ const HrTag = styled.hr`
   background-color: #f0f0f0;
   margin: 5px 0;
   width: 100%;
-  max-width: 600px;
 `;
 
 export default Card;

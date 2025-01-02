@@ -12,6 +12,7 @@ import BoardComment, { CommentType } from './BoardComment';
 import BoardReply, { ReplyType } from './BoardReply';
 import { useLocation } from 'react-router-dom';
 import { LogViewedBoardAPI } from '../api/viewedBoardsApi';
+import { breakpoints } from '../../_common/breakpoint';
 
 const BoardRead = () => {
   const useQuery = () => {
@@ -20,8 +21,8 @@ const BoardRead = () => {
   };
 
   const query = useQuery();
-  const ID = query.get('id') as string;
-  const userId: string = localStorage.getItem('id') as string;
+  const ID: string = query.get('id') as string;
+  const USER_Id: string = localStorage.getItem('id') as string;
 
   const [isBoardState, setIsBoardStateBoard] = useState<CardType>({
     id: ID,
@@ -44,6 +45,7 @@ const BoardRead = () => {
       const commentRes = await CommentListAPI({ boardId: ID });
       if (!commentRes) return;
       const commentResponse = commentRes.data.response;
+      
       setIsCommentState([...commentResponse]);
       const res = await BoardReadAPI({
         id: ID,
@@ -51,12 +53,15 @@ const BoardRead = () => {
 
       if (!res) return;
       const response = res.data.response;
+
       setIsBoardStateBoard(response);
 
-      await LogViewedBoardAPI({
-        userId: response.user_id,
+      const logViewBoard = await LogViewedBoardAPI({
+        userId: USER_Id,
         boardId: response.id,
       });
+      if (!logViewBoard) return;
+      const resLogViewBoard = logViewBoard.data.response;
     };
 
     readBoard();
@@ -66,7 +71,7 @@ const BoardRead = () => {
     boardId: ID,
     content: '',
     nickname: (localStorage.getItem('nickname') as string) || '',
-    userId: userId || '',
+    userId: USER_Id || '',
   });
 
   const commentHandleChange = (event: CollectionTypes) => {
@@ -108,7 +113,17 @@ const BoardRead = () => {
     return (
       <RepliesContainer>
         {replies.map((re: ReplyType) => (
-          <BoardReply key={re.id} {...re} />
+          <BoardReply
+            key={re.id}
+            id={re.id}
+            comment_id={re.comment_id}
+            user_id={re.user_id}
+            content={re.content}
+            nickname={re.nickname}
+            created_at={re.created_at}
+            updated_at={re.updated_at}
+            deleted_at={re.deleted_at}
+          />
         ))}
       </RepliesContainer>
     );
@@ -158,6 +173,7 @@ const BoardRead = () => {
             content={isBoardState.content}
             type={isBoardState.type}
             shareCount={isBoardState.share_count}
+            userId={isBoardState.user_id}
           />
         )}
         <CommentSection>
@@ -173,8 +189,8 @@ const BoardRead = () => {
             }
           />
           <ButtonGroup>
-            <CancelButton>Cancel</CancelButton>
-            <CommentButton onClick={commentWrite}>Comment</CommentButton>
+            <CancelButton>취소</CancelButton>
+            <CommentButton onClick={commentWrite}>댓글</CommentButton>
           </ButtonGroup>
         </CommentSection>
         {isCommentState?.length > 0 ? renderComments(isCommentState) : null}
@@ -188,23 +204,25 @@ export default BoardRead;
 const BoardReadContainer = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
   width: 100%;
-  align-items: flex-start;
   height: auto;
-
+  box-sizing: border-box;
   overflow-x: hidden;
 `;
 
 const CardContainer = styled.div`
-  flex: 1;
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
+  max-width: 600px;
+  width: 100%;
   height: auto;
+  box-sizing: border-box;
 
-  @media (max-width: 768px) {
-    max-width: 95%;
+  @media (max-width: ${breakpoints.mobile}) {
+    max-width: 100%;
   }
 `;
 
@@ -212,15 +230,14 @@ const CommentSection = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 560px;
-  margin: 10px;
+  max-width: 600px;
   border: 3px solid #ccc;
   border-radius: 30px;
-  padding: 10px;
+  padding: 5px 15px;
+  box-sizing: border-box;
 
-  @media (max-width: 767px) {
-    max-width: 450px;
-    margin: 10px 0px;
+  @media (max-width: ${breakpoints.mobile}) {
+    max-width: 95%;
   }
 `;
 
@@ -262,19 +279,11 @@ const CommentButton = styled.button`
 `;
 
 const CommentsContainer = styled.div`
-  margin-top: 20px;
+  margin-top: 10px;
   width: 100%;
-  max-width: 560px;
-
-  @media (max-width: 767px) {
-    max-width: 450px;
-    margin: 10px 0px;
-  }
 `;
 
-const CommentContainer = styled.div`
-  margin-bottom: 15px;
-`;
+const CommentContainer = styled.div``;
 
 const RepliesWrapper = styled.div`
   margin-left: 40px;
@@ -282,4 +291,5 @@ const RepliesWrapper = styled.div`
 
 const RepliesContainer = styled.div`
   margin-top: 10px;
+  padding: 0 15px;
 `;

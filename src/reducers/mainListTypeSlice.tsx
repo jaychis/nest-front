@@ -2,19 +2,33 @@ import { MainListTypes } from '../_common/collectionTypes';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface MainListTypeState {
-  buttonType: MainListTypes;
+  readonly buttonType: MainListTypes;
 }
 
-const initialState: MainListTypeState = {
-  buttonType: 'HOME',
+export interface HamburgerState {
+  readonly hamburgerState: boolean;
+}
+
+const initialState = {
+  buttonType: 'HOME' as MainListTypes,
+  hamburgerState: false,
 };
 
 export const sideButtonSlice = createSlice({
   name: 'sideBarButton',
   initialState,
   reducers: {
-    setButtonType: (state, action: PayloadAction<MainListTypes>) => {
-      state.buttonType = action.payload;
+    setButtonType: (state, action: PayloadAction<MainListTypeState>) => {
+      state.buttonType = action.payload.buttonType;
+    },
+    buttonType: (state, action: PayloadAction<MainListTypeState>) => {
+      state.buttonType = action.payload.buttonType;
+    },
+    setHamburgerState: (state, action: PayloadAction<HamburgerState>) => {
+      state.hamburgerState = action.payload.hamburgerState;
+    },
+    hamburgerState: (state, action: PayloadAction<HamburgerState>) => {
+      state.hamburgerState = action.payload.hamburgerState;
     },
   },
 });

@@ -6,6 +6,7 @@ import instagram from '../assets/img/instagram.png';
 import twitter from '../assets/img/twitter.png';
 import facebook from '../assets/img/facebook.png';
 import copy from '../assets/img/copy.png';
+import { breakpoints } from '../_common/breakpoint';
 
 interface ShareProps {
   readonly shareCount: number;
@@ -21,7 +22,6 @@ const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
   const kakaoApiKey = process.env.REACT_APP_KAKAO_API_KEY;
 
   React.useEffect(() => {
-
     if (window.Kakao && !window.Kakao.isInitialized()) {
       window.Kakao.init(kakaoApiKey);
     }
@@ -136,7 +136,7 @@ const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
               src="https://img.icons8.com/ios/50/forward-arrow.png"
               alt="Share Icon"
             />
-            <ShareCountTag>{shareCount}</ShareCountTag>
+            {/*<ShareCountTag>{shareCount}</ShareCountTag>*/}
           </ShareButton>
           {active && (
             <DropdownMenu>
@@ -221,27 +221,32 @@ const DropdownItem = styled.a`
 `;
 
 const ShareWrapper = styled.div`
-  width: 15%;
-  height: 40px;
+  height: 100%;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
-
 `;
 
 const ShareIcon = styled.img`
-  width: 30px !important;
+  width: 40px !important;
   height: 30px !important;
   object-fit: contain !important;
   border-radius: 45% !important;
-  margin-right: 10px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 30px !important;
+    height: 18px !important;
+    object-fit: contain !important;
+    border-radius: 45% !important;
+  }
 `;
 
 const ShareButton = styled.button.withConfig({
   shouldForwardProp: (prop) => prop !== 'isHovered',
 })<{
-  isHovered: boolean;
+  readonly isHovered: boolean;
 }>`
   display: flex;
   align-items: center;
@@ -249,24 +254,20 @@ const ShareButton = styled.button.withConfig({
   gap: 8px;
   background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
   border: 1px solid gray;
-  height: 40px;
-  width: 80px;
+  height: 100%;
+  width: 100%;
   border-radius: 30px;
-  margin-left: -7px;
   cursor: pointer;
 
-  @media (max-width: 768px) {
-    width: 65px;
-    height: 40px;
+  object-fit: cover;
+  @media (max-width: ${breakpoints.mobile}) {
     font-size: 10px;
-    margin-left: 5px;
-    margin-right: 7px;
   }
 `;
 
 const ShareImageTag = styled.img`
-  height: 20px;
-  width: 23px;
+  height: 100%;
+  width: 100%;
 `;
 
 const ShareCountTag = styled.p`

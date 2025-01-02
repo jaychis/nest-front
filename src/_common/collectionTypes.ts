@@ -3,11 +3,25 @@ export interface CollectionTypes {
   readonly value: string;
 }
 
-export type MainListTypes = 'HOME' | 'POPULAR' | 'TAGMATCH' | 'FREQUENTSHARE';
+export type MainListTypes =
+  | 'HOME'
+  | 'POPULAR'
+  | 'TAGMATCH'
+  | 'FREQUENTSHARE'
+  | 'ALL';
 
 export type ReactionStateTypes = 'LIKE' | 'DISLIKE' | null;
 
 export type BoardType = 'TEXT' | 'LINK' | 'MEDIA' | 'YOUTUBE';
+
+export interface UsersProfileType {
+  readonly id: string;
+  readonly user_id: string;
+  readonly profile_image: string | null;
+  readonly created_at: Date;
+  readonly updated_at: Date;
+  readonly deleted_at: Date | null;
+}
 
 export interface UserType {
   readonly id: string;
@@ -19,13 +33,14 @@ export interface UserType {
   readonly created_at: Date;
   readonly updated_at: Date;
   readonly deleted_at: Date | null;
+  readonly users_profile: UsersProfileType[];
 }
 
 export interface TagType {
   readonly id: string;
   readonly name: string;
-  readonly communitiesTags?: any[]; 
-};
+  readonly communitiesTags?: any[];
+}
 
 export interface CommunityType {
   readonly id: string;
@@ -71,6 +86,7 @@ export interface BoardProps {
   readonly createdAt: Date;
   readonly type: BoardType;
   readonly shareCount: number;
+  readonly userId: string;
 }
 
 export interface InquiryType {
@@ -82,7 +98,5 @@ export interface InquiryType {
   readonly title: string;
   readonly update_at: Date;
 }
-
-
 
 export type CommunityVisibilityType = 'PUBLIC' | 'RESTRICTED' | 'PRIVATE';

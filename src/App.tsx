@@ -16,34 +16,73 @@ import CommunityCreatePage2 from './pages/Board/CommunityCreate/CommunityCreateP
 import CommunityCreatePage3 from './pages/Board/CommunityCreate/CommunityCreatePage3';
 import { CommunityProvider } from './contexts/CommunityContext';
 import AdminList from './pages/Admin/AdminList';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+import { useSelector } from 'react-redux';
+import { RootState } from './store/store';
+import SearchMobile from './pages/Search/SearchMobile';
+import { breakpoints } from './_common/breakpoint';
+import MobilePrivacyPolicyPage from './components/MobilePrivacyPolicyPage';
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+const Layout = ({ children }: { readonly children: React.ReactNode }) => {
+  const { hamburgerState } = useSelector(
+    (state: RootState) => state.sideBarButton,
+  );
   const LayoutContainer = styled.div`
     display: flex;
     width: 100%;
-    //min-height: 100vh;
     height: 100%;
   `;
 
-  const GlobalSideBarContainer = styled.div`
-    width: 200px;
+  const slideIn = keyframes`
+        from {
+            transform: translateX(-200px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    `;
 
-    @media (max-width: 767px) {
-      width: 0px;
+  const slideOut = keyframes`
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(-200px);
+            opacity: 0;
+        }
+    `;
+
+  const GlobalSideBarContainer = styled.div<{ readonly isOpen: boolean }>`
+    width: 200px;
+    height: 100%;
+    position: fixed;
+
+    @media (max-width: ${breakpoints.mobile}) {
+      left: ${(props) => (props.isOpen ? '0' : '-200px')};
+      z-index: 50;
+      overflow: visible;
+      animation: ${({ isOpen }) => (isOpen ? slideIn : slideOut)} 0.25s forwards;
+
+      // visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
+      opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
+      transition:
+        opacity 0.5s,
+        visibility 0.5s;
     }
   `;
 
   const MainContent = styled.div`
     flex: 1;
-    margin-top: 80px;
+    margin: 80px 0 0 200px;
     padding-top: 10px;
     overflow: auto;
 
-    @media (max-width: 767px) {
-      margin-left: 0;
-      max-width: 600px;
-      padding-top: 10px;
+    @media (max-width: ${breakpoints.mobile}) {
+      margin: 80px 0 0 0;
+      max-width: 100%;
     }
   `;
 
@@ -51,7 +90,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     <>
       <GlobalBar />
       <LayoutContainer>
-        <GlobalSideBarContainer>
+        <GlobalSideBarContainer isOpen={hamburgerState}>
           <GlobalSideBar />
         </GlobalSideBarContainer>
         <MainContent>{children}</MainContent>
@@ -144,7 +183,13 @@ function App() {
             {/*어드민*/}
             <Route path={'/admin/list'} element={<AdminList />} />
 
-            {/* 새 라우터 */}
+            {/* 모바일 검색화면*/}
+            <Route path={'/Searchmobile'} element={<SearchMobile />} />
+
+            <Route
+              path={'/privacy-policy/mobile'}
+              element={<MobilePrivacyPolicyPage />}
+            />
           </Routes>
         </CommunityProvider>
       </Router>

@@ -11,21 +11,6 @@ export const KakaoOAuthLoginAPI = async (param: KakaoOAuthLoginParam) => {
     const URL: string = `${OAUTH_URL}/kakao/callback`;
 
     const res = await client.post(URL, param);
-    console.log('UsersKakaoOAuthRedirectAPI res : ', res);
-
-    return res;
-  } catch (e: any) {
-    errorHandling({ text: 'UsersKakaoOAuthRedirectAPI', error: e });
-  }
-};
-
-export const UsersKakaoOAuthLoginAPI = async () => {
-  try {
-    // const URL: string = `${OAUTH_URL}/kakao/callback?code=${code}`;
-    const URL: string = `${OAUTH_URL}/kakao/login`;
-
-    const res = await client.get(URL);
-    console.log('UsersKakaoOAuthRedirectAPI res : ', res);
 
     return res;
   } catch (e: any) {
@@ -38,7 +23,6 @@ export const UsersKakaoOAuthSignUpAPI = async () => {
     const URL: string = `${OAUTH_URL}/kakao`;
 
     const res = await client.get(URL);
-    console.log('UsersKakaoAuthSignUpAPI res : ', res);
 
     return res;
   } catch (e: any) {
@@ -51,7 +35,6 @@ export const UsersNaverOAuthSignUpAPI = async () => {
     const URL: string = `${OAUTH_URL}/naver`;
 
     const res = await client.get(URL);
-    console.log('UsersNaverOAuthSignUpAPI res : ', res);
 
     return res;
   } catch (e: any) {

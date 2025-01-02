@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   BoardListAPI,
   BoardPopularListAPI,
+  BoardRecentListAPI,
   BoardShareListAPI,
   BoardTagsRelatedAPI,
 } from '../api/boardApi';
@@ -14,6 +15,7 @@ import EmptyState from '../../components/EmptyState';
 import { useInView } from 'react-intersection-observer';
 import CommunityBanner from './CommunityBanner';
 import styled from 'styled-components';
+import { breakpoints } from '../../_common/breakpoint';
 
 const BoardList = () => {
   interface AllListParams {
@@ -23,7 +25,6 @@ const BoardList = () => {
   type IdType = null | string;
 
   const [list, setList] = useState<CardType[]>([]);
-  const [loading, setLoading] = useState<boolean>(false); // Move useState inside the component
   const TAKE: number = 5;
   const { buttonType }: MainListTypeState = useSelector(
     (state: RootState) => state.sideBarButton,
@@ -61,6 +62,7 @@ const BoardList = () => {
             category: null,
           });
           break;
+
         case 'POPULAR':
           response = await BoardPopularListAPI({
             take: TAKE,
@@ -77,6 +79,7 @@ const BoardList = () => {
             userId: localStorage.getItem('id') as string,
           });
           break;
+
         case 'FREQUENTSHARE':
           response = await BoardShareListAPI({
             take: TAKE,
@@ -84,6 +87,15 @@ const BoardList = () => {
             category: null,
           });
           break;
+
+        case 'ALL':
+          response = await BoardRecentListAPI({
+            take: TAKE,
+            lastId: id,
+            category: null,
+          });
+          break;
+
         default:
           response = await BoardListAPI({
             take: TAKE,
@@ -114,7 +126,8 @@ const BoardList = () => {
         {buttonType !== 'HOME' &&
           buttonType !== 'POPULAR' &&
           buttonType !== 'TAGMATCH' &&
-          buttonType !== 'FREQUENTSHARE' && (
+          buttonType !== 'FREQUENTSHARE' &&
+          buttonType !== 'ALL' && (
             <>
               <CommunityBanner />
             </>
@@ -133,6 +146,7 @@ const BoardList = () => {
                     content={el.content}
                     type={el.type}
                     shareCount={el.share_count}
+                    userId={el.user_id}
                   />
                 </React.Fragment>
               );
@@ -154,12 +168,10 @@ const MainContainer = styled.div`
   justify-content: flex-start;
   width: 100%;
   box-sizing: border-box;
-  margin-left: 1%;
-  margin-top: 1%;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${breakpoints.mobile}) {
     margin-left: 0;
-    max-width: 600px;
+    max-width: 100%;
   }
 `;
 
@@ -168,9 +180,8 @@ const CardsContainer = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 800px; /* Set an appropriate max width */
+  max-width: 600px;
   box-sizing: border-box;
-  padding: 0 20px; /* Add left and right padding */
 `;
 
 const InvisibleRefContainer = styled.div`

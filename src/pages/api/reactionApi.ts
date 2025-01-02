@@ -1,17 +1,20 @@
 import { client } from './client';
+import { errorHandling } from '../../_common/errorHandling';
+
+const REACTIONS_URL: string = 'reactions';
 
 interface ReactionCountParams {
   readonly boardId: string;
 }
 export const ReactionCountAPI = async ({ boardId }: ReactionCountParams) =>
-  await client.get(`reactions?boardId=${boardId}`);
+  await client.get(`${REACTIONS_URL}?boardId=${boardId}`);
 
 interface ReactionListParams {
   readonly boardId: string;
 }
 
 export const ReactionListAPI = async ({ boardId }: ReactionListParams) =>
-  await client.get(`reactions/list?boardId=${boardId}`);
+  await client.get(`${REACTIONS_URL}/list?boardId=${boardId}`);
 
 export interface ReactionParams {
   readonly type: 'LIKE' | 'DISLIKE';
@@ -21,7 +24,11 @@ export interface ReactionParams {
 }
 
 export const ReactionApi = async (params: ReactionParams) => {
-  const response = await client.post('reactions', params);
+  try {
+    const response = await client.post(`${REACTIONS_URL}/`, params);
 
-  return response;
+    return response;
+  } catch (e: any) {
+    errorHandling({ text: 'ReactionApi', error: e });
+  }
 };

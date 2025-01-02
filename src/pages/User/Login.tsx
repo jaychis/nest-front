@@ -1,13 +1,11 @@
 import React, { MouseEventHandler, useEffect, useState } from 'react';
-
 import { CollectionTypes } from '../../_common/collectionTypes';
 import { isValidPasswordFormat } from '../../_common/passwordRegex';
 import { FaComment } from 'react-icons/fa';
 import Alert from '../../components/Alert';
 import { LoginAPI, LoginParams, RefreshTokenAPI } from '../api/userApi';
-import { KakaoOAuthLoginAPI, UsersNaverOAuthSignUpAPI } from '../api/oAuthApi';
+import { KakaoOAuthLoginAPI } from '../api/oAuthApi';
 import styled from 'styled-components';
-
 type modalType = 'login' | 'signup' | 'recovery' | 'verity';
 
 interface Props {
@@ -16,8 +14,6 @@ interface Props {
   readonly kakaoEmail: string;
   readonly setKakaoEmail: (state: string) => void;
 }
-type OAuthReturnType = 'NEW_USER' | 'EXITING_USER';
-
 const Login = ({
   onSwitchView,
   modalIsOpen,
@@ -30,7 +26,6 @@ const Login = ({
   });
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [showAlert, setShowAlert] = useState<boolean>(false);
-  const [errorModalVisible, setErrorModalVisible] = useState<boolean>(false); // State for ErrorModal
 
   const setLoginProcess = ({
     id,
@@ -99,7 +94,6 @@ const Login = ({
             localStorage.setItem('access_token', access_token);
             localStorage.setItem('refresh_token', refresh_token);
 
-            // Retry the original request
             const retryRes = await LoginAPI(login);
             const retryResponse = retryRes.data.response;
             const { id, nickname } = retryResponse;
@@ -135,42 +129,6 @@ const Login = ({
     }
   };
 
-  const naverOauthLogin = async () => {
-    console.log('naverOauthLogin check');
-    // alert("naverOauthLogin check");
-
-    const res = await UsersNaverOAuthSignUpAPI();
-    if (!res) return;
-
-    console.log('naverAuthLogin res : ', res);
-    const TYPE: OAuthReturnType = res.data.response.type;
-
-    if (TYPE === 'NEW_USER') {
-      // 이메일 가지고 있고, 회원가입시 해당 이메일이 회원가입창에 입력될 수 있도록
-      console.log(
-        ' res.data.response.profile.email : ',
-        res.data.response.profile.email,
-      );
-      const EMAIL: string = res.data.response.profile.email as string;
-      console.log('EMAIL : ', EMAIL);
-
-      // onSwitchView();
-    } else if (TYPE === 'EXITING_USER') {
-      const loginProfile = await UsersNaverOAuthSignUpAPI();
-      if (!loginProfile) return;
-      console.log('loginProfile : ', loginProfile);
-      const { id, nickname, access_token, refresh_token } =
-        loginProfile.data.response;
-
-      setLoginProcess({
-        id,
-        nickname,
-        access_token,
-        refresh_token,
-      });
-    }
-  };
-
   const KAKAO_CLIENT_ID = process.env.REACT_APP_KAKAO_CLIENT_ID as string;
 
   const env = process.env.REACT_APP_NODE_ENV as keyof typeof REDIRECT_URLS;
@@ -184,14 +142,6 @@ const Login = ({
     development: process.env.REACT_APP_KAKAO_TEST_REDIRECT_URL as string,
   };
   const REDIRECT_URI = REDIRECT_URLS[env] as string;
-
-  useEffect(() => {
-    console.log('KAKAO_CLIENT_ID : ', KAKAO_CLIENT_ID);
-    console.log('REDIRECT_URI : ', REDIRECT_URI);
-    console.log(
-      `process.env.REACT_APP_NODE_ENV ${process.env.REACT_APP_NODE_ENV}`,
-    );
-  });
 
   const goSignup = () => onSwitchView('signup');
 
@@ -221,7 +171,7 @@ const Login = ({
         if (code) {
           const response = await KakaoOAuthLoginAPI({ code });
           if (!response) return;
-
+          
           const {
             id,
             nickname,
@@ -249,15 +199,12 @@ const Login = ({
             localStorage.setItem('email', email);
             goSignup();
           }
-        } else {
-          alert('인증 코드가 없습니다. 다시 시도해 주세요.');
         }
       },
       { once: true },
     );
   };
 
-  // 리다이렉션 페이지에서 부모 창으로 데이터를 전달하는 useEffect
   useEffect(() => {
     if (window.opener) {
       const urlParams = new URLSearchParams(window.location.search);
@@ -274,10 +221,10 @@ const Login = ({
     <Container>
       {showAlert && (
         <Alert
-        message="로그인이 완료되었습니다."
-        onClose={() => setShowAlert(false)}
-        type="success"
-      />
+          message="로그인이 완료되었습니다."
+          onClose={() => setShowAlert(false)}
+          type="success"
+        />
       )}
       <div>
         <Header>
@@ -285,7 +232,11 @@ const Login = ({
         </Header>
 
         <SocialButtonsContainer>
-          <SocialButton onClick={kakaoOauthLogin}>
+          <SocialButton
+            onClick={() => {
+              kakaoOauthLogin();
+            }}
+          >
             <FaComment /> 카카오로 로그인
           </SocialButton>
         </SocialButtonsContainer>
@@ -350,14 +301,11 @@ const Container = styled.div`
   background-color: #fff;
   border-radius: 25px;
   padding: 20px;
-  min-width: 400px;
-  max-width: 600px;
-  width: 80%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  height: 400px;
+  z-index: 2001;
 `;
 
 const Header = styled.div`
@@ -466,6 +414,5 @@ const ErrorText = styled.div`
   margin-top: 10px;
   margin-bottom: 10px;
 `;
-
 
 export default Login;

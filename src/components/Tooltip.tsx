@@ -6,7 +6,12 @@ import styled from 'styled-components';
 const Tooltip = ({ image, title, content }: ToolTipProps) => {
   return (
     <TooltipContainer>
-      <Tippy content={content}>
+      <Tippy
+        content={content}
+        placement="right"
+        offset={[10, 0]}
+        interactive={true}
+      >
         <ContainerWrapper>
           <ImageContainer>{image}</ImageContainer>
           <TitleContainer>{title}</TitleContainer>

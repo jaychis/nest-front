@@ -37,7 +37,7 @@ const modalOverlay: CSSProperties = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  zIndex: 1000,
+  zIndex: 2010,
 };
 
 const modalContent: CSSProperties = {

@@ -14,23 +14,23 @@ import logo from '../../assets/img/panda_logo.png';
 import { CommunityListAPI } from '../api/communityApi';
 import Tooltip from '../../components/Tooltip';
 import styled from 'styled-components';
-
-interface HomeListProps {
-  selectedButton?: string;
-  isSideHovered: string | null;
-}
+import { breakpoints } from '../../_common/breakpoint';
+import AlertModal from '../../components/AlertModal';
 
 const GlobalSideBar = () => {
-  
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const modalState: UserModalState = useSelector(
     (state: RootState) => state.modalState,
   );
+  const { hamburgerState, buttonType } = useSelector(
+    (state: RootState) => state.sideBarButton,
+  );
   const [isSideHovered, setIsSideHovered] = useState<
     MainListTypes | 'CREATE_COMMUNITY' | null
   >(null);
-  const [selectedButton, setSelectedButton] = useState<MainListTypes>('HOME');
+  const [selectedButton, setSelectedButton] =
+    useState<MainListTypes>(buttonType);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const isLoggedIn = !!localStorage.getItem('access_token');
@@ -79,26 +79,33 @@ const GlobalSideBar = () => {
     setCommunityNamesSet(initialSet);
   }, [communityList]);
 
-  const handleClick = (button: MainListTypes) => {
-    if (button === 'TAGMATCH' && !(localStorage.getItem('id') as string)) {
-      alert('회원가입 유저에게 제공되는 기능입니다.');
+  interface CommunityClickType {
+    readonly button: MainListTypes;
+  }
+  const sendDispatchSideBtn = async ({ button }: CommunityClickType) => {
+    dispatch(sideButtonSliceActions.setButtonType({ buttonType: button }));
+    dispatch(
+      sideButtonSliceActions.setHamburgerState({ hamburgerState: false }),
+    );
+  };
 
-      return;
+  const handleClick = async (button: MainListTypes) => {
+    console.log('isSideHovered : ', isSideHovered);
+    if (button === 'TAGMATCH' && !(localStorage.getItem('id') as string)) {
+      return alert('회원가입 유저에게만 제공되는 기능입니다.');
     }
 
     setSelectedButton(button);
-    dispatch(sideButtonSliceActions.setButtonType(button));
+    await sendDispatchSideBtn({ button });
+    navigate('/');
   };
 
-  interface CommunityClickType {
-    button: MainListTypes;
-  }
-  const handleCommunityClick = (
+  const handleCommunityClick = async (
     { button }: CommunityClickType,
     index: number,
   ) => {
-    dispatch(sideButtonSliceActions.setButtonType(button));
     dispatch(setCommunity(communityList[index]));
+    await sendDispatchSideBtn({ button });
   };
 
   const handleLoadMore = () => {
@@ -114,132 +121,145 @@ const GlobalSideBar = () => {
   };
 
   return (
-    <GlobalSideBarContainer isModalOpen={modalState.modalState}>
-
-      <HomeList
-        selectedButton={selectedButton}
-        isSideHovered={isSideHovered}
-        onMouseEnter={() => setIsSideHovered('HOME')}
-        onMouseLeave={() => setIsSideHovered(null)}
-        onClick={() => handleClick('HOME')}
+    <>
+      <GlobalSideBarContainer
+        isModalOpen={modalState.modalState}
+        isOpen={hamburgerState}
       >
-      <Tooltip
-        image={'🏠'}
-        title={'홈'}
-        content={'사용자들이 좋아요를 많이 누른 랭킹순입니다.'}
-      />
-      </HomeList>
-
-      <MostCommentedList
-        selectedButton={selectedButton}
-        isSideHovered={isSideHovered}
-        onMouseEnter={() => setIsSideHovered('POPULAR')}
-        onMouseLeave={() => setIsSideHovered(null)}
-        onClick={() => handleClick('POPULAR')}
-      >
-        <Tooltip
-          image={'🔥'}
-          title={'실시간'}
-          content={'사용자들이 댓글을 많이 단 랭킹입니다.'}
-        />
-      </MostCommentedList>
-
-      <FrequentShareList
-        selectedButton={selectedButton}
-        isSideHovered={isSideHovered}
-        onMouseEnter={() => setIsSideHovered('FREQUENTSHARE')}
-        onMouseLeave={() => setIsSideHovered(null)}
-        onClick={() => handleClick('FREQUENTSHARE')}
-      >
-        <Tooltip
-          image={'🌐'}
-          title={'퍼주기'}
-          content={'사용자들이 많이 공유한 랭킹입니다.'}
-        />
-      </FrequentShareList>
-
-      <TagMatchList
-        selectedButton={selectedButton}
-        isSideHovered={isSideHovered}
-        onMouseEnter={() => setIsSideHovered('TAGMATCH')}
-        onMouseLeave={() => setIsSideHovered(null)}
-        onClick={() => handleClick('TAGMATCH')}
-      >
-        <Tooltip
-          image={'🌐'}
-          title={'내가 좋아할 글'}
-          content={'사용자가 좋아할 만한 태그를 가진 랭킹입니다.'}
-        />
-      </TagMatchList>
-      
-      <div style={{ fontWeight: 'bold', paddingLeft: '10px', fontSize: '1rem' }}>
-        RECENT
-      </div>
-      <div style={{ padding: '5px 0 10px 10px' }}>
-        <div
-          style={{ display: 'flex', alignItems: 'center', marginBottom: '6px' }}
+        <HomeList
+          selectedButton={selectedButton}
+          isSideHovered={isSideHovered}
+          onMouseEnter={() => setIsSideHovered('HOME')}
+          onMouseLeave={() => setIsSideHovered(null)}
+          onClick={() => handleClick('HOME')}
         >
-          <span style={{ fontSize: '1.3rem' }}>🇰🇷</span>
-          <span style={{ marginLeft: '6px', fontSize: '1rem' }}>r/korea</span>
-        </div>
-      </div>
-      
+          <Tooltip
+            image={'🏠'}
+            title={'홈'}
+            content={'사용자들이 좋아요를 많이 누른 랭킹순입니다.'}
+          />
+        </HomeList>
 
-      <CommunitySection>커뮤니티</CommunitySection>
+        <MostCommentedList
+          selectedButton={selectedButton}
+          isSideHovered={isSideHovered}
+          onMouseEnter={() => setIsSideHovered('POPULAR')}
+          onMouseLeave={() => setIsSideHovered(null)}
+          onClick={() => handleClick('POPULAR')}
+        >
+          <Tooltip
+            image={'🔥'}
+            title={'실시간'}
+            content={'사용자들이 댓글을 많이 단 랭킹입니다.'}
+          />
+        </MostCommentedList>
 
-      <CreateCommunityItem
-        isSideHovered={isSideHovered}
-        onMouseEnter={() => setIsSideHovered('CREATE_COMMUNITY')}
-        onMouseLeave={() => setIsSideHovered(null)}
-        onClick={handleCreateCommunityClick}
-      >
-        <span style={{ marginRight: '10px' }}>➕</span>
-        커뮤니티 만들기
-      </CreateCommunityItem>
+        <FrequentShareList
+          selectedButton={selectedButton}
+          isSideHovered={isSideHovered}
+          onMouseEnter={() => setIsSideHovered('FREQUENTSHARE')}
+          onMouseLeave={() => setIsSideHovered(null)}
+          onClick={() => handleClick('FREQUENTSHARE')}
+        >
+          <Tooltip
+            image={'🌍'}
+            title={'퍼주기'}
+            content={'사용자들이 많이 공유한 랭킹입니다.'}
+          />
+        </FrequentShareList>
 
-      <CommunityListContainer>
-        {communityList.length > 0
-          ? communityList
-              .slice(0, displayCount)
-              .map((community: SelectCommunityParams, index) => (
-                <CommunityItem key={community.id || index}>
-                  <CommunityIcon
-                    src={logo}
-                    alt={'community icon'}
-                    onClick={() =>
-                      handleCommunityClick(
-                        {button: community.name,} as CommunityClickType,index,
-                      )}
-                  />
-                  <CommunityName
-                    onClick={() =>
-                      handleCommunityClick(
-                        {
-                          button: community.name,
-                        } as CommunityClickType,
-                        index,
-                      )
-                    }
-                  >
-                    j/{community.name}
-                  </CommunityName>
-                </CommunityItem>
-              ))
-          : []}
+        <TagMatchList
+          selectedButton={selectedButton}
+          isSideHovered={isSideHovered}
+          onMouseEnter={() => setIsSideHovered('TAGMATCH')}
+          onMouseLeave={() => setIsSideHovered(null)}
+          onClick={() => handleClick('TAGMATCH')}
+        >
+          <Tooltip
+            image={'💖'}
+            title={'내가 좋아할 글'}
+            content={'사용자가 좋아할 만한 태그를 가진 랭킹입니다.'}
+          />
+        </TagMatchList>
 
-        {communityList.length > displayCount && (
-          <ButtonWrapper>
-            <ShowMoreButton 
-              onClick={handleLoadMore} 
-              disabled={loading} 
-              isLoading={loading}
-            >
-              {loading ? '로딩 중...' : '더 보기'}
-            </ShowMoreButton>
-          </ButtonWrapper>
-        )}
-      </CommunityListContainer>
-    </GlobalSideBarContainer>
+        <AllListSection
+          selectedButton={selectedButton}
+          isSideHovered={isSideHovered}
+          onMouseEnter={() => setIsSideHovered('ALL')}
+          onMouseLeave={() => setIsSideHovered(null)}
+          onClick={() => handleClick('ALL')}
+        >
+          <Tooltip
+            image="📚"
+            title="모든 리스트"
+            content="최신순으로 정렬된 랭킹입니다."
+          />
+        </AllListSection>
+
+        <RecentSection>RECENT</RecentSection>
+        <RecentItem>
+          <span>🇰🇷</span>
+          <span>r/korea</span>
+        </RecentItem>
+
+        <CommunitySection>커뮤니티</CommunitySection>
+
+        <CreateCommunityItem
+          isSideHovered={isSideHovered}
+          onMouseEnter={() => setIsSideHovered('CREATE_COMMUNITY')}
+          onMouseLeave={() => setIsSideHovered(null)}
+          onClick={handleCreateCommunityClick}
+        >
+          <span style={{ marginRight: '10px' }}>➕</span>
+          커뮤니티 만들기
+        </CreateCommunityItem>
+
+        <CommunityListContainer>
+          {communityList.length > 0
+            ? communityList
+                .slice(0, displayCount)
+                .map((community: SelectCommunityParams, index) => (
+                  <CommunityItem key={community.id || index}>
+                    <CommunityIcon
+                      src={logo}
+                      alt={'community icon'}
+                      onClick={() =>
+                        handleCommunityClick(
+                          { button: community.name } as CommunityClickType,
+                          index,
+                        )
+                      }
+                    />
+                    <CommunityName
+                      onClick={() =>
+                        handleCommunityClick(
+                          {
+                            button: community.name,
+                          } as CommunityClickType,
+                          index,
+                        )
+                      }
+                    >
+                      j/{community.name}
+                    </CommunityName>
+                  </CommunityItem>
+                ))
+            : []}
+
+          {communityList.length > displayCount && (
+            <ButtonWrapper>
+              <ShowMoreButton
+                onClick={handleLoadMore}
+                disabled={loading}
+                isLoading={loading}
+              >
+                {loading ? '로딩 중...' : '더 보기'}
+              </ShowMoreButton>
+            </ButtonWrapper>
+          )}
+        </CommunityListContainer>
+      </GlobalSideBarContainer>
+    </>
   );
 };
 
@@ -247,12 +267,12 @@ export default GlobalSideBar;
 
 const GlobalSideBarContainer = styled.div.withConfig({
   shouldForwardProp: (prop) => prop !== 'isModalOpen',
-})<{ isModalOpen: boolean }>`
+})<{ readonly isModalOpen: boolean; readonly isOpen: boolean }>`
   display: flex;
   flex-direction: column;
   width: 200px;
-  height: 100%; /* 전체 높이 */
-  overflow-y: auto; /* 필요한 경우 스크롤 */
+  height: 100%;
+  overflow: visible;
   background: #fff;
   margin-right: 10px;
   border-radius: 8px;
@@ -261,58 +281,68 @@ const GlobalSideBarContainer = styled.div.withConfig({
   border-top: none;
   margin-top: 90px;
   position: fixed;
-  z-index: ${({ isModalOpen }) => (isModalOpen ? -1 : 1000)};
+  z-index: 2001;
 
-  @media (max-width: 768px) {
-    display: none;
+  @media (max-width: ${breakpoints.mobile}) {
+    z-index: 1000;
+    position: fixed;
+    transition:
+      height 0.35s ease,
+      margin 0.35s ease,
+      width 0.35s ease;
   }
 `;
 
-const HomeList = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'selectedButton' && prop !== 'isSideHovered',
-})<HomeListProps>`
+const HomeList = styled.div<{
+  readonly selectedButton: string;
+  readonly isSideHovered: string | null;
+}>`
   padding: 6px 0;
   background-color: ${({ selectedButton, isSideHovered }) =>
     selectedButton === 'HOME' || isSideHovered === 'HOME'
       ? '#f0f0f0'
       : 'white'};
   border-radius: 5px;
+  cursor: pointer;
 `;
 
-const MostCommentedList = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'selectedButton' && prop !== 'isSideHovered',
-})<HomeListProps>`
+const MostCommentedList = styled.div<{
+  readonly selectedButton: string;
+  readonly isSideHovered: string | null;
+}>`
   padding: 6px 0;
   background-color: ${({ selectedButton, isSideHovered }) =>
     selectedButton === 'POPULAR' || isSideHovered === 'POPULAR'
       ? '#f0f0f0'
       : 'white'};
   border-radius: 5px;
-  margin: 1px;
+  cursor: pointer;
 `;
 
-const FrequentShareList = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'selectedButton' && prop !== 'isSideHovered',
-})<HomeListProps>`
+const FrequentShareList = styled.div<{
+  readonly selectedButton: string;
+  readonly isSideHovered: string | null;
+}>`
   padding: 6px 0;
   background-color: ${({ selectedButton, isSideHovered }) =>
     selectedButton === 'FREQUENTSHARE' || isSideHovered === 'FREQUENTSHARE'
       ? '#f0f0f0'
       : 'white'};
   border-radius: 5px;
-  margin: 1px;
+  cursor: pointer;
 `;
 
-const TagMatchList = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'selectedButton' && prop !== 'isSideHovered',
-})<HomeListProps>`
+const TagMatchList = styled.div<{
+  readonly selectedButton: string;
+  readonly isSideHovered: string | null;
+}>`
   padding: 6px 0;
   background-color: ${({ selectedButton, isSideHovered }) =>
     selectedButton === 'TAGMATCH' || isSideHovered === 'TAGMATCH'
       ? '#f0f0f0'
       : 'white'};
   border-radius: 5px;
-  margin: 1px;
+  cursor: pointer;
 `;
 
 const CommunitySection = styled.div`
@@ -321,11 +351,11 @@ const CommunitySection = styled.div`
   font-size: 14px;
 `;
 
-const CreateCommunityItem = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'isSideHovered',
-})<HomeListProps>`
+const CreateCommunityItem = styled.div<{
+  readonly isSideHovered: string | null;
+}>`
   display: flex;
-  align-items: center;
+  lign-items: center;
   padding: 8px 0;
   background-color: ${({ isSideHovered }) =>
     isSideHovered === 'CREATE_COMMUNITY' ? '#f0f0f0' : 'white'};
@@ -361,7 +391,7 @@ const CommunityName = styled.span`
 
 const ShowMoreButton = styled.button.withConfig({
   shouldForwardProp: (prop) => prop !== 'isLoading',
-})<{isLoading:boolean}>`
+})<{ readonly isLoading: boolean }>`
   padding: 8px 16px;
   border-radius: 5px;
   background-color: #0079d3;
@@ -379,4 +409,37 @@ const ButtonWrapper = styled.div`
   display: flex;
   justify-content: center;
   margin: 10px;
+`;
+
+const RecentSection = styled.div`
+  font-weight: bold;
+  padding-left: 10px;
+  font-size: 1rem;
+`;
+
+const RecentItem = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+  padding: 5px 0 10px 10px;
+
+  span {
+    font-size: 1.3rem;
+
+    &:nth-child(2) {
+      margin-left: 6px;
+      font-size: 1rem;
+    }
+  }
+`;
+
+const AllListSection = styled.div<{
+  readonly selectedButton: string;
+  readonly isSideHovered: string | null;
+}>`
+  padding: 6px 0;
+  background-color: ${({ selectedButton, isSideHovered }) =>
+    selectedButton === 'ALL' || isSideHovered === 'ALL' ? '#f0f0f0' : 'white'};
+  border-radius: 5px;
+  margin: 1px;
 `;

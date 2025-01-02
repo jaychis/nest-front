@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-
 import {
   CollectionTypes,
   ReactionStateTypes,
@@ -15,6 +14,12 @@ import {
 import logo from '../../assets/img/panda_logo.png';
 import { ReplyType } from './BoardReply';
 import { ReplySubmitAPI, ReplySubmitParams } from '../api/replyApi';
+import { breakpoints } from '../../_common/breakpoint';
+import { handleReaction } from '../../_common/handleUserReaction';
+import {
+  fetchProfileImage,
+  FetchProfileImageType,
+} from '../../_common/fetchCardProfile';
 
 export interface CommentType {
   readonly id: string;
@@ -29,44 +34,80 @@ export interface CommentType {
 }
 
 interface BoardCommentProps extends CommentType {
-  onReplySubmit: (reply: ReplyType) => void;
+  readonly onReplySubmit: (reply: ReplyType) => void;
 }
 
 const BoardComment = (co: BoardCommentProps) => {
   const [isHovered, setIsHovered] = useState<boolean>(false);
-  const [isCardCommentCount, setIsCardCommentCount] = useState<number>(0);
   const [isCardCommentUpHovered, setIsCardCommentUpHovered] =
     useState<boolean>(false);
   const [isCardCommentDownHovered, setIsCardCommentDownHovered] =
     useState<boolean>(false);
   const [isCardCommentReplyHovered, setIsCardCommentReplyHovered] =
     useState<boolean>(false);
-  const [isCommentReaction, setCommentIsReaction] =
-    useState<ReactionStateTypes>(null);
   const [isCommentReplyButton, setIsCommentReplyButton] =
     useState<boolean>(false);
-
   const USER_ID: string = localStorage.getItem('id') as string;
   const ID: string = co.id;
 
-  const reactionCommentButton = async (type: ReactionStateTypes) => {
-    if (type !== null) {
-      const param: ReactionParams = {
+  const [localCount, setLocalCount] = useState<number>(0);
+  const [isCommentReaction, setCommentIsReaction] =
+    useState<ReactionStateTypes>(null);
+  const [isCardCommentCount, setIsCardCommentCount] = useState<number>(0);
+
+  const reactionCommentButton = async (userReaction: ReactionStateTypes) => {
+    if (userReaction !== null) {
+      const params: ReactionParams = {
         boardId: ID,
         userId: USER_ID,
-        type,
+        type: userReaction,
         reactionTarget: 'COMMENT',
       };
 
-      ReactionApi(param)
-        .then((res) => {
-          const type = res.data.response?.type;
-          if (type === undefined) setCommentIsReaction(null);
-          else setCommentIsReaction(type);
-        })
-        .catch((err) => console.error(err));
+      try {
+        const res = await ReactionApi(params);
+        if (!res) return;
+
+        const status: number = res.status;
+        if (status === 201) {
+          await handleReaction({
+            localCount,
+            userReaction,
+            isReaction: isCommentReaction,
+            setIsReaction: setCommentIsReaction,
+            isCardCount: isCardCommentCount,
+            setIsCardCount: setIsCardCommentCount,
+          });
+        }
+      } catch (err) {
+        console.error(err);
+      }
     }
   };
+
+  const [isProfile, setIsProfile] = useState<string | null>(null);
+  const fetchCommentProfile = async ({
+    userId,
+  }: {
+    readonly userId: string;
+  }) => {
+    const profileImage: FetchProfileImageType = await fetchProfileImage({
+      userId,
+    });
+    !profileImage ? setIsProfile(null) : setIsProfile(profileImage);
+  };
+  useEffect(() => {
+    const startFunc = async () => {
+      await fetchCommentProfile({ userId: co.user_id });
+    };
+    startFunc();
+  }, [co.user_id]);
+
+  useEffect(() => {
+    if (localCount < 0) {
+      setLocalCount(0);
+    }
+  }, [localCount]);
 
   const [isReplyState, setIsReplyState] = useState<ReplyType>({
     id: '',
@@ -121,7 +162,10 @@ const BoardComment = (co: BoardCommentProps) => {
     ReactionCountAPI({ boardId: ID })
       .then((res) => {
         const resCount = res.data.response;
-        setIsCardCommentCount(resCount.count);
+
+        const count: number =
+          resCount.board_score < 0 ? 0 : resCount.board_score;
+        setIsCardCommentCount(count);
       })
       .catch((err) => console.error(err));
   }, [isCommentReaction]);
@@ -129,7 +173,10 @@ const BoardComment = (co: BoardCommentProps) => {
   return (
     <CommentContainer>
       <CommentHeader>
-        <Avatar src={logo} alt={`${co.nickname}'s avatar`} />
+        <Avatar
+          src={isProfile ? isProfile : logo}
+          alt={`${co.nickname}'s avatar`}
+        />
         <Nickname>{co.nickname}</Nickname>
       </CommentHeader>
 
@@ -142,33 +189,40 @@ const BoardComment = (co: BoardCommentProps) => {
       </CommentContent>
 
       <CommentActions>
-        <ActionButton
-          isActive={isCommentReaction === 'LIKE'}
-          onMouseEnter={() => setIsCardCommentUpHovered(true)}
-          onMouseLeave={() => setIsCardCommentUpHovered(false)}
-          onClick={() => reactionCommentButton('LIKE')}
-        >
-          좋아요
-        </ActionButton>
+        <ReactionWrapper>
+          <LikeButton
+            isLiked={isCommentReaction === 'LIKE'}
+            isHovered={isCardCommentUpHovered}
+            onMouseEnter={() => setIsCardCommentUpHovered(true)}
+            onMouseLeave={() => setIsCardCommentUpHovered(false)}
+            onClick={() => reactionCommentButton('LIKE')}
+          >
+            좋아요
+          </LikeButton>
 
-        <ReactionCount>{isCardCommentCount}</ReactionCount>
+          <ReactionCount>{isCardCommentCount}</ReactionCount>
 
-        <ActionButton
-          isActive={isCommentReaction === 'DISLIKE'}
-          onMouseEnter={() => setIsCardCommentDownHovered(true)}
-          onMouseLeave={() => setIsCardCommentDownHovered(false)}
-          onClick={() => reactionCommentButton('DISLIKE')}
-        >
-          싫어요
-        </ActionButton>
+          <DisLikeButton
+            isDisliked={isCommentReaction === 'DISLIKE'}
+            isHovered={isCardCommentDownHovered}
+            onMouseEnter={() => setIsCardCommentDownHovered(true)}
+            onMouseLeave={() => setIsCardCommentDownHovered(false)}
+            onClick={() => reactionCommentButton('DISLIKE')}
+          >
+            싫어요
+          </DisLikeButton>
+        </ReactionWrapper>
 
-        <ActionButton
-          onMouseEnter={() => setIsCardCommentReplyHovered(true)}
-          onMouseLeave={() => setIsCardCommentReplyHovered(false)}
-          onClick={() => setIsCommentReplyButton(!isCommentReplyButton)}
-        >
-          답글
-        </ActionButton>
+        <CommentWrapper>
+          <CommentButton
+            isHovered={isCardCommentReplyHovered}
+            onMouseEnter={() => setIsCardCommentReplyHovered(true)}
+            onMouseLeave={() => setIsCardCommentReplyHovered(false)}
+            onClick={() => setIsCommentReplyButton(!isCommentReplyButton)}
+          >
+            답글
+          </CommentButton>
+        </CommentWrapper>
       </CommentActions>
 
       {isCommentReplyButton && (
@@ -185,9 +239,9 @@ const BoardComment = (co: BoardCommentProps) => {
           />
           <ReplyActions>
             <CancelButton onClick={() => setIsCommentReplyButton(false)}>
-              Cancel
+              취소
             </CancelButton>
-            <SubmitButton onClick={replyWrite}>Comment</SubmitButton>
+            <SubmitButton onClick={replyWrite}>답글</SubmitButton>
           </ReplyActions>
         </ReplyBox>
       )}
@@ -201,8 +255,9 @@ const CommentContainer = styled.div`
   display: flex;
   flex-direction: column;
   font-family: Arial, sans-serif;
-  margin-bottom: 10px;
-  margin-right: 5%;
+  padding: 0 15px;
+  width: 100%;
+  white-space: pre-wrap;
 `;
 
 const CommentHeader = styled.div`
@@ -212,11 +267,13 @@ const CommentHeader = styled.div`
 const Avatar = styled.img`
   width: 40px;
   height: 40px;
-  border-radius: 30%;
+  border-radius: 50%;
   margin-right: 18px;
 `;
 
 const Nickname = styled.div`
+  display: flex;
+  align-items: center;
   font-weight: bold;
   color: #333;
 `;
@@ -225,8 +282,10 @@ const CommentContent = styled.div<{ isHovered: boolean }>`
   background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
   border-radius: 10px;
   padding: 8px;
-  width: 85%;
+  width: 100%;
   text-align: justify;
+  object-fit: contain;
+  box-sizing: border-box;
 `;
 
 const CommentActions = styled.div`
@@ -234,17 +293,41 @@ const CommentActions = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
   width: 100%;
-  margin-bottom: 10px;
+  margin: 5px 0;
 `;
 
-const ActionButton = styled.button<{ isActive?: boolean }>`
-  border: ${(props) => (props.isActive ? '2px solid blue' : '1px solid gray')};
-  background-color: ${(props) => (props.isActive ? '#c9c6c5' : '#f5f5f5')};
-  width: 65px;
-  height: 30px;
+const ReactionWrapper = styled.div`
+  margin-right: 5px;
+  border-radius: 30px;
+  width: 160px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 120px;
+  }
+`;
+
+const LikeButton = styled.button.withConfig({
+  shouldForwardProp: (prop) => !['isLiked', 'isHovered'].includes(prop),
+})<{
+  readonly isLiked: boolean;
+  readonly isHovered: boolean;
+}>`
+  border: ${(props) => (props.isLiked ? '2px solid blue' : '1px solid gray')};
+  background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
+  width: 100%;
+  height: 100%;
   border-radius: 30px;
   cursor: pointer;
-  margin-right: 10px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 50px;
+    height: 40px;
+    font-size: 10px;
+  }
 `;
 
 const ReactionCount = styled.span`
@@ -253,14 +336,34 @@ const ReactionCount = styled.span`
   height: 10px;
 `;
 
+const DisLikeButton = styled.button.withConfig({
+  shouldForwardProp: (prop) => !['isDisliked', 'isHovered'].includes(prop),
+})<{
+  readonly isDisliked: boolean;
+  readonly isHovered: boolean;
+}>`
+  border: ${(props) => (props.isDisliked ? '1px solid red' : '1px solid gray')};
+  background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
+  width: 100%;
+  height: 100%;
+  border-radius: 30px;
+  cursor: pointer;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 50px;
+    height: 40px;
+    font-size: 10px;
+  }
+`;
+
 const ReplyBox = styled.div`
   display: flex;
   flex-direction: column;
-  width: 80%;
-  margin: 10px;
+  width: 100%;
   border: 3px solid #ccc;
   border-radius: 30px;
   padding: 10px;
+  box-sizing: border-box;
 `;
 
 const ReplyTextarea = styled.textarea`
@@ -299,3 +402,37 @@ const SubmitButton = styled.button`
   background-color: #007bff;
   color: white;
 `;
+
+const CommentWrapper = styled.div`
+  width: 75px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 45px;
+    margin-right: 7px;
+  }
+`;
+
+const CommentButton = styled.button.withConfig({
+  shouldForwardProp: (prop) => prop !== 'isHovered',
+})<{
+  readonly isHovered: boolean;
+}>`
+  border: 1px solid gray;
+  background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
+  height: 100%;
+  width: 100%;
+  border-radius: 30px;
+  cursor: pointer;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 45px;
+    height: 40px;
+    font-size: 10px;
+  }
+`;
+
+

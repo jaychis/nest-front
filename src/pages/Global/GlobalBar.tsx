@@ -7,7 +7,7 @@ import logo from '../../assets/img/panda_logo.png';
 import ProfileModal from '../User/ProfileModal';
 import { AddSearchAPI } from '../api/searchApi';
 import NotificationModal from '../User/NotificationModal';
-import { searchQuery, setSearchResults } from '../../reducers/searchSlice';
+import { setSearchResults } from '../../reducers/searchSlice';
 import { RootState, AppDispatch } from '../../store/store';
 import debounce from 'lodash.debounce';
 import { UserModalState, setModalState } from '../../reducers/modalStateSlice';
@@ -15,6 +15,8 @@ import 'react-tooltip/dist/react-tooltip.css';
 import { Tooltip } from 'react-tooltip';
 import './GlobalBar.module.css';
 import styled from 'styled-components';
+import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
+import { breakpoints } from '../../_common/breakpoint';
 
 const GlobalBar = () => {
   const navigate = useNavigate();
@@ -37,6 +39,36 @@ const GlobalBar = () => {
     useState<boolean>(false);
   const userButtonRef = useRef<HTMLDivElement>(null);
   const bellButtonRef = useRef<HTMLDivElement>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+  const [isVisible, setIsVisible] = useState<boolean>(true);
+  const [lastScrollY, setLastScrollY] = useState<number>(0);
+
+  const handleScroll = () => {
+    const currentScrollY = window.scrollY;
+    if (currentScrollY > lastScrollY && currentScrollY > 30) {
+      // 화면을 내릴 때, 특정 위치(30px 이상)에서 Top Bar 숨김
+      setIsVisible(false);
+    } else {
+      // 화면을 올릴 때 Top Bar 표시
+      setIsVisible(true);
+    }
+    setLastScrollY(currentScrollY);
+  };
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [lastScrollY]);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+    dispatch(
+      sideButtonSliceActions.setHamburgerState({
+        hamburgerState: !isSidebarOpen,
+      }),
+    );
+  };
 
   const toggleProfileModal = () => {
     setIsProfileModalOpen(!isProfileModalOpen);
@@ -79,13 +111,13 @@ const GlobalBar = () => {
     setIsNotificationModalOpen(!isNotificationModalOpen);
   };
 
-  const handleAddTopic = (topic: string) => {
-    setSearchTerm(topic);
-    navigate(`/search/list?query=${topic}`);
-  };
-
   const handleLogoClick = () => {
     window.location.href = '/';
+  };
+
+  const handleDetectViewPort = () => {
+    const viewport = window.visualViewport;
+    if (viewport && viewport.width < 767) navigate('/SearchMobile');
   };
 
   useEffect(() => {
@@ -102,7 +134,13 @@ const GlobalBar = () => {
 
   return (
     <div>
-      <GlobalTopBar modalState={modalState.modalState}>
+      <GlobalTopBar isVisible={isVisible}>
+        <HamburgerMenu onClick={toggleSidebar}>
+          <Bar />
+          <Bar />
+          <Bar />
+        </HamburgerMenu>
+
         {/* Logo and Site Name */}
         <LogoWrapper
           logoHover={logoHover}
@@ -111,7 +149,7 @@ const GlobalBar = () => {
           onClick={handleLogoClick}
         >
           <LogoImage src={logo} alt="Logo" />
-          <SiteName>{'jaychis.com'}</SiteName>
+          <SiteName>{'제이치스'}</SiteName>
         </LogoWrapper>
 
         {/* Search Bar */}
@@ -122,9 +160,10 @@ const GlobalBar = () => {
             value={searchTerm}
             name={'search'}
             onChange={(e) => handleSearchChange(e)}
-            onKeyDown={handleKeyDown} // 엔터 키 이벤트 추가
+            onKeyDown={handleKeyDown}
+            onClick={handleDetectViewPort}
           />
-          <SearchIcon onClick={clickSearch} />
+          <SearchIcon onClick={handleDetectViewPort} />
         </SearchContainer>
 
         {/* Navigation Icons */}
@@ -211,11 +250,10 @@ const GlobalBar = () => {
 
 export default GlobalBar;
 
-const GlobalTopBar = styled.nav.withConfig({
-  shouldForwardProp: (prop) => prop !== 'modalState',
-})<{
-  modalState: boolean;
-}>`
+interface TopBarProps {
+  readonly isVisible: boolean;
+}
+const GlobalTopBar = styled.nav<TopBarProps>`
   position: fixed;
   display: flex;
   justify-content: space-between;
@@ -224,19 +262,49 @@ const GlobalTopBar = styled.nav.withConfig({
   padding: 0.625rem;
   border: 2px solid #d3d3d3;
   width: 100%;
-  z-index: ${(props) => (props.modalState ? -1 : 2000)};
+  z-index: 2001;
+  box-sizing: border-box;
+
+  transform: translateY(0);
+  transition: transform 0.27s ease-in-out;
+  @media (max-width: ${breakpoints.mobile}) {
+    transform: ${({ isVisible }) =>
+      isVisible ? 'translateY(0)' : 'translateY(-100%)'};
+  }
+`;
+
+const HamburgerMenu = styled.div`
+  @media (max-width: ${breakpoints.mobile}) {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    span {
+      width: 30px;
+      height: 3px;
+      background-color: black;
+      margin: 5px 0;
+    }
+  }
+`;
+
+const Bar = styled.span`
+  display: block;
+  width: 100%;
+  height: 3px;
+  background-color: black;
+  border-radius: 3px;
 `;
 
 const LogoWrapper = styled.div.withConfig({
   shouldForwardProp: (prop) => prop !== 'logoHover',
 })<{
-  logoHover: boolean;
+  readonly logoHover: boolean;
 }>`
   display: flex;
   align-items: center;
   background: ${(props) => (props.logoHover ? '#D3D3D3' : 'transparent')};
   border-radius: 25px;
-  padding: 0.625rem; /* 10px을 rem으로 변환 */
+  padding: 0.625rem;
   cursor: pointer;
 `;
 
@@ -245,9 +313,9 @@ const LogoImage = styled.img`
 `;
 
 const SiteName = styled.span`
-  margin-left: 0.625rem; /* 10px을 rem으로 변환 */
+  margin-left: 0.625rem;
 
-  @media (max-width: 644px) {
+  @media (max-width: ${breakpoints.mobile}) {
     display: none;
   }
 `;
@@ -258,7 +326,14 @@ const SearchContainer = styled.div`
   margin-right: 20px;
   display: flex;
   justify-content: center;
-  position: relative; /
+  position: relative;
+  display: flex;
+  width: 10px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    margin: 0 0 0 0;
+    justify-content: flex-end;
+  }
 `;
 
 const SearchInput = styled.input`
@@ -267,8 +342,8 @@ const SearchInput = styled.input`
   border-radius: 20px;
   border: 1px solid #ccc;
 
-  @media (max-width: 644px) {
-    width: 100%;
+  @media (max-width: ${breakpoints.mobile}) {
+    display: none;
   }
 `;
 
@@ -278,12 +353,16 @@ const SearchIcon = styled(FaSistrix)`
   height: 30px;
   margin-top: 5px;
   cursor: pointer;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    margin: 0 5px 5px 0;
+  }
 `;
 
 const ProfileButton = styled.div.withConfig({
   shouldForwardProp: (prop) => prop !== 'userHover',
 })<{
-  userHover: boolean;
+  readonly userHover: boolean;
 }>`
   display: flex;
   align-items: center;
@@ -294,7 +373,7 @@ const ProfileButton = styled.div.withConfig({
   background: ${(props) => (props.userHover ? '#D3D3D3' : 'transparent')};
   cursor: pointer;
   position: relative;
-  margin-top: 0.5vh;
+  margin-top: 1vh;
 `;
 
 const ProfileImage = styled.img`
@@ -307,7 +386,7 @@ const ProfileImage = styled.img`
 const PostButtonContainer = styled.div.withConfig({
   shouldForwardProp: (prop) => prop !== 'plusHover',
 })<{
-  plusHover: boolean;
+  readonly plusHover: boolean;
 }>`
   display: flex;
   align-items: center;
@@ -322,7 +401,7 @@ const PostButtonContainer = styled.div.withConfig({
 const SubmitButton = styled.button.withConfig({
   shouldForwardProp: (prop) => prop !== 'plusHover',
 })<{
-  plusHover: boolean;
+  readonly plusHover: boolean;
 }>`
   border: none;
   background: ${(props) => (props.plusHover ? '#D3D3D3' : 'white')};
@@ -330,14 +409,18 @@ const SubmitButton = styled.button.withConfig({
 `;
 
 const PlusIcon = styled(FaPlus)`
-  height: 30px;
-  width: 15px;
+  height: 52.5px;
+  width: 24px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    margin-bottom: 2px;
+  }
 `;
 
 const InquiryButtonContainer = styled.div.withConfig({
   shouldForwardProp: (prop) => prop !== 'inquiryHover',
 })<{
-  inquiryHover: boolean;
+  readonly inquiryHover: boolean;
 }>`
   display: flex;
   align-items: center;
@@ -351,7 +434,7 @@ const InquiryButtonContainer = styled.div.withConfig({
 const InquiryButton = styled.button.withConfig({
   shouldForwardProp: (prop) => prop !== 'inquiryHover',
 })<{
-  inquiryHover: boolean;
+  readonly inquiryHover: boolean;
 }>`
   display: flex;
   align-items: center;
@@ -361,17 +444,23 @@ const InquiryButton = styled.button.withConfig({
   border-radius: 25px;
   background: ${(props) => (props.inquiryHover ? '#D3D3D3' : 'white')};
   cursor: pointer;
+  height: 60px;
+  width: 60px;
 `;
 
 const InquiryIcon = styled.img`
-  height: 55%;
-  width: 55%;
+  height: 57.5%;
+  width: 57.5%;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    margin-bottom: 2px;
+  }
 `;
 
 const NotificationButtonContainer = styled.div.withConfig({
   shouldForwardProp: (prop) => prop !== 'bellHover',
 })<{
-  bellHover: boolean;
+  readonly bellHover: boolean;
 }>`
   display: flex;
   align-items: center;
@@ -381,17 +470,23 @@ const NotificationButtonContainer = styled.div.withConfig({
   height: 50px;
   background: ${(props) => (props.bellHover ? '#D3D3D3' : 'transparent')};
   cursor: pointer;
-  margin-right: 30px;
+  margin-right: 2vw;
 `;
 
 const BellIcon = styled(FaBell).withConfig({
   shouldForwardProp: (prop) => prop !== 'bellHover',
 })<{
-  bellHover: boolean;
+  readonly bellHover: boolean;
 }>`
   color: ${(props) => (props.bellHover ? 'white' : 'black')};
-  width: 20px;
-  height: 20px;
+  width: 25px;
+  height: 25px;
+  margin-right: 1vw;
+  margin-top: 1vh;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    margin-right: 8vw;
+  }
 `;
 
 const LoginStatusView = styled.div`

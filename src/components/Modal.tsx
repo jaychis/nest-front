@@ -1,28 +1,24 @@
 import styled from 'styled-components';
+import { breakpoints } from '../_common/breakpoint';
 
 interface Props {
   readonly children: React.ReactNode;
   readonly isOpen: boolean;
   readonly onClose: () => void;
   readonly buttonLabel?: string;
-  // readonly onSubmit: () => void;
 }
-const Modal = ({ children, isOpen, onClose, buttonLabel}: Props) => {
-
+const Modal = ({ children, isOpen, onClose, buttonLabel }: Props) => {
   if (!isOpen) return null;
-  
+
   return (
-      <ModalContainer>
-          <ModalBody>
-            <div style={{ display: "flex", height: "20%", marginBottom: '2vh' }}>
-              <CloseButton onClick={onClose}>
-                Close
-              </CloseButton>
-            </div>
-              {children}
-          </ModalBody>
-      </ModalContainer>
-    
+    <ModalContainer>
+      <ModalBody>
+        <div style={{ display: 'flex', height: '20%', marginBottom: '2vh' }}>
+          <CloseButton onClick={onClose}>Close</CloseButton>
+        </div>
+        {children}
+      </ModalBody>
+    </ModalContainer>
   );
 };
 
@@ -30,27 +26,37 @@ export default Modal;
 
 const ModalContainer = styled.div`
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 500%;
+  left: 9%;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.30);
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 9999;
+  width: 80%;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    top: 170%;
+    left: 0%;
+    width: 100%;
+    height: 100vh;
+  }
 `;
 
 const ModalBody = styled.div`
   background-color: #fff;
+  width: 30%;
   border-radius: 25px;
-  padding: 25px;
-  min-width: 450px; 
-  max-width: 400px;
-  max-height: 90%;
+  padding: 15px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   overflow: auto;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 100%;
+  }
 `;
 
 const CloseButton = styled.button`
@@ -63,20 +69,4 @@ const CloseButton = styled.button`
   cursor: pointer;
   margin-left: auto;
   margin-right: 10px;
-`;
-
-const ContentWrapper = styled.div`
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: black;
-  width: 80%;
-`;
-
-const ActionButtonContainer = styled.div`
-  display: flex;
-  height: 20%;
-  justify-content: center;
-  align-items: center;
 `;
