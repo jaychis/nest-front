@@ -95,6 +95,7 @@ const SearchMobile = () => {
                   {list.query}
                 </span>
               </Item>
+              <Hr/>
             </>
           );
         })}
@@ -151,5 +152,11 @@ const Icon = styled.img`
   height: 30px;
   margin-right: 2vw;
 `
+
+const Hr = styled.hr`
+  border: 1px solid #ddd;
+  margin: 10px 0 0 2px;
+  width: 80%;
+`;
 
 export default SearchMobile;

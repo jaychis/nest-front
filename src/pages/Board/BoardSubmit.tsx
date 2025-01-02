@@ -34,9 +34,7 @@ const BoardSubmit = () => {
   const [topics, setTopics] = useState<string[]>([]);
   const [tagSearchTerm, setTagSearchTerm] = useState('');
   const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [image, setImage] = useState<File[]>([]);
   const [textContent, setTextContent] = useState<string[]>(['']); // 서버에 보내기 위한 변수
-  const [contentPreview, setContentPreview] = useState<string>(''); // ReactQuill에서 사용자에게 보여주기 위한 변수
 
   const handleRemoveTopic = (index: number) => {
     const newTopics = topics.filter((_, i) => i !== index);
@@ -394,6 +392,7 @@ const BoardSubmit = () => {
               ) : (
                 <>
                   <InputStyle
+                    style={{paddingBottom: '30px'}}
                     type={'file'}
                     multiple
                     onChange={handleFileChange}
@@ -636,8 +635,8 @@ const Item = styled.li<{ readonly isEven: boolean }>`
 const ImagePreviewWrapper = styled.div``;
 
 const ImagePreview = styled.img`
-  height: 400px;
-  width: 400px;
+  max-height: 100%;
+  width: 100%;
   object-fit: cover; /* 선택사항: 이미지를 잘라내거나 비율 유지 */
 `;
 
