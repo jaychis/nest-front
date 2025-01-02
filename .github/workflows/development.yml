@@ -51,7 +51,7 @@ jobs:
           push: true
           build-args: |
             HTTP_PORT=80
-            SERVER_NAME=www.jaychis.com
+            SERVER_NAME=stage.jaychis.com
           tags: |
             ${{ env.DOCKER_IMAGE }}:stage
             ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }}
