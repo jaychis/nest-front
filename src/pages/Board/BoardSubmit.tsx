@@ -643,7 +643,7 @@ const ImagePreviewWrapper = styled.div``;
 
 const ImagePreview = styled.img`
   max-height: 100%;
-  width: 100%;
+  max-width: 100%;
   object-fit: cover; /* 선택사항: 이미지를 잘라내거나 비율 유지 */
 `;
 
