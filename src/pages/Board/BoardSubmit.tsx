@@ -20,6 +20,7 @@ import DeleteButton from '../../components/Buttons/DeleteButton';
 import styled from 'styled-components';
 import { TagListAPI } from '../api/tagApi';
 import { breakpoints } from '../../_common/breakpoint';
+import xIcon from '../../assets/img/icons8-엑스-30.png';
 
 const BoardSubmit = () => {
   const navigate = useNavigate();
@@ -379,7 +380,7 @@ const BoardSubmit = () => {
                 <>
                   {previewUrls.map((image, index) => (
                     <ImagePreviewWrapper key={index}>
-                      <button onClick={() => {imageUrlListDelete(image)}}>휴지통</button>
+                      <CloseButton src={xIcon} onClick={() => {imageUrlListDelete(image)}}/>
                       <ImagePreview
                         src={image}
                         alt={`Preview image ${index}`}
@@ -639,13 +640,36 @@ const Item = styled.li<{ readonly isEven: boolean }>`
   }
 `;
 
-const ImagePreviewWrapper = styled.div``;
+const ImagePreviewWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  width: 300px; 
+  height: 300px; 
+  border: 1px solid #ddd; 
+  border-radius: 8px;
+  background-color: #f9f9f9; 
+  padding: 10px;
+  position: relative;
+`;
 
 const ImagePreview = styled.img`
   max-height: 100%;
   max-width: 100%;
-  object-fit: cover; /* 선택사항: 이미지를 잘라내거나 비율 유지 */
+  object-fit: cover; 
 `;
+
+const CloseButton = styled.img`
+  width: 15px;
+  height: 15px;
+  border: 1px solid black;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  margin-bottom: auto;
+`;
+
 
 const TagInfoMessage = styled.p`
   font-size: 16px;
