@@ -138,11 +138,9 @@ const BoardSubmit = () => {
     setFileList(urls.fileList);
   };
 
-  const imageUrlListDelete = async () => {
-    const res: ImageLocalPreviewUrlsDeleteType =
-      await ImageLocalPreviewUrlsDelete({ urls: previewUrls });
-    if (!res) return;
-    setPreviewUrls(res);
+  const imageUrlListDelete = async (deleteImage: string) => {
+    const temp = previewUrls.filter((url) => url !== deleteImage)
+    setPreviewUrls(temp);
   };
 
   const [linkContent, setLinkContent] = useState<string>('');
@@ -379,9 +377,9 @@ const BoardSubmit = () => {
 
               {previewUrls.length > 0 ? (
                 <>
-                  <button onClick={imageUrlListDelete}>휴지통</button>
                   {previewUrls.map((image, index) => (
                     <ImagePreviewWrapper key={index}>
+                      <button onClick={() => {imageUrlListDelete(image)}}>휴지통</button>
                       <ImagePreview
                         src={image}
                         alt={`Preview image ${index}`}
@@ -664,7 +662,7 @@ const CustomInput = styled.div`
 `
 
 const CustomLabel = styled.label`
-  padding: 10px;
+  padding: 8px;
   background-color: #84d7fb;
   color: white;
   border: none;
