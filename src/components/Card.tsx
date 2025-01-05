@@ -218,14 +218,14 @@ const Card = ({
     if (localCount < 0) {
       setLocalCount(0);
     }
-  }, [localCount]);
+  }, [localCount,content]);
 
   const extractTextFromHTML = (htmlString: string): string => {
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = htmlString;
     return tempDiv.innerText || tempDiv.textContent || '';
   };
-  console.log(content)
+
   return (
     <>
       <CardContainer
@@ -249,13 +249,14 @@ const Card = ({
           <BoardTitle onClick={goBoardRead}>{title}</BoardTitle>
 
           {type === 'TEXT' ? (
-            <TextContainer>
+            <TextContainer
+            fontcolor={color}
+            >
               {content?.map((co, index) => {
                 return (
                   <ContentWrapper
                     key={`${id}-${index}`}
                     dangerouslySetInnerHTML={{ __html: safeHtml(co) }}
-                    fontcolor={color}
                   />
                 );
               })}
@@ -466,22 +467,22 @@ const BoardTitle = styled.h3`
   font-size: 1.5rem;
 `;
 
-const TextContainer = styled.div`
+const TextContainer = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'fontcolor', 
+})<{ fontcolor: string }>`
   text-align: left;
   white-space: normal;
   word-break: break-word;
   width: 100%;
+
+  span{
+    color: ${(props) => props.fontcolor};
+  }
 `;
 
-const ContentWrapper = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'fontcolor', // `fontcolor` prop을 DOM으로 전달하지 않음
-})<{ fontcolor: string }>`
+const ContentWrapper = styled.div`
   max-width: 100% !important;
   max-height: 100% !important;
-
-  span {
-    color: ${(props) => props.fontcolor};  // props.fontcolor로 색상값 전달
-  }
 
   img {
     max-width: 70% !important;
