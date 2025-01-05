@@ -26,6 +26,7 @@ import {
   fetchProfileImage,
   FetchProfileImageType,
 } from '../_common/fetchCardProfile';
+import Carousel from './Carousel';
 
 const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
   try {
@@ -69,6 +70,7 @@ const Card = ({
     image: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'ico', 'tiff', 'tif', 'heif', 'heic', 'avif'],
     video: ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv']
   };
+  const [color, setColor] = useState<string>('')
 
   const isMediaType = (url: string, type: 'image' | 'video'): boolean => {
     const ext = url.split('.').pop()?.toLowerCase();
@@ -92,11 +94,14 @@ const Card = ({
   }, []);
 
   const safeHtml = (content: string) => {
+    
     return sanitizeHtml(content, {
-      allowedTags: ['img', 'a', 'br', 'p', 'div'], // 허용할 태그
+      allowedTags: ['img', 'a', 'br', 'p', 'div','span','pre','bold','em','u','s',], // 허용할 태그
       allowedAttributes: {
         img: ['src', 'srcset', 'alt', 'title', 'width', 'height', 'loading', 'style'],
-        a: ['href']
+        a: ['href'],
+        span: ['style'],
+        p:['style']
       },
       transformTags: {
         img: (tagName, attribs) => {
@@ -201,6 +206,15 @@ const Card = ({
   }, []);
 
   useEffect(() => {
+    if (content.some(item => item.includes('span'))) {
+      const contentString = content.join(''); 
+      const colorMatch = contentString.match(/color:\s*rgb\([^\)]+\)/);
+      
+      if (colorMatch) {
+        const extractedColor = colorMatch[0].replace('color: ', '').trim();
+        setColor(extractedColor); 
+      }
+    }
     if (localCount < 0) {
       setLocalCount(0);
     }
@@ -211,7 +225,7 @@ const Card = ({
     tempDiv.innerHTML = htmlString;
     return tempDiv.innerText || tempDiv.textContent || '';
   };
-
+  console.log(content)
   return (
     <>
       <CardContainer
@@ -238,33 +252,28 @@ const Card = ({
             <TextContainer>
               {content?.map((co, index) => {
                 return (
-                  <Contentwrapper
+                  <ContentWrapper
                     key={`${id}-${index}`}
                     dangerouslySetInnerHTML={{ __html: safeHtml(co) }}
+                    fontcolor={color}
                   />
                 );
               })}
             </TextContainer>
           ) : type === 'MEDIA' ? (
             <MediaContainer>
-              {content.map((url, index) => (
-                <>
-                {isMediaType(url,'image') ?
-                <Image
-                key={`${id}-${index}`}
-                src={url}
-                alt={`Preview image ${index}`}/> :
+             
+                {isMediaType(content[0],'image') ?
+                <Carousel 
+                  imageList={content}
+                /> :
                 <Video
-                  key={index}
                   controls
                   preload="metadata"
                 >
-                  <source src={url} />
+                  <source src={content[0]} />
                 </Video>}
 
-                </>
-
-              ))}
             </MediaContainer>
           ) : (
             <>
@@ -464,9 +473,15 @@ const TextContainer = styled.div`
   width: 100%;
 `;
 
-const Contentwrapper = styled.div`
+const ContentWrapper = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'fontcolor', // `fontcolor` prop을 DOM으로 전달하지 않음
+})<{ fontcolor: string }>`
   max-width: 100% !important;
   max-height: 100% !important;
+
+  span {
+    color: ${(props) => props.fontcolor};  // props.fontcolor로 색상값 전달
+  }
 
   img {
     max-width: 70% !important;

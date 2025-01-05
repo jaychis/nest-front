@@ -1,5 +1,5 @@
-import ReactQuill from "react-quill";
-import 'react-quill/dist/quill.snow.css';
+import ReactQuill from "react-quill-new";
+import 'react-quill-new/dist/quill.snow.css'; 
 import { AwsImageUploadFunctionality } from "../_common/imageUploadFuntionality";
 import { useRef, useMemo } from "react";
 interface Props {
@@ -37,9 +37,10 @@ const SubmitQuill = ({setContent, content, height}: Props) => {
     });
   };
   const modules = useMemo(() => ({
+    
     toolbar: {
       container: [
-        ['bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block', { color: [] }, { background: [] }],
+        [ 'italic', 'underline', 'strike', 'blockquote', 'code-block', { color: [] }, { background: [] }],
         ['image', 'link'],
       ],
       handlers: {
