@@ -45,7 +45,7 @@ const BoardRead = () => {
       const commentRes = await CommentListAPI({ boardId: ID });
       if (!commentRes) return;
       const commentResponse = commentRes.data.response;
-      
+
       setIsCommentState([...commentResponse]);
       const res = await BoardReadAPI({
         id: ID,
@@ -243,6 +243,7 @@ const CommentSection = styled.div`
 
 const CommentTextArea = styled.textarea`
   width: 100%;
+  height: 90px;
   border: none;
   border-radius: 14px;
   resize: vertical;
