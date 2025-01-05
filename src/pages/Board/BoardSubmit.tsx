@@ -123,7 +123,6 @@ const BoardSubmit = () => {
 
   useEffect(() => {
     adjustEditorHeight();
-    console.log(textContent)
   }, [textContent]);
 
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
@@ -166,7 +165,6 @@ const BoardSubmit = () => {
       try {
         const res = await GetCommunitiesNameAPI({ name: value });
         if (res && res.data && res.data.response) {
-          console.log('Search results:', res.data.response);
           setSearchResults(
             res.data.response.map((community: any) => community.name),
           );
