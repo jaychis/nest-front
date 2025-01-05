@@ -40,8 +40,8 @@ const SubmitQuill = ({setContent, content, height}: Props) => {
     
     toolbar: {
       container: [
-        [ 'italic', 'underline', 'strike', 'blockquote', 'code-block', { color: [] }],
-        ['image', 'link'],
+        [ 'italic', 'underline', 'strike', 'blockquote', { color: [] }],
+        ['image'],
       ],
       handlers: {
         image: handleImageUpload,

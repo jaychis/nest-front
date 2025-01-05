@@ -92,16 +92,25 @@ const Card = ({
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-
+  console.log(content)
   const safeHtml = (content: string) => {
     
     return sanitizeHtml(content, {
-      allowedTags: ['img', 'a', 'br', 'p', 'div','span','pre','bold','em','u','s',], // 허용할 태그
+      allowedTags: [
+        'img', 'a', 'br', 'p', 'div', 'span', 'pre', 'code', 'bold', 'em', 'u', 's', 'blockquote'
+      ], 
       allowedAttributes: {
         img: ['src', 'srcset', 'alt', 'title', 'width', 'height', 'loading', 'style'],
         a: ['href'],
         span: ['style'],
-        p:['style']
+        p:['style'],
+        div: ['class', 'spellcheck'],
+        pre: ['class'], 
+        code: ['class'],
+      },
+      allowedClasses: {
+        div: ['ql-code-block', 'ql-code-block-container'], 
+        code: ['language-*'],
       },
       transformTags: {
         img: (tagName, attribs) => {
