@@ -1,14 +1,18 @@
-import ReactQuill from "react-quill-new";
-import 'react-quill-new/dist/quill.snow.css'; 
+import ReactQuill from "react-quill";
+import 'react-quill/dist/quill.snow.css'; 
 import { AwsImageUploadFunctionality } from "../_common/imageUploadFuntionality";
 import { useRef, useMemo } from "react";
+
 interface Props {
   readonly setContent: (item: string[] | ((prev: string[]) => string[])) => void;
   readonly content: string[];
   readonly height: string;
 }
+
 const SubmitQuill = ({setContent, content, height}: Props) => {
+  
   const quillRef = useRef<ReactQuill>(null);
+
   const handleImageUpload = () => {
     const input = document.createElement('input');
     input.setAttribute('type', 'file');
@@ -36,18 +40,31 @@ const SubmitQuill = ({setContent, content, height}: Props) => {
       }
     });
   };
+
   const modules = useMemo(() => ({
     
     toolbar: {
       container: [
-        [ 'italic', 'underline', 'strike', 'blockquote', 'code-block', { color: [] }],
-        ['image', 'link'],
+        [ 'italic', 'underline', 'strike', { color: [] }],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        ['image'],
       ],
       handlers: {
         image: handleImageUpload,
       },
     },
   }), []);
+
+  const formats=[
+    'italic',
+    'underline',
+    'strike',
+    'blockquote',
+    'color',
+    'image',
+    'list'
+  ]
+
   return (
     <ReactQuill
       ref={quillRef}
@@ -55,7 +72,9 @@ const SubmitQuill = ({setContent, content, height}: Props) => {
       onChange={(content) => setContent(content.split('<br />'))}
       value={content.join('<br />')}
       modules={modules}
+      formats={formats}
     />
   );
 };
+
 export default SubmitQuill;
