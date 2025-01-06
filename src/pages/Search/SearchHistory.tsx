@@ -15,7 +15,8 @@ const SearchHistory = () => {
             const parsedHistory = JSON.parse(history); 
     
             if (Array.isArray(parsedHistory)) {
-                setSearchHistoryList(parsedHistory);
+                setSearchHistoryList(parsedHistory.reverse());
+                console.log(parsedHistory)
             } else {
                 console.warn('Parsed history is not an array:', parsedHistory);
                 setSearchHistoryList([]);
@@ -33,7 +34,7 @@ const SearchHistory = () => {
     return(
         <HistoryContainer>
             {searchHistoryList ? 
-            searchHistoryList.sort().slice(0,3).map((list, index) => {return(
+            searchHistoryList.slice(0,3).map((list, index) => {return(
                 <Item key={index} onClick={() => {navigate(`/search/list?query=${list}`)}}>
                     <Text>{list}</Text>
                 </Item>)}) :

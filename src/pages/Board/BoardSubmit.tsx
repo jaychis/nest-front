@@ -20,6 +20,7 @@ import DeleteButton from '../../components/Buttons/DeleteButton';
 import styled from 'styled-components';
 import { TagListAPI } from '../api/tagApi';
 import { breakpoints } from '../../_common/breakpoint';
+import xIcon from '../../assets/img/icons8-엑스-30.png';
 
 const BoardSubmit = () => {
   const navigate = useNavigate();
@@ -34,9 +35,7 @@ const BoardSubmit = () => {
   const [topics, setTopics] = useState<string[]>([]);
   const [tagSearchTerm, setTagSearchTerm] = useState('');
   const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [image, setImage] = useState<File[]>([]);
   const [textContent, setTextContent] = useState<string[]>(['']); // 서버에 보내기 위한 변수
-  const [contentPreview, setContentPreview] = useState<string>(''); // ReactQuill에서 사용자에게 보여주기 위한 변수
 
   const handleRemoveTopic = (index: number) => {
     const newTopics = topics.filter((_, i) => i !== index);
@@ -140,11 +139,9 @@ const BoardSubmit = () => {
     setFileList(urls.fileList);
   };
 
-  const imageUrlListDelete = async () => {
-    const res: ImageLocalPreviewUrlsDeleteType =
-      await ImageLocalPreviewUrlsDelete({ urls: previewUrls });
-    if (!res) return;
-    setPreviewUrls(res);
+  const imageUrlListDelete = async (deleteImage: string) => {
+    const temp = previewUrls.filter((url) => url !== deleteImage)
+    setPreviewUrls(temp);
   };
 
   const [linkContent, setLinkContent] = useState<string>('');
@@ -381,9 +378,9 @@ const BoardSubmit = () => {
 
               {previewUrls.length > 0 ? (
                 <>
-                  <button onClick={imageUrlListDelete}>휴지통</button>
                   {previewUrls.map((image, index) => (
                     <ImagePreviewWrapper key={index}>
+                      <CloseButton src={xIcon} onClick={() => {imageUrlListDelete(image)}}/>
                       <ImagePreview
                         src={image}
                         alt={`Preview image ${index}`}
@@ -393,11 +390,21 @@ const BoardSubmit = () => {
                 </>
               ) : (
                 <>
+                <CustomInput>
+                <CustomLabel 
+                  htmlFor="file"
+                  style={{borderRadius:'14px'}}  
+                >
+                  이미지 업로드
                   <InputStyle
-                    type={'file'}
-                    multiple
-                    onChange={handleFileChange}
+                  type="file"
+                  id="file"
+                  style={{display: 'none'}}
+                  multiple
+                  onChange={handleFileChange}
                   />
+                </CustomLabel>
+                </CustomInput>
                 </>
               )}
             </>
@@ -633,13 +640,36 @@ const Item = styled.li<{ readonly isEven: boolean }>`
   }
 `;
 
-const ImagePreviewWrapper = styled.div``;
+const ImagePreviewWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  width: 300px; 
+  height: 300px; 
+  border: 1px solid #ddd; 
+  border-radius: 8px;
+  background-color: #f9f9f9; 
+  padding: 10px;
+  position: relative;
+`;
 
 const ImagePreview = styled.img`
-  height: 400px;
-  width: 400px;
-  object-fit: cover; /* 선택사항: 이미지를 잘라내거나 비율 유지 */
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: cover; 
 `;
+
+const CloseButton = styled.img`
+  width: 15px;
+  height: 15px;
+  border: 1px solid black;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  margin-bottom: auto;
+`;
+
 
 const TagInfoMessage = styled.p`
   font-size: 16px;
@@ -647,5 +677,21 @@ const TagInfoMessage = styled.p`
   margin: 10px 0;
   line-height: 1.5;
 `;
+
+const CustomInput = styled.div`
+  display: flex;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 16px;
+`
+
+const CustomLabel = styled.label`
+  padding: 8px;
+  background-color: #84d7fb;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-family: Arial, Helvetica, sans-serif;
+`
 
 export default BoardSubmit;

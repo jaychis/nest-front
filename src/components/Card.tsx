@@ -26,6 +26,7 @@ import {
   fetchProfileImage,
   FetchProfileImageType,
 } from '../_common/fetchCardProfile';
+import Carousel from './Carousel';
 
 const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
   try {
@@ -69,7 +70,8 @@ const Card = ({
     image: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'ico', 'tiff', 'tif', 'heif', 'heic', 'avif'],
     video: ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv']
   };
-  
+  const [color, setColor] = useState<string>('')
+
   const isMediaType = (url: string, type: 'image' | 'video'): boolean => {
     const ext = url.split('.').pop()?.toLowerCase();
     return ext ? mediaExtensions[type].includes(ext) : false;
@@ -92,11 +94,14 @@ const Card = ({
   }, []);
 
   const safeHtml = (content: string) => {
+    
     return sanitizeHtml(content, {
-      allowedTags: ['img', 'a', 'br', 'p', 'div'], // 허용할 태그
-      allowedAttributes: { 
+      allowedTags: ['img', 'a', 'br', 'p', 'div','span','pre','bold','em','u','s',], // 허용할 태그
+      allowedAttributes: {
         img: ['src', 'srcset', 'alt', 'title', 'width', 'height', 'loading', 'style'],
-        a: ['href']
+        a: ['href'],
+        span: ['style'],
+        p:['style']
       },
       transformTags: {
         img: (tagName, attribs) => {
@@ -198,13 +203,22 @@ const Card = ({
 
     const temp = extractTextFromHTML(content[0]);
     setShareContent(temp);
-  }, [userId, id]);
+  }, []);
 
   useEffect(() => {
+    if (content.some(item => item.includes('span'))) {
+      const contentString = content.join(''); 
+      const colorMatch = contentString.match(/color:\s*rgb\([^\)]+\)/);
+      
+      if (colorMatch) {
+        const extractedColor = colorMatch[0].replace('color: ', '').trim();
+        setColor(extractedColor); 
+      }
+    }
     if (localCount < 0) {
       setLocalCount(0);
     }
-  }, [localCount]);
+  }, [localCount,content]);
 
   const extractTextFromHTML = (htmlString: string): string => {
     const tempDiv = document.createElement('div');
@@ -235,10 +249,12 @@ const Card = ({
           <BoardTitle onClick={goBoardRead}>{title}</BoardTitle>
 
           {type === 'TEXT' ? (
-            <TextContainer>
+            <TextContainer
+            fontcolor={color}
+            >
               {content?.map((co, index) => {
                 return (
-                  <Contentwrapper
+                  <ContentWrapper
                     key={`${id}-${index}`}
                     dangerouslySetInnerHTML={{ __html: safeHtml(co) }}
                   />
@@ -247,24 +263,18 @@ const Card = ({
             </TextContainer>
           ) : type === 'MEDIA' ? (
             <MediaContainer>
-              {content.map((url, index) => (
-                <>
-                {isMediaType(url,'image') ?
-                <Image
-                key={`${id}-${index}`}
-                src={url}
-                alt={`Preview image ${index}`}/> : 
+             
+                {isMediaType(content[0],'image') ?
+                <Carousel 
+                  imageList={content}
+                /> :
                 <Video
-                  key={index}
                   controls
                   preload="metadata"
                 >
-                  <source src={url} />
+                  <source src={content[0]} />
                 </Video>}
-                
-                </>
-                
-              ))}
+
             </MediaContainer>
           ) : (
             <>
@@ -457,14 +467,20 @@ const BoardTitle = styled.h3`
   font-size: 1.5rem;
 `;
 
-const TextContainer = styled.div`
+const TextContainer = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'fontcolor', 
+})<{ fontcolor: string }>`
   text-align: left;
   white-space: normal;
   word-break: break-word;
   width: 100%;
+
+  span{
+    color: ${(props) => props.fontcolor};
+  }
 `;
 
-const Contentwrapper = styled.div`
+const ContentWrapper = styled.div`
   max-width: 100% !important;
   max-height: 100% !important;
 
@@ -506,7 +522,7 @@ const ReactionWrapper = styled.div`
   align-items: center;
 
   @media (max-width: ${breakpoints.mobile}) {
-    max-width: 130px;
+    max-width: 170px;
   }
 `;
 
