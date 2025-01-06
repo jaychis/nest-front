@@ -97,20 +97,22 @@ const Card = ({
     
     return sanitizeHtml(content, {
       allowedTags: [
-        'img', 'a', 'br', 'p', 'div', 'span', 'pre', 'code', 'bold', 'em', 'u', 's', 'blockquote'
+        'img', 'a', 'br', 'p', 'div', 'span', 'pre', 'code', 'bold', 'em', 'u', 's', 'blockquote','ol','li','ul'
       ], 
       allowedAttributes: {
         img: ['src', 'srcset', 'alt', 'title', 'width', 'height', 'loading', 'style'],
         a: ['href'],
-        span: ['style'],
+        span: ['style','contenteditable'],
         p:['style'],
         div: ['class', 'spellcheck'],
         pre: ['class'], 
         code: ['class'],
+        li: ['data-list','style','class']
       },
       allowedClasses: {
         div: ['ql-code-block', 'ql-code-block-container'], 
         code: ['language-*'],
+        li: ['ql-indent-*'],
       },
       transformTags: {
         img: (tagName, attribs) => {
@@ -275,7 +277,6 @@ const Card = ({
               {isMediaType(content[0],'image') && content.length === 1 && (<Image src = {content[0]}/>)}
               {isMediaType(content[0],'image') && content.length > 1 && (<Carousel imageList={content}/>)}
               {!isMediaType(content[0],'image') && (<Video controls preload="metadata"> <source src={content[0]} /></Video>  )}
-
             </MediaContainer>
           ) : (
             <>
@@ -586,7 +587,7 @@ const CommentWrapper = styled.div`
   align-items: center;
 
   @media (max-width: ${breakpoints.mobile}) {
-    width: 50px;
+    width: 60px;
     margin-right: 7px;
   }
 `;
