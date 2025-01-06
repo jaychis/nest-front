@@ -497,7 +497,6 @@ const BoardSubmitContainer = styled.div`
 
   @media (min-width: ${breakpoints.mobile}) and (max-width: ${breakpoints.desktop}) {
     width: 80%;
-    margin-left: 15vw;
   }
 `;
 
