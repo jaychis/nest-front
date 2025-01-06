@@ -1,68 +1,119 @@
 import { useState } from "react";
 import styled, { keyframes } from "styled-components";
-import back from '../assets/img/icons8-뒤로-50.png'
-import next from '../assets/img/icons8-앞으로-50.png'
+import back from '../assets/img/icons8-뒤로-50.png';
+import next from '../assets/img/icons8-앞으로-50.png';
 
 interface CarouselProps {
-    imageList: string[]
+    imageList: string[];
 }
-const Carousel = ({imageList}:CarouselProps) => {
 
-    const [carouselIndex, setCarouselIndex] = useState<number>(0)
-    const [direction, setDirection] = useState<'next' | 'prev'>('next'); 
+const Carousel = ({ imageList }: CarouselProps) => {
+    const [carouselIndex, setCarouselIndex] = useState<number>(0);
+    const [direction, setDirection] = useState<'next' | 'prev'>('next'); // 방향 상태 추가
+    const [touchStartX, setTouchStartX] = useState<number | null>(null);
+
 
     const handelNext = () => {
         setDirection('next');
-        if(carouselIndex  === imageList.length - 1) setCarouselIndex(0)
-        else setCarouselIndex(carouselIndex+1)
-    }
+        setCarouselIndex((prev) => (prev === imageList.length - 1 ? 0 : prev + 1));
+    };
 
     const handleBack = () => {
-        if(carouselIndex  === 0) setCarouselIndex(imageList.length - 1)
-            else setCarouselIndex(carouselIndex-1)
-    }
+        setDirection('prev');
+        setCarouselIndex((prev) => (prev === 0 ? imageList.length - 1 : prev - 1));
+    };
 
-    return(
+    const handleTouchStart = (e: React.TouchEvent) => {
+        setTouchStartX(e.touches[0].clientX);
+    };
+
+    const handleTouchEnd = (e: React.TouchEvent) => {
+        if (touchStartX === null) return;
+
+        const touchEndX = e.changedTouches[0].clientX;
+        const diffX = touchStartX - touchEndX;
+
+        if (diffX > 50) {
+            handelNext();
+        } else if (diffX < -50) {
+            handleBack();
+        }
+
+        setTouchStartX(null);
+    };
+
+    return (
         <CarouselContainer>
-            <ArrowIcon src = {back} onClick = {handleBack}/>
-            <CarouselImage 
-            src = {imageList[carouselIndex]} 
-            key={carouselIndex}
-            direction={direction}
-            />
-            <ArrowIcon src = {next} onClick = {handelNext} />
+            <ArrowIcon src={back} onClick={handleBack} />
+            <CarouselImageWrapper
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
+            >
+                <CarouselImage
+                    src={imageList[carouselIndex]}
+                    direction={direction}
+                    key={carouselIndex}
+                />
+            </CarouselImageWrapper>
+            <ArrowIcon src={next} onClick={handelNext} />
         </CarouselContainer>
-    )
-}
+    );
+};
 
 const slideInNext = keyframes`
-    from{
+    from {
         transform: translateX(100%);
+        opacity: 0.5;
     }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+`;
 
-    to{
-        transform: translateX(0);    
+const slideInPrev = keyframes`
+    from {
+        transform: translateX(-100%);
+        opacity: 0.5;
     }
-`
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+`;
 
 const CarouselContainer = styled.div`
     display: flex;
-    width: 100px:
-    height: 100px;
     align-items: center;
-    overflow: hiden;
-`
+    justify-content: center;
+    gap: 10px;
+    width: 300px;
+    height: 300px;
+    overflow: hidden;
+    position: relative;
+`;
 
-const CarouselImage = styled.img<{ direction: 'next' | 'prev' }>`
+const CarouselImageWrapper = styled.div`
     width: 250px;
     height: 250px;
-    animation: ${({ direction }) => (direction === 'next' ? slideInNext : null)} 0.5s ease-in-out;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`;
 
-`
+const CarouselImage = styled.img<{ direction: 'next' | 'prev' }>`
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    animation: ${({ direction }) => (direction === 'next' ? slideInNext : slideInPrev)} 0.5s ease-in-out;
+`;
 
 const ArrowIcon = styled.img`
     width: 50px;
     height: 50px;
-`
+    cursor: pointer;
+    user-select: none;
+`;
 
-export default Carousel
+export default Carousel;

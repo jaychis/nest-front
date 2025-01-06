@@ -123,7 +123,6 @@ const BoardSubmit = () => {
 
   useEffect(() => {
     adjustEditorHeight();
-    console.log(textContent)
   }, [textContent]);
 
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
@@ -166,7 +165,6 @@ const BoardSubmit = () => {
       try {
         const res = await GetCommunitiesNameAPI({ name: value });
         if (res && res.data && res.data.response) {
-          console.log('Search results:', res.data.response);
           setSearchResults(
             res.data.response.map((community: any) => community.name),
           );
@@ -379,13 +377,15 @@ const BoardSubmit = () => {
               {previewUrls.length > 0 ? (
                 <>
                   {previewUrls.map((image, index) => (
+                    <>
                     <ImagePreviewWrapper key={index}>
-                      <CloseButton src={xIcon} onClick={() => {imageUrlListDelete(image)}}/>
+                    <CloseButton src={xIcon} onClick={() => {imageUrlListDelete(image)}}/>
                       <ImagePreview
                         src={image}
                         alt={`Preview image ${index}`}
                       />
                     </ImagePreviewWrapper>
+                    </>
                   ))}
                 </>
               ) : (
@@ -644,7 +644,6 @@ const ImagePreviewWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
   width: 300px; 
   height: 300px; 
   border: 1px solid #ddd; 
@@ -652,22 +651,25 @@ const ImagePreviewWrapper = styled.div`
   background-color: #f9f9f9; 
   padding: 10px;
   position: relative;
+  z-index: 0;
 `;
 
 const ImagePreview = styled.img`
   max-height: 100%;
   max-width: 100%;
-  object-fit: cover; 
+  object-fit: cover;
+  z-index: 1;
 `;
 
 const CloseButton = styled.img`
+  top: 2%;
+  left: 1%;
+  position: absolute;
   width: 15px;
   height: 15px;
   border: 1px solid black;
   border-radius: 50%;
   cursor: pointer;
-  z-index: 10;
-  margin-bottom: auto;
 `;
 
 

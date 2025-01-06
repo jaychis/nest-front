@@ -96,12 +96,21 @@ const Card = ({
   const safeHtml = (content: string) => {
     
     return sanitizeHtml(content, {
-      allowedTags: ['img', 'a', 'br', 'p', 'div','span','pre','bold','em','u','s',], // 허용할 태그
+      allowedTags: [
+        'img', 'a', 'br', 'p', 'div', 'span', 'pre', 'code', 'bold', 'em', 'u', 's', 'blockquote'
+      ], 
       allowedAttributes: {
         img: ['src', 'srcset', 'alt', 'title', 'width', 'height', 'loading', 'style'],
         a: ['href'],
         span: ['style'],
-        p:['style']
+        p:['style'],
+        div: ['class', 'spellcheck'],
+        pre: ['class'], 
+        code: ['class'],
+      },
+      allowedClasses: {
+        div: ['ql-code-block', 'ql-code-block-container'], 
+        code: ['language-*'],
       },
       transformTags: {
         img: (tagName, attribs) => {
@@ -225,7 +234,7 @@ const Card = ({
     tempDiv.innerHTML = htmlString;
     return tempDiv.innerText || tempDiv.textContent || '';
   };
-
+  
   return (
     <>
       <CardContainer
@@ -263,17 +272,9 @@ const Card = ({
             </TextContainer>
           ) : type === 'MEDIA' ? (
             <MediaContainer>
-             
-                {isMediaType(content[0],'image') ?
-                <Carousel 
-                  imageList={content}
-                /> :
-                <Video
-                  controls
-                  preload="metadata"
-                >
-                  <source src={content[0]} />
-                </Video>}
+              {isMediaType(content[0],'image') && content.length === 1 && (<Image src = {content[0]}/>)}
+              {isMediaType(content[0],'image') && content.length > 1 && (<Carousel imageList={content}/>)}
+              {!isMediaType(content[0],'image') && (<Video controls preload="metadata"> <source src={content[0]} /></Video>  )}
 
             </MediaContainer>
           ) : (
@@ -522,7 +523,7 @@ const ReactionWrapper = styled.div`
   align-items: center;
 
   @media (max-width: ${breakpoints.mobile}) {
-    max-width: 170px;
+    width: 170px;
   }
 `;
 
@@ -540,7 +541,7 @@ const LikeButton = styled.button.withConfig({
   cursor: pointer;
 
   @media (max-width: ${breakpoints.mobile}) {
-    width: 60px;
+    width: 70px;
     height: 40px;
     font-size: 10px;
   }
@@ -571,7 +572,7 @@ const DisLikeButton = styled.button.withConfig({
   cursor: pointer;
 
   @media (max-width: ${breakpoints.mobile}) {
-    width: 60px;
+    width: 70px;
     height: 40px;
     font-size: 10px;
   }
@@ -585,7 +586,7 @@ const CommentWrapper = styled.div`
   align-items: center;
 
   @media (max-width: ${breakpoints.mobile}) {
-    width: 45px;
+    width: 50px;
     margin-right: 7px;
   }
 `;
