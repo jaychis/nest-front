@@ -54,22 +54,6 @@ const SubmitInquiry: React.FC<SubmitModalProps> = ({ isopen, setIsopen }) => {
     }
   };
 
-  const modules = {
-    toolbar: [
-      [{ header: '1' }, { header: '2' }, { font: [] }],
-      [{ size: [] }],
-      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-      [
-        { list: 'ordered' },
-        { list: 'bullet' },
-        { indent: '-1' },
-        { indent: '+1' },
-      ],
-      ['link', 'image'],
-      ['clean'],
-    ],
-  };
-
   return (
     <>
       <GlobalBar />
@@ -78,7 +62,7 @@ const SubmitInquiry: React.FC<SubmitModalProps> = ({ isopen, setIsopen }) => {
         onRequestClose={() => setIsopen(false)}
         style={{
           content: {
-            width: '50%',
+            width: '50vw',
             height: '85vh',
             margin: 'auto',
             padding: '20px',
@@ -123,9 +107,8 @@ const SubmitInquiry: React.FC<SubmitModalProps> = ({ isopen, setIsopen }) => {
               <ReactQuill
                 value={content}
                 onChange={setContent}
-                modules={modules}
                 theme="snow"
-                style={{ height: '400px' }}
+                style={{ height: '400px', width: '40vw' }}
               />
             </ReactQuillWrapper>
           </InquiryContainer>
@@ -145,6 +128,8 @@ const SubmitInquiry: React.FC<SubmitModalProps> = ({ isopen, setIsopen }) => {
     </>
   );
 };
+
+
 
 const LogoTitleWrapper = styled.div`
   display: flex;
