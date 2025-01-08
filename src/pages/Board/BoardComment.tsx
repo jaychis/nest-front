@@ -368,6 +368,7 @@ const ReplyBox = styled.div`
 
 const ReplyTextarea = styled.textarea`
   width: 100%;
+  height: 80px;
   border: none;
   border-radius: 14px;
   resize: vertical;
@@ -434,5 +435,3 @@ const CommentButton = styled.button.withConfig({
     font-size: 10px;
   }
 `;
-
-

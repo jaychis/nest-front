@@ -86,6 +86,7 @@ const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
         break;
 
       case '카카오톡':
+        console.log(domain)
         if (window.Kakao && window.Kakao.isInitialized()) {
           shareCountApi(id);
           setIsActive(false);
@@ -93,19 +94,18 @@ const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
             objectType: 'feed',
             content: {
               title: `${title}`,
-              description: `${content}`,
               imageUrl: 'https://i.ibb.co/pwfv8nX/panda-logo.png',
               link: {
-                mobileWebUrl: encodeURIComponent(domain),
-                webUrl: `https://${domain}`,
+                mobileWebUrl: `http://${domain}`,
+                webUrl: `http://${domain}`,
               },
             },
             buttons: [
               {
                 title: '웹으로 보기',
                 link: {
-                  mobileWebUrl: encodeURIComponent(domain),
-                  webUrl: `https://${domain}`,
+                  mobileWebUrl: `http://${domain}`,
+                  webUrl: `http://${domain}`,
                 },
               },
             ],

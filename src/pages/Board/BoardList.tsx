@@ -147,6 +147,7 @@ const BoardList = () => {
                     type={el.type}
                     shareCount={el.share_count}
                     userId={el.user_id}
+                    profileImage={el.profile_image}
                   />
                 </React.Fragment>
               );

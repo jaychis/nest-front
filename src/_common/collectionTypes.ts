@@ -66,6 +66,7 @@ export interface CardType {
   readonly updated_at: Date;
   readonly deleted_at?: Date | null;
   readonly share_count: number;
+  readonly profile_image?: string;
 }
 
 export interface ReactionType {
@@ -87,6 +88,7 @@ export interface BoardProps {
   readonly type: BoardType;
   readonly shareCount: number;
   readonly userId: string;
+  readonly profileImage?: string;
 }
 
 export interface InquiryType {
