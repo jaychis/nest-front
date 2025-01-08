@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { breakpoints } from "../_common/breakpoint";
 
 interface DropDownProps {
     readonly menu: string[]
@@ -8,8 +9,7 @@ interface DropDownProps {
 const DropDown = ({ menu,eventHandler }:DropDownProps) => {
     return (
         <DropDownContainer>
-            <DropDownList
-            >
+            <DropDownList>
                 {menu.map((item, index) => (
                     <DropDownItem
                     key={index} 
@@ -26,8 +26,21 @@ const DropDown = ({ menu,eventHandler }:DropDownProps) => {
 };
 
 const DropDownContainer = styled.div`
+    position: absolute;
     height: 100%;
-    overflow: hidden;
+    z-index: 1000;
+    margin-top: 5.5vh;
+    margin-left: -6vw;
+
+    @media(max-width: ${breakpoints.mobile}){
+        margin-top: 5.5vh;
+        margin-left: -100px;
+    }
+    
+    @media(min-width: ${breakpoints.mobile}) and (max-width: ${breakpoints.tablet}){
+         margin-left: -14vw;
+    }
+    
 `
 
 const DropDownList = styled.ul`
@@ -48,6 +61,11 @@ const DropDownItem = styled.li`
     height: 40px;
     padding: 5px;
     font-size: 1rem;
+
+    @media(max-width: ${breakpoints.tablet}){
+        width: 100px;
+    }
+
 `
 
 export default DropDown;
