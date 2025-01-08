@@ -254,7 +254,7 @@ const ShareButton = styled.button.withConfig({
   gap: 8px;
   background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
   border: 1px solid gray;
-  height: 100%;
+  height: 40px;
   width: 100%;
   border-radius: 30px;
   cursor: pointer;
@@ -262,6 +262,7 @@ const ShareButton = styled.button.withConfig({
   object-fit: cover;
   @media (max-width: ${breakpoints.mobile}) {
     font-size: 10px;
+    height: 40px;
   }
 `;
 
