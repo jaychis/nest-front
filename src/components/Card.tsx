@@ -49,6 +49,7 @@ const Card = ({
   type,
   shareCount,
   userId,
+  profileImage,
 }: BoardProps) => {
   const navigate = useNavigate();
   const [isCardCount, setIsCardCount] = useState<number>(0);
@@ -67,10 +68,24 @@ const Card = ({
   );
   const [isProfile, setIsProfile] = useState<string | null>(null);
   const mediaExtensions = {
-    image: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'ico', 'tiff', 'tif', 'heif', 'heic', 'avif'],
-    video: ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv']
+    image: [
+      'jpg',
+      'jpeg',
+      'png',
+      'gif',
+      'webp',
+      'svg',
+      'bmp',
+      'ico',
+      'tiff',
+      'tif',
+      'heif',
+      'heic',
+      'avif',
+    ],
+    video: ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv'],
   };
-  const [color, setColor] = useState<string>('')
+  const [color, setColor] = useState<string>('');
 
   const isMediaType = (url: string, type: 'image' | 'video'): boolean => {
     const ext = url.split('.').pop()?.toLowerCase();
@@ -78,6 +93,12 @@ const Card = ({
   };
 
   const USER_ID: string = localStorage.getItem('id') as string;
+
+  useEffect(() => {
+    if (profileImage) {
+      setIsProfile(profileImage);
+    }
+  }, [profileImage]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -94,23 +115,46 @@ const Card = ({
   }, []);
 
   const safeHtml = (content: string) => {
-    
     return sanitizeHtml(content, {
       allowedTags: [
-        'img', 'a', 'br', 'p', 'div', 'span', 'pre', 'code', 'bold', 'em', 'u', 's', 'blockquote','ol','li','ul'
-      ], 
+        'img',
+        'a',
+        'br',
+        'p',
+        'div',
+        'span',
+        'pre',
+        'code',
+        'bold',
+        'em',
+        'u',
+        's',
+        'blockquote',
+        'ol',
+        'li',
+        'ul',
+      ],
       allowedAttributes: {
-        img: ['src', 'srcset', 'alt', 'title', 'width', 'height', 'loading', 'style'],
+        img: [
+          'src',
+          'srcset',
+          'alt',
+          'title',
+          'width',
+          'height',
+          'loading',
+          'style',
+        ],
         a: ['href'],
-        span: ['style','contenteditable'],
-        p:['style'],
+        span: ['style', 'contenteditable'],
+        p: ['style'],
         div: ['class', 'spellcheck'],
-        pre: ['class'], 
+        pre: ['class'],
         code: ['class'],
-        li: ['data-list','style','class']
+        li: ['data-list', 'style', 'class'],
       },
       allowedClasses: {
-        div: ['ql-code-block', 'ql-code-block-container'], 
+        div: ['ql-code-block', 'ql-code-block-container'],
         code: ['language-*'],
         li: ['ql-indent-*'],
       },
@@ -217,26 +261,26 @@ const Card = ({
   }, []);
 
   useEffect(() => {
-    if (content.some(item => item.includes('span'))) {
-      const contentString = content.join(''); 
+    if (content.some((item) => item.includes('span'))) {
+      const contentString = content.join('');
       const colorMatch = contentString.match(/color:\s*rgb\([^\)]+\)/);
-      
+
       if (colorMatch) {
         const extractedColor = colorMatch[0].replace('color: ', '').trim();
-        setColor(extractedColor); 
+        setColor(extractedColor);
       }
     }
     if (localCount < 0) {
       setLocalCount(0);
     }
-  }, [localCount,content]);
+  }, [localCount, content]);
 
   const extractTextFromHTML = (htmlString: string): string => {
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = htmlString;
     return tempDiv.innerText || tempDiv.textContent || '';
   };
-  
+
   return (
     <>
       <CardContainer
@@ -260,9 +304,7 @@ const Card = ({
           <BoardTitle onClick={goBoardRead}>{title}</BoardTitle>
 
           {type === 'TEXT' ? (
-            <TextContainer
-            fontcolor={color}
-            >
+            <TextContainer fontcolor={color}>
               {content?.map((co, index) => {
                 return (
                   <ContentWrapper
@@ -274,9 +316,18 @@ const Card = ({
             </TextContainer>
           ) : type === 'MEDIA' ? (
             <MediaContainer>
-              {isMediaType(content[0],'image') && content.length === 1 && (<Image src = {content[0]}/>)}
-              {isMediaType(content[0],'image') && content.length > 1 && (<Carousel imageList={content}/>)}
-              {!isMediaType(content[0],'image') && (<Video controls preload="metadata"> <source src={content[0]} /></Video>  )}
+              {isMediaType(content[0], 'image') && content.length === 1 && (
+                <Image src={content[0]} />
+              )}
+              {isMediaType(content[0], 'image') && content.length > 1 && (
+                <Carousel imageList={content} />
+              )}
+              {!isMediaType(content[0], 'image') && (
+                <Video controls preload="metadata">
+                  {' '}
+                  <source src={content[0]} />
+                </Video>
+              )}
             </MediaContainer>
           ) : (
             <>
@@ -435,7 +486,7 @@ const Video = styled.video`
   border-radius: 20px;
   display: block;
   object-fit: contain;
-`
+`;
 
 const LogoContainer = styled.div`
   display: flex;
@@ -470,14 +521,14 @@ const BoardTitle = styled.h3`
 `;
 
 const TextContainer = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'fontcolor', 
+  shouldForwardProp: (prop) => prop !== 'fontcolor',
 })<{ fontcolor: string }>`
   text-align: left;
   white-space: normal;
   word-break: break-word;
   width: 100%;
 
-  span{
+  span {
     color: ${(props) => props.fontcolor};
   }
 `;
