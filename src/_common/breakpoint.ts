@@ -3,7 +3,7 @@ export const breakpoints: {
   readonly tablet: string;
   readonly desktop: string;
 } = {
-  mobile: '767px',
-  tablet: '1024px',
+  mobile: '480px',
+  tablet: '768px',
   desktop: '1280px',
 };
