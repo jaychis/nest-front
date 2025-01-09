@@ -59,7 +59,6 @@ const Card = ({
   const [isCardDownHovered, setIsCardDownHovered] = useState<boolean>(false);
   const [isCardCommentHovered, setIsCardCommentHovered] =
     useState<boolean>(false);
-  const [isCardSendHovered, setIsCardSendHovered] = useState<boolean>(false);
   const [isReaction, setIsReaction] = useState<ReactionStateTypes>(null);
   const [shareContent, setShareContent] = useState<string>('');
   const [isSmallScreen, setIsSmallScreen] = useState(false);
@@ -490,6 +489,7 @@ const Video = styled.video`
 
 const LogoContainer = styled.div`
   display: flex;
+  position: relative;
   flex-direction: row;
   align-items: center;
   width: 100%;
@@ -638,7 +638,6 @@ const CommentWrapper = styled.div`
   align-items: center;
 
   @media (max-width: ${breakpoints.mobile}) {
-    width: 60px;
     margin-right: 7px;
   }
 `;
@@ -656,7 +655,7 @@ const CommentButton = styled.button.withConfig({
   cursor: pointer;
 
   @media (max-width: ${breakpoints.mobile}) {
-    width: 45px;
+    width: 70px;
     height: 40px;
     font-size: 10px;
   }
@@ -669,6 +668,10 @@ const ShareWrapper = styled.div`
   justify-content: center;
   align-items: center;
   margin: 0 5px;
+
+  @media(max-width: ${breakpoints.mobile}){
+    width: 60px;
+  }
 `;
 
 const ScirpWrapper = styled.div`
