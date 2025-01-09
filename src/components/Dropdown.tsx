@@ -3,10 +3,11 @@ import { breakpoints } from "../_common/breakpoint";
 
 interface DropDownProps {
     readonly menu: string[]
-    readonly eventHandler: (item: string) => any;
+    readonly eventHandler: (item: string, eventIndex?:number) => any;
+    readonly eventIndex?: number;
 }
 
-const DropDown = ({ menu,eventHandler }:DropDownProps) => {
+const DropDown = ({ menu,eventHandler,eventIndex }:DropDownProps) => {
     return (
         <DropDownContainer>
             <DropDownList>
@@ -15,7 +16,7 @@ const DropDown = ({ menu,eventHandler }:DropDownProps) => {
                     key={index} 
                     onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
                     onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#fff'}
-                    onClick = {() => {eventHandler(item)}}
+                    onClick = {() => {eventHandler(item,eventIndex)}}
                     >
                         {item}
                     </DropDownItem>

@@ -166,3 +166,21 @@ export const BoardDelete = async (id:string, nickname:string) => {
     console.error(err)
   }
 }
+
+interface UpdateParams{
+  readonly ID: string;
+  readonly title: string;
+  readonly nickname: string;
+  readonly content: string[];
+  readonly category: string;
+}
+
+export const BoardUpdate = async (param: UpdateParams) => {
+  const URL: string = `${BOARD_URL}`
+  try{
+    const res = await client.patch(URL,param)
+    return res
+  }catch(err){
+    console.error(err)
+  }
+}
