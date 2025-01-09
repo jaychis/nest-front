@@ -6,7 +6,7 @@ import { ProfileState } from '../../reducers/profileSlice';
 import { CardType, UserType } from '../../_common/collectionTypes';
 import Card from '../../components/Card';
 import BoardComment, { CommentType } from '../Board/BoardComment';
-import { BoardInquiryAPI } from '../api/boardApi';
+import { BoardInquiryAPI,BoardDelete } from '../api/boardApi';
 import { CommentUsersInquiryAPI } from '../api/commentApi';
 import {
   AwsImageUploadFunctionality,
@@ -20,6 +20,7 @@ import { breakpoints } from '../../_common/breakpoint';
 import TRASH from '../../assets/img/trash.png';
 import SAVE from '../../assets/img/save.png';
 import { UsersProfilePictureAPI } from '../api/usresProfileApi';
+import DropDown from '../../components/Dropdown';
 
 type ACTIVE_SECTION_TYPES = 'POSTS' | 'COMMENTS' | 'PROFILE';
 const Profile = () => {
@@ -36,6 +37,17 @@ const Profile = () => {
   const [nickname, setNickname] = useState<string>(user.data.nickname || '');
   const [email, setEmail] = useState<string>(user.data.email || '');
   const [phone, setPhone] = useState<string>(user.data.phone || '');
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const dropdownList:string[] = ['삭제하기','수정하기']
+  
+  const handleDelete = (item:string) => {
+    if(item === '삭제하기'){
+      BoardDelete(ID,nickname)
+      alert('게시글이 삭제되었습니다.')
+    }else if(item === '수정하기'){
+
+    }
+  }
 
   const imageUrlListDelete = async () => {
     const res: ImageLocalPreviewUrlsDeleteType =
@@ -147,6 +159,20 @@ const Profile = () => {
           <SectionTitle>내가 등록한 게시글</SectionTitle>
           {myPosts && myPosts.length > 0 ? (
             myPosts.map((post: CardType) => (
+              <>
+              <div style = {{margin: '0 15% 0 auto'}}>
+                <EditIcon
+                  style = {{marginTop: '1%'}}
+                  src="https://img.icons8.com/material-outlined/24/menu-2.png"
+                  alt="menu-2"
+                  onClick={() => {setIsOpen(!isOpen)}}
+                />
+                {isOpen && (
+                <DropDown
+                  menu={dropdownList}
+                  eventHandler={handleDelete}
+                />)}
+              </div>
               <Card
                 key={post?.id}
                 shareCount={post?.share_count}
@@ -154,6 +180,7 @@ const Profile = () => {
                 userId={post?.user_id}
                 {...post}
               />
+              </>
             ))
           ) : (
             <p>등록된 포스트가 없습니다.</p>
@@ -422,6 +449,14 @@ const ImageIcon = styled.img`
   width: 24px;
   height: 24px;
   border-radius: 50%;
+`;
+
+const EditIcon = styled.img`
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  z-index: 1000;
 `;
 
 export default Profile;

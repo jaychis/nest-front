@@ -156,3 +156,13 @@ export const shareCountApi = async (id: string) => {
     console.error(err);
   }
 };
+
+export const BoardDelete = async (id:string, nickname:string) => {
+  const URL: string = `${BOARD_URL}/delete`;
+  try{
+    const res = await client.patch(URL,{id,nickname})
+    return res
+  }catch(err){
+    console.error(err)
+  }
+}

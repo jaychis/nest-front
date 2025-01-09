@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { breakpoints } from "../_common/breakpoint";
 
 interface DropDownProps {
     readonly menu: string[]
@@ -8,8 +9,7 @@ interface DropDownProps {
 const DropDown = ({ menu,eventHandler }:DropDownProps) => {
     return (
         <DropDownContainer>
-            <DropDownList
-            >
+            <DropDownList>
                 {menu.map((item, index) => (
                     <DropDownItem
                     key={index} 
@@ -26,9 +26,38 @@ const DropDown = ({ menu,eventHandler }:DropDownProps) => {
 };
 
 const DropDownContainer = styled.div`
-    height: 100%;
-    overflow: hidden;
-`
+  position: absolute;
+  height: auto; 
+  z-index: 1000;
+  top: 35%;
+  left: auto;
+  right: 35%;
+  transform: translateX(-50%);
+  width: 100px;
+
+  @media (max-width: 320px) {
+    top: 31%;
+    left: 73%;
+    transform: translateX(-50%);
+  }
+
+  @media (min-width: 321px) and (max-width: ${breakpoints.mobile}) {
+    top: 29%;
+    left: 77%;
+  }
+
+  @media (min-width: ${breakpoints.mobile}) and (max-width: ${breakpoints.tablet}) {
+    top: 29%;
+    left: 61%;
+    transform: translateX(-50%);
+  }
+
+  @media (min-width: ${breakpoints.tablet}) and (max-width: ${breakpoints.desktop}) {
+    top: 29%;
+    left: 59%;
+    transform: translateX(-50%);
+  }
+`;
 
 const DropDownList = styled.ul`
   border: 1px solid #ddd;
@@ -38,16 +67,19 @@ const DropDownList = styled.ul`
   padding: 5px;
   list-style-type: none;
   margin: 0;
+  width: 100%;
 `;
 
 const DropDownItem = styled.li`
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 6vw;
+    width: 100%;
     height: 40px;
     padding: 5px;
     font-size: 1rem;
+    padding: 5px;
+
 `
 
 export default DropDown;
