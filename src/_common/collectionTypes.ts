@@ -66,7 +66,14 @@ export interface CardType {
   readonly updated_at: Date;
   readonly deleted_at?: Date | null;
   readonly share_count: number;
-  readonly profile_image?: string;
+  readonly user_profile?: {
+    readonly id: string;
+    readonly profile_image: string | null;
+    readonly created_at: Date;
+    readonly updated_at: Date;
+    readonly deleted_at: Date | null;
+    readonly user_id: string;
+  };
 }
 
 export interface ReactionType {
