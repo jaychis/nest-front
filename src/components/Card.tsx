@@ -65,7 +65,6 @@ const Card = ({
   const modalState: UserModalState = useSelector(
     (state: RootState) => state.modalState,
   );
-  const [isProfile, setIsProfile] = useState<string | null>(null);
   const mediaExtensions = {
     image: [
       'jpg',
@@ -92,12 +91,6 @@ const Card = ({
   };
 
   const USER_ID: string = localStorage.getItem('id') as string;
-
-  useEffect(() => {
-    if (profileImage) {
-      setIsProfile(profileImage);
-    }
-  }, [profileImage]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -236,22 +229,13 @@ const Card = ({
     }
   };
 
-  const fetchCardProfile = async (userId: string) => {
-    const profileImage: FetchProfileImageType = await fetchProfileImage({
-      userId,
-    });
-    !profileImage ? setIsProfile(null) : setIsProfile(profileImage);
-  };
-
   const debouncedFetchReactionList = debounce(fetchReactionList, 300);
   const debouncedFetchReactionCount = debounce(fetchReactionCount, 300);
-  const debouncedFetchCardProfile = debounce(fetchCardProfile, 300);
 
   useEffect(() => {
     const startFunc = async () => {
       await debouncedFetchReactionList(id);
       await debouncedFetchReactionCount(id);
-      await debouncedFetchCardProfile(userId);
     };
     startFunc();
 
@@ -290,7 +274,7 @@ const Card = ({
       >
         {/* Card Image */}
         <LogoContainer>
-          <LogoImg src={isProfile ? isProfile : logo} />
+          <LogoImg src={profileImage ? profileImage : logo} />
           <NicknameWrapper
             onClick={() => navigate(`/users/inquiry?nickname=${nickname}`)}
           >
@@ -669,7 +653,7 @@ const ShareWrapper = styled.div`
   align-items: center;
   margin: 0 5px;
 
-  @media(max-width: ${breakpoints.mobile}){
+  @media (max-width: ${breakpoints.mobile}) {
     width: 60px;
   }
 `;
