@@ -1,4 +1,4 @@
-import React, { useEffect, useState, ChangeEvent } from 'react';
+import React, { useEffect, useState, ChangeEvent, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
 import { UsersProfileAPI } from '../api/userApi';
@@ -39,7 +39,8 @@ const Profile = () => {
   const [phone, setPhone] = useState<string>(user.data.phone || '');
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dropdownList:string[] = ['삭제하기','수정하기']
-  
+  const parentRef = useRef<HTMLDivElement>(null)
+
   const handleDelete = (item:string, index?: number) => {
     if(item === '삭제하기'){
       if(index === undefined) return
@@ -163,19 +164,25 @@ const Profile = () => {
           {myPosts && myPosts.length > 0 ? (
             myPosts.map((post: CardType,index) => (
               <>
-              <div style = {{margin: '0 15% 0 auto'}}>
+              <div ref={parentRef} style={{ margin: '0 15% 0 auto', width: '5%' }}>
                 <EditIcon
-                  style = {{marginTop: '1%'}}
+                  style={{ marginTop: '1%' }}
                   src="https://img.icons8.com/material-outlined/24/menu-2.png"
                   alt="menu-2"
-                  onClick={() => {setIsOpen(!isOpen)}}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsOpen(!isOpen);
+                  }}
                 />
                 {isOpen && (
-                <DropDown
-                  menu={dropdownList}
-                  eventHandler={handleDelete}
-                  eventIndex={index}
-                />)}
+                  <DropDown
+                    menu={dropdownList}
+                    eventHandler={handleDelete}
+                    eventIndex={index}
+                    onClose={() => setIsOpen(false)}
+                    ref={parentRef}
+                  />
+                )}
               </div>
               <Card
                 key={post?.id}
