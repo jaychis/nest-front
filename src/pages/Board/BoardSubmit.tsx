@@ -471,7 +471,9 @@ const BoardSubmit = () => {
               </SelectedTopicWrapper>
             </Form>
           </Container>
-          <SubmitButtonStyle type="submit" onClick={(e) => handleSubmit(e)}>
+          <SubmitButtonStyle type="submit" 
+          onTouchEnd={(e) => {handleSubmit(e)}} 
+          onClick={(e) => handleSubmit(e)}>
             보내기
           </SubmitButtonStyle>
         </ContentWrapper>
