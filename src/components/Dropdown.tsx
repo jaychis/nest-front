@@ -25,15 +25,16 @@ const DropDown = forwardRef<HTMLDivElement, DropDownProps>(
             'current' in dropDownRef &&
             dropDownRef.current &&
             !dropDownRef.current.contains(target) &&
-            internalRef?.current && !internalRef.current.contains(target) 
+            internalRef?.current &&
+            !internalRef.current.contains(target)
           ) {
             onClose();
           }
         };
       
-        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('click', handleClickOutside);
         return () => {
-          document.removeEventListener('mousedown', handleClickOutside);
+          document.removeEventListener('click', handleClickOutside);
         };
       }, [onClose, dropDownRef, internalRef]);
   
@@ -60,31 +61,23 @@ const DropDownContainer = styled.div`
   position: absolute;
   height: auto; 
   z-index: 1000;
-  top: 35%;
-  left: auto;
-  right: 37%;
+  top: 4vh;
+  right: -50%;
   transform: translateX(-50%);
   width: 100px;
 
   @media (max-width: 320px) {
-    top: 31%;
-    left: 73%;
+    left: -250%;
     transform: translateX(-50%);
   }
 
-  @media (min-width: 321px) and (max-width: ${breakpoints.mobile}) {
-    top: 29%;
-    left: 77%;
-  }
-
-  @media (min-width: ${breakpoints.mobile}) and (max-width: ${breakpoints.tablet}) {
-    top: 29%;
-    left: 61%;
+  @media (min-width: 321px) and (max-width: ${breakpoints.tablet}) {
+    left: -190%;
     transform: translateX(-50%);
   }
 
   @media (min-width: ${breakpoints.tablet}) and (max-width: ${breakpoints.desktop}) {
-    top: 29%;
+    top: 5vh
     left: 59%;
     transform: translateX(-50%);
   }

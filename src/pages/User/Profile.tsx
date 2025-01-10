@@ -37,7 +37,7 @@ const Profile = () => {
   const [nickname, setNickname] = useState<string>(user.data.nickname || '');
   const [email, setEmail] = useState<string>(user.data.email || '');
   const [phone, setPhone] = useState<string>(user.data.phone || '');
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean[]>([false]);
   const dropdownList:string[] = ['삭제하기','수정하기']
   const parentRef = useRef<HTMLDivElement>(null)
 
@@ -93,8 +93,6 @@ const Profile = () => {
         if (!res) return;
         const response = res.data.response;
         setMyPosts(response);
-        console.log(myPosts)
-        console.log(response)
       };
       postsInquiry();
     }
@@ -132,6 +130,10 @@ const Profile = () => {
     }
   }, [activeSection, ID, dispatch]);
 
+  useEffect(() => {
+    setIsOpen(Array(myPosts.length).fill(false))
+  },[myPosts])
+
   const handleReplySubmit = (reply: any) => {
     // Implement reply submit logic here
   };
@@ -164,22 +166,27 @@ const Profile = () => {
           {myPosts && myPosts.length > 0 ? (
             myPosts.map((post: CardType,index) => (
               <>
-              <div ref={parentRef} style={{ margin: '0 15% 0 auto', width: '5%' }}>
+              <div ref={parentRef} style={{margin: '0 2% 0 auto', width: '5%', position: 'relative' }}>
                 <EditIcon
                   style={{ marginTop: '1%' }}
                   src="https://img.icons8.com/material-outlined/24/menu-2.png"
                   alt="menu-2"
                   onClick={(e) => {
                     e.stopPropagation();
-                    setIsOpen(!isOpen);
+                    setIsOpen((prev) =>
+                      prev.map((state, idx) => (idx === index ? !state : state))
+                    );
                   }}
                 />
-                {isOpen && (
+                {isOpen[index] && (
                   <DropDown
                     menu={dropdownList}
                     eventHandler={handleDelete}
                     eventIndex={index}
-                    onClose={() => setIsOpen(false)}
+                    onClose={() => setIsOpen((prev) =>
+                      prev.map((state, idx) => (idx === index ? false : state))
+                    )
+                    }
                     ref={parentRef}
                   />
                 )}
