@@ -183,7 +183,7 @@ const CommunityProfile = () => {
   return (
     <>
       <CommunityInfoContainer>
-        <Modal isOpen={isOpen} onClose={handleModal}>
+        <Modal isOpen={isOpen} onClose={handleModal} top={'0%'}>
           {/* onChange에서 dispatch를 이용해 selectCommunity의 값을 변경하지 않고  
             edit관련 변수들을 거쳐서 변경한 이유는 이름이나 배경사진을 변경하려다가
             취소하고 나오게 되면 onChange와 dispatch를 통해 변경된 상태가 화면에 적용돼
@@ -327,7 +327,10 @@ const CommunityProfile = () => {
 
             {view && (
               <DropDownElement ref={dropDownRef}>
-                <DropDown menu={editList} eventHandler={communityEditHandler} />
+                <DropDown 
+                menu={editList} 
+                eventHandler={communityEditHandler}
+                onClose = {() => {setView(false)}} />
               </DropDownElement>
             )}
           </>

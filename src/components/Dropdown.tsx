@@ -6,7 +6,7 @@ interface DropDownProps {
   readonly menu: string[];
   readonly eventHandler: (item: string, eventIndex?: number) => any;
   readonly eventIndex?: number;
-  readonly onClose?: () => void;
+  readonly onClose: () => void;
 }
 
 const DropDown = forwardRef<HTMLDivElement, DropDownProps>(
@@ -46,7 +46,10 @@ const DropDown = forwardRef<HTMLDivElement, DropDownProps>(
                 key={index}
                 onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#f5f5f5')}
                 onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#fff')}
-                onClick={() => eventHandler(item, eventIndex)}
+                onClick={() => {
+                    eventHandler(item, eventIndex);
+                    onClose()
+                }}
               >
                 {item}
               </DropDownItem>

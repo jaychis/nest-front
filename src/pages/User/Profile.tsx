@@ -21,6 +21,8 @@ import TRASH from '../../assets/img/trash.png';
 import SAVE from '../../assets/img/save.png';
 import { UsersProfilePictureAPI } from '../api/usresProfileApi';
 import DropDown from '../../components/Dropdown';
+import Modal from '../../components/Modal';
+import SubmitQuill from '../../components/SubmitQuill';
 
 type ACTIVE_SECTION_TYPES = 'POSTS' | 'COMMENTS' | 'PROFILE';
 const Profile = () => {
@@ -37,17 +39,23 @@ const Profile = () => {
   const [nickname, setNickname] = useState<string>(user.data.nickname || '');
   const [email, setEmail] = useState<string>(user.data.email || '');
   const [phone, setPhone] = useState<string>(user.data.phone || '');
-  const [isOpen, setIsOpen] = useState<boolean[]>([false]);
+  const [dropdownisOpen, setDropdownIsOpen] = useState<boolean[]>([false]);
   const dropdownList:string[] = ['삭제하기','수정하기']
   const parentRef = useRef<HTMLDivElement>(null)
-
-  const handleDelete = (item:string, index?: number) => {
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
+  const [editContent, setEditContent] = useState<string[]>([])
+  const [editTitle, setEditTitle] = useState<string>('');
+  const [editIndex, setEditIndex] = useState<number>(0)
+  const handleEdit = (item:string, index?: number) => {
     if(item === '삭제하기'){
       if(index === undefined) return
       BoardDelete(myPosts[index].id,myPosts[index].nickname)
       alert('게시글이 삭제되었습니다.')
-    }else if(item === '수정하기'){
-      
+    }else if(item === '수정하기' && index !== undefined){
+      setEditContent(myPosts[index].content)
+      setEditTitle(myPosts[index].title)
+      setEditIndex(index)
+      setModalIsOpen(true)
     }
   }
 
@@ -131,14 +139,48 @@ const Profile = () => {
   }, [activeSection, ID, dispatch]);
 
   useEffect(() => {
-    setIsOpen(Array(myPosts.length).fill(false))
+    setDropdownIsOpen(Array(myPosts.length).fill(false))
   },[myPosts])
 
   const handleReplySubmit = (reply: any) => {
     // Implement reply submit logic here
   };
+
   return (
     <Container>
+      <Modal  
+        top={'10vh'}
+        isOpen={modalIsOpen}
+        onClose={() => {setModalIsOpen(false)}}
+      >
+        <StyledInput
+        value={editTitle}
+        onChange={(e) => {setEditTitle(e.target.value)}}
+        placeholder='수정을 제목을 입력하세요'
+        />
+          
+        <SubmitQuill
+        setContent={setEditContent}
+        content={editContent}
+        height={'50vh'}
+        />
+
+        <SubmitButtonStyle
+        onClick = {() => {
+          BoardUpdate({
+            id:myPosts[editIndex].id,
+            title:editTitle, 
+            content:editContent,
+            nickname:myPosts[editIndex].nickname,
+            category:myPosts[editIndex].category });
+            alert('수정이 완료되었습니다.')
+            console.log(editTitle)
+          }}
+        >
+          보내기
+        </SubmitButtonStyle>
+      </Modal>
+
       <ButtonContainer>
         <SectionButton
           isActive={activeSection === 'POSTS'}
@@ -173,17 +215,17 @@ const Profile = () => {
                   alt="menu-2"
                   onClick={(e) => {
                     e.stopPropagation();
-                    setIsOpen((prev) =>
+                    setDropdownIsOpen((prev) =>
                       prev.map((state, idx) => (idx === index ? !state : state))
                     );
                   }}
                 />
-                {isOpen[index] && (
+                {dropdownisOpen[index] && (
                   <DropDown
                     menu={dropdownList}
-                    eventHandler={handleDelete}
+                    eventHandler={handleEdit}
                     eventIndex={index}
-                    onClose={() => setIsOpen((prev) =>
+                    onClose={() => setDropdownIsOpen((prev) =>
                       prev.map((state, idx) => (idx === index ? false : state))
                     )
                     }
@@ -191,6 +233,7 @@ const Profile = () => {
                   />
                 )}
               </div>
+
               <Card
                 key={post?.id}
                 shareCount={post?.share_count}
@@ -475,6 +518,30 @@ const EditIcon = styled.img`
   height: 30px;
   position: absolute;
   z-index: 1000;
+`;
+
+const StyledInput = styled.input`
+  flex: 1;
+  width: 96%;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  background-color: #f7f7f7;
+  margin-top: 3vh;
+  margin-bottom: 3vh;
+`;
+
+const SubmitButtonStyle = styled.button`
+  width: 80px;
+  padding: 10px 20px;
+  background-color: #84d7fb;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 7vh;
 `;
 
 export default Profile;

@@ -7,9 +7,10 @@ interface Props {
   readonly setContent: (item: string[] | ((prev: string[]) => string[])) => void;
   readonly content: string[];
   readonly height: string;
+  readonly width?: string;
 }
 
-const SubmitQuill = ({setContent, content, height}: Props) => {
+const SubmitQuill = ({setContent, content, height,width}: Props) => {
   
   const quillRef = useRef<ReactQuill>(null);
 
@@ -68,7 +69,7 @@ const SubmitQuill = ({setContent, content, height}: Props) => {
   return (
     <ReactQuill
       ref={quillRef}
-      style={{ height: height }}
+      style={{ height: height, width: width }}
       onChange={(content) => setContent(content.split('<br />'))}
       value={content.join('<br />')}
       modules={modules}
