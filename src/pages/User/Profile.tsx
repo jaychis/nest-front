@@ -6,7 +6,7 @@ import { ProfileState } from '../../reducers/profileSlice';
 import { CardType, UserType } from '../../_common/collectionTypes';
 import Card from '../../components/Card';
 import BoardComment, { CommentType } from '../Board/BoardComment';
-import { BoardInquiryAPI,BoardDelete } from '../api/boardApi';
+import { BoardInquiryAPI,BoardDelete,BoardUpdate } from '../api/boardApi';
 import { CommentUsersInquiryAPI } from '../api/commentApi';
 import {
   AwsImageUploadFunctionality,
@@ -40,12 +40,13 @@ const Profile = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dropdownList:string[] = ['삭제하기','수정하기']
   
-  const handleDelete = (item:string) => {
+  const handleDelete = (item:string, index?: number) => {
     if(item === '삭제하기'){
-      BoardDelete(ID,nickname)
+      if(index === undefined) return
+      BoardDelete(myPosts[index].id,myPosts[index].nickname)
       alert('게시글이 삭제되었습니다.')
     }else if(item === '수정하기'){
-
+      
     }
   }
 
@@ -91,6 +92,8 @@ const Profile = () => {
         if (!res) return;
         const response = res.data.response;
         setMyPosts(response);
+        console.log(myPosts)
+        console.log(response)
       };
       postsInquiry();
     }
@@ -158,7 +161,7 @@ const Profile = () => {
         <Section>
           <SectionTitle>내가 등록한 게시글</SectionTitle>
           {myPosts && myPosts.length > 0 ? (
-            myPosts.map((post: CardType) => (
+            myPosts.map((post: CardType,index) => (
               <>
               <div style = {{margin: '0 15% 0 auto'}}>
                 <EditIcon
@@ -171,6 +174,7 @@ const Profile = () => {
                 <DropDown
                   menu={dropdownList}
                   eventHandler={handleDelete}
+                  eventIndex={index}
                 />)}
               </div>
               <Card
