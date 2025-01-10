@@ -1,4 +1,4 @@
-import React, { useEffect, useState, ChangeEvent } from 'react';
+import React, { useEffect, useState, ChangeEvent, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
 import { UsersProfileAPI } from '../api/userApi';
@@ -37,9 +37,10 @@ const Profile = () => {
   const [nickname, setNickname] = useState<string>(user.data.nickname || '');
   const [email, setEmail] = useState<string>(user.data.email || '');
   const [phone, setPhone] = useState<string>(user.data.phone || '');
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean[]>([false]);
   const dropdownList:string[] = ['삭제하기','수정하기']
-  
+  const parentRef = useRef<HTMLDivElement>(null)
+
   const handleDelete = (item:string, index?: number) => {
     if(item === '삭제하기'){
       if(index === undefined) return
@@ -92,8 +93,6 @@ const Profile = () => {
         if (!res) return;
         const response = res.data.response;
         setMyPosts(response);
-        console.log(myPosts)
-        console.log(response)
       };
       postsInquiry();
     }
@@ -131,6 +130,10 @@ const Profile = () => {
     }
   }, [activeSection, ID, dispatch]);
 
+  useEffect(() => {
+    setIsOpen(Array(myPosts.length).fill(false))
+  },[myPosts])
+
   const handleReplySubmit = (reply: any) => {
     // Implement reply submit logic here
   };
@@ -163,19 +166,30 @@ const Profile = () => {
           {myPosts && myPosts.length > 0 ? (
             myPosts.map((post: CardType,index) => (
               <>
-              <div style = {{margin: '0 15% 0 auto'}}>
+              <div ref={parentRef} style={{margin: '0 2% 0 auto', width: '5%', position: 'relative' }}>
                 <EditIcon
-                  style = {{marginTop: '1%'}}
+                  style={{ marginTop: '1%' }}
                   src="https://img.icons8.com/material-outlined/24/menu-2.png"
                   alt="menu-2"
-                  onClick={() => {setIsOpen(!isOpen)}}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsOpen((prev) =>
+                      prev.map((state, idx) => (idx === index ? !state : state))
+                    );
+                  }}
                 />
-                {isOpen && (
-                <DropDown
-                  menu={dropdownList}
-                  eventHandler={handleDelete}
-                  eventIndex={index}
-                />)}
+                {isOpen[index] && (
+                  <DropDown
+                    menu={dropdownList}
+                    eventHandler={handleDelete}
+                    eventIndex={index}
+                    onClose={() => setIsOpen((prev) =>
+                      prev.map((state, idx) => (idx === index ? false : state))
+                    )
+                    }
+                    ref={parentRef}
+                  />
+                )}
               </div>
               <Card
                 key={post?.id}
