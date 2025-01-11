@@ -168,7 +168,7 @@ export const BoardDelete = async (id:string, nickname:string) => {
 }
 
 interface UpdateParams{
-  readonly ID: string;
+  readonly id: string;
   readonly title: string;
   readonly nickname: string;
   readonly content: string[];

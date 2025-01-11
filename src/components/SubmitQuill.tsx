@@ -1,15 +1,24 @@
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css'; 
 import { AwsImageUploadFunctionality } from "../_common/imageUploadFuntionality";
-import { useRef, useMemo } from "react";
+import { useRef, useMemo,useEffect } from "react";
 
 interface Props {
   readonly setContent: (item: string[] | ((prev: string[]) => string[])) => void;
   readonly content: string[];
   readonly height: string;
+  readonly width?: string;
 }
 
-const SubmitQuill = ({setContent, content, height}: Props) => {
+const SubmitQuill = ({setContent, content, height,width}: Props) => {
+  
+  useEffect(() => {
+    
+    if(content[0].length > 65535){
+      console.log(content[0].length)
+      alert('내용은 65535자 이하여야 합니다.\n 이미지는 사진모양 아이콘을 클릭하여 업로드 해주세요');
+    }
+  },[content])
   
   const quillRef = useRef<ReactQuill>(null);
 
@@ -68,7 +77,7 @@ const SubmitQuill = ({setContent, content, height}: Props) => {
   return (
     <ReactQuill
       ref={quillRef}
-      style={{ height: height }}
+      style={{ height: height, width: width }}
       onChange={(content) => setContent(content.split('<br />'))}
       value={content.join('<br />')}
       modules={modules}

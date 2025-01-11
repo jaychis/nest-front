@@ -75,6 +75,7 @@ const UserModalForm = () => {
       </ButtonWrapper>
 
       <Modal
+        top={'500%'}
         buttonLabel={activeView}
         isOpen={modalIsOpen}
         onClose={() => {
