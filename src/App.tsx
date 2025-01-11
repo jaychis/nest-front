@@ -4,7 +4,7 @@ import GlobalBar from './pages/Global/GlobalBar';
 import GlobalSideBar from './pages/Global/GlobalSideBar';
 import BoardList from './pages/Board/BoardList';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import BoardSubmit from './pages/Board/BoardSubmit';
+import BoardSubmit from './pages/Board/BoardSubmit/BoardSubmit';
 import BoardRead from './pages/Board/BoardRead';
 import Profile from './pages/User/Profile';
 import UsersInquiry from './pages/User/UsersInquiry';

@@ -1,11 +1,11 @@
 import React, { FormEvent, useEffect, useState, useRef } from 'react';
-import { BoardSubmitAPI, SubmitParams } from '../api/boardApi';
+import { BoardSubmitAPI, SubmitParams } from '../../api/boardApi';
 import { useNavigate } from 'react-router-dom';
-import SubmitQuill from '../../components/SubmitQuill';
+import SubmitQuill from '../../../components/SubmitQuill';
 import 'react-markdown-editor-lite/lib/index.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { BoardType } from '../../_common/collectionTypes';
+import { BoardType } from '../../../_common/collectionTypes';
 import {
   AwsImageUploadFunctionality,
   AwsImageUploadFunctionalityReturnType,
@@ -13,14 +13,14 @@ import {
   ImageLocalPreviewUrlsDelete,
   ImageLocalPreviewUrlsDeleteType,
   ImageLocalPreviewUrlsReturnType,
-} from '../../_common/imageUploadFuntionality';
-import { GetCommunitiesNameAPI } from '../api/communityApi';
-import ErrorModal from '../../_common/ErrorModal';
-import DeleteButton from '../../components/Buttons/DeleteButton';
+} from '../../../_common/imageUploadFuntionality';
+import { GetCommunitiesNameAPI } from '../../api/communityApi';
+import ErrorModal from '../../../_common/ErrorModal';
+import DeleteButton from '../../../components/Buttons/DeleteButton';
 import styled from 'styled-components';
-import { TagListAPI } from '../api/tagApi';
-import { breakpoints } from '../../_common/breakpoint';
-import xIcon from '../../assets/img/icons8-엑스-30.png';
+import { TagListAPI } from '../../api/tagApi';
+import { breakpoints } from '../../../_common/breakpoint';
+import xIcon from '../../../assets/img/icons8-엑스-30.png';
 
 const BoardSubmit = () => {
   const navigate = useNavigate();
@@ -31,7 +31,7 @@ const BoardSubmit = () => {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const ID: string = localStorage.getItem('id') as string;
   const NICKNAME: string = localStorage.getItem('nickname') as string;
-  const [textTitle, setTextTitle] = useState<string>('');  
+  const [title, setTitle] = useState<string>('');  
   const [topics, setTopics] = useState<string[]>([]);
   const [tagSearchTerm, setTagSearchTerm] = useState('');
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -85,29 +85,6 @@ const BoardSubmit = () => {
       setTopics([...topics, formattedTopic]);
       setTagSearchTerm('');
     }
-  };
-
-  const handleTextTitleChange = async (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ): Promise<void> => {
-    const { value } = event.target;
-    setTextTitle(value);
-  };
-
-  const [mediaTitle, setMediaTitle] = useState<string>('');
-  const handleMediaTitleChange = async (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ): Promise<void> => {
-    const { value } = event.target;
-    setMediaTitle(value);
-  };
-
-  const [linkTitle, setLinkTitle] = useState<string>('');
-  const handleLinkTitleChange = async (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ): Promise<void> => {
-    const { value } = event.target;
-    setLinkTitle(value);
   };
 
   const adjustEditorHeight = () => {
@@ -192,23 +169,21 @@ const BoardSubmit = () => {
     event.preventDefault();
 
     let content: string[] = [];
-    let title = '';
 
     try {
       if (inputType === 'TEXT') {
-        if (!textTitle || !textContent) {
+        if (!title || !textContent) {
           setErrorMessage(
             '텍스트 게시물의 제목과 내용을 모두 입력해야 합니다.',
           );
           setErrorModalVisible(true);
           return;
         }
-        title = textTitle;
         content = textContent;
       }
 
       if (inputType === 'MEDIA') {
-        if (!mediaTitle || fileList.length === 0) {
+        if (!title || fileList.length === 0) {
           setErrorMessage(
             '미디어 게시물의 제목과 파일을 모두 제공해야 합니다.',
           );
@@ -220,16 +195,14 @@ const BoardSubmit = () => {
         if (!res) return;
 
         content = res.imageUrls;
-        title = mediaTitle;
       }
 
       if (inputType === 'LINK') {
-        if (!linkTitle || !linkContent) {
+        if (!title || !linkContent) {
           setErrorMessage('링크 게시물의 제목과 링크를 모두 입력해야 합니다.');
           setErrorModalVisible(true);
           return;
         }
-        title = linkTitle;
         content = [linkContent];
       }
 
@@ -350,14 +323,15 @@ const BoardSubmit = () => {
             </div>
           )}
 
+            <InputStyle
+              name="title"
+              type="text"
+              placeholder="제목"
+              onChange={(e) => {setTitle(e.target.value)}}
+            />
+
           {inputType === 'TEXT' && (
             <>
-              <InputStyle
-                name="title"
-                type="text"
-                placeholder="제목"
-                onChange={handleTextTitleChange}
-              />
               <SubmitQuill
                 content={textContent}
                 setContent={setTextContent}
@@ -367,13 +341,6 @@ const BoardSubmit = () => {
           )}
           {inputType === 'MEDIA' && (
             <>
-              <InputStyle
-                name="title"
-                type="text"
-                placeholder="제목"
-                onChange={handleMediaTitleChange}
-              />
-
               {previewUrls.length > 0 ? (
                 <>
                   {previewUrls.map((image, index) => (
@@ -411,12 +378,6 @@ const BoardSubmit = () => {
           )}
           {inputType === 'LINK' && (
             <>
-              <InputStyle
-                name="title"
-                type="text"
-                placeholder="제목"
-                onChange={handleLinkTitleChange}
-              />
               <InputStyle
                 type="text"
                 placeholder="링크 추가"
