@@ -20,7 +20,7 @@ import DeleteButton from '../../../components/Buttons/DeleteButton';
 import styled from 'styled-components';
 import { TagListAPI } from '../../api/tagApi';
 import { breakpoints } from '../../../_common/breakpoint';
-import xIcon from '../../../assets/img/icons8-엑스-30.png';
+import UploadImageAndVideo from './UploadImageAndVideo';
 
 const BoardSubmit = () => {
   const navigate = useNavigate();
@@ -104,22 +104,6 @@ const BoardSubmit = () => {
 
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [fileList, setFileList] = useState<File[]>([]);
-  const handleFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ): Promise<void> => {
-    const urls: ImageLocalPreviewUrlsReturnType = await ImageLocalPreviewUrls({
-      event,
-    });
-    if (!urls) return;
-    setPreviewUrls(urls.previewUrls);
-    setFileList(urls.fileList);
-  };
-
-  const imageUrlListDelete = async (deleteImage: string) => {
-    const temp = previewUrls.filter((url) => url !== deleteImage)
-    setPreviewUrls(temp);
-  };
-
   const [linkContent, setLinkContent] = useState<string>('');
   const handleLinkContentChange = async (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -340,40 +324,13 @@ const BoardSubmit = () => {
             </>
           )}
           {inputType === 'MEDIA' && (
-            <>
-              {previewUrls.length > 0 ? (
-                <>
-                  {previewUrls.map((image, index) => (
-                    <>
-                    <ImagePreviewWrapper key={index}>
-                    <CloseButton src={xIcon} onClick={() => {imageUrlListDelete(image)}}/>
-                      <ImagePreview
-                        src={image}
-                        alt={`Preview image ${index}`}
-                      />
-                    </ImagePreviewWrapper>
-                    </>
-                  ))}
-                </>
-              ) : (
-                <>
-                <CustomInput>
-                <CustomLabel 
-                  htmlFor="file"
-                  style={{borderRadius:'14px'}}  
-                >
-                  이미지 업로드
-                  <InputStyle
-                  type="file"
-                  id="file"
-                  style={{display: 'none'}}
-                  multiple
-                  onChange={handleFileChange}
+            <>  
+                  <UploadImageAndVideo
+                  previewUrls={previewUrls}
+                  setPreviewUrls={setPreviewUrls}
+                  fileList={fileList}
+                  setFileList={setFileList}
                   />
-                </CustomLabel>
-                </CustomInput>
-                </>
-              )}
             </>
           )}
           {inputType === 'LINK' && (
