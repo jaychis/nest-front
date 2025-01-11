@@ -6,12 +6,13 @@ interface Props {
   readonly isOpen: boolean;
   readonly onClose: () => void;
   readonly buttonLabel?: string;
+  readonly top: string;
 }
-const Modal = ({ children, isOpen, onClose, buttonLabel }: Props) => {
+const Modal = ({ children, isOpen, onClose, buttonLabel,top }: Props) => {
   if (!isOpen) return null;
 
   return (
-    <ModalContainer>
+    <ModalContainer style = {{top: top}}>
       <ModalBody>
         <div style={{ display: 'flex', height: '20%', marginBottom: '2vh' }}>
           <CloseButton onClick={onClose}>Close</CloseButton>
@@ -26,27 +27,29 @@ export default Modal;
 
 const ModalContainer = styled.div`
   position: fixed;
-  top: 500%;
-  left: 9%;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   z-index: 9999;
-  width: 80%;
-
+  width: 80vw;
+  max-width: 600px;
+  
   @media (max-width: ${breakpoints.mobile}) {
-    top: 170%;
-    left: 0%;
-    width: 100%;
+    top: 35vh !important ;
+    left: 2%;
+    width: 90%;
     height: 100vh;
+  }
+
+  @media (min-width: ${breakpoints.mobile}) and (max-width: ${breakpoints.tablet}){
+    left: 20%;
+    width: 80%;
+  }
+
+  @media(min-width: ${breakpoints.tablet}){
+    left: 30%;
   }
 `;
 
 const ModalBody = styled.div`
   background-color: #fff;
-  width: 30%;
   border-radius: 25px;
   padding: 15px;
   display: flex;
@@ -56,6 +59,10 @@ const ModalBody = styled.div`
 
   @media (max-width: ${breakpoints.mobile}) {
     width: 100%;
+  }
+
+  @media (min-width: ${breakpoints.mobile}) and (max-width: ${breakpoints.tablet}){
+    width: 85%;
   }
 `;
 

@@ -35,7 +35,7 @@ const BoardSubmit = () => {
   const [topics, setTopics] = useState<string[]>([]);
   const [tagSearchTerm, setTagSearchTerm] = useState('');
   const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [textContent, setTextContent] = useState<string[]>(['']); // 서버에 보내기 위한 변수
+  const [textContent, setTextContent] = useState<string[]>(['']); 
 
   const handleRemoveTopic = (index: number) => {
     const newTopics = topics.filter((_, i) => i !== index);
@@ -471,7 +471,9 @@ const BoardSubmit = () => {
               </SelectedTopicWrapper>
             </Form>
           </Container>
-          <SubmitButtonStyle type="submit" onClick={(e) => handleSubmit(e)}>
+          <SubmitButtonStyle type="submit" 
+          onTouchEnd={(e) => {handleSubmit(e)}} 
+          onClick={(e) => handleSubmit(e)}>
             보내기
           </SubmitButtonStyle>
         </ContentWrapper>
