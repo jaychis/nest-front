@@ -96,16 +96,16 @@ const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
               title: `${title}`,
               imageUrl: 'https://i.ibb.co/pwfv8nX/panda-logo.png',
               link: {
-                mobileWebUrl: `http://${domain}`,
-                webUrl: `http://${domain}`,
+                mobileWebUrl: `https://${domain}`,
+                webUrl: `https://${domain}`,
               },
             },
             buttons: [
               {
                 title: '웹으로 보기',
                 link: {
-                  mobileWebUrl: `http://${domain}`,
-                  webUrl: `http://${domain}`,
+                  mobileWebUrl: `https://${domain}`,
+                  webUrl: `https://${domain}`,
                 },
               },
             ],
