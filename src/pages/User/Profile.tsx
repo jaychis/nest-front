@@ -174,7 +174,7 @@ const Profile = () => {
             nickname:myPosts[editIndex].nickname,
             category:myPosts[editIndex].category });
             alert('수정이 완료되었습니다.')
-            console.log(editTitle)
+            setModalIsOpen(false)
           }}
         >
           보내기
