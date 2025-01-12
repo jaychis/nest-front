@@ -1,27 +1,37 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import './App.css';
 import GlobalBar from './pages/Global/GlobalBar';
-import GlobalSideBar from './pages/Global/GlobalSideBar';
-import BoardList from './pages/Board/BoardList';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import BoardSubmit from './pages/Board/BoardSubmit/BoardSubmit';
-import BoardRead from './pages/Board/BoardRead';
-import Profile from './pages/User/Profile';
-import UsersInquiry from './pages/User/UsersInquiry';
 import ScrollToTop from './components/ScrollToTop';
-import RightSideBar from './pages/Global/RightSideBar';
-import SearchList from './pages/Search/SearchList';
-import CommunityCreatePage1 from './pages/Board/CommunityCreate/CommunityCreatePage1';
-import CommunityCreatePage2 from './pages/Board/CommunityCreate/CommunityCreatePage2';
-import CommunityCreatePage3 from './pages/Board/CommunityCreate/CommunityCreatePage3';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { CommunityProvider } from './contexts/CommunityContext';
-import AdminList from './pages/Admin/AdminList';
-import styled, { keyframes } from 'styled-components';
+import styled,{keyframes} from 'styled-components';
 import { useSelector } from 'react-redux';
 import { RootState } from './store/store';
-import SearchMobile from './pages/Search/SearchMobile';
 import { breakpoints } from './_common/breakpoint';
-import MobilePrivacyPolicyPage from './components/MobilePrivacyPolicyPage';
+
+const GlobalSideBar = lazy(() => import('./pages/Global/GlobalSideBar'));
+const RightSideBar = lazy(() => import('./pages/Global/RightSideBar'));
+const BoardList = lazy(() => import('./pages/Board/BoardList'));
+const BoardSubmit = lazy(() => import('./pages/Board/BoardSubmit/BoardSubmit'));
+const BoardRead = lazy(() => import('./pages/Board/BoardRead'));
+const Profile = lazy(() => import('./pages/User/Profile'));
+const UsersInquiry = lazy(() => import('./pages/User/UsersInquiry'));
+const SearchList = lazy(() => import('./pages/Search/SearchList'));
+const CommunityCreatePage1 = lazy(
+  () => import('./pages/Board/CommunityCreate/CommunityCreatePage1'),
+);
+const CommunityCreatePage2 = lazy(
+  () => import('./pages/Board/CommunityCreate/CommunityCreatePage2'),
+);
+const CommunityCreatePage3 = lazy(
+  () => import('./pages/Board/CommunityCreate/CommunityCreatePage3'),
+);
+const AdminList = lazy(() => import('./pages/Admin/AdminList'));
+const SearchMobile = lazy(() => import('./pages/Search/SearchMobile'));
+const MobilePrivacyPolicyPage = lazy(
+  () => import('./components/MobilePrivacyPolicyPage'),
+);
+
 
 const Layout = ({ children }: { readonly children: React.ReactNode }) => {
   const { hamburgerState } = useSelector(
