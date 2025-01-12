@@ -1,7 +1,7 @@
 @font-face {
     font-family: 'MyFont';
     src: url('assets/fonts/BMJUA_otf.otf') format('opentype');
-    
+    font-display: swap; 
 }
 
 body {

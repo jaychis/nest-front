@@ -6,17 +6,18 @@ import {
   BoardShareListAPI,
   BoardTagsRelatedAPI,
 } from '../api/boardApi';
+import Card from '../../components/Card';
 import { CardType } from '../../_common/collectionTypes';
 import { MainListTypeState } from '../../reducers/mainListTypeSlice';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import EmptyState from '../../components/EmptyState';
 import { useInView } from 'react-intersection-observer';
-import CommunityBanner from './CommunityBanner';
 import styled from 'styled-components';
 import { breakpoints } from '../../_common/breakpoint';
+import debounce from 'lodash.debounce';
 
-const Card = React.lazy(() => import('../../components/Card'))
+const CommunityBanner = React.lazy(() => import('./CommunityBanner'))
 
 const BoardList = () => {
   interface AllListParams {
@@ -34,10 +35,10 @@ const BoardList = () => {
   const [lastInView, setLastInView] = useState<boolean>(false);
   const [id, setId] = useState<IdType>(null);
   const [allDataLoaded, setAllDataLoaded] = useState<boolean>(false);
-
+  
   useEffect(() => {
     if (list.length > 0 && inView && !lastInView) {
-      ListApi({ id, allDataLoaded });
+      debouncListApi({ id, allDataLoaded });
     }
     setLastInView(inView);
   }, [inView]);
@@ -47,7 +48,7 @@ const BoardList = () => {
     setId(null);
     setList([]);
     setLastInView(false);
-    ListApi({ id: null, allDataLoaded: false });
+    debouncListApi({ id: null, allDataLoaded: false });
   }, [buttonType]);
 
   const ListApi = async ({ id, allDataLoaded }: AllListParams) => {
@@ -121,6 +122,8 @@ const BoardList = () => {
       console.error('API error: ', err);
     }
   };
+
+  const debouncListApi = debounce(ListApi,300)
 
   return (
     <>

@@ -10,8 +10,8 @@ import { RootState } from './store/store';
 import { breakpoints } from './_common/breakpoint';
 import GlobalSideBar from './pages/Global/GlobalSideBar';
 import RightSideBar from './pages/Global/RightSideBar';
+import BoardList from './pages/Board/BoardList';
 
-const BoardList = lazy(() => import('./pages/Board/BoardList'));
 const BoardSubmit = lazy(() => import('./pages/Board/BoardSubmit/BoardSubmit'));
 const BoardRead = lazy(() => import('./pages/Board/BoardRead'));
 const Profile = lazy(() => import('./pages/User/Profile'));

@@ -1,7 +1,9 @@
 import React from 'react';
-import logo from '../assets/img/panda_logo.png';
+
 import styled from 'styled-components';
 const EmptyState = () => {
+  const logo = `https://i.ibb.co/KwD7dLS/panda-logo.png`
+
   return (
     <Container>
       <Image src={logo} alt="Empty State" />

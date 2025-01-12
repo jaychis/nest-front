@@ -1,9 +1,0 @@
-@font-face {
-    font-family: 'MyFont';
-    src: url('../../assets/fonts/BMJUA_otf.otf') format('opentype');
-}
-
-body {
-    font-family: 'MyFont', sans-serif;
-}
-
