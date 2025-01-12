@@ -1,6 +1,5 @@
 import  { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import {
   ReactionApi,
   ReactionCountAPI,
@@ -12,7 +11,6 @@ import {
   ReactionStateTypes,
   ReactionType,
 } from '../_common/collectionTypes';
-import YouTube from 'react-youtube';
 import sanitizeHtml from 'sanitize-html';
 import debounce from 'lodash.debounce';
 import { UserModalState } from '../reducers/modalStateSlice';
@@ -249,7 +247,6 @@ const Card = ({
         isHovered={isCardHovered}
         modalState={modalState.modalState}
       >
-        {/* Card Image */}
         <LogoContainer>
           <LogoImg src={logo} alt='프로필 이미지' />
           <NicknameWrapper
