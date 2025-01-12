@@ -23,6 +23,7 @@ import { UsersProfilePictureAPI } from '../api/usresProfileApi';
 import DropDown from '../../components/Dropdown';
 import Modal from '../../components/Modal';
 import SubmitQuill from '../../components/SubmitQuill';
+import UploadImageAndVideo from '../Board/BoardSubmit/UploadImageAndVideo';
 
 type ACTIVE_SECTION_TYPES = 'POSTS' | 'COMMENTS' | 'PROFILE';
 const Profile = () => {
@@ -46,6 +47,8 @@ const Profile = () => {
   const [editContent, setEditContent] = useState<string[]>([])
   const [editTitle, setEditTitle] = useState<string>('');
   const [editIndex, setEditIndex] = useState<number>(0)
+  const [fileList, setFileList] = useState<File[]>([]);
+
   const handleEdit = (item:string, index?: number) => {
     if(item === '삭제하기'){
       if(index === undefined) return
@@ -101,6 +104,7 @@ const Profile = () => {
         if (!res) return;
         const response = res.data.response;
         setMyPosts(response);
+        console.log(response)
       };
       postsInquiry();
     }
@@ -158,13 +162,22 @@ const Profile = () => {
         onChange={(e) => {setEditTitle(e.target.value)}}
         placeholder='수정을 제목을 입력하세요'
         />
-          
+        
+        { myPosts[editIndex] && myPosts[editIndex].type === 'TEXT' && (
         <SubmitQuill
         setContent={setEditContent}
         content={editContent}
         height={'50vh'}
         />
+        )}
 
+        { myPosts[editIndex] && myPosts[editIndex].type === 'MEDIA' && (
+        <UploadImageAndVideo
+        setContent={setEditContent}
+        content={editContent}
+        />
+        )}
+        
         <SubmitButtonStyle
         onClick = {() => {
           BoardUpdate({
@@ -541,7 +554,8 @@ const SubmitButtonStyle = styled.button`
   border-radius: 4px;
   cursor: pointer;
   font-weight: bold;
-  margin-top: 7vh;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
 `;
 
 export default Profile;

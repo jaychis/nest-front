@@ -1,26 +1,22 @@
 import React, { FormEvent, useEffect, useState, useRef } from 'react';
-import { BoardSubmitAPI, SubmitParams } from '../api/boardApi';
+import { BoardSubmitAPI, SubmitParams } from '../../api/boardApi';
 import { useNavigate } from 'react-router-dom';
-import SubmitQuill from '../../components/SubmitQuill';
+import SubmitQuill from '../../../components/SubmitQuill';
 import 'react-markdown-editor-lite/lib/index.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { BoardType } from '../../_common/collectionTypes';
+import { BoardType } from '../../../_common/collectionTypes';
 import {
   AwsImageUploadFunctionality,
   AwsImageUploadFunctionalityReturnType,
-  ImageLocalPreviewUrls,
-  ImageLocalPreviewUrlsDelete,
-  ImageLocalPreviewUrlsDeleteType,
-  ImageLocalPreviewUrlsReturnType,
-} from '../../_common/imageUploadFuntionality';
-import { GetCommunitiesNameAPI } from '../api/communityApi';
-import ErrorModal from '../../_common/ErrorModal';
-import DeleteButton from '../../components/Buttons/DeleteButton';
+} from '../../../_common/imageUploadFuntionality';
+import { GetCommunitiesNameAPI } from '../../api/communityApi';
+import ErrorModal from '../../../_common/ErrorModal';
+import DeleteButton from '../../../components/Buttons/DeleteButton';
 import styled from 'styled-components';
-import { TagListAPI } from '../api/tagApi';
-import { breakpoints } from '../../_common/breakpoint';
-import xIcon from '../../assets/img/icons8-엑스-30.png';
+import { TagListAPI } from '../../api/tagApi';
+import { breakpoints } from '../../../_common/breakpoint';
+import UploadImageAndVideo from './UploadImageAndVideo';
 
 const BoardSubmit = () => {
   const navigate = useNavigate();
@@ -31,7 +27,7 @@ const BoardSubmit = () => {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const ID: string = localStorage.getItem('id') as string;
   const NICKNAME: string = localStorage.getItem('nickname') as string;
-  const [textTitle, setTextTitle] = useState<string>('');  
+  const [title, setTitle] = useState<string>('');  
   const [topics, setTopics] = useState<string[]>([]);
   const [tagSearchTerm, setTagSearchTerm] = useState('');
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -87,29 +83,6 @@ const BoardSubmit = () => {
     }
   };
 
-  const handleTextTitleChange = async (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ): Promise<void> => {
-    const { value } = event.target;
-    setTextTitle(value);
-  };
-
-  const [mediaTitle, setMediaTitle] = useState<string>('');
-  const handleMediaTitleChange = async (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ): Promise<void> => {
-    const { value } = event.target;
-    setMediaTitle(value);
-  };
-
-  const [linkTitle, setLinkTitle] = useState<string>('');
-  const handleLinkTitleChange = async (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ): Promise<void> => {
-    const { value } = event.target;
-    setLinkTitle(value);
-  };
-
   const adjustEditorHeight = () => {
     if (editorRef.current) {
       const editorElement = editorRef.current.editor;
@@ -125,24 +98,6 @@ const BoardSubmit = () => {
     adjustEditorHeight();
   }, [textContent]);
 
-  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
-  const [fileList, setFileList] = useState<File[]>([]);
-  const handleFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ): Promise<void> => {
-    const urls: ImageLocalPreviewUrlsReturnType = await ImageLocalPreviewUrls({
-      event,
-    });
-    if (!urls) return;
-    setPreviewUrls(urls.previewUrls);
-    setFileList(urls.fileList);
-  };
-
-  const imageUrlListDelete = async (deleteImage: string) => {
-    const temp = previewUrls.filter((url) => url !== deleteImage)
-    setPreviewUrls(temp);
-  };
-
   const [linkContent, setLinkContent] = useState<string>('');
   const handleLinkContentChange = async (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -154,6 +109,7 @@ const BoardSubmit = () => {
   const [selectedCommunity, setSelectedCommunity] = useState<string>('jaychis');
   const [searchTerm, setSearchTerm] = useState<string>('jaychis');
   const [searchResults, setSearchResults] = useState<string[]>([]);
+  const [imgUrl, setImgUrl] = useState<string[]>([]);
 
   const handleCommunitySearchChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -192,44 +148,36 @@ const BoardSubmit = () => {
     event.preventDefault();
 
     let content: string[] = [];
-    let title = '';
 
     try {
       if (inputType === 'TEXT') {
-        if (!textTitle || !textContent) {
+        if (!title || !textContent) {
           setErrorMessage(
             '텍스트 게시물의 제목과 내용을 모두 입력해야 합니다.',
           );
           setErrorModalVisible(true);
           return;
         }
-        title = textTitle;
         content = textContent;
       }
 
       if (inputType === 'MEDIA') {
-        if (!mediaTitle || fileList.length === 0) {
+        if (!title || imgUrl.length === 0) {
           setErrorMessage(
             '미디어 게시물의 제목과 파일을 모두 제공해야 합니다.',
           );
           setErrorModalVisible(true);
           return;
         }
-        const res: AwsImageUploadFunctionalityReturnType =
-          await AwsImageUploadFunctionality({ fileList });
-        if (!res) return;
-
-        content = res.imageUrls;
-        title = mediaTitle;
+        content = imgUrl
       }
 
       if (inputType === 'LINK') {
-        if (!linkTitle || !linkContent) {
+        if (!title || !linkContent) {
           setErrorMessage('링크 게시물의 제목과 링크를 모두 입력해야 합니다.');
           setErrorModalVisible(true);
           return;
         }
-        title = linkTitle;
         content = [linkContent];
       }
 
@@ -350,14 +298,15 @@ const BoardSubmit = () => {
             </div>
           )}
 
+            <InputStyle
+              name="title"
+              type="text"
+              placeholder="제목"
+              onChange={(e) => {setTitle(e.target.value)}}
+            />
+
           {inputType === 'TEXT' && (
             <>
-              <InputStyle
-                name="title"
-                type="text"
-                placeholder="제목"
-                onChange={handleTextTitleChange}
-              />
               <SubmitQuill
                 content={textContent}
                 setContent={setTextContent}
@@ -366,57 +315,15 @@ const BoardSubmit = () => {
             </>
           )}
           {inputType === 'MEDIA' && (
-            <>
-              <InputStyle
-                name="title"
-                type="text"
-                placeholder="제목"
-                onChange={handleMediaTitleChange}
+            <>  
+              <UploadImageAndVideo
+              setContent={setImgUrl}
+              content={imgUrl}
               />
-
-              {previewUrls.length > 0 ? (
-                <>
-                  {previewUrls.map((image, index) => (
-                    <>
-                    <ImagePreviewWrapper key={index}>
-                    <CloseButton src={xIcon} onClick={() => {imageUrlListDelete(image)}}/>
-                      <ImagePreview
-                        src={image}
-                        alt={`Preview image ${index}`}
-                      />
-                    </ImagePreviewWrapper>
-                    </>
-                  ))}
-                </>
-              ) : (
-                <>
-                <CustomInput>
-                <CustomLabel 
-                  htmlFor="file"
-                  style={{borderRadius:'14px'}}  
-                >
-                  이미지 업로드
-                  <InputStyle
-                  type="file"
-                  id="file"
-                  style={{display: 'none'}}
-                  multiple
-                  onChange={handleFileChange}
-                  />
-                </CustomLabel>
-                </CustomInput>
-                </>
-              )}
             </>
           )}
           {inputType === 'LINK' && (
             <>
-              <InputStyle
-                name="title"
-                type="text"
-                placeholder="제목"
-                onChange={handleLinkTitleChange}
-              />
               <InputStyle
                 type="text"
                 placeholder="링크 추가"
@@ -641,60 +548,11 @@ const Item = styled.li<{ readonly isEven: boolean }>`
   }
 `;
 
-const ImagePreviewWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 300px; 
-  height: 300px; 
-  border: 1px solid #ddd; 
-  border-radius: 8px;
-  background-color: #f9f9f9; 
-  padding: 10px;
-  position: relative;
-  z-index: 0;
-`;
-
-const ImagePreview = styled.img`
-  max-height: 100%;
-  max-width: 100%;
-  object-fit: cover;
-  z-index: 1;
-`;
-
-const CloseButton = styled.img`
-  top: 2%;
-  left: 1%;
-  position: absolute;
-  width: 15px;
-  height: 15px;
-  border: 1px solid black;
-  border-radius: 50%;
-  cursor: pointer;
-`;
-
-
 const TagInfoMessage = styled.p`
   font-size: 16px;
   color: #555;
   margin: 10px 0;
   line-height: 1.5;
 `;
-
-const CustomInput = styled.div`
-  display: flex;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 16px;
-`
-
-const CustomLabel = styled.label`
-  padding: 8px;
-  background-color: #84d7fb;
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-family: Arial, Helvetica, sans-serif;
-`
 
 export default BoardSubmit;
