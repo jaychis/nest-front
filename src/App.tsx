@@ -113,7 +113,7 @@ const Layout = ({ children }: { readonly children: React.ReactNode }) => {
 function App() {
   return (
     <>
-    <Suspense>
+    <Suspense fallback={<div>로딩 중...</div>}>
       <Router>
         <ScrollToTop />
         <CommunityProvider>

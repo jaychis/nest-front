@@ -1,6 +1,6 @@
 // Alert 컴포넌트
 import React from 'react';
-import { FaTimes } from 'react-icons/fa';
+import { FaTimes } from '@react-icons/all-files/fa/FaTimes';
 import styled from 'styled-components';
 
 // Alert 컴포넌트의 타입 정의

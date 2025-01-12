@@ -1,7 +1,7 @@
 import React, { MouseEventHandler, useEffect, useState } from 'react';
 import { CollectionTypes } from '../../_common/collectionTypes';
 import { isValidPasswordFormat } from '../../_common/passwordRegex';
-import { FaComment } from 'react-icons/fa';
+import { FaComment } from '@react-icons/all-files/fa/FaComment';
 import Alert from '../../components/Alert';
 import { LoginAPI, LoginParams, RefreshTokenAPI } from '../api/userApi';
 import { KakaoOAuthLoginAPI } from '../api/oAuthApi';

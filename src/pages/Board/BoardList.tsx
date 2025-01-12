@@ -6,7 +6,6 @@ import {
   BoardShareListAPI,
   BoardTagsRelatedAPI,
 } from '../api/boardApi';
-import Card from '../../components/Card';
 import { CardType } from '../../_common/collectionTypes';
 import { MainListTypeState } from '../../reducers/mainListTypeSlice';
 import { useSelector } from 'react-redux';
@@ -16,6 +15,8 @@ import { useInView } from 'react-intersection-observer';
 import CommunityBanner from './CommunityBanner';
 import styled from 'styled-components';
 import { breakpoints } from '../../_common/breakpoint';
+
+const Card = React.lazy(() => import('../../components/Card'))
 
 const BoardList = () => {
   interface AllListParams {

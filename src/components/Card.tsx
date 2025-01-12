@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import {
@@ -22,10 +22,6 @@ import styled from 'styled-components';
 import ShareComponent from './ShareComponent';
 import { breakpoints } from '../_common/breakpoint';
 import { handleReaction } from '../_common/handleUserReaction';
-import {
-  fetchProfileImage,
-  FetchProfileImageType,
-} from '../_common/fetchCardProfile';
 import Carousel from './Carousel';
 
 const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {

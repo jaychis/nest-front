@@ -1,5 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { FaSistrix, FaPlus, FaBell } from 'react-icons/fa';
+import { FaSistrix } from '@react-icons/all-files/fa/FaSistrix';
+import { FaPlus } from '@react-icons/all-files/fa/FaPlus';
+import { FaBell } from '@react-icons/all-files/fa/FaBell';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import UserModalForm from '../User/UserModalForm';
