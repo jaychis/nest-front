@@ -54,7 +54,7 @@ const SubmitQuill = ({setContent, content, height,width}: Props) => {
     
     toolbar: {
       container: [
-        [ 'italic', 'underline', 'strike', { color: [] }],
+        [ 'italic', 'underline', 'strike', { color: [] }, 'link'],
         [{ list: 'ordered' }, { list: 'bullet' }],
         ['image'],
       ],
@@ -71,7 +71,8 @@ const SubmitQuill = ({setContent, content, height,width}: Props) => {
     'blockquote',
     'color',
     'image',
-    'list'
+    'list',
+    'link'
   ]
 
   return (

@@ -100,7 +100,7 @@ const Card = ({
       ], 
       allowedAttributes: {
         img: ['src', 'srcset', 'alt', 'title', 'width', 'height', 'loading', 'style'],
-        a: ['href'],
+        a: ['href','rel', 'target'],
         span: ['style','contenteditable'],
         p:['style'],
         div: ['class', 'spellcheck'],
