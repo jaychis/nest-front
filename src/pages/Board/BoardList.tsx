@@ -108,6 +108,7 @@ const BoardList = () => {
       const res = response?.data?.response;
       if (!res) return;
       const newCards = res.current_list;
+      console.log('newCards : ', newCards);
       setList((prevList) => [...prevList, ...newCards]);
 
       if (newCards.length > 0) {
@@ -147,6 +148,7 @@ const BoardList = () => {
                     type={el.type}
                     shareCount={el.share_count}
                     userId={el.user_id}
+                    profileImage={el.user_profile?.profile_image as string}
                   />
                 </React.Fragment>
               );
