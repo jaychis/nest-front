@@ -15,8 +15,20 @@ interface UploadImageAndVideoProps {
 
 const UploadImageAndVideo = ({content, setContent}: UploadImageAndVideoProps) => {
 
+    const mediaExtensions = {
+        image: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'ico', 'tiff', 'tif', 'heif', 'heic', 'avif'],
+        video: ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv']
+      };
+
     const [fileList, setFileList] = useState<File[]>([]);
     const [previewUrls, setPreviewUrls] = useState<string[]>(content)
+    const [isImage, setIsImage] = useState<boolean>(false)
+    const [isVideo, setIsVideo] =useState<boolean>(false)
+
+    const isMediaType = (url:string[], type: 'image' | 'video') => {
+        const temp = url.pop()?.toLowerCase()
+        return temp ? mediaExtensions[type].includes(temp) : false
+    }
     
     const deleteImagePreview = async (deleteImage: string) => {
         const temp = previewUrls.filter((url) => url !== deleteImage)
@@ -31,20 +43,49 @@ const UploadImageAndVideo = ({content, setContent}: UploadImageAndVideoProps) =>
           event,
         });
         if (!urls) return;
+
+        if(!isImage) {
+            const img = urls.fileList.some((url) => isMediaType(url.name.split('.'),'image'))
+            setIsImage(img)
+        }
+        if(!isVideo) {
+            const video = urls.fileList.some((url) => isMediaType(url.name.split('.'),'video'))
+            setIsVideo(video)
+        }
+        
         setPreviewUrls([...previewUrls, ...urls.previewUrls]);
         setFileList(urls.fileList);
       };
 
     useEffect(() => {
-        
+
+        if (isVideo && isImage) {
+            setPreviewUrls([]);
+            setContent([]);
+            setFileList([])
+            setIsVideo(false);
+            setIsImage(false)
+            return alert('이미지와 동영상을 동시에 업로드할 수 없습니다.');
+        }
+
         const uploadAws = async () => {
             const res:AwsImageUploadFunctionalityReturnType = await AwsImageUploadFunctionality({fileList})
             if(!res) return
             setContent([...content, ...res.imageUrls])
         }
+
         uploadAws()
     },[fileList])
 
+    useEffect(() => {
+        // 수정하기에서 기존 content에 이미 들어가 있는 내용 체크하기 위함
+        const img = content.some((url) => isMediaType(url.split('.'),'image'))
+        setIsImage(img)
+
+        const video = content.some((url) => isMediaType(url.split('.'),'video'))
+        setIsVideo(video)
+    },[])
+   
     return(
         <>
         <CustomInput>
@@ -66,13 +107,16 @@ const UploadImageAndVideo = ({content, setContent}: UploadImageAndVideoProps) =>
             
                 {previewUrls.map((image, index) => (
                 <>
+                {isImage && (
                 <ImagePreviewWrapper key={index}>
-                <CloseButton src={xIcon} onClick={() => {deleteImagePreview(image)}}/>
-                    <ImagePreview
-                    src={image}
-                    alt={`Preview image ${index}`}
-                    />
-                </ImagePreviewWrapper>
+                    <CloseButton src={xIcon} onClick={() => {deleteImagePreview(image)}}/>
+                        <ImagePreview
+                        src={image}
+                        alt={`Preview image ${index}`}
+                        />
+                </ImagePreviewWrapper>)}
+
+                {isVideo && (<Video controls preload="metadata"> <source src={image} /></Video>)}  
                 </>
                 ))}
         </>
@@ -140,3 +184,13 @@ const InputStyle = styled.input`
   border-radius: 4px;
   box-sizing: border-box;
 `;
+
+const Video = styled.video`
+  max-width: 700px;
+  max-height: 400px;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  display: block;
+  object-fit: contain;
+`
