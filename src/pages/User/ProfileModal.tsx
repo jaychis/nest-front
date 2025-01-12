@@ -42,7 +42,9 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onRequestClose, but
 
   const handleMyPage = () => {
     onRequestClose();
-    navigate("/users/profile");
+    setTimeout(() => {
+      navigate("/users/profile");
+    }, 0);
   };
   
   return (

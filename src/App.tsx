@@ -8,9 +8,9 @@ import styled,{keyframes} from 'styled-components';
 import { useSelector } from 'react-redux';
 import { RootState } from './store/store';
 import { breakpoints } from './_common/breakpoint';
+import GlobalSideBar from './pages/Global/GlobalSideBar';
+import RightSideBar from './pages/Global/RightSideBar';
 
-const GlobalSideBar = lazy(() => import('./pages/Global/GlobalSideBar'));
-const RightSideBar = lazy(() => import('./pages/Global/RightSideBar'));
 const BoardList = lazy(() => import('./pages/Board/BoardList'));
 const BoardSubmit = lazy(() => import('./pages/Board/BoardSubmit/BoardSubmit'));
 const BoardRead = lazy(() => import('./pages/Board/BoardRead'));
@@ -113,6 +113,7 @@ const Layout = ({ children }: { readonly children: React.ReactNode }) => {
 function App() {
   return (
     <>
+    <Suspense>
       <Router>
         <ScrollToTop />
         <CommunityProvider>
@@ -203,6 +204,7 @@ function App() {
           </Routes>
         </CommunityProvider>
       </Router>
+      </Suspense>
     </>
   );
 }

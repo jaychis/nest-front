@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import logo from '../assets/img/panda_logo.png';
+
 import {
   ReactionApi,
   ReactionCountAPI,
@@ -84,7 +84,7 @@ const Card = ({
     video: ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv'],
   };
   const [color, setColor] = useState<string>('');
-
+  const logo = `https://i.ibb.co/KwD7dLS/panda-logo.png`
   const isMediaType = (url: string, type: 'image' | 'video'): boolean => {
     const ext = url.split('.').pop()?.toLowerCase();
     return ext ? mediaExtensions[type].includes(ext) : false;
@@ -265,7 +265,7 @@ const Card = ({
       >
         {/* Card Image */}
         <LogoContainer>
-          <LogoImg src={profileImage ? profileImage : logo} />
+          <LogoImg src={logo} alt='프로필 이미지' />
           <NicknameWrapper
             onClick={() => navigate(`/users/inquiry?nickname=${nickname}`)}
           >
