@@ -1,23 +1,27 @@
-import { useState } from "react"
+import { useState,useEffect } from "react"
 import styled from "styled-components"
 import xIcon from '../../../assets/img/icons8-엑스-30.png';
 import {
     ImageLocalPreviewUrls,
     ImageLocalPreviewUrlsReturnType,
+    AwsImageUploadFunctionality,
+    AwsImageUploadFunctionalityReturnType
   } from '../../../_common/imageUploadFuntionality';
 
 interface UploadImageAndVideoProps {
-    readonly previewUrls: string[];
-    readonly setPreviewUrls: (item:any) => void;
-    readonly fileList: File[];
-    readonly setFileList: (item:any) => void;
+    readonly content: string[];
+    readonly setContent: (item: string[] | ((prev: string[]) => string[])) => void;
 }
 
-const UploadImageAndVideo = ({previewUrls,setPreviewUrls,fileList, setFileList}: UploadImageAndVideoProps) => {
+const UploadImageAndVideo = ({content, setContent}: UploadImageAndVideoProps) => {
+
+    const [fileList, setFileList] = useState<File[]>([]);
+    const [previewUrls, setPreviewUrls] = useState<string[]>(content)
     
     const deleteImagePreview = async (deleteImage: string) => {
         const temp = previewUrls.filter((url) => url !== deleteImage)
         setPreviewUrls(temp);
+        setContent(temp)
       };
 
     const handleFileChange = async (
@@ -27,46 +31,51 @@ const UploadImageAndVideo = ({previewUrls,setPreviewUrls,fileList, setFileList}:
           event,
         });
         if (!urls) return;
-        setPreviewUrls(urls.previewUrls);
+        setPreviewUrls([...previewUrls, ...urls.previewUrls]);
         setFileList(urls.fileList);
       };
 
+    useEffect(() => {
+        
+        const uploadAws = async () => {
+            const res:AwsImageUploadFunctionalityReturnType = await AwsImageUploadFunctionality({fileList})
+            if(!res) return
+            setContent([...content, ...res.imageUrls])
+        }
+        uploadAws()
+    },[fileList])
+
     return(
         <>
-              {previewUrls.length > 0 ? (
+        <CustomInput>
+            <CustomLabel 
+                htmlFor="file"
+                style={{borderRadius:'14px'}}  
+            >
+                이미지 업로드
+                <InputStyle
+                type="file"
+                id="file"
+                accept="image/*,video/*"
+                style={{display: 'none'}}
+                multiple
+                onChange={handleFileChange}
+                />
+            </CustomLabel>
+            </CustomInput>
+            
+                {previewUrls.map((image, index) => (
                 <>
-                  {previewUrls.map((image, index) => (
-                    <>
-                    <ImagePreviewWrapper key={index}>
-                    <CloseButton src={xIcon} onClick={() => {deleteImagePreview(image)}}/>
-                      <ImagePreview
-                        src={image}
-                        alt={`Preview image ${index}`}
-                      />
-                    </ImagePreviewWrapper>
-                    </>
-                  ))}
+                <ImagePreviewWrapper key={index}>
+                <CloseButton src={xIcon} onClick={() => {deleteImagePreview(image)}}/>
+                    <ImagePreview
+                    src={image}
+                    alt={`Preview image ${index}`}
+                    />
+                </ImagePreviewWrapper>
                 </>
-              ) : (
-                <>
-                <CustomInput>
-                <CustomLabel 
-                  htmlFor="file"
-                  style={{borderRadius:'14px'}}  
-                >
-                  이미지 업로드
-                  <InputStyle
-                  type="file"
-                  id="file"
-                  style={{display: 'none'}}
-                  multiple
-                  onChange={handleFileChange}
-                  />
-                </CustomLabel>
-                </CustomInput>
-                </>
-              )}
-            </>
+                ))}
+        </>
     )
 }
 

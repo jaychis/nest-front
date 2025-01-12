@@ -9,10 +9,6 @@ import { BoardType } from '../../../_common/collectionTypes';
 import {
   AwsImageUploadFunctionality,
   AwsImageUploadFunctionalityReturnType,
-  ImageLocalPreviewUrls,
-  ImageLocalPreviewUrlsDelete,
-  ImageLocalPreviewUrlsDeleteType,
-  ImageLocalPreviewUrlsReturnType,
 } from '../../../_common/imageUploadFuntionality';
 import { GetCommunitiesNameAPI } from '../../api/communityApi';
 import ErrorModal from '../../../_common/ErrorModal';
@@ -102,8 +98,6 @@ const BoardSubmit = () => {
     adjustEditorHeight();
   }, [textContent]);
 
-  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
-  const [fileList, setFileList] = useState<File[]>([]);
   const [linkContent, setLinkContent] = useState<string>('');
   const handleLinkContentChange = async (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -115,6 +109,7 @@ const BoardSubmit = () => {
   const [selectedCommunity, setSelectedCommunity] = useState<string>('jaychis');
   const [searchTerm, setSearchTerm] = useState<string>('jaychis');
   const [searchResults, setSearchResults] = useState<string[]>([]);
+  const [imgUrl, setImgUrl] = useState<string[]>([]);
 
   const handleCommunitySearchChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -167,18 +162,14 @@ const BoardSubmit = () => {
       }
 
       if (inputType === 'MEDIA') {
-        if (!title || fileList.length === 0) {
+        if (!title || imgUrl.length === 0) {
           setErrorMessage(
             '미디어 게시물의 제목과 파일을 모두 제공해야 합니다.',
           );
           setErrorModalVisible(true);
           return;
         }
-        const res: AwsImageUploadFunctionalityReturnType =
-          await AwsImageUploadFunctionality({ fileList });
-        if (!res) return;
-
-        content = res.imageUrls;
+        content = imgUrl
       }
 
       if (inputType === 'LINK') {
@@ -325,12 +316,10 @@ const BoardSubmit = () => {
           )}
           {inputType === 'MEDIA' && (
             <>  
-                  <UploadImageAndVideo
-                  previewUrls={previewUrls}
-                  setPreviewUrls={setPreviewUrls}
-                  fileList={fileList}
-                  setFileList={setFileList}
-                  />
+              <UploadImageAndVideo
+              setContent={setImgUrl}
+              content={imgUrl}
+              />
             </>
           )}
           {inputType === 'LINK' && (
@@ -559,60 +548,11 @@ const Item = styled.li<{ readonly isEven: boolean }>`
   }
 `;
 
-const ImagePreviewWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 300px; 
-  height: 300px; 
-  border: 1px solid #ddd; 
-  border-radius: 8px;
-  background-color: #f9f9f9; 
-  padding: 10px;
-  position: relative;
-  z-index: 0;
-`;
-
-const ImagePreview = styled.img`
-  max-height: 100%;
-  max-width: 100%;
-  object-fit: cover;
-  z-index: 1;
-`;
-
-const CloseButton = styled.img`
-  top: 2%;
-  left: 1%;
-  position: absolute;
-  width: 15px;
-  height: 15px;
-  border: 1px solid black;
-  border-radius: 50%;
-  cursor: pointer;
-`;
-
-
 const TagInfoMessage = styled.p`
   font-size: 16px;
   color: #555;
   margin: 10px 0;
   line-height: 1.5;
 `;
-
-const CustomInput = styled.div`
-  display: flex;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 16px;
-`
-
-const CustomLabel = styled.label`
-  padding: 8px;
-  background-color: #84d7fb;
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-family: Arial, Helvetica, sans-serif;
-`
 
 export default BoardSubmit;
