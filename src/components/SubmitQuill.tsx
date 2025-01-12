@@ -1,7 +1,8 @@
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css'; 
 import { AwsImageUploadFunctionality } from "../_common/imageUploadFuntionality";
-import { useRef, useMemo,useEffect } from "react";
+import { useRef, useMemo, useEffect } from "react";
+import Quill from 'quill';
 
 interface Props {
   readonly setContent: (item: string[] | ((prev: string[]) => string[])) => void;
@@ -10,16 +11,28 @@ interface Props {
   readonly width?: string;
 }
 
-const SubmitQuill = ({setContent, content, height,width}: Props) => {
+const SubmitQuill = ({ setContent, content, height, width }: Props) => {
+
   
+  const Link = Quill.import('formats/link');
+
+  class CustomLink extends Link {
+    static create(value: string) {
+      if (value && !value.startsWith('http://') && !value.startsWith('https://')) {
+        value = `https://${value}`;  
+      }
+      return super.create(value);
+    }
+  }
+
+  Quill.register(CustomLink, true);
+
   useEffect(() => {
-    
-    if(content[0].length > 65535){
-      console.log(content[0].length)
+    if (content[0].length > 65535) {
       alert('내용은 65535자 이하여야 합니다.\n 이미지는 사진모양 아이콘을 클릭하여 업로드 해주세요');
     }
-  },[content])
-  
+  }, [content]);
+
   const quillRef = useRef<ReactQuill>(null);
 
   const handleImageUpload = () => {
@@ -51,10 +64,9 @@ const SubmitQuill = ({setContent, content, height,width}: Props) => {
   };
 
   const modules = useMemo(() => ({
-    
     toolbar: {
       container: [
-        [ 'italic', 'underline', 'strike', { color: [] }],
+        [ 'italic', 'underline', 'strike', { color: [] }, 'link'],
         [{ list: 'ordered' }, { list: 'bullet' }],
         ['image'],
       ],
@@ -64,15 +76,16 @@ const SubmitQuill = ({setContent, content, height,width}: Props) => {
     },
   }), []);
 
-  const formats=[
+  const formats = [
     'italic',
     'underline',
     'strike',
     'blockquote',
     'color',
     'image',
-    'list'
-  ]
+    'list',
+    'link',
+  ];
 
   return (
     <ReactQuill
