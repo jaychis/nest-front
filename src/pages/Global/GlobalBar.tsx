@@ -1,9 +1,10 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { FaSistrix, FaPlus, FaBell } from 'react-icons/fa';
+import { FaSistrix } from '@react-icons/all-files/fa/FaSistrix';
+import { FaPlus } from '@react-icons/all-files/fa/FaPlus';
+import { FaBell } from '@react-icons/all-files/fa/FaBell';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import UserModalForm from '../User/UserModalForm';
-import logo from '../../assets/img/panda_logo.png';
 import ProfileModal from '../User/ProfileModal';
 import { AddSearchAPI } from '../api/searchApi';
 import NotificationModal from '../User/NotificationModal';
@@ -13,12 +14,12 @@ import debounce from 'lodash.debounce';
 import { UserModalState, setModalState } from '../../reducers/modalStateSlice';
 import 'react-tooltip/dist/react-tooltip.css';
 import { Tooltip } from 'react-tooltip';
-import './GlobalBar.module.css';
 import styled from 'styled-components';
 import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
 import { breakpoints } from '../../_common/breakpoint';
 
 const GlobalBar = () => {
+  const logo = `https://i.ibb.co/KwD7dLS/panda-logo.png`
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const modalState: UserModalState = useSelector(

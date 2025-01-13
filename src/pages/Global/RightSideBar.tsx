@@ -273,19 +273,6 @@ const Query = styled.span`
   color: #333;
 `;
 
-const Details = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-top: 5px;
-  font-size: 14px;
-  color: #666;
-`;
-
-const Count = styled.span`
-  margin-right: 10px;
-  font-weight: bold;
-`;
-
 const Link = styled.a`
   font-size: 16px;
   color: #333;

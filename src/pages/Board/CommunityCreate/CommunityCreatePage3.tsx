@@ -7,7 +7,9 @@ import {
 } from '../../api/communityApi';
 import { CommunityVisibilityType } from '../../../_common/collectionTypes';
 import { CommunityTagsSubmitAPI } from '../../api/communityTagsAPI';
-import { FaGlobe, FaLock, FaUsers } from 'react-icons/fa'; // Importing icons from react-icons
+import { FaLock} from '@react-icons/all-files/fa/FaLock'; 
+import { FaGlobe } from '@react-icons/all-files/fa/FaGlobe'; 
+import { FaUsers } from '@react-icons/all-files/fa/FaUsers'; 
 import styled from 'styled-components';
 import MultiStepNav from '../../../components/Buttons/MultiStepNav';
 import Button from '../../../components/Buttons/Button';

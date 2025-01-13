@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import logo from '../assets/img/panda_logo.png';
 import {
   ReactionApi,
   ReactionCountAPI,
@@ -12,7 +11,6 @@ import {
   ReactionStateTypes,
   ReactionType,
 } from '../_common/collectionTypes';
-import YouTube from 'react-youtube';
 import sanitizeHtml from 'sanitize-html';
 import debounce from 'lodash.debounce';
 import { UserModalState } from '../reducers/modalStateSlice';
@@ -22,22 +20,8 @@ import styled from 'styled-components';
 import ShareComponent from './ShareComponent';
 import { breakpoints } from '../_common/breakpoint';
 import { handleReaction } from '../_common/handleUserReaction';
-import {
-  fetchProfileImage,
-  FetchProfileImageType,
-} from '../_common/fetchCardProfile';
 import Carousel from './Carousel';
-
-const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
-  try {
-    return url.includes('v=')
-      ? url?.split('v=')[1]?.split('&')[0]
-      : url?.split('youtu.be/')[1]?.split('?')[0];
-  } catch (e) {
-    console.error('Invalid URL', e);
-    return '';
-  }
-};
+import YoutubeCard from '../pages/Board/BoardSubmit/YoutubeCard';
 
 const Card = ({
   id,
@@ -84,7 +68,7 @@ const Card = ({
     video: ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv'],
   };
   const [color, setColor] = useState<string>('');
-
+  const logo = `https://i.ibb.co/KwD7dLS/panda-logo.png`
   const isMediaType = (url: string, type: 'image' | 'video'): boolean => {
     const ext = url.split('.').pop()?.toLowerCase();
     return ext ? mediaExtensions[type].includes(ext) : false;
@@ -263,9 +247,8 @@ const Card = ({
         isHovered={isCardHovered}
         modalState={modalState.modalState}
       >
-        {/* Card Image */}
         <LogoContainer>
-          <LogoImg src={profileImage ? profileImage : logo} />
+          <LogoImg src={logo} alt='프로필 이미지' />
           <NicknameWrapper
             onClick={() => navigate(`/users/inquiry?nickname=${nickname}`)}
           >
@@ -305,21 +288,9 @@ const Card = ({
             </MediaContainer>
           ) : (
             <>
-              {content.map((video: string, index: number) => (
-                <VideoContainer key={`${id}-${index}`}>
-                  {video && (
-                    <YouTube
-                      videoId={getYouTubeVideoId({ url: video })}
-                      opts={{
-                        width: '100%',
-                        height: '400px',
-                        playerVars: { modestbranding: 1 },
-                      }}
-                      style={{ borderRadius: '20px' }} // 추가된 부분
-                    />
-                  )}
-                </VideoContainer>
-              ))}
+              {<YoutubeCard
+              content={content}
+              />}
             </>
           )}
         </ContentContainer>
@@ -357,7 +328,6 @@ const Card = ({
             </CommentButton>
           </CommentWrapper>
 
-          {/* 공유 */}
           <ShareWrapper>
             <ShareComponent
               shareCount={shareCount}
@@ -366,37 +336,6 @@ const Card = ({
               id={id}
             />
           </ShareWrapper>
-
-          {/*<ScirpWrapper>*/}
-          {/*  <ScripButton*/}
-          {/*    isHovered={isCardSendHovered}*/}
-          {/*    onMouseEnter={() => setIsCardSendHovered(true)}*/}
-          {/*    onMouseLeave={() => setIsCardSendHovered(false)}*/}
-          {/*  >*/}
-          {/*    보내기*/}
-          {/*  </ScripButton>*/}
-          {/*</ScirpWrapper>*/}
-          {/*<div*/}
-          {/*  style={{*/}
-          {/*    marginLeft: "auto", // 자동 여백을 사용하여 오른쪽 정렬*/}
-          {/*    borderRadius: "30px",*/}
-          {/*    width: "auto", // 너비 자동 조정*/}
-          {/*    height: "50px",*/}
-          {/*    display: "flex",*/}
-          {/*    justifyContent: "right",*/}
-          {/*    alignItems: "center",*/}
-          {/*  }}*/}
-          {/*>*/}
-          {/*  <span*/}
-          {/*    style={{*/}
-          {/*      fontSize: "14px",*/}
-          {/*      color: "#000",*/}
-          {/*    }}*/}
-          {/*  >*/}
-          {/*    /!* 조회수  *!/*/}
-          {/*    {viewCount}회*/}
-          {/*  </span>*/}
-          {/*</div>*/}
         </ButtonContainer>
       </CardContainer>
 
@@ -520,11 +459,6 @@ const ContentWrapper = styled.div`
   }
 `;
 
-const VideoContainer = styled.div`
-  border-radius: 20px;
-  overflow: hidden;
-`;
-
 const ButtonContainer = styled.div.withConfig({
   shouldForwardProp: (prop) => prop !== 'modalState',
 })<{
@@ -646,41 +580,6 @@ const ShareWrapper = styled.div`
 
   @media (max-width: ${breakpoints.mobile}) {
     width: 60px;
-  }
-`;
-
-const ScirpWrapper = styled.div`
-  border-radius: 30px;
-  width: 75px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    margin-left: 0px;
-  }
-`;
-
-const ScripButton = styled.button.withConfig({
-  shouldForwardProp: (prop) => prop !== 'isHovered',
-})<{
-  readonly isHovered: boolean;
-}>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
-  border: 1px solid gray;
-  height: 100%;
-  width: 100%;
-  border-radius: 30px;
-  cursor: pointer;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    width: 65px;
-    height: 40px;
-    font-size: 10px;
   }
 `;
 
