@@ -13,7 +13,6 @@ interface Props {
 
 const SubmitQuill = ({ setContent, content, height, width }: Props) => {
 
-  
   const Link = Quill.import('formats/link');
 
   class CustomLink extends Link {
@@ -55,7 +54,7 @@ const SubmitQuill = ({ setContent, content, height, width }: Props) => {
               editor.insertText(range.index, '\n'); 
               editor.setSelection({ index: range.index + 3, length: 0 });
             }
-          }
+          } 
         } catch (error) {
           console.log(error);
         }

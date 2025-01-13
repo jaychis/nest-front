@@ -58,7 +58,6 @@ const UploadImageAndVideo = ({content, setContent}: UploadImageAndVideoProps) =>
       };
 
     useEffect(() => {
-
         if (isVideo && isImage) {
             setPreviewUrls([]);
             setContent([]);
