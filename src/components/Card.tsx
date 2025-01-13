@@ -21,7 +21,7 @@ import ShareComponent from './ShareComponent';
 import { breakpoints } from '../_common/breakpoint';
 import { handleReaction } from '../_common/handleUserReaction';
 import Carousel from './Carousel';
-import YoutubeCard from '../pages/Board/BoardSubmit/YoutubeCard';
+import YoutubeCard from './YoutubeCard';
 
 const Card = ({
   id,
