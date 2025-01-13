@@ -71,7 +71,6 @@ const UploadImageAndVideo = ({content, setContent}: UploadImageAndVideoProps) =>
             const res:AwsImageUploadFunctionalityReturnType = await AwsImageUploadFunctionality({fileList})
             if(!res) return
             setContent([...content, ...res.imageUrls])
-            console.log(test)
         }
 
         uploadAws()

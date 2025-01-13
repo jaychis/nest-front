@@ -87,15 +87,15 @@ const CarouselContainer = styled.div`
     align-items: center;
     justify-content: center;
     gap: 10px;
-    width: 300px;
-    height: 300px;
+    width: 450px;
+    height: 350px;
     overflow: hidden;
     position: relative;
 `;
 
 const CarouselImageWrapper = styled.div`
-    width: 250px;
-    height: 250px;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
     display: flex;
     align-items: center;
