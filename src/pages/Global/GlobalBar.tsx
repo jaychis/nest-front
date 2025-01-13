@@ -251,10 +251,11 @@ const GlobalBar = () => {
 
 export default GlobalBar;
 
-interface TopBarProps {
+const GlobalTopBar = styled.nav.withConfig({
+  shouldForwardProp: (prop) => prop !== 'isVisible',
+  })<{
   readonly isVisible: boolean;
-}
-const GlobalTopBar = styled.nav<TopBarProps>`
+  }>`
   position: fixed;
   display: flex;
   justify-content: space-between;

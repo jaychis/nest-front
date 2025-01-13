@@ -55,7 +55,9 @@ const slideOut = keyframes`
         }
     `;
 
-const GlobalSideBarContainer = styled.div<{ readonly isOpen: boolean }>`
+const GlobalSideBarContainer = styled.div.withConfig({
+    shouldForwardProp: (prop) => prop !== 'isOpen',
+})<{ readonly isOpen: boolean }>`
     width: 200px;
     height: 100%;
     position: fixed;

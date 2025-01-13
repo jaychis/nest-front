@@ -90,7 +90,6 @@ const GlobalSideBar = () => {
   };
 
   const handleClick = async (button: MainListTypes) => {
-    console.log('isSideHovered : ', isSideHovered);
     if (button === 'TAGMATCH' && !(localStorage.getItem('id') as string)) {
       return alert('회원가입 유저에게만 제공되는 기능입니다.');
     }
@@ -124,7 +123,6 @@ const GlobalSideBar = () => {
     <>
       <GlobalSideBarContainer
         isModalOpen={modalState.modalState}
-        isOpen={hamburgerState}
       >
         <HomeList
           selectedButton={selectedButton}
@@ -267,7 +265,7 @@ export default GlobalSideBar;
 
 const GlobalSideBarContainer = styled.div.withConfig({
   shouldForwardProp: (prop) => prop !== 'isModalOpen',
-})<{ readonly isModalOpen: boolean; readonly isOpen: boolean }>`
+})<{ readonly isModalOpen: boolean}>`
   display: flex;
   flex-direction: column;
   width: 200px;
@@ -293,7 +291,7 @@ const GlobalSideBarContainer = styled.div.withConfig({
   }
 `;
 
-const HomeList = styled.div<{
+const HomeList = styled.div.withConfig({ shouldForwardProp: (prop) => !['selectedButton', 'isSideHovered'].includes(prop) })<{
   readonly selectedButton: string;
   readonly isSideHovered: string | null;
 }>`
@@ -306,7 +304,7 @@ const HomeList = styled.div<{
   cursor: pointer;
 `;
 
-const MostCommentedList = styled.div<{
+const MostCommentedList = styled.div.withConfig({ shouldForwardProp: (prop) => !['selectedButton', 'isSideHovered'].includes(prop) })<{
   readonly selectedButton: string;
   readonly isSideHovered: string | null;
 }>`
@@ -319,7 +317,7 @@ const MostCommentedList = styled.div<{
   cursor: pointer;
 `;
 
-const FrequentShareList = styled.div<{
+const FrequentShareList = styled.div.withConfig({ shouldForwardProp: (prop) => !['selectedButton', 'isSideHovered'].includes(prop) })<{
   readonly selectedButton: string;
   readonly isSideHovered: string | null;
 }>`
@@ -332,7 +330,7 @@ const FrequentShareList = styled.div<{
   cursor: pointer;
 `;
 
-const TagMatchList = styled.div<{
+const TagMatchList = styled.div.withConfig({ shouldForwardProp: (prop) => !['selectedButton', 'isSideHovered'].includes(prop) })<{
   readonly selectedButton: string;
   readonly isSideHovered: string | null;
 }>`
@@ -351,7 +349,7 @@ const CommunitySection = styled.div`
   font-size: 14px;
 `;
 
-const CreateCommunityItem = styled.div<{
+const CreateCommunityItem = styled.div.withConfig({ shouldForwardProp: (prop) => !['isSideHovered'].includes(prop) })<{
   readonly isSideHovered: string | null;
 }>`
   display: flex;
@@ -433,7 +431,8 @@ const RecentItem = styled.div`
   }
 `;
 
-const AllListSection = styled.div<{
+const AllListSection = styled.div.withConfig({ 
+  shouldForwardProp: (prop) => !['selectedButton', 'isSideHovered'].includes(prop) })<{
   readonly selectedButton: string;
   readonly isSideHovered: string | null;
 }>`
