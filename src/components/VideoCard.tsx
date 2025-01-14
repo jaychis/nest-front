@@ -22,17 +22,17 @@ const videoExtractors: VideoExtractor[] = [
   {
     platform: 'youtube',
     match: (url: string) => url.includes('youtu.be/'),
-    extract: (url) => url.split('youtu.be/')[1]?.split('?')[0] || null,
+    extract: (url: string) => url.split('youtu.be/')[1]?.split('?')[0] || null,
   },
   {
     platform: 'youtube_shorts',
-    match: (url) => url.includes('youtube.com/shorts/'),
-    extract: (url) => url.split('/shorts/')[1]?.split('?')[0] || null,
+    match: (url: string) => url.includes('youtube.com/shorts/'),
+    extract: (url: string) => url.split('/shorts/')[1]?.split('?')[0] || null,
   },
   {
     platform: 'instagram',
-    match: (url) => url.includes('instagram.com/reel/'),
-    extract: (url) => url.split('reel/')[1]?.split('/')[0] || null,
+    match: (url: string) => url.includes('instagram.com/reel/'),
+    extract: (url: string) => url.split('reel/')[1]?.split('/')[0] || null,
   },
   {
     platform: 'facebook_video',
@@ -169,19 +169,6 @@ export default VideoCard;
 const VideoContainer = styled.div`
   border-radius: 0px;
   overflow: hidden;
-`;
-const StyledVideoContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  border-radius: 20px;
-  overflow: hidden;
-`;
-
-const StyledVideoWrapper = styled.div`
-  flex: 1 1 300px;
-  display: flex;
-  justify-content: center;
 `;
 
 const StyledInstagramWrapper = styled.div<{ readonly height: string }>`

@@ -15,7 +15,6 @@ import { CommunityListAPI } from '../api/communityApi';
 import Tooltip from '../../components/Tooltip';
 import styled from 'styled-components';
 import { breakpoints } from '../../_common/breakpoint';
-import AlertModal from '../../components/AlertModal';
 
 const GlobalSideBar = () => {
   const navigate = useNavigate();
@@ -217,7 +216,7 @@ const GlobalSideBar = () => {
                 .map((community: SelectCommunityParams, index) => (
                   <CommunityItem key={community.id || index}>
                     <CommunityIcon
-                      src={logo}
+                      src={community.icon ? community.icon : logo}
                       alt={'community icon'}
                       onClick={() =>
                         handleCommunityClick(
