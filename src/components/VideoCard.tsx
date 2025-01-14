@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import YouTube from 'react-youtube';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 interface VideoProps {
   readonly content: string[];
@@ -54,6 +54,14 @@ const videoExtractors: VideoExtractor[] = [
     match: (url: string) => url.includes('reddit.com/'),
     extract: (url: string) => url.split('/s/')[1]?.split('?')[0] || null,
   },
+  {
+    platform: 'tiktok',
+    match: (url: string) => url.includes('tiktok.com/'),
+    extract: (url: string) => {
+      const match = url.match(/\/video\/(\d+)/);
+      return match ? match[1] : null;
+    },
+  },
 ];
 
 const VideoCard = ({ content }: VideoProps) => {
@@ -78,11 +86,19 @@ const VideoCard = ({ content }: VideoProps) => {
     <VideoContainer>
       {content.map((video: string, index: number) => {
         const { platform, id } = getVideoIdFromUrl({ url: video });
-        const isYoutube = platform === 'youtube';
-        const videoHeight = isYoutube ? '400px' : '1000px';
+        const isYoutube: boolean = platform === 'youtube';
+        const isTiktok: boolean = platform === 'tiktok';
+        const isInstagram: boolean = platform === 'instagram';
+        const videoHeight = isYoutube
+          ? '400px'
+          : isTiktok
+            ? '575px'
+            : isInstagram
+              ? '690px'
+              : '1000px';
 
         return (
-          <VideoContainer key={`${id}-${index}`}>
+          <>
             {(platform === 'youtube' || platform === 'youtube_shorts') &&
               id && (
                 <YouTube
@@ -96,13 +112,23 @@ const VideoCard = ({ content }: VideoProps) => {
                 />
               )}
             {platform === 'instagram' && id && (
-              <iframe
-                src={`https://www.instagram.com/reel/${id}/embed`}
-                width="100%"
-                height={videoHeight}
-                style={{ borderRadius: '20px', border: 'none' }}
-                allowFullScreen
-              ></iframe>
+              <StyledInstagramWrapper height={videoHeight}>
+                <StyledIframe
+                  src={`https://www.instagram.com/reel/${id}/embed`}
+                  height="1000px"
+                  transformY="-53px"
+                ></StyledIframe>
+              </StyledInstagramWrapper>
+            )}
+            {platform === 'tiktok' && id && (
+              <StyledTikTokWrapper>
+                <StyledIframeContainer height={videoHeight}>
+                  <StyledIframe
+                    src={`https://www.tiktok.com/embed/${id}`}
+                    height="1000px"
+                  ></StyledIframe>
+                </StyledIframeContainer>
+              </StyledTikTokWrapper>
             )}
             {platform === 'facebook_video' && id && (
               <iframe
@@ -131,7 +157,7 @@ const VideoCard = ({ content }: VideoProps) => {
                 allowFullScreen
               ></iframe>
             )}
-          </VideoContainer>
+          </>
         );
       })}
     </VideoContainer>
@@ -141,6 +167,50 @@ const VideoCard = ({ content }: VideoProps) => {
 export default VideoCard;
 
 const VideoContainer = styled.div`
+  border-radius: 0px;
+  overflow: hidden;
+`;
+const StyledVideoContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
   border-radius: 20px;
   overflow: hidden;
+`;
+
+const StyledVideoWrapper = styled.div`
+  flex: 1 1 300px;
+  display: flex;
+  justify-content: center;
+`;
+
+const StyledInstagramWrapper = styled.div<{ readonly height: string }>`
+  width: 100%;
+  height: ${(props) => props.height};
+  overflow: hidden;
+  position: relative;
+  border-radius: 30px;
+`;
+
+const StyledTikTokWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const StyledIframeContainer = styled.div<{ readonly height: string }>`
+  width: 330px;
+  height: ${(props) => props.height};
+  overflow: hidden;
+  position: relative;
+  border-radius: 30px;
+`;
+
+const StyledIframe = styled.iframe<{
+  readonly height: string;
+  readonly transformY?: string;
+}>`
+  width: 100%;
+  height: ${(props) => props.height};
+  border: none;
+  transform: translateY(${(props) => props.transformY || '0'});
 `;
