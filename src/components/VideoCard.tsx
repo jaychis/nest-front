@@ -6,55 +6,72 @@ interface VideoProps {
   readonly content: string[];
 }
 
+interface VideoExtractor {
+  readonly platform: string;
+  readonly match: (url: string) => boolean;
+  readonly extract: (url: string) => string | null;
+}
+
+const videoExtractors: VideoExtractor[] = [
+  {
+    platform: 'youtube',
+    match: (url: string) =>
+      url.includes('youtube.com/watch') && url.includes('v='),
+    extract: (url: string) => url.split('v=')[1]?.split('&')[0] || null,
+  },
+  {
+    platform: 'youtube',
+    match: (url: string) => url.includes('youtu.be/'),
+    extract: (url) => url.split('youtu.be/')[1]?.split('?')[0] || null,
+  },
+  {
+    platform: 'youtube_shorts',
+    match: (url) => url.includes('youtube.com/shorts/'),
+    extract: (url) => url.split('/shorts/')[1]?.split('?')[0] || null,
+  },
+  {
+    platform: 'instagram',
+    match: (url) => url.includes('instagram.com/reel/'),
+    extract: (url) => url.split('reel/')[1]?.split('/')[0] || null,
+  },
+  {
+    platform: 'facebook_video',
+    match: (url: string) => url.includes('facebook.com/share/v/'),
+    extract: (url: string) => url.split('/v/')[1]?.split('/')[0] || null,
+  },
+  {
+    platform: 'facebook_reel',
+    match: (url: string) => url.includes('facebook.com/share/r/'),
+    extract: (url: string) => url.split('/r/')[1]?.split('/')[0] || null,
+  },
+  {
+    platform: 'threads',
+    match: (url: string) => url.includes('threads.net/'),
+    extract: (url: string) => url.split('/post/')[1]?.split('?')[0] || null,
+  },
+  {
+    platform: 'reddit',
+    match: (url: string) => url.includes('reddit.com/'),
+    extract: (url: string) => url.split('/s/')[1]?.split('?')[0] || null,
+  },
+];
+
 const VideoCard = ({ content }: VideoProps) => {
   const getVideoIdFromUrl = ({
     url,
   }: {
     readonly url: string;
   }): { readonly platform: string; readonly id: string } => {
-    try {
-      if (url.includes('youtube.com/watch') && url.includes('v=')) {
-        return { platform: 'youtube', id: url.split('v=')[1]?.split('&')[0] };
-      } else if (url.includes('youtu.be/')) {
-        return {
-          platform: 'youtube',
-          id: url.split('youtu.be/')[1]?.split('?')[0],
-        };
-      } else if (url.includes('youtube.com/shorts/')) {
-        return {
-          platform: 'youtube_shorts',
-          id: url.split('shorts/')[1]?.split('?')[0],
-        };
-      } else if (url.includes('instagram.com/reel/')) {
-        return {
-          platform: 'instagram',
-          id: url.split('reel/')[1]?.split('/')[0],
-        };
-      } else if (url.includes('facebook.com/share/v/')) {
-        return {
-          platform: 'facebook_video',
-          id: url.split('/v/')[1]?.split('/')[0],
-        };
-      } else if (url.includes('facebook.com/share/r/')) {
-        return {
-          platform: 'facebook_reel',
-          id: url.split('/r/')[1]?.split('/')[0],
-        };
-      } else if (url.includes('threads.net/')) {
-        return {
-          platform: 'threads',
-          id: url.split('/post/')[1]?.split('?')[0],
-        };
-      } else if (url.includes('reddit.com/')) {
-        return { platform: 'reddit', id: url.split('/s/')[1]?.split('?')[0] };
-      } else {
-        console.warn('Unsupported URL format:', url);
-        return { platform: 'unknown', id: '' };
+    for (const extractor of videoExtractors) {
+      if (extractor.match(url)) {
+        const id = extractor.extract(url);
+        if (id) {
+          return { platform: extractor.platform, id };
+        }
       }
-    } catch (e) {
-      console.error('Error extracting video ID:', e);
-      return { platform: 'error', id: '' };
     }
+    console.warn('Unsupported URL format:', url);
+    return { platform: 'unknown', id: '' };
   };
 
   return (
