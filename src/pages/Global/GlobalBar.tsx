@@ -251,10 +251,11 @@ const GlobalBar = () => {
 
 export default GlobalBar;
 
-interface TopBarProps {
+const GlobalTopBar = styled.nav.withConfig({
+  shouldForwardProp: (prop) => prop !== 'isVisible',
+  })<{
   readonly isVisible: boolean;
-}
-const GlobalTopBar = styled.nav<TopBarProps>`
+  }>`
   position: fixed;
   display: flex;
   justify-content: space-between;
@@ -275,7 +276,7 @@ const GlobalTopBar = styled.nav<TopBarProps>`
 `;
 
 const HamburgerMenu = styled.div`
-  @media (max-width: ${breakpoints.mobile}) {
+  @media (max-width: ${breakpoints.tablet}) {
     display: flex;
     flex-direction: column;
     cursor: pointer;

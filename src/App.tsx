@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { CommunityProvider } from './contexts/CommunityContext';
 import BoardList from './pages/Board/BoardList';
 import Layout from './components/Layout';
+import CustomSuspense from './components/Suspense';
 
 const BoardSubmit = lazy(() => import('./pages/Board/BoardSubmit/BoardSubmit'));
 const BoardRead = lazy(() => import('./pages/Board/BoardRead'));
@@ -29,7 +30,7 @@ const MobilePrivacyPolicyPage = lazy(
 function App() {
   return (
     <>
-    <Suspense fallback={<div>로딩 중...</div>}>
+    <Suspense fallback={<CustomSuspense/>}>
       <Router>
         <ScrollToTop />
         <CommunityProvider>

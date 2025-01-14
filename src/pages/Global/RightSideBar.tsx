@@ -5,7 +5,6 @@ import debounce from 'lodash.debounce';
 import { useSelector } from 'react-redux';
 import { GetRecentViewedBoardsAPI } from '../api/viewedBoardsApi';
 import { RootState } from '../../store/store';
-import { UserModalState } from '../../reducers/modalStateSlice';
 import styled from 'styled-components';
 
 type SelectTapTypes = 'topSearches' | 'recentBoards';
@@ -15,9 +14,6 @@ type RecentViewedPost = {
 };
 
 const RightSideBar = () => {
-  const modalState: UserModalState = useSelector(
-    (state: RootState) => state.modalState,
-  );
   const searchResults = useSelector(
     (state: RootState) => state.search.searchResults,
   );
@@ -96,7 +92,7 @@ const RightSideBar = () => {
 
   return (
     <RightSideBarContainer>
-      <SidebarContent modalState={modalState.modalState}>
+      <SidebarContent>
         <Tabs>
           <Tab
             active={selectedTab === 'topSearches'}
@@ -191,7 +187,7 @@ const RightSideBarContainer = styled.div`
   }
 `;
 
-const SidebarContent = styled.div<{ readonly modalState: boolean }>`
+const SidebarContent = styled.div`
   width: 250px;
   padding: 20px;
   background: #fff;
@@ -201,7 +197,6 @@ const SidebarContent = styled.div<{ readonly modalState: boolean }>`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   height: 100%;
   position: fixed;
-  z-index: ${(props) => (props.modalState ? -1 : 1000)};
   margin-top: 90px;
 `;
 
@@ -211,7 +206,9 @@ const Tabs = styled.div`
   margin-bottom: 20px;
 `;
 
-const Tab = styled.div<{ readonly active: boolean }>`
+const Tab = styled.div.withConfig({ 
+  shouldForwardProp: (prop) => prop !== 'active',
+})<{readonly active: boolean}>`
   padding: 10px 20px;
   cursor: pointer;
   border-radius: 8px;
@@ -250,7 +247,9 @@ const List = styled.ol`
   margin: 0;
 `;
 
-const ListItem = styled.li<{ hovered: boolean }>`
+const ListItem = styled.li.withConfig({ 
+  shouldForwardProp: (prop) => prop !== 'hovered',
+})<{readonly hovered: boolean}>`
   display: flex;
   justify-content: space-between;
   align-items: center;
