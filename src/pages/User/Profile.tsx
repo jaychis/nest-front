@@ -183,7 +183,7 @@ const Profile = () => {
         <StyledInput
         value={editContent}
         onChange={(e) => {setEditContent([e.target.value])}}
-        placeholder='수정을 링크를를 입력하세요'
+        placeholder='수정할 링크를 입력하세요'
         />
         )}
         

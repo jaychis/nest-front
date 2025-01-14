@@ -384,8 +384,8 @@ const MediaContainer = styled.div`
 const Image = styled.img`
   max-width: 700px;
   max-height: 400px;
-  width: 100%;
-  height: 100%;
+  width: 400px;
+  height: auto;
   border-radius: 20px;
   display: block;
   object-fit: contain;

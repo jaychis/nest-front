@@ -103,8 +103,8 @@ const CarouselImageWrapper = styled.div`
 `;
 
 const CarouselImage = styled.img<{ direction: 'next' | 'prev' }>`
-    width: 100%;
-    height: 100%;
+    width: 400px;
+    height: auto;
     object-fit: cover;
     animation: ${({ direction }) => (direction === 'next' ? slideInNext : slideInPrev)} 0.5s ease-in-out;
 `;
