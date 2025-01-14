@@ -62,7 +62,7 @@ const GlobalSideBarContainer = styled.div.withConfig({
     height: 100%;
     position: fixed;
 
-    @media (max-width: ${breakpoints.mobile}) {
+    @media (max-width: ${breakpoints.tablet}) {
     left: ${(props) => (props.isOpen ? '0' : '-200px')};
     z-index: 50;
     overflow: visible;
