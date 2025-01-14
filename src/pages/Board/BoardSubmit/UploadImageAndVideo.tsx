@@ -58,7 +58,6 @@ const UploadImageAndVideo = ({content, setContent}: UploadImageAndVideoProps) =>
       };
 
     useEffect(() => {
-
         if (isVideo && isImage) {
             setPreviewUrls([]);
             setContent([]);
@@ -109,7 +108,7 @@ const UploadImageAndVideo = ({content, setContent}: UploadImageAndVideoProps) =>
                 <>
                 {isImage && (
                 <ImagePreviewWrapper key={index}>
-                    <CloseButton src={xIcon} onClick={() => {deleteImagePreview(image)}}/>
+                    <DeleteIcon src={xIcon} onClick={() => {deleteImagePreview(image)}}/>
                         <ImagePreview
                         src={image}
                         alt={`Preview image ${index}`}
@@ -140,13 +139,13 @@ const ImagePreviewWrapper = styled.div`
 `;
 
 const ImagePreview = styled.img`
-  max-height: 100%;
-  max-width: 100%;
+  max-height: 90%;
+  max-width: 90%;
   object-fit: cover;
   z-index: 1;
 `;
 
-const CloseButton = styled.img`
+const DeleteIcon = styled.img`
   top: 2%;
   left: 1%;
   position: absolute;

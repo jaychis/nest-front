@@ -25,6 +25,7 @@ import Modal from '../../components/Modal';
 import SubmitQuill from '../../components/SubmitQuill';
 import UploadImageAndVideo from '../Board/BoardSubmit/UploadImageAndVideo';
 
+
 type ACTIVE_SECTION_TYPES = 'POSTS' | 'COMMENTS' | 'PROFILE';
 const Profile = () => {
   const user: ProfileState = useSelector((state: RootState) => state.profile);
@@ -47,7 +48,6 @@ const Profile = () => {
   const [editContent, setEditContent] = useState<string[]>([])
   const [editTitle, setEditTitle] = useState<string>('');
   const [editIndex, setEditIndex] = useState<number>(0)
-  const [fileList, setFileList] = useState<File[]>([]);
 
   const handleEdit = (item:string, index?: number) => {
     if(item === '삭제하기'){
@@ -59,6 +59,7 @@ const Profile = () => {
       setEditTitle(myPosts[index].title)
       setEditIndex(index)
       setModalIsOpen(true)
+      console.log(myPosts[index].content)
     }
   }
 
@@ -175,6 +176,14 @@ const Profile = () => {
         <UploadImageAndVideo
         setContent={setEditContent}
         content={editContent}
+        />
+        )}
+
+        { myPosts[editIndex] && myPosts[editIndex].type === 'LINK' && (
+        <StyledInput
+        value={editContent}
+        onChange={(e) => {setEditContent([e.target.value])}}
+        placeholder='수정을 링크를를 입력하세요'
         />
         )}
         

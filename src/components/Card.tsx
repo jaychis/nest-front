@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import logo from '../assets/img/panda_logo.png';
 import {
   ReactionApi,
   ReactionCountAPI,
@@ -12,7 +11,7 @@ import {
   ReactionStateTypes,
   ReactionType,
 } from '../_common/collectionTypes';
-import YouTube from 'react-youtube';
+
 import sanitizeHtml from 'sanitize-html';
 import debounce from 'lodash.debounce';
 import { UserModalState } from '../reducers/modalStateSlice';
@@ -23,53 +22,8 @@ import ShareComponent from './ShareComponent';
 import { breakpoints } from '../_common/breakpoint';
 import { handleReaction } from '../_common/handleUserReaction';
 import Carousel from './Carousel';
+import VideoCard from './VideoCard';
 
-const getVideoIdFromUrl = ({
-  url,
-}: {
-  readonly url: string;
-}): { readonly platform: string; readonly id: string } => {
-  try {
-    if (url.includes('youtube.com/watch') && url.includes('v=')) {
-      return { platform: 'youtube', id: url.split('v=')[1]?.split('&')[0] };
-    } else if (url.includes('youtu.be/')) {
-      return {
-        platform: 'youtube',
-        id: url.split('youtu.be/')[1]?.split('?')[0],
-      };
-    } else if (url.includes('youtube.com/shorts/')) {
-      return {
-        platform: 'youtube_shorts',
-        id: url.split('shorts/')[1]?.split('?')[0],
-      };
-    } else if (url.includes('instagram.com/reel/')) {
-      return {
-        platform: 'instagram',
-        id: url.split('reel/')[1]?.split('/')[0],
-      };
-    } else if (url.includes('facebook.com/share/v/')) {
-      return {
-        platform: 'facebook_video',
-        id: url.split('/v/')[1]?.split('/')[0],
-      };
-    } else if (url.includes('facebook.com/share/r/')) {
-      return {
-        platform: 'facebook_reel',
-        id: url.split('/r/')[1]?.split('/')[0],
-      };
-    } else if (url.includes('threads.net/')) {
-      return { platform: 'threads', id: url.split('/post/')[1]?.split('?')[0] };
-    } else if (url.includes('reddit.com/')) {
-      return { platform: 'reddit', id: url.split('/s/')[1]?.split('?')[0] };
-    } else {
-      console.warn('Unsupported URL format:', url);
-      return { platform: 'unknown', id: '' };
-    }
-  } catch (e) {
-    console.error('Error extracting video ID:', e);
-    return { platform: 'error', id: '' };
-  }
-};
 const Card = ({
   id,
   category,
@@ -115,7 +69,7 @@ const Card = ({
     video: ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv'],
   };
   const [color, setColor] = useState<string>('');
-
+  const logo = `https://i.ibb.co/KwD7dLS/panda-logo.png`;
   const isMediaType = (url: string, type: 'image' | 'video'): boolean => {
     const ext = url.split('.').pop()?.toLowerCase();
     return ext ? mediaExtensions[type].includes(ext) : false;
@@ -168,7 +122,7 @@ const Card = ({
           'loading',
           'style',
         ],
-        a: ['href'],
+        a: ['href', 'rel', 'target'],
         span: ['style', 'contenteditable'],
         p: ['style'],
         div: ['class', 'spellcheck'],
@@ -303,7 +257,6 @@ const Card = ({
         isHovered={isCardHovered}
         modalState={modalState.modalState}
       >
-        {/* Card Image */}
         <LogoContainer>
           <LogoImg src={profileImage ? profileImage : logo} />
           <NicknameWrapper
@@ -345,65 +298,7 @@ const Card = ({
             </MediaContainer>
           ) : (
             <>
-              {content.map((video: string, index: number) => {
-                const { platform, id } = getVideoIdFromUrl({ url: video });
-                const isYoutube = platform === 'youtube';
-                const videoHeight = isYoutube ? '400px' : '1000px';
-
-                return (
-                  <VideoContainer key={`${id}-${index}`}>
-                    {(platform === 'youtube' ||
-                      platform === 'youtube_shorts') &&
-                      id && (
-                        <YouTube
-                          videoId={id}
-                          opts={{
-                            width: '100%',
-                            height: videoHeight,
-                            playerVars: { modestbranding: 1 },
-                          }}
-                          style={{ borderRadius: '20px' }}
-                        />
-                      )}
-                    {platform === 'instagram' && id && (
-                      <iframe
-                        src={`https://www.instagram.com/reel/${id}/embed`}
-                        width="100%"
-                        height={videoHeight}
-                        style={{ borderRadius: '20px', border: 'none' }}
-                        allowFullScreen
-                      ></iframe>
-                    )}
-                    {platform === 'facebook_video' && id && (
-                      <iframe
-                        src={`https://www.facebook.com/video/embed?video_id=${id}`}
-                        width="100%"
-                        height={videoHeight}
-                        style={{ borderRadius: '20px', border: 'none' }}
-                        allowFullScreen
-                      ></iframe>
-                    )}
-                    {platform === 'reddit' && id && (
-                      <iframe
-                        src={`https://www.reddit.com/embed/${id}`}
-                        width="100%"
-                        height={videoHeight}
-                        style={{ borderRadius: '20px', border: 'none' }}
-                        allowFullScreen
-                      ></iframe>
-                    )}
-                    {platform === 'threads' && id && (
-                      <iframe
-                        src={`https://www.threads.net/embed/post/${id}`}
-                        width="100%"
-                        height={videoHeight}
-                        style={{ borderRadius: '20px', border: 'none' }}
-                        allowFullScreen
-                      ></iframe>
-                    )}
-                  </VideoContainer>
-                );
-              })}
+              <VideoCard content={content} />
             </>
           )}
         </ContentContainer>
@@ -441,7 +336,6 @@ const Card = ({
             </CommentButton>
           </CommentWrapper>
 
-          {/* 공유 */}
           <ShareWrapper>
             <ShareComponent
               shareCount={shareCount}
@@ -450,37 +344,6 @@ const Card = ({
               id={id}
             />
           </ShareWrapper>
-
-          {/*<ScirpWrapper>*/}
-          {/*  <ScripButton*/}
-          {/*    isHovered={isCardSendHovered}*/}
-          {/*    onMouseEnter={() => setIsCardSendHovered(true)}*/}
-          {/*    onMouseLeave={() => setIsCardSendHovered(false)}*/}
-          {/*  >*/}
-          {/*    보내기*/}
-          {/*  </ScripButton>*/}
-          {/*</ScirpWrapper>*/}
-          {/*<div*/}
-          {/*  style={{*/}
-          {/*    marginLeft: "auto", // 자동 여백을 사용하여 오른쪽 정렬*/}
-          {/*    borderRadius: "30px",*/}
-          {/*    width: "auto", // 너비 자동 조정*/}
-          {/*    height: "50px",*/}
-          {/*    display: "flex",*/}
-          {/*    justifyContent: "right",*/}
-          {/*    alignItems: "center",*/}
-          {/*  }}*/}
-          {/*>*/}
-          {/*  <span*/}
-          {/*    style={{*/}
-          {/*      fontSize: "14px",*/}
-          {/*      color: "#000",*/}
-          {/*    }}*/}
-          {/*  >*/}
-          {/*    /!* 조회수  *!/*/}
-          {/*    {viewCount}회*/}
-          {/*  </span>*/}
-          {/*</div>*/}
         </ButtonContainer>
       </CardContainer>
 
@@ -604,11 +467,6 @@ const ContentWrapper = styled.div`
   }
 `;
 
-const VideoContainer = styled.div`
-  border-radius: 20px;
-  overflow: hidden;
-`;
-
 const ButtonContainer = styled.div.withConfig({
   shouldForwardProp: (prop) => prop !== 'modalState',
 })<{
@@ -730,41 +588,6 @@ const ShareWrapper = styled.div`
 
   @media (max-width: ${breakpoints.mobile}) {
     width: 60px;
-  }
-`;
-
-const ScirpWrapper = styled.div`
-  border-radius: 30px;
-  width: 75px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    margin-left: 0px;
-  }
-`;
-
-const ScripButton = styled.button.withConfig({
-  shouldForwardProp: (prop) => prop !== 'isHovered',
-})<{
-  readonly isHovered: boolean;
-}>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
-  border: 1px solid gray;
-  height: 100%;
-  width: 100%;
-  border-radius: 30px;
-  cursor: pointer;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    width: 65px;
-    height: 40px;
-    font-size: 10px;
   }
 `;
 
