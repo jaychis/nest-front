@@ -1,4 +1,4 @@
-import  { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ReactionApi,
@@ -11,6 +11,7 @@ import {
   ReactionStateTypes,
   ReactionType,
 } from '../_common/collectionTypes';
+
 import sanitizeHtml from 'sanitize-html';
 import debounce from 'lodash.debounce';
 import { UserModalState } from '../reducers/modalStateSlice';
@@ -21,7 +22,7 @@ import ShareComponent from './ShareComponent';
 import { breakpoints } from '../_common/breakpoint';
 import { handleReaction } from '../_common/handleUserReaction';
 import Carousel from './Carousel';
-import YoutubeCard from './YoutubeCard';
+import VideoCard from './VideoCard';
 
 const Card = ({
   id,
@@ -68,7 +69,7 @@ const Card = ({
     video: ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv'],
   };
   const [color, setColor] = useState<string>('');
-  const logo = `https://i.ibb.co/KwD7dLS/panda-logo.png`
+  const logo = `https://i.ibb.co/KwD7dLS/panda-logo.png`;
   const isMediaType = (url: string, type: 'image' | 'video'): boolean => {
     const ext = url.split('.').pop()?.toLowerCase();
     return ext ? mediaExtensions[type].includes(ext) : false;
@@ -111,10 +112,19 @@ const Card = ({
         'ul',
       ],
       allowedAttributes: {
-        img: ['src', 'srcset', 'alt', 'title', 'width', 'height', 'loading', 'style'],
-        a: ['href','rel', 'target'],
-        span: ['style','contenteditable'],
-        p:['style'],
+        img: [
+          'src',
+          'srcset',
+          'alt',
+          'title',
+          'width',
+          'height',
+          'loading',
+          'style',
+        ],
+        a: ['href', 'rel', 'target'],
+        span: ['style', 'contenteditable'],
+        p: ['style'],
         div: ['class', 'spellcheck'],
         pre: ['class'],
         code: ['class'],
@@ -248,7 +258,7 @@ const Card = ({
         modalState={modalState.modalState}
       >
         <LogoContainer>
-          <LogoImg src={logo} alt='프로필 이미지' />
+          <LogoImg src={profileImage ? profileImage : logo} />
           <NicknameWrapper
             onClick={() => navigate(`/users/inquiry?nickname=${nickname}`)}
           >
@@ -288,9 +298,7 @@ const Card = ({
             </MediaContainer>
           ) : (
             <>
-              {<YoutubeCard
-              content={content}
-              />}
+              <VideoCard content={content} />
             </>
           )}
         </ContentContainer>
