@@ -5,13 +5,13 @@ import next from '../assets/img/icons8-앞으로-50.png';
 
 interface CarouselProps {
     imageList: string[];
+    
 }
 
 const Carousel = ({ imageList }: CarouselProps) => {
     const [carouselIndex, setCarouselIndex] = useState<number>(0);
     const [direction, setDirection] = useState<'next' | 'prev'>('next'); // 방향 상태 추가
     const [touchStartX, setTouchStartX] = useState<number | null>(null);
-
 
     const handelNext = () => {
         setDirection('next');
@@ -53,6 +53,7 @@ const Carousel = ({ imageList }: CarouselProps) => {
                     src={imageList[carouselIndex]}
                     direction={direction}
                     key={carouselIndex}
+                    loading="lazy"
                 />
             </CarouselImageWrapper>
             <ArrowIcon src={next} onClick={handelNext} />

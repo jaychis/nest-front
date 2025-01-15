@@ -1,4 +1,4 @@
-import  { useEffect, useState } from 'react';
+import  { useEffect, useState, lazy } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ReactionApi,
@@ -20,8 +20,10 @@ import styled from 'styled-components';
 import ShareComponent from './ShareComponent';
 import { breakpoints } from '../_common/breakpoint';
 import { handleReaction } from '../_common/handleUserReaction';
-import Carousel from './Carousel';
-import YoutubeCard from './YoutubeCard';
+
+
+const Carousel = lazy(() => import('./Carousel'))
+const YoutubeCard = lazy(() => import('./YoutubeCard'))
 
 const Card = ({
   id,
@@ -209,13 +211,13 @@ const Card = ({
 
   useEffect(() => {
     const startFunc = async () => {
-      await debouncedFetchReactionList(id);
-      await debouncedFetchReactionCount(id);
+      await Promise.all([
+        debouncedFetchReactionList(id),
+        debouncedFetchReactionCount(id),
+      ]);
     };
     startFunc();
-
-    const temp = extractTextFromHTML(content[0]);
-    setShareContent(temp);
+    extractTextFromHTML(content[0]);
   }, []);
 
   useEffect(() => {
@@ -379,13 +381,12 @@ const MediaContainer = styled.div`
   border: 2px solid darkgray;
   border-radius: 20px;
   margin: 10px auto;
+  height: 400px;
 `;
 
 const Image = styled.img`
-  max-width: 700px;
-  max-height: 400px;
   width: 400px;
-  height: auto;
+  height: 400px;
   border-radius: 20px;
   display: block;
   object-fit: contain;

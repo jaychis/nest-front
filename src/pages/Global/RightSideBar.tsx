@@ -179,6 +179,7 @@ const RightSideBar = () => {
 
 const RightSideBarContainer = styled.div`
   width: 250px;
+  height: 100%;
   margin-left: auto;
   margin-right: 20px;
 

@@ -367,6 +367,7 @@ const CommunityListContainer = styled.div`
   flex: 1;
   padding: 5px 0 10px 10px;
   overflow-y: auto;
+  height: calc(100vh - 150px);
 `;
 
 const CommunityItem = styled.div`

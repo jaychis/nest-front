@@ -312,6 +312,7 @@ const LogoWrapper = styled.div.withConfig({
 
 const LogoImage = styled.img`
   width: 50px;
+  height: 50px;
 `;
 
 const SiteName = styled.span`
