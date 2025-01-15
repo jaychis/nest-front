@@ -16,6 +16,7 @@ import { useInView } from 'react-intersection-observer';
 import styled from 'styled-components';
 import { breakpoints } from '../../_common/breakpoint';
 import debounce from 'lodash.debounce';
+import CustomSuspense from '../../components/Suspense';
 
 const CommunityBanner = React.lazy(() => import('./CommunityBanner'))
 

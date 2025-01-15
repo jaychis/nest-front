@@ -19,7 +19,7 @@ import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
 import { breakpoints } from '../../_common/breakpoint';
 
 const GlobalBar = () => {
-  const logo = `https://i.ibb.co/KwD7dLS/panda-logo.png`
+  const logo = "https://i.ibb.co/rHPPfvt/download.webp" 
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const modalState: UserModalState = useSelector(

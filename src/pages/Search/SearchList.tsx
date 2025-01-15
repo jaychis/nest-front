@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   GetSearchBoardsAPI,
   GetSearchCommentsAPI,
@@ -111,7 +111,6 @@ const SearchList = () => {
           if (!res) return;
 
           const response = res.data.response;
-          console.log('GetSearchPeopleAPI response : ', response);
 
           setSearchUserList(response);
         })
@@ -125,7 +124,6 @@ const SearchList = () => {
         .then((res): void => {
           if (!res) return;
           const response = res.data.response;
-          console.log('TAGS response : ', response);
 
           setSearchTagList(response);
         })
@@ -133,7 +131,7 @@ const SearchList = () => {
           console.error('SearchList GetSearchTagsAPI error : ', err),
         );
     }
-  }, [searchType, QUERY, sortType]); // QUERY를 의존성 배열에 추가하여 쿼리 변경 시 재실행
+  }, [searchType, QUERY, sortType]);
 
   useEffect(() => {
     const viewport = window.visualViewport;
@@ -156,7 +154,6 @@ const SearchList = () => {
   }: {
     readonly type: string;
   }): Promise<void> => {
-    console.log('NavBarStateChange type : ', type);
     if (type === 'BOARDS') setSearchType('BOARDS');
     if (type === 'COMMUNITIES') setSearchType('COMMUNITIES');
     if (type === 'COMMENTS') setSearchType('COMMENTS');
@@ -208,7 +205,6 @@ const SearchList = () => {
     );
   };
 
-  const EmptyList = () => <EmptyState />;
   return (
     <>
       <MainContainer>

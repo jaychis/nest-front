@@ -21,11 +21,6 @@ const CommunityCreatePage2: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    console.log('topics : ', topics);
-    console.log('searchTerm : ', searchTerm);
-  }, [topics, searchTerm]);
-
   const handleRemoveTopic = (index: number) => {
     const newTopics = topics.filter((_, i) => i !== index);
     setTopics(newTopics);

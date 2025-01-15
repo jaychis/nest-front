@@ -1,4 +1,4 @@
-import  { useEffect, useState, lazy } from 'react';
+import  React,{ useEffect, useState, lazy } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ReactionApi,
@@ -13,14 +13,12 @@ import {
 } from '../_common/collectionTypes';
 import sanitizeHtml from 'sanitize-html';
 import debounce from 'lodash.debounce';
-import { UserModalState } from '../reducers/modalStateSlice';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import styled from 'styled-components';
 import ShareComponent from './ShareComponent';
 import { breakpoints } from '../_common/breakpoint';
 import { handleReaction } from '../_common/handleUserReaction';
-
 
 const Carousel = lazy(() => import('./Carousel'))
 const YoutubeCard = lazy(() => import('./YoutubeCard'))
@@ -46,11 +44,7 @@ const Card = ({
   const [isCardCommentHovered, setIsCardCommentHovered] =
     useState<boolean>(false);
   const [isReaction, setIsReaction] = useState<ReactionStateTypes>(null);
-  const [shareContent, setShareContent] = useState<string>('');
   const [isSmallScreen, setIsSmallScreen] = useState(false);
-  const modalState: UserModalState = useSelector(
-    (state: RootState) => state.modalState,
-  );
   const mediaExtensions = {
     image: [
       'jpg',
@@ -70,7 +64,7 @@ const Card = ({
     video: ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv'],
   };
   const [color, setColor] = useState<string>('');
-  const logo = `https://i.ibb.co/KwD7dLS/panda-logo.png`
+  const logo = "https://i.ibb.co/rHPPfvt/download.webp" 
   const isMediaType = (url: string, type: 'image' | 'video'): boolean => {
     const ext = url.split('.').pop()?.toLowerCase();
     return ext ? mediaExtensions[type].includes(ext) : false;
@@ -247,7 +241,6 @@ const Card = ({
         onMouseEnter={() => setIsCardHovered(true)}
         onMouseLeave={() => setIsCardHovered(false)}
         isHovered={isCardHovered}
-        modalState={modalState.modalState}
       >
         <LogoContainer>
           <LogoImg src={logo} alt='프로필 이미지' />
@@ -297,7 +290,7 @@ const Card = ({
           )}
         </ContentContainer>
 
-        <ButtonContainer modalState={modalState.modalState}>
+        <ButtonContainer>
           <ReactionWrapper>
             <LikeButton
               isLiked={isReaction === 'LIKE'}
@@ -347,10 +340,9 @@ const Card = ({
 };
 
 const CardContainer = styled.div.withConfig({
-  shouldForwardProp: (prop) => !['isHovered', 'modalState'].includes(prop),
+  shouldForwardProp: (prop) => !['isHovered'].includes(prop),
 })<{
   readonly isHovered: boolean;
-  readonly modalState: boolean;
 }>`
   display: flex;
   flex-direction: column;
@@ -460,11 +452,7 @@ const ContentWrapper = styled.div`
   }
 `;
 
-const ButtonContainer = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'modalState',
-})<{
-  readonly modalState: boolean;
-}>`
+const ButtonContainer = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;

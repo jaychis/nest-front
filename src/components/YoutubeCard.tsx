@@ -1,11 +1,13 @@
 import styled from "styled-components";
 import YouTube from "react-youtube";
+import React from "react";
 
 interface YoutubeProps {
   readonly content: string[];
 }
 
 const YoutubeCard = ({ content }: YoutubeProps) => {
+  
   const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
     try {
       return url.includes("v=")
