@@ -113,17 +113,17 @@ const VideoCard = ({ content }: VideoProps) => {
                 />
               )}
             {platform === 'instagram' && id && (
-              <StyledInstagramWrapper>
-                <StyledInstagramContainer height={videoHeight}>
-                  <StyledIframe
-                    src={`https://www.instagram.com/reel/${id}/embed`}
-                    height="1000px"
-                    width="1000px"
-                    transformY="-60px"
-                    transformX="23px"
-                  ></StyledIframe>
-                </StyledInstagramContainer>
-              </StyledInstagramWrapper>
+              <StyledInstagramWrapperContainer>
+                <StyledInstagramWrapper>
+                  <StyledInstagramContainer height={videoHeight}>
+                    <StyledInstagramIframe
+                      src={`https://www.instagram.com/reel/${id}/embed`}
+                      height="1000px"
+                      width="500px"
+                    ></StyledInstagramIframe>
+                  </StyledInstagramContainer>
+                </StyledInstagramWrapper>
+              </StyledInstagramWrapperContainer>
             )}
             {platform === 'tiktok' && id && (
               <StyledTikTokWrapper>
@@ -177,25 +177,51 @@ const VideoContainer = styled.div`
   overflow: hidden;
 `;
 
+const StyledInstagramWrapperContainer = styled.div`
+  overflow: hidden; /* 초과된 콘텐츠 숨김 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: blue;
+  width: 100%;
+  height: 100%;
+`;
+
 const StyledInstagramWrapper = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
   background-color: black;
-  width: 100%;
+  height: 480px; /* 높이를 고정 */
   border-radius: 30px;
+  overflow: hidden; /* 초과된 콘텐츠 숨김 */
+  background-color: brown;
+  width: 380px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    height: 480px; /* 모바일 환경에서 높이 조정 */
+  }
 `;
 
 const StyledInstagramContainer = styled.div<{ readonly height: string }>`
-  width: 500px;
-  height: ${(props) => props.height};
-  overflow: hidden;
-  position: relative;
-  height: 590px;
-  border-radius: 20px;
+  width: 100%; /* 부모 너비 고정 */
+  height: 100%; /* 부모 높이에 맞춤 */
+  overflow: hidden; /* 초과 콘텐츠 숨김 */
 
-  @media (max-width: ${breakpoints.mobile}) {
-    height: 580px;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center; /* 중앙 정렬 */
+  background-color: red;
+`;
+
+const StyledInstagramIframe = styled.iframe<{
+  readonly height: string;
+}>`
+  width: 100%;
+  height: 100%; /* 부모의 높이에 맞게 설정 */
+  border: none;
+  overflow: hidden; /* 초과 콘텐츠 숨김 */
+  pointer-events: none; /* 사용자가 스크롤할 수 없도록 차단 */
 `;
 
 const StyledTikTokWrapper = styled.div`
@@ -214,7 +240,7 @@ const StyledTiktokIframeContainer = styled.div<{ readonly height: string }>`
   border-radius: 10px;
 
   @media (max-width: ${breakpoints.mobile}) {
-    height: 510px;
+    height: 570px;
     width: 290px;
   }
 `;
