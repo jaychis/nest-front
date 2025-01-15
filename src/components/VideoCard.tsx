@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import YouTube from 'react-youtube';
 import React, { useEffect } from 'react';
+import { breakpoints } from '../_common/breakpoint';
 
 interface VideoProps {
   readonly content: string[];
@@ -112,22 +113,27 @@ const VideoCard = ({ content }: VideoProps) => {
                 />
               )}
             {platform === 'instagram' && id && (
-              <StyledInstagramWrapper height={videoHeight}>
-                <StyledIframe
-                  src={`https://www.instagram.com/reel/${id}/embed`}
-                  height="1000px"
-                  transformY="-53px"
-                ></StyledIframe>
+              <StyledInstagramWrapper>
+                <StyledInstagramContainer height={videoHeight}>
+                  <StyledIframe
+                    src={`https://www.instagram.com/reel/${id}/embed`}
+                    height="1000px"
+                    width="1000px"
+                    transformY="-60px"
+                    transformX="23px"
+                  ></StyledIframe>
+                </StyledInstagramContainer>
               </StyledInstagramWrapper>
             )}
             {platform === 'tiktok' && id && (
               <StyledTikTokWrapper>
-                <StyledIframeContainer height={videoHeight}>
+                <StyledTiktokIframeContainer height={videoHeight}>
                   <StyledIframe
                     src={`https://www.tiktok.com/embed/${id}`}
                     height="1000px"
+                    width="1000px"
                   ></StyledIframe>
-                </StyledIframeContainer>
+                </StyledTiktokIframeContainer>
               </StyledTikTokWrapper>
             )}
             {platform === 'facebook_video' && id && (
@@ -171,33 +177,56 @@ const VideoContainer = styled.div`
   overflow: hidden;
 `;
 
-const StyledInstagramWrapper = styled.div<{ readonly height: string }>`
+const StyledInstagramWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  background-color: black;
   width: 100%;
+  border-radius: 30px;
+`;
+
+const StyledInstagramContainer = styled.div<{ readonly height: string }>`
+  width: 500px;
   height: ${(props) => props.height};
   overflow: hidden;
   position: relative;
-  border-radius: 30px;
+  height: 590px;
+  border-radius: 20px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    height: 580px;
+  }
 `;
 
 const StyledTikTokWrapper = styled.div`
   display: flex;
   justify-content: center;
+  background-color: black;
+  width: 100%;
+  border-radius: 30px;
 `;
 
-const StyledIframeContainer = styled.div<{ readonly height: string }>`
-  width: 330px;
+const StyledTiktokIframeContainer = styled.div<{ readonly height: string }>`
+  width: 323px;
   height: ${(props) => props.height};
   overflow: hidden;
   position: relative;
-  border-radius: 30px;
+  border-radius: 10px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    height: 510px;
+    width: 290px;
+  }
 `;
 
 const StyledIframe = styled.iframe<{
   readonly height: string;
   readonly transformY?: string;
+  readonly transformX?: string;
 }>`
   width: 100%;
   height: ${(props) => props.height};
   border: none;
-  transform: translateY(${(props) => props.transformY || '0'});
+  transform: translateX(${(props) => props.transformX || '0'})
+    translateY(${(props) => props.transformY || '0'});
 `;
