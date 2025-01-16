@@ -266,7 +266,7 @@ const GlobalTopBar = styled.nav.withConfig({
   width: 100%;
   z-index: 2001;
   box-sizing: border-box;
-
+  
   transform: translateY(0);
   transition: transform 0.27s ease-in-out;
   @media (max-width: ${breakpoints.mobile}) {

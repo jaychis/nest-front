@@ -78,10 +78,11 @@ const GlobalSideBarContainer = styled.div.withConfig({
 
 const MainContent = styled.div`
     width: 100%;
+    height: 100%;
     flex: 1;
     margin: 80px 0 0 200px;
     padding-top: 10px;
-    overflow: auto;
+    overflow: hidden;
 
     @media (max-width: ${breakpoints.mobile}) {
     margin: 80px 0 0 0;

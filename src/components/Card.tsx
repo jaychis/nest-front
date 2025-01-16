@@ -1,4 +1,4 @@
-import  React,{ useEffect, useState, lazy } from 'react';
+import { useEffect, useState, lazy } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ReactionApi,
@@ -13,8 +13,6 @@ import {
 } from '../_common/collectionTypes';
 import sanitizeHtml from 'sanitize-html';
 import debounce from 'lodash.debounce';
-import { useSelector } from 'react-redux';
-import { RootState } from '../store/store';
 import styled from 'styled-components';
 import ShareComponent from './ShareComponent';
 import { breakpoints } from '../_common/breakpoint';

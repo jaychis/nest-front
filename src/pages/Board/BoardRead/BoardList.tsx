@@ -146,7 +146,6 @@ const BoardList = () => {
   }
   
   return (
-    <>
       <MainContainer>
         {buttonType !== 'HOME' &&
           buttonType !== 'POPULAR' &&
@@ -161,8 +160,8 @@ const BoardList = () => {
         <AutoSizer>
             {({ width, height }) => (
               <List
-                width={width} // AutoSizer가 제공하는 동적인 width
-                height={height} // height 값도 AutoSizer에서 제공 가능
+                width={width} 
+                height={height} 
                 rowCount={list.length}
                 rowHeight={cache.rowHeight}
                 rowRenderer={rowRenderer}
@@ -172,14 +171,12 @@ const BoardList = () => {
           </AutoSizer>
         </CardsContainer>
       </MainContainer>
-    </>
   );
 };
 
 const MainContainer = styled.div`
-  overflow: hidden;
   width: 100%;
-  height: 1000px;
+  height: 100%;
   box-sizing: border-box;
   margin-left: 15%;
 
@@ -191,9 +188,10 @@ const MainContainer = styled.div`
 
 const CardsContainer = styled.div`
   width: 100%;
-  height: 1000px;
-  max-width: 600px;
+  height: 100%;
+  max-width: 800px;
   box-sizing: border-box;
+  overflow: hidden;
 `;
 
 export default BoardList;

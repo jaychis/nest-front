@@ -8,3 +8,7 @@ body {
     font-family: 'MyFont', sans-serif;
 }
 
+html, body, #root {
+    height: 95%;
+    width: 100%;
+  }
