@@ -77,6 +77,7 @@ const GlobalSideBarContainer = styled.div.withConfig({
 `;
 
 const MainContent = styled.div`
+    width: 100%;
     flex: 1;
     margin: 80px 0 0 200px;
     padding-top: 10px;

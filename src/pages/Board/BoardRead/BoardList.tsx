@@ -158,15 +158,18 @@ const BoardList = () => {
             </>
           )}
         <CardsContainer>
-        <List
-            width={800} 
-            height={600} 
-            rowCount={list.length} 
-            rowHeight={cache.rowHeight} 
-            rowRenderer={rowRenderer} 
-            onScroll={handleScroll}
-            
-          />
+        <AutoSizer>
+            {({ width, height }) => (
+              <List
+                width={width} // AutoSizer가 제공하는 동적인 width
+                height={height} // height 값도 AutoSizer에서 제공 가능
+                rowCount={list.length}
+                rowHeight={cache.rowHeight}
+                rowRenderer={rowRenderer}
+                onScroll={handleScroll}
+              />
+            )}
+          </AutoSizer>
         </CardsContainer>
       </MainContainer>
     </>
@@ -174,24 +177,21 @@ const BoardList = () => {
 };
 
 const MainContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
+  overflow: hidden;
   width: 100%;
+  height: 1000px;
   box-sizing: border-box;
+  margin-left: 15%;
 
-  @media (max-width: ${breakpoints.mobile}) {
+  @media (max-width: ${breakpoints.tablet}) {
     margin-left: 0;
     max-width: 100%;
   }
 `;
 
 const CardsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   width: 100%;
+  height: 1000px;
   max-width: 600px;
   box-sizing: border-box;
 `;
