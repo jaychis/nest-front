@@ -15,8 +15,7 @@ import {
   UserType,
   TagType,
 } from '../../_common/collectionTypes';
-import BoardReply, { ReplyType } from '../Board/BoardReply';
-import EmptyState from '../../components/EmptyState';
+import BoardReply, {ReplyType} from '../Board/BoardRead/BoardReply';
 import styled from 'styled-components';
 import UserSearchCard from '../../components/UserSearchCard';
 import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';

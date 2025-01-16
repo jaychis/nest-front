@@ -5,20 +5,18 @@ import {
   BoardRecentListAPI,
   BoardShareListAPI,
   BoardTagsRelatedAPI,
-} from '../api/boardApi';
-import Card from '../../components/Card';
-import { CardType } from '../../_common/collectionTypes';
-import { MainListTypeState } from '../../reducers/mainListTypeSlice';
+} from '../../api/boardApi';
+import Card from '../../../components/Card';
+import { CardType } from '../../../_common/collectionTypes';
+import { MainListTypeState } from '../../../reducers/mainListTypeSlice';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../store/store';
-import EmptyState from '../../components/EmptyState';
-import { useInView } from 'react-intersection-observer';
+import { RootState } from '../../../store/store';
 import styled from 'styled-components';
-import { breakpoints } from '../../_common/breakpoint';
+import { breakpoints } from '../../../_common/breakpoint';
 import debounce from 'lodash.debounce';
-import CustomSuspense from '../../components/Suspense';
+import { List, ListRowRenderer } from 'react-virtualized';
 
-const CommunityBanner = React.lazy(() => import('./CommunityBanner'))
+const CommunityBanner = React.lazy(() => import('../CommunityBanner'))
 
 const BoardList = () => {
   interface AllListParams {
@@ -32,23 +30,13 @@ const BoardList = () => {
   const { buttonType }: MainListTypeState = useSelector(
     (state: RootState) => state.sideBarButton,
   );
-  const [ref, inView] = useInView();
-  const [lastInView, setLastInView] = useState<boolean>(false);
   const [id, setId] = useState<IdType>(null);
   const [allDataLoaded, setAllDataLoaded] = useState<boolean>(false);
-  
-  useEffect(() => {
-    if (list.length > 0 && inView && !lastInView) {
-      debouncListApi({ id, allDataLoaded });
-    }
-    setLastInView(inView);
-  }, [inView]);
 
   useEffect(() => {
     setAllDataLoaded(false);
     setId(null);
     setList([]);
-    setLastInView(false);
     debouncListApi({ id: null, allDataLoaded: false });
   }, [buttonType]);
 
@@ -125,6 +113,33 @@ const BoardList = () => {
 
   const debouncListApi = debounce(ListApi,300)
 
+  const rowRenderer = ({ index, key, style }: { index: number, key: string, style: React.CSSProperties }) => {
+    const el = list[index];
+
+    return (
+      <div key={key} style={style}>
+        <Card
+          id={el.id}
+          category={el.category}
+          title={el.title}
+          nickname={el.nickname}
+          createdAt={el.created_at}
+          content={el.content}
+          type={el.type}
+          shareCount={el.share_count}
+          userId={el.user_id}
+          profileImage={el.user_profile?.profile_image as string}
+        />
+      </div>
+    );
+  };
+
+  const handleScroll = ({ scrollTop, scrollHeight, clientHeight }: any) => {
+    if (scrollTop + clientHeight >= scrollHeight - 100 && !allDataLoaded) {
+      debouncListApi({ id, allDataLoaded });
+    }
+  }
+  
   return (
     <>
       <MainContainer>
@@ -138,31 +153,16 @@ const BoardList = () => {
             </>
           )}
         <CardsContainer>
-          {list.length ? (
-            list.map((el: CardType, index) => {
-              return (
-                <React.Fragment key={`${el.id}-${index}`}>
-                  <Card
-                    id={el.id}
-                    category={el.category}
-                    title={el.title}
-                    nickname={el.nickname}
-                    createdAt={el.created_at}
-                    content={el.content}
-                    type={el.type}
-                    shareCount={el.share_count}
-                    userId={el.user_id}
-                    profileImage={el.user_profile?.profile_image as string}
-                  />
-                </React.Fragment>
-              );
-            })
-          ) : (
-            <EmptyState />
-          )}
+        <List
+            width={1000} 
+            height={600} 
+            rowCount={list.length} 
+            rowHeight={300} 
+            rowRenderer={rowRenderer} 
+            onScroll={handleScroll}
+          />
         </CardsContainer>
       </MainContainer>
-      <InvisibleRefContainer ref={ref}>d</InvisibleRefContainer>
     </>
   );
 };
@@ -188,10 +188,6 @@ const CardsContainer = styled.div`
   width: 100%;
   max-width: 600px;
   box-sizing: border-box;
-`;
-
-const InvisibleRefContainer = styled.div`
-  opacity: 0;
 `;
 
 export default BoardList;

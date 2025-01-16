@@ -5,7 +5,7 @@ import { UsersProfileAPI } from '../api/userApi';
 import { ProfileState } from '../../reducers/profileSlice';
 import { CardType, UserType } from '../../_common/collectionTypes';
 import Card from '../../components/Card';
-import BoardComment, { CommentType } from '../Board/BoardComment';
+import BoardComment, {CommentType} from '../Board/BoardRead/BoardComment';
 import { BoardInquiryAPI,BoardDelete,BoardUpdate } from '../api/boardApi';
 import { CommentUsersInquiryAPI } from '../api/commentApi';
 import {
