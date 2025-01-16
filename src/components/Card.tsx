@@ -356,9 +356,10 @@ const CardContainer = styled.div.withConfig({
   object-fit: contain;
   box-sizing: border-box;
   border-radius: 30px;
+  margin-bottom: 2vh;
 
   @media (max-width: ${breakpoints.mobile}) {
-    margin: 0;
+    margin: 0 0 5px 0;
   }
 `;
 
@@ -456,9 +457,8 @@ const ButtonContainer = styled.div`
   align-items: flex-start;
   width: 100%;
   max-width: 800px;
-  height: 100%;
+  height: 50px;
   margin-top: 5px;
-  max-height: 80px;
 `;
 
 const ReactionWrapper = styled.div`

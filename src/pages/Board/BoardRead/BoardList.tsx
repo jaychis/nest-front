@@ -189,7 +189,7 @@ const MainContainer = styled.div`
 const CardsContainer = styled.div`
   width: 100%;
   height: 1200px;
- 
+  
   box-sizing: border-box;
   overflow: hidden;
 `;
