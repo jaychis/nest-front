@@ -178,7 +178,7 @@ const MainContainer = styled.div`
   width: 100%;
   height: 100%;
   box-sizing: border-box;
-  margin-left: 15%;
+  margin-left: 2%;
 
   @media (max-width: ${breakpoints.tablet}) {
     margin-left: 0;
@@ -188,8 +188,8 @@ const MainContainer = styled.div`
 
 const CardsContainer = styled.div`
   width: 100%;
-  height: 100%;
-  max-width: 800px;
+  height: 1200px;
+ 
   box-sizing: border-box;
   overflow: hidden;
 `;

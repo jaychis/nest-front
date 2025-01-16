@@ -255,7 +255,6 @@ const Profile = () => {
                   />
                 )}
               </div>
-
               <Card
                 key={post?.id}
                 shareCount={post?.share_count}
