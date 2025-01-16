@@ -14,7 +14,7 @@ import { RootState } from '../../../store/store';
 import styled from 'styled-components';
 import { breakpoints } from '../../../_common/breakpoint';
 import debounce from 'lodash.debounce';
-import { List, ListRowRenderer } from 'react-virtualized';
+import { List, CellMeasurer, CellMeasurerCache, AutoSizer } from 'react-virtualized';
 
 const CommunityBanner = React.lazy(() => import('../CommunityBanner'))
 
@@ -27,9 +27,7 @@ const BoardList = () => {
 
   const [list, setList] = useState<CardType[]>([]);
   const TAKE: number = 5;
-  const { buttonType }: MainListTypeState = useSelector(
-    (state: RootState) => state.sideBarButton,
-  );
+  const { buttonType }: MainListTypeState = useSelector((state: RootState) => state.sideBarButton,);
   const [id, setId] = useState<IdType>(null);
   const [allDataLoaded, setAllDataLoaded] = useState<boolean>(false);
 
@@ -113,10 +111,16 @@ const BoardList = () => {
 
   const debouncListApi = debounce(ListApi,300)
 
-  const rowRenderer = ({ index, key, style }: { index: number, key: string, style: React.CSSProperties }) => {
+  const cache = new CellMeasurerCache({
+    fixedWidth: true, 
+    defaultHeight: 250, 
+  });
+
+  const rowRenderer = ({ index, key, style,parent }: any) => {
     const el = list[index];
 
     return (
+      <CellMeasurer cache={cache} parent={parent} key={key} columnIndex={0} rowIndex={index}>
       <div key={key} style={style}>
         <Card
           id={el.id}
@@ -131,6 +135,7 @@ const BoardList = () => {
           profileImage={el.user_profile?.profile_image as string}
         />
       </div>
+      </CellMeasurer>
     );
   };
 
@@ -154,12 +159,13 @@ const BoardList = () => {
           )}
         <CardsContainer>
         <List
-            width={1000} 
+            width={800} 
             height={600} 
             rowCount={list.length} 
-            rowHeight={300} 
+            rowHeight={cache.rowHeight} 
             rowRenderer={rowRenderer} 
             onScroll={handleScroll}
+            
           />
         </CardsContainer>
       </MainContainer>
