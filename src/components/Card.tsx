@@ -291,7 +291,7 @@ const Card = ({
             </MediaContainer>
           ) : (
             <>
-              <VideoCard content={content} />
+              <YoutubeCard content={content} />
             </>
           )}
         </ContentContainer>
