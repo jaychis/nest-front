@@ -13,7 +13,7 @@ interface ProfileModalProps {
 const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onRequestClose, buttonRef }) => {
   const navigate = useNavigate();
   const [modalStyle, setModalStyle] = useState({});
-  const nickname:string = localStorage.getItem('nickname') as string
+  const id:string = localStorage.getItem('id') as string
 
   useEffect(() => {
     if (buttonRef.current) {
@@ -44,7 +44,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onRequestClose, but
   const handleMyPage = () => {
     onRequestClose();
     setTimeout(() => {
-      navigate(`/users/profile/${nickname}`);
+      navigate(`/users/profile/${id}`);
     }, 0);
   };
   

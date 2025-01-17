@@ -250,7 +250,7 @@ const Card = ({
         onMouseLeave={() => setIsCardHovered(false)}
         isHovered={isCardHovered}
       >
-        <LogoContainer onClick={() => navigate(`/users/profile/${nickname}`)}>
+        <LogoContainer onClick={() => navigate(`/users/profile/${userId}`,)}>
           <LogoImg src={profileImage ? profileImage : logo} />
           <NicknameWrapper
           >

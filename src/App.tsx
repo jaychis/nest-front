@@ -63,7 +63,7 @@ function App() {
             />
             {/*유저*/}
             <Route
-              path="/users/profile/:userid"
+              path="/users/profile/:userId"
               element={
                 <Layout>
                   <Profile />
