@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import {
   ReactionStateTypes,
   ReactionType,
-} from '../../_common/collectionTypes';
+} from '../../../_common/collectionTypes';
 import {
   ReactionApi,
   ReactionCountAPI,
   ReactionListAPI,
   ReactionParams,
-} from '../api/reactionApi';
+} from '../../api/reactionApi';
 import styled from 'styled-components';
-import logo from '../../assets/img/panda_logo.png';
-import { breakpoints } from '../../_common/breakpoint';
-import { handleReaction } from '../../_common/handleUserReaction';
+import logo from '../../../assets/img/panda_logo.png';
+import { breakpoints } from '../../../_common/breakpoint';
+import { handleReaction } from '../../../_common/handleUserReaction';
 import {
   fetchProfileImage,
   FetchProfileImageType,
-} from '../../_common/fetchCardProfile';
+} from '../../../_common/fetchCardProfile';
 
 export interface ReplyType {
   readonly id: string;

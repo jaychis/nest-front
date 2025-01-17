@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AddSearchAPI, GetTopTenSearchesAPI } from '../api/searchApi';
 import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash.debounce';
@@ -179,6 +179,7 @@ const RightSideBar = () => {
 
 const RightSideBarContainer = styled.div`
   width: 250px;
+  height: 100%;
   margin-left: auto;
   margin-right: 20px;
 

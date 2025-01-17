@@ -19,7 +19,7 @@ import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
 import { breakpoints } from '../../_common/breakpoint';
 
 const GlobalBar = () => {
-  const logo = `https://i.ibb.co/KwD7dLS/panda-logo.png`
+  const logo = "https://i.ibb.co/rHPPfvt/download.webp" 
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const modalState: UserModalState = useSelector(
@@ -266,7 +266,7 @@ const GlobalTopBar = styled.nav.withConfig({
   width: 100%;
   z-index: 2001;
   box-sizing: border-box;
-
+  
   transform: translateY(0);
   transition: transform 0.27s ease-in-out;
   @media (max-width: ${breakpoints.mobile}) {
@@ -312,6 +312,7 @@ const LogoWrapper = styled.div.withConfig({
 
 const LogoImage = styled.img`
   width: 50px;
+  height: 50px;
 `;
 
 const SiteName = styled.span`

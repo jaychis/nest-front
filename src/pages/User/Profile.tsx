@@ -5,7 +5,7 @@ import { UsersProfileAPI } from '../api/userApi';
 import { ProfileState } from '../../reducers/profileSlice';
 import { CardType, UserType } from '../../_common/collectionTypes';
 import Card from '../../components/Card';
-import BoardComment, { CommentType } from '../Board/BoardComment';
+import BoardComment, {CommentType} from '../Board/BoardRead/BoardComment';
 import { BoardInquiryAPI,BoardDelete,BoardUpdate } from '../api/boardApi';
 import { CommentUsersInquiryAPI } from '../api/commentApi';
 import {
@@ -183,7 +183,7 @@ const Profile = () => {
         <StyledInput
         value={editContent}
         onChange={(e) => {setEditContent([e.target.value])}}
-        placeholder='수정을 링크를를 입력하세요'
+        placeholder='수정할 링크를 입력하세요'
         />
         )}
         
@@ -255,7 +255,6 @@ const Profile = () => {
                   />
                 )}
               </div>
-
               <Card
                 key={post?.id}
                 shareCount={post?.share_count}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { MainListTypes } from '../../_common/collectionTypes';
@@ -10,7 +10,6 @@ import {
 } from '../../reducers/communitySlice';
 import { RootState } from '../../store/store';
 import { UserModalState } from '../../reducers/modalStateSlice';
-import logo from '../../assets/img/panda_logo.png';
 import { CommunityListAPI } from '../api/communityApi';
 import Tooltip from '../../components/Tooltip';
 import styled from 'styled-components';
@@ -41,7 +40,7 @@ const GlobalSideBar = () => {
     new Set(),
   );
   const [displayCount, setDisplayCount] = useState(5);
-
+  const logo = "https://i.ibb.co/rHPPfvt/download.webp"
   const fetchCommunities = async (page: number) => {
     setLoading(true);
 
@@ -378,6 +377,7 @@ const CommunityListContainer = styled.div`
   flex: 1;
   padding: 5px 0 10px 10px;
   overflow-y: auto;
+  height: calc(100vh - 150px);
 `;
 
 const CommunityItem = styled.div`

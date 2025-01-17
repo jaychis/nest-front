@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import Card from '../../components/Card';
-import { BoardReadAPI } from '../api/boardApi';
-import { CardType, CollectionTypes } from '../../_common/collectionTypes';
+import Card from '../../../components/Card';
+import { BoardReadAPI } from '../../api/boardApi';
+import { CardType, CollectionTypes } from '../../../_common/collectionTypes';
 import {
   CommentListAPI,
   CommentSubmitAPI,
   CommentSubmitParams,
-} from '../api/commentApi';
+} from '../../api/commentApi';
 import BoardComment, { CommentType } from './BoardComment';
-import BoardReply, { ReplyType } from './BoardReply';
+import BoardReply, {ReplyType} from './BoardReply';
 import { useLocation } from 'react-router-dom';
-import { LogViewedBoardAPI } from '../api/viewedBoardsApi';
-import { breakpoints } from '../../_common/breakpoint';
+import { LogViewedBoardAPI } from '../../api/viewedBoardsApi';
+import { breakpoints } from '../../../_common/breakpoint';
 
 const BoardRead = () => {
   const useQuery = () => {
