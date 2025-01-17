@@ -6,7 +6,6 @@ import { CommunityProvider } from './contexts/CommunityContext';
 import BoardList from './pages/Board/BoardList';
 import Layout from './components/Layout';
 import CustomSuspense from './components/Suspense';
-
 const BoardSubmit = lazy(() => import('./pages/Board/BoardSubmit/BoardSubmit'));
 const BoardRead = lazy(() => import('./pages/Board/BoardRead'));
 const Profile = lazy(() => import('./pages/User/Profile'));
