@@ -27,9 +27,8 @@ export default Modal;
 const ModalContainer = styled.div`
   position: fixed;
   z-index: 9999;
-  width: 80vw;
   max-width: 600px;
-  max-height: 90vh; /* 모달 최대 높이 설정 */
+  max-height: 600px; /* 모달 최대 높이 설정 */
   overflow: hidden; /* 내부 내용이 넘칠 경우 숨김 처리 */
   background-color: rgba(0, 0, 0, 0.5); /* 모달 뒤 배경 */
   

@@ -18,9 +18,11 @@ import styled from 'styled-components';
 import ShareComponent from './ShareComponent';
 import { breakpoints } from '../_common/breakpoint';
 import { handleReaction } from '../_common/handleUserReaction';
-
+import Modal from './Modal';
+import UserProfileModal from './UserProfileModal';
 const Carousel = lazy(() => import('./Carousel'))
 const YoutubeCard = lazy(() => import('./YoutubeCard'))
+
 
 const Card = ({
   id,
@@ -44,6 +46,7 @@ const Card = ({
     useState<boolean>(false);
   const [isReaction, setIsReaction] = useState<ReactionStateTypes>(null);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const mediaExtensions = {
     image: [
       'jpg',
@@ -63,7 +66,7 @@ const Card = ({
     video: ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv'],
   };
   const [color, setColor] = useState<string>('');
-  const logo = "https://i.ibb.co/rHPPfvt/download.webp" 
+  const logo = profileImage || "https://i.ibb.co/rHPPfvt/download.webp" 
   const isMediaType = (url: string, type: 'image' | 'video'): boolean => {
     const ext = url.split('.').pop()?.toLowerCase();
     return ext ? mediaExtensions[type].includes(ext) : false;
@@ -250,8 +253,8 @@ const Card = ({
         onMouseLeave={() => setIsCardHovered(false)}
         isHovered={isCardHovered}
       >
-        <LogoContainer onClick={() => navigate(`/users/profile/${userId}`,)}>
-          <LogoImg src={profileImage ? profileImage : logo} />
+        <LogoContainer onClick={() => setIsOpen(true)}>
+          <LogoImg src={logo} />
           <NicknameWrapper
           >
             {nickname}
@@ -338,6 +341,16 @@ const Card = ({
           </ShareWrapper>
         </ButtonContainer>
       </CardContainer>
+      <Modal
+      isOpen={isOpen}
+      onClose={() => {setIsOpen(false)}}
+      top={'5%'}
+      >
+      <UserProfileModal
+      nickname={nickname}
+      logo={logo}
+      />  
+      </Modal>
 
       <HrTag />
     </>
