@@ -257,7 +257,8 @@ const ShareButton = styled.button.withConfig({
   width: 100%;
   border-radius: 30px;
   cursor: pointer;
-
+  margin-left: 1vw;
+  
   object-fit: cover;
   @media (max-width: ${breakpoints.mobile}) {
     font-size: 10px;
@@ -266,8 +267,8 @@ const ShareButton = styled.button.withConfig({
 `;
 
 const ShareImageTag = styled.img`
-  height: 100%;
-  width: 100%;
+  height: 40px;
+  width: 40px;
 `;
 
 const ShareCountTag = styled.p`

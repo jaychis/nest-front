@@ -2,7 +2,7 @@ import React from 'react';
 
 import styled from 'styled-components';
 const EmptyState = () => {
-  const logo = `https://i.ibb.co/KwD7dLS/panda-logo.png`
+  const logo = "https://i.ibb.co/rHPPfvt/download.webp" 
 
   return (
     <Container>

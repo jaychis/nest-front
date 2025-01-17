@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import logo from '../../assets/img/panda_logo.png';
 import DropDown from '../../components/Dropdown';
 import { useState, useEffect } from 'react';
 import React from 'react';
@@ -61,7 +60,8 @@ const CommunityProfile = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [view, setView] = useState<boolean>(false);
   const [inviteeNickname, setInviteeNickname] = useState<string>('');
-
+  const logo = "https://i.ibb.co/rHPPfvt/download.webp" 
+  
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {

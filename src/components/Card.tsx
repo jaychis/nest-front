@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, lazy } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ReactionApi,
@@ -14,15 +14,15 @@ import {
 
 import sanitizeHtml from 'sanitize-html';
 import debounce from 'lodash.debounce';
-import { UserModalState } from '../reducers/modalStateSlice';
-import { useSelector } from 'react-redux';
-import { RootState } from '../store/store';
 import styled from 'styled-components';
 import ShareComponent from './ShareComponent';
 import { breakpoints } from '../_common/breakpoint';
 import { handleReaction } from '../_common/handleUserReaction';
-import Carousel from './Carousel';
-import VideoCard from './VideoCard';
+import Modal from './Modal';
+import UserProfileModal from './UserProfileModal';
+const Carousel = lazy(() => import('./Carousel'))
+const YoutubeCard = lazy(() => import('./YoutubeCard'))
+
 
 const Card = ({
   id,
@@ -45,11 +45,8 @@ const Card = ({
   const [isCardCommentHovered, setIsCardCommentHovered] =
     useState<boolean>(false);
   const [isReaction, setIsReaction] = useState<ReactionStateTypes>(null);
-  const [shareContent, setShareContent] = useState<string>('');
   const [isSmallScreen, setIsSmallScreen] = useState(false);
-  const modalState: UserModalState = useSelector(
-    (state: RootState) => state.modalState,
-  );
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const mediaExtensions = {
     image: [
       'jpg',
@@ -69,7 +66,7 @@ const Card = ({
     video: ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv'],
   };
   const [color, setColor] = useState<string>('');
-  const logo = `https://i.ibb.co/KwD7dLS/panda-logo.png`;
+  const logo = profileImage || "https://i.ibb.co/rHPPfvt/download.webp" 
   const isMediaType = (url: string, type: 'image' | 'video'): boolean => {
     const ext = url.split('.').pop()?.toLowerCase();
     return ext ? mediaExtensions[type].includes(ext) : false;
@@ -219,13 +216,13 @@ const Card = ({
 
   useEffect(() => {
     const startFunc = async () => {
-      await debouncedFetchReactionList(id);
-      await debouncedFetchReactionCount(id);
+      await Promise.all([
+        debouncedFetchReactionList(id),
+        debouncedFetchReactionCount(id),
+      ]);
     };
     startFunc();
-
-    const temp = extractTextFromHTML(content[0]);
-    setShareContent(temp);
+    extractTextFromHTML(content[0]);
   }, []);
 
   useEffect(() => {
@@ -255,12 +252,10 @@ const Card = ({
         onMouseEnter={() => setIsCardHovered(true)}
         onMouseLeave={() => setIsCardHovered(false)}
         isHovered={isCardHovered}
-        modalState={modalState.modalState}
       >
-        <LogoContainer>
-          <LogoImg src={profileImage ? profileImage : logo} />
+        <LogoContainer onClick={() => setIsOpen(true)}>
+          <LogoImg src={logo} />
           <NicknameWrapper
-            onClick={() => navigate(`/users/inquiry?nickname=${nickname}`)}
           >
             {nickname}
           </NicknameWrapper>
@@ -298,12 +293,12 @@ const Card = ({
             </MediaContainer>
           ) : (
             <>
-              <VideoCard content={content} />
+              <YoutubeCard content={content} />
             </>
           )}
         </ContentContainer>
 
-        <ButtonContainer modalState={modalState.modalState}>
+        <ButtonContainer>
           <ReactionWrapper>
             <LikeButton
               isLiked={isReaction === 'LIKE'}
@@ -346,6 +341,16 @@ const Card = ({
           </ShareWrapper>
         </ButtonContainer>
       </CardContainer>
+      <Modal
+      isOpen={isOpen}
+      onClose={() => {setIsOpen(false)}}
+      top={'5%'}
+      >
+      <UserProfileModal
+      nickname={nickname}
+      logo={logo}
+      />  
+      </Modal>
 
       <HrTag />
     </>
@@ -353,10 +358,9 @@ const Card = ({
 };
 
 const CardContainer = styled.div.withConfig({
-  shouldForwardProp: (prop) => !['isHovered', 'modalState'].includes(prop),
+  shouldForwardProp: (prop) => !['isHovered'].includes(prop),
 })<{
   readonly isHovered: boolean;
-  readonly modalState: boolean;
 }>`
   display: flex;
   flex-direction: column;
@@ -372,9 +376,10 @@ const CardContainer = styled.div.withConfig({
   object-fit: contain;
   box-sizing: border-box;
   border-radius: 30px;
+  margin-bottom: 2vh;
 
   @media (max-width: ${breakpoints.mobile}) {
-    margin: 0;
+    margin: 0 0 5px 0;
   }
 `;
 
@@ -387,13 +392,12 @@ const MediaContainer = styled.div`
   border: 2px solid darkgray;
   border-radius: 20px;
   margin: 10px auto;
+  height: 400px;
 `;
 
 const Image = styled.img`
-  max-width: 700px;
-  max-height: 400px;
-  width: 100%;
-  height: 100%;
+  width: 400px;
+  height: 400px;
   border-radius: 20px;
   display: block;
   object-fit: contain;
@@ -467,19 +471,14 @@ const ContentWrapper = styled.div`
   }
 `;
 
-const ButtonContainer = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'modalState',
-})<{
-  readonly modalState: boolean;
-}>`
+const ButtonContainer = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
   width: 100%;
   max-width: 800px;
-  height: 100%;
+  height: 50px;
   margin-top: 5px;
-  max-height: 80px;
 `;
 
 const ReactionWrapper = styled.div`

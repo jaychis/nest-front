@@ -3,12 +3,13 @@ import './App.css';
 import ScrollToTop from './components/ScrollToTop';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { CommunityProvider } from './contexts/CommunityContext';
-import BoardList from './pages/Board/BoardList';
+import BoardList from './pages/Board/BoardRead/BoardList';
 import Layout from './components/Layout';
 import CustomSuspense from './components/Suspense';
+import UserProfileModal from './components/UserProfileModal';
 
 const BoardSubmit = lazy(() => import('./pages/Board/BoardSubmit/BoardSubmit'));
-const BoardRead = lazy(() => import('./pages/Board/BoardRead'));
+const BoardRead = lazy(() => import('./pages/Board/BoardRead/BoardRead'));
 const Profile = lazy(() => import('./pages/User/Profile'));
 const UsersInquiry = lazy(() => import('./pages/User/UsersInquiry'));
 const SearchList = lazy(() => import('./pages/Search/SearchList'));
@@ -63,7 +64,7 @@ function App() {
             />
             {/*유저*/}
             <Route
-              path="/users/profile"
+              path="/users/profile/:userId"
               element={
                 <Layout>
                   <Profile />

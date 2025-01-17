@@ -1,25 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import {
   CollectionTypes,
   ReactionStateTypes,
   ReactionType,
-} from '../../_common/collectionTypes';
+} from '../../../_common/collectionTypes';
 import {
   ReactionApi,
   ReactionCountAPI,
   ReactionListAPI,
   ReactionParams,
-} from '../api/reactionApi';
-import logo from '../../assets/img/panda_logo.png';
+} from '../../api/reactionApi';
+import logo from '../../../assets/img/panda_logo.png';
 import { ReplyType } from './BoardReply';
-import { ReplySubmitAPI, ReplySubmitParams } from '../api/replyApi';
-import { breakpoints } from '../../_common/breakpoint';
-import { handleReaction } from '../../_common/handleUserReaction';
+import { ReplySubmitAPI, ReplySubmitParams } from '../../api/replyApi';
+import { breakpoints } from '../../../_common/breakpoint';
+import { handleReaction } from '../../../_common/handleUserReaction';
 import {
   fetchProfileImage,
   FetchProfileImageType,
-} from '../../_common/fetchCardProfile';
+} from '../../../_common/fetchCardProfile';
+import { useNavigate } from 'react-router-dom';
 
 export interface CommentType {
   readonly id: string;
@@ -49,7 +50,7 @@ const BoardComment = (co: BoardCommentProps) => {
     useState<boolean>(false);
   const USER_ID: string = localStorage.getItem('id') as string;
   const ID: string = co.id;
-
+  const navigate = useNavigate()
   const [localCount, setLocalCount] = useState<number>(0);
   const [isCommentReaction, setCommentIsReaction] =
     useState<ReactionStateTypes>(null);
@@ -172,7 +173,7 @@ const BoardComment = (co: BoardCommentProps) => {
 
   return (
     <CommentContainer>
-      <CommentHeader>
+      <CommentHeader onClick = {() => navigate(`/users/profile/${USER_ID}`)}>
         <Avatar
           src={isProfile ? isProfile : logo}
           alt={`${co.nickname}'s avatar`}

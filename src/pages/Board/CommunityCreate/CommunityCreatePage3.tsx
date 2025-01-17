@@ -280,7 +280,6 @@ const CommunityCreatePage3: FC = () => {
 
 export default CommunityCreatePage3;
 
-// Styled Components
 const Container = styled.div`
   background-color: #ffffff;
   padding: 20px;
