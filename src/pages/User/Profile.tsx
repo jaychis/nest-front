@@ -28,6 +28,7 @@ import UploadImageAndVideo from '../Board/BoardSubmit/UploadImageAndVideo';
 
 type ACTIVE_SECTION_TYPES = 'POSTS' | 'COMMENTS' | 'PROFILE';
 const Profile = () => {
+  
   const user: ProfileState = useSelector((state: RootState) => state.profile);
   const dispatch = useDispatch<AppDispatch>();
   const [myPosts, setMyPosts] = useState<CardType[]>([]);

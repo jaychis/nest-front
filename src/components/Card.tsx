@@ -250,10 +250,9 @@ const Card = ({
         onMouseLeave={() => setIsCardHovered(false)}
         isHovered={isCardHovered}
       >
-        <LogoContainer>
+        <LogoContainer onClick={() => navigate(`/users/profile/${nickname}`)}>
           <LogoImg src={profileImage ? profileImage : logo} />
           <NicknameWrapper
-            onClick={() => navigate(`/users/inquiry?nickname=${nickname}`)}
           >
             {nickname}
           </NicknameWrapper>
