@@ -119,9 +119,7 @@ const GlobalSideBar = () => {
 
   return (
     <>
-      <GlobalSideBarContainer
-        isModalOpen={modalState.modalState}
-      >
+      <GlobalSideBarContainer isModalOpen={modalState.modalState}>
         <HomeList
           selectedButton={selectedButton}
           isSideHovered={isSideHovered}
@@ -195,7 +193,7 @@ const GlobalSideBar = () => {
         <RecentSection>RECENT</RecentSection>
         <RecentItem>
           <span>🇰🇷</span>
-          <span>r/korea</span>
+          <span>j/korea</span>
         </RecentItem>
 
         <CommunitySection>커뮤니티</CommunitySection>
@@ -217,7 +215,7 @@ const GlobalSideBar = () => {
                 .map((community: SelectCommunityParams, index) => (
                   <CommunityItem key={community.id || index}>
                     <CommunityIcon
-                      src={logo}
+                      src={community.icon ? community.icon : logo}
                       alt={'community icon'}
                       onClick={() =>
                         handleCommunityClick(
@@ -263,7 +261,7 @@ export default GlobalSideBar;
 
 const GlobalSideBarContainer = styled.div.withConfig({
   shouldForwardProp: (prop) => prop !== 'isModalOpen',
-})<{ readonly isModalOpen: boolean}>`
+})<{ readonly isModalOpen: boolean }>`
   display: flex;
   flex-direction: column;
   width: 200px;
@@ -289,7 +287,10 @@ const GlobalSideBarContainer = styled.div.withConfig({
   }
 `;
 
-const HomeList = styled.div.withConfig({ shouldForwardProp: (prop) => !['selectedButton', 'isSideHovered'].includes(prop) })<{
+const HomeList = styled.div.withConfig({
+  shouldForwardProp: (prop) =>
+    !['selectedButton', 'isSideHovered'].includes(prop),
+})<{
   readonly selectedButton: string;
   readonly isSideHovered: string | null;
 }>`
@@ -302,7 +303,10 @@ const HomeList = styled.div.withConfig({ shouldForwardProp: (prop) => !['selecte
   cursor: pointer;
 `;
 
-const MostCommentedList = styled.div.withConfig({ shouldForwardProp: (prop) => !['selectedButton', 'isSideHovered'].includes(prop) })<{
+const MostCommentedList = styled.div.withConfig({
+  shouldForwardProp: (prop) =>
+    !['selectedButton', 'isSideHovered'].includes(prop),
+})<{
   readonly selectedButton: string;
   readonly isSideHovered: string | null;
 }>`
@@ -315,7 +319,10 @@ const MostCommentedList = styled.div.withConfig({ shouldForwardProp: (prop) => !
   cursor: pointer;
 `;
 
-const FrequentShareList = styled.div.withConfig({ shouldForwardProp: (prop) => !['selectedButton', 'isSideHovered'].includes(prop) })<{
+const FrequentShareList = styled.div.withConfig({
+  shouldForwardProp: (prop) =>
+    !['selectedButton', 'isSideHovered'].includes(prop),
+})<{
   readonly selectedButton: string;
   readonly isSideHovered: string | null;
 }>`
@@ -328,7 +335,10 @@ const FrequentShareList = styled.div.withConfig({ shouldForwardProp: (prop) => !
   cursor: pointer;
 `;
 
-const TagMatchList = styled.div.withConfig({ shouldForwardProp: (prop) => !['selectedButton', 'isSideHovered'].includes(prop) })<{
+const TagMatchList = styled.div.withConfig({
+  shouldForwardProp: (prop) =>
+    !['selectedButton', 'isSideHovered'].includes(prop),
+})<{
   readonly selectedButton: string;
   readonly isSideHovered: string | null;
 }>`
@@ -347,7 +357,9 @@ const CommunitySection = styled.div`
   font-size: 14px;
 `;
 
-const CreateCommunityItem = styled.div.withConfig({ shouldForwardProp: (prop) => !['isSideHovered'].includes(prop) })<{
+const CreateCommunityItem = styled.div.withConfig({
+  shouldForwardProp: (prop) => !['isSideHovered'].includes(prop),
+})<{
   readonly isSideHovered: string | null;
 }>`
   display: flex;
@@ -430,8 +442,10 @@ const RecentItem = styled.div`
   }
 `;
 
-const AllListSection = styled.div.withConfig({ 
-  shouldForwardProp: (prop) => !['selectedButton', 'isSideHovered'].includes(prop) })<{
+const AllListSection = styled.div.withConfig({
+  shouldForwardProp: (prop) =>
+    !['selectedButton', 'isSideHovered'].includes(prop),
+})<{
   readonly selectedButton: string;
   readonly isSideHovered: string | null;
 }>`

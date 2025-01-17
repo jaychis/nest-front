@@ -11,6 +11,7 @@ import {
   ReactionStateTypes,
   ReactionType,
 } from '../_common/collectionTypes';
+
 import sanitizeHtml from 'sanitize-html';
 import debounce from 'lodash.debounce';
 import styled from 'styled-components';
@@ -105,10 +106,19 @@ const Card = ({
         'ul',
       ],
       allowedAttributes: {
-        img: ['src', 'srcset', 'alt', 'title', 'width', 'height', 'loading', 'style'],
-        a: ['href','rel', 'target'],
-        span: ['style','contenteditable'],
-        p:['style'],
+        img: [
+          'src',
+          'srcset',
+          'alt',
+          'title',
+          'width',
+          'height',
+          'loading',
+          'style',
+        ],
+        a: ['href', 'rel', 'target'],
+        span: ['style', 'contenteditable'],
+        p: ['style'],
         div: ['class', 'spellcheck'],
         pre: ['class'],
         code: ['class'],
@@ -241,7 +251,7 @@ const Card = ({
         isHovered={isCardHovered}
       >
         <LogoContainer>
-          <LogoImg src={logo} alt='프로필 이미지' />
+          <LogoImg src={profileImage ? profileImage : logo} />
           <NicknameWrapper
             onClick={() => navigate(`/users/inquiry?nickname=${nickname}`)}
           >
@@ -281,9 +291,7 @@ const Card = ({
             </MediaContainer>
           ) : (
             <>
-              {<YoutubeCard
-              content={content}
-              />}
+              <VideoCard content={content} />
             </>
           )}
         </ContentContainer>
