@@ -6,10 +6,6 @@ import 'react-markdown-editor-lite/lib/index.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { BoardType } from '../../../_common/collectionTypes';
-import {
-  AwsImageUploadFunctionality,
-  AwsImageUploadFunctionalityReturnType,
-} from '../../../_common/imageUploadFuntionality';
 import { GetCommunitiesNameAPI } from '../../api/communityApi';
 import ErrorModal from '../../../_common/ErrorModal';
 import DeleteButton from '../../../components/Buttons/DeleteButton';
