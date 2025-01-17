@@ -360,7 +360,8 @@ const Profile = () => {
                   <Value>{email || '이메일을 입력하세요'}</Value>
                 )}
               </InfoRow>
-              <InfoRow>
+               {/*
+               <InfoRow>
                 <Label>전화번호:</Label>
                 {isEditing ? (
                   <Input
@@ -372,6 +373,8 @@ const Profile = () => {
                   <Value>{phone || '전화번호를 입력하세요'}</Value>
                 )}
               </InfoRow>
+              */}
+              
             </ProfileInfo>
           </ProfileContainer>
         </Section>
