@@ -1,27 +1,27 @@
-import { useState } from "react";
-import Modal from "./Modal";
 import styled from "styled-components";
 import { breakpoints } from "../_common/breakpoint";
-
+import { useNavigate } from "react-router-dom";
 interface UserProps{
     readonly nickname?: string;
     readonly logo: string;
+    readonly id: string;
 }
 
-const UserProfileModal = ({nickname,logo}: UserProps) => {
+const UserProfileModal = ({nickname,logo,id}: UserProps) => {
 
     const userImg = "https://i.ibb.co/YWrj6pL/download-1.webp" 
     const chat = "https://i.ibb.co/80x8jng/download-2.webp"
+    const navigate = useNavigate()
 
     return(
         <UserProfileContainer>
             <UserCard>
                 <Logo src = {logo}/>
-                <Text style = {{fontSize: '1.5rem'}}>user1</Text>
+                <Text style = {{fontSize: '1.5rem'}}>{nickname}</Text>
             </UserCard>
 
             <Menu>
-                <Item> <Icon src = {userImg}/> <Text>프로필 보기</Text></Item>
+                <Item> <Icon src = {userImg}/> <Text onClick = {() => {navigate(`/users/profile/${id}`)}}>프로필 보기</Text></Item>
                 <Item> <Icon src = {chat} /> <Text>채팅 보내기</Text></Item>
             </Menu>
         </UserProfileContainer>

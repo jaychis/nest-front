@@ -349,6 +349,7 @@ const Card = ({
       <UserProfileModal
       nickname={nickname}
       logo={logo}
+      id={userId}
       />  
       </Modal>
 
