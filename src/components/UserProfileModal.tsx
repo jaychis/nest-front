@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Modal from "./Modal";
 import styled from "styled-components";
+import { breakpoints } from "../_common/breakpoint";
 
 interface UserProps{
     readonly nickname?: string;
@@ -36,6 +37,10 @@ const UserProfileContainer = styled.div`
     flex-direction: column;
     align-items: center;
     width: 250px;
+
+    @media(max-width: ${breakpoints.mobile}){
+        width: 100px;
+    }
 `
 
 const UserCard = styled.div`
