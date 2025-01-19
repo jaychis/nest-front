@@ -262,7 +262,7 @@ const GlobalTopBar = styled.nav.withConfig({
   align-items: center;
   background-color: #ffffff;
   padding: 0.625rem;
-  border: 2px solid #d3d3d3;
+  border-bottom: 2px solid #d3d3d3;
   width: 100%;
   z-index: 2001;
   box-sizing: border-box;
