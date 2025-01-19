@@ -340,6 +340,7 @@ const Card = ({
             />
           </ShareWrapper>
         </ButtonContainer>
+        <HrTag />
       </CardContainer>
       <Modal
       isOpen={isOpen}
@@ -349,10 +350,9 @@ const Card = ({
       <UserProfileModal
       nickname={nickname}
       logo={logo}
+      id={userId}
       />  
       </Modal>
-
-      <HrTag />
     </>
   );
 };
@@ -368,7 +368,9 @@ const CardContainer = styled.div.withConfig({
   align-items: flex-start;
   width: 100%;
   height: 100%;
-  max-height: 1000vh;
+  max-height: 650px;
+  max-width: 700px;
+
   cursor: pointer;
   padding: 0 15px;
   background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
@@ -376,7 +378,6 @@ const CardContainer = styled.div.withConfig({
   object-fit: contain;
   box-sizing: border-box;
   border-radius: 30px;
-  margin-bottom: 2vh;
 
   @media (max-width: ${breakpoints.mobile}) {
     margin: 0 0 5px 0;
