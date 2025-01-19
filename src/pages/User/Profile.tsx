@@ -24,17 +24,17 @@ import DropDown from '../../components/Dropdown';
 import Modal from '../../components/Modal';
 import SubmitQuill from '../../components/SubmitQuill';
 import UploadImageAndVideo from '../Board/BoardSubmit/UploadImageAndVideo';
-
+import { useParams } from 'react-router-dom';
 
 type ACTIVE_SECTION_TYPES = 'POSTS' | 'COMMENTS' | 'PROFILE';
 const Profile = () => {
+  
+  const {userId} = useParams<{userId: string}>()
   const user: ProfileState = useSelector((state: RootState) => state.profile);
   const dispatch = useDispatch<AppDispatch>();
   const [myPosts, setMyPosts] = useState<CardType[]>([]);
   const [myComments, setMyComments] = useState<CommentType[]>([]);
-  const [activeSection, setActiveSection] =
-    useState<ACTIVE_SECTION_TYPES>('POSTS');
-  const ID: string = (localStorage.getItem('id') as string) || '';
+  const [activeSection, setActiveSection] = useState<ACTIVE_SECTION_TYPES>('POSTS');
   const [profilePreview, setProfilePreview] = useState<string[]>([]);
   const [profileList, setProfileList] = useState<File[]>([]);
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -59,7 +59,6 @@ const Profile = () => {
       setEditTitle(myPosts[index].title)
       setEditIndex(index)
       setModalIsOpen(true)
-      console.log(myPosts[index].content)
     }
   }
 
@@ -99,9 +98,11 @@ const Profile = () => {
   };
 
   useEffect(() => {
+    console.log(userId)
+    if(!userId) return
     if (activeSection === 'POSTS') {
       const postsInquiry = async (): Promise<void> => {
-        const res = await BoardInquiryAPI({ userId: ID });
+        const res = await BoardInquiryAPI({ userId: userId });
         if (!res) return;
         const response = res.data.response;
         setMyPosts(response);
@@ -112,7 +113,7 @@ const Profile = () => {
 
     if (activeSection === 'COMMENTS') {
       const commentInquiry = async (): Promise<void> => {
-        const res = await CommentUsersInquiryAPI({ userId: ID });
+        const res = await CommentUsersInquiryAPI({ userId: userId });
         if (!res) return;
 
         const response = res.data.response;
@@ -141,7 +142,7 @@ const Profile = () => {
       };
       userInquiry();
     }
-  }, [activeSection, ID, dispatch]);
+  }, [activeSection, userId, dispatch]);
 
   useEffect(() => {
     setDropdownIsOpen(Array(myPosts.length).fill(false))
@@ -208,25 +209,25 @@ const Profile = () => {
           isActive={activeSection === 'POSTS'}
           onClick={() => setActiveSection('POSTS')}
         >
-          내가 등록한 게시글
+          등록한 게시글
         </SectionButton>
         <SectionButton
           isActive={activeSection === 'COMMENTS'}
           onClick={() => setActiveSection('COMMENTS')}
         >
-          내가 등록한 댓글
+          등록한 댓글
         </SectionButton>
         <SectionButton
           isActive={activeSection === 'PROFILE'}
           onClick={() => setActiveSection('PROFILE')}
         >
-          나의 정보
+          정보
         </SectionButton>
       </ButtonContainer>
 
       {activeSection === 'POSTS' && (
         <Section>
-          <SectionTitle>내가 등록한 게시글</SectionTitle>
+          <SectionTitle>{nickname}가 등록한 게시글</SectionTitle>
           {myPosts && myPosts.length > 0 ? (
             myPosts.map((post: CardType,index) => (
               <>
@@ -272,7 +273,7 @@ const Profile = () => {
 
       {activeSection === 'COMMENTS' && (
         <Section>
-          <SectionTitle>내가 등록한 댓글</SectionTitle>
+          <SectionTitle>등록한 댓글</SectionTitle>
           {myComments.length > 0 ? (
             myComments.map((comment: CommentType) => (
               <BoardComment
@@ -359,7 +360,8 @@ const Profile = () => {
                   <Value>{email || '이메일을 입력하세요'}</Value>
                 )}
               </InfoRow>
-              <InfoRow>
+               {/*
+               <InfoRow>
                 <Label>전화번호:</Label>
                 {isEditing ? (
                   <Input
@@ -371,6 +373,8 @@ const Profile = () => {
                   <Value>{phone || '전화번호를 입력하세요'}</Value>
                 )}
               </InfoRow>
+              */}
+              
             </ProfileInfo>
           </ProfileContainer>
         </Section>

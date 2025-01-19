@@ -18,9 +18,11 @@ import styled from 'styled-components';
 import ShareComponent from './ShareComponent';
 import { breakpoints } from '../_common/breakpoint';
 import { handleReaction } from '../_common/handleUserReaction';
-
+import Modal from './Modal';
+import UserProfileModal from './UserProfileModal';
 const Carousel = lazy(() => import('./Carousel'))
 const YoutubeCard = lazy(() => import('./YoutubeCard'))
+
 
 const Card = ({
   id,
@@ -44,6 +46,7 @@ const Card = ({
     useState<boolean>(false);
   const [isReaction, setIsReaction] = useState<ReactionStateTypes>(null);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const mediaExtensions = {
     image: [
       'jpg',
@@ -63,7 +66,7 @@ const Card = ({
     video: ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv'],
   };
   const [color, setColor] = useState<string>('');
-  const logo = "https://i.ibb.co/rHPPfvt/download.webp" 
+  const logo = profileImage || "https://i.ibb.co/rHPPfvt/download.webp" 
   const isMediaType = (url: string, type: 'image' | 'video'): boolean => {
     const ext = url.split('.').pop()?.toLowerCase();
     return ext ? mediaExtensions[type].includes(ext) : false;
@@ -250,10 +253,9 @@ const Card = ({
         onMouseLeave={() => setIsCardHovered(false)}
         isHovered={isCardHovered}
       >
-        <LogoContainer>
-          <LogoImg src={profileImage ? profileImage : logo} />
+        <LogoContainer onClick={() => setIsOpen(true)}>
+          <LogoImg src={logo} />
           <NicknameWrapper
-            onClick={() => navigate(`/users/inquiry?nickname=${nickname}`)}
           >
             {nickname}
           </NicknameWrapper>
@@ -338,9 +340,19 @@ const Card = ({
             />
           </ShareWrapper>
         </ButtonContainer>
+        <HrTag />
       </CardContainer>
-
-      <HrTag />
+      <Modal
+      isOpen={isOpen}
+      onClose={() => {setIsOpen(false)}}
+      top={'5%'}
+      >
+      <UserProfileModal
+      nickname={nickname}
+      logo={logo}
+      id={userId}
+      />  
+      </Modal>
     </>
   );
 };
@@ -356,7 +368,9 @@ const CardContainer = styled.div.withConfig({
   align-items: flex-start;
   width: 100%;
   height: 100%;
-  max-height: 1000vh;
+  max-height: 650px;
+  max-width: 700px;
+
   cursor: pointer;
   padding: 0 15px;
   background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
@@ -364,7 +378,6 @@ const CardContainer = styled.div.withConfig({
   object-fit: contain;
   box-sizing: border-box;
   border-radius: 30px;
-  margin-bottom: 2vh;
 
   @media (max-width: ${breakpoints.mobile}) {
     margin: 0 0 5px 0;
