@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import arrow from '../../assets/img/icons8-뒤로-32.png'
-import GlobalSideBar from "../Global/GlobalSideBar";
+import arrow from '../../../assets/img/icons8-뒤로-32.png'
+import GlobalSideBar from "../../Global/GlobalSideBar";
 
 interface ChatProps {
     readonly logo?: string;
@@ -9,7 +9,6 @@ interface ChatProps {
 }
 
 const Chat = ({logo, nickname}:ChatProps) => {
-
 
     return(
         <ChatContainer>

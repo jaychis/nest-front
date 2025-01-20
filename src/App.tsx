@@ -25,7 +25,8 @@ const SearchMobile = lazy(() => import('./pages/Search/SearchMobile'));
 const MobilePrivacyPolicyPage = lazy(
   () => import('./components/MobilePrivacyPolicyPage'),
 );
-const Chat = lazy(() => import('./pages/User/Chat'))
+const ChatRoom = lazy(() => import('./pages/User/chat/ChatRoom'))
+const ChatList = lazy(() => import('./pages/User/chat/ChatList'))
 
 function App() {
   return (
@@ -121,7 +122,12 @@ function App() {
 
             <Route
               path={`/chat/:id`}
-              element={<Chat/>}
+              element={<ChatRoom/>}
+            />
+
+            <Route
+              path={`/chatList`}
+              element={<ChatList/>}
             />
           </Routes>
         </CommunityProvider>
