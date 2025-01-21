@@ -1,13 +1,21 @@
-import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { breakpoints } from "../../../_common/breakpoint";
 
-const ChatList = () => {
+
+interface ChatListProps {
+    readonly selectedChat: boolean;
+    readonly setSelectedChat: (item: boolean) => void;
+}
+
+const ChatList = ({selectedChat,setSelectedChat}:ChatListProps) => {
 
     const List = ['100','500','9800','4450','9510','774','0','100','500','9800','4450','9510','774','0']
    
 
-    const selectChat = () => {
-        
+    const handleSelect = () => {
+        if(window.innerWidth < 768){
+            
+        }
     }
 
     return(
@@ -21,7 +29,10 @@ const ChatList = () => {
             <Body>
                 {List.map((item,index) => {
                     return(
-                        <Item onClick = {selectChat}>
+                        <Item 
+                        onDoubleClick = {handleSelect}
+                        onTouchEnd = {handleSelect}
+                        >
                             {item.length > 0 ?
                             <>
                             <ProfileImage width = '60px' height = '60px' src = "https://i.ibb.co/rHPPfvt/download.webp"/>
@@ -48,17 +59,26 @@ const ChatListContainer = styled.div`
     width: 400px;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     overflow-y: scroll;
+
+    @media(max-width: ${breakpoints.mobile}){
+        height: 130vh;
+        width: 100%;
+    }
+
+    @media(min-width: ${breakpoints.mobile}) and (max-width: ${breakpoints.tablet}){
+        height: 130vh;
+    }
 `
 
 const Header = styled.div`
     display: flex;
     align-items: center;
     width: 100%;
-    height: 80px;
+    height: 80px !important;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     margin-bottom: 10%;
+    padding: 15px 0 15px 0;
 `
 
 const Title = styled.div`
@@ -83,6 +103,7 @@ const Body = styled.div`
 const Item = styled.div`
     display: flex;
     margin: 0 0 10% 0;
+    cursor: pointer;
 `
 
 const ProfileImage = styled.img`

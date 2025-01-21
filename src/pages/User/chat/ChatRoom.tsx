@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
 import styled from "styled-components";
 import arrow from '../../../assets/img/icons8-뒤로-32.png'
-import GlobalSideBar from "../../Global/GlobalSideBar";
+import { breakpoints } from "../../../_common/breakpoint";
+
 
 interface ChatProps {
     readonly logo?: string;
@@ -44,6 +44,10 @@ const ChatContainer = styled.div`
     height: 100vh;
     flex-direction: column;
     overflow-y: scroll;
+
+    @media(max-width: ${breakpoints.tablet}){
+        height: 130vh;
+    }
 `
 
 const Header = styled.div`
