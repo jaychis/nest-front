@@ -6,15 +6,21 @@ import { breakpoints } from "../../../_common/breakpoint";
 interface ChatProps {
     readonly logo?: string;
     readonly nickname?: string;
+    readonly setSelectedChat?: (item: boolean) => void;
 }
 
-const ChatRoom = ({logo, nickname}:ChatProps) => {
+const ChatRoom = ({logo, nickname,setSelectedChat}:ChatProps) => {
+
+    const handleBack = () => {
+        if(!setSelectedChat) return
+        setSelectedChat(false)
+    }
 
     return(
         <ChatContainer>
 
             <Header>
-                <img width = '30px' height = '30px' src = {arrow}/>
+                <Arrow width = '30px' height = '30px' src = {arrow} onClick={handleBack}/>
                 <Logo width = '35px' height = '35px' src = "https://i.ibb.co/rHPPfvt/download.webp" />
                 <Text>user1</Text>
             </Header>
@@ -123,3 +129,12 @@ const SendButton = styled.button`
     height: 20px;
   }
 `;
+
+const Arrow = styled.img`
+    width: 30px;
+    heightL 30px;
+
+    @media(min-width: ${breakpoints.mobile}){
+    display: none;
+    }
+`
