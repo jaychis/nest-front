@@ -8,7 +8,7 @@ interface ChatProps {
     readonly nickname?: string;
 }
 
-const Chat = ({logo, nickname}:ChatProps) => {
+const ChatRoom = ({logo, nickname}:ChatProps) => {
 
     return(
         <ChatContainer>
@@ -36,21 +36,21 @@ const Chat = ({logo, nickname}:ChatProps) => {
     )
 }
 
-export default Chat;
+export default ChatRoom;
 
 const ChatContainer = styled.div`
     display: flex;
-    width: 100%;
-    height: 133vh;
+    width: 480px;
+    height: 100vh;
     flex-direction: column;
+    overflow-y: scroll;
 `
 
 const Header = styled.div`
     display: flex;
-    margin: 3% 0 0 0%;
     align-items: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    height: 60px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    height: 80px;
 `
 
 const Body = styled.div`
@@ -62,7 +62,7 @@ const Body = styled.div`
 `
 
 const SubmitMessage = styled.div`
-    margin: auto 0 0 0;
+    margin: auto 0 0 10px;
     box-shadow: 8px 4px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
@@ -70,6 +70,7 @@ const SubmitMessage = styled.div`
     border-radius: 24px;
     padding: 8px 16px;
     background-color: #fff;
+    width: 85%;
 `
 
 const Logo = styled.img`

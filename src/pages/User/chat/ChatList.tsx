@@ -3,11 +3,13 @@ import styled from "styled-components";
 
 const ChatList = () => {
 
-    const selectChat = () => {
+    const List = ['100','500','9800','4450','9510','774','0','100','500','9800','4450','9510','774','0']
+   
 
+    const selectChat = () => {
+        
     }
 
-    const List = ['100','100','500','800','600','8000']
     return(
         <ChatListContainer>
 
@@ -20,11 +22,17 @@ const ChatList = () => {
                 {List.map((item,index) => {
                     return(
                         <Item onClick = {selectChat}>
+                            {item.length > 0 ?
+                            <>
                             <ProfileImage width = '60px' height = '60px' src = "https://i.ibb.co/rHPPfvt/download.webp"/>
                             <div style = {{display:'flex', flexDirection: 'column'}}>
                                 <Nickname>user1</Nickname>
                                 
                             </div>
+                            </> : 
+                            <Text>
+                            채팅을 시작해 보세요!    
+                            </Text>}
                         </Item>
                     )
                 })}
@@ -36,10 +44,12 @@ const ChatList = () => {
 export default ChatList;
 
 const ChatListContainer = styled.div`
-    height: 100%;
-    width: 100%;
+    height: 100vh;
+    width: 400px;
     display: flex;
     flex-direction: column;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow-y: scroll;
 `
 
 const Header = styled.div`
@@ -48,7 +58,6 @@ const Header = styled.div`
     width: 100%;
     height: 80px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
     margin-bottom: 10%;
 `
 
@@ -74,7 +83,6 @@ const Body = styled.div`
 const Item = styled.div`
     display: flex;
     margin: 0 0 10% 0;
-    
 `
 
 const ProfileImage = styled.img`
@@ -86,4 +94,11 @@ const Nickname = styled.p`
     font-size: 1.2rem;
     margin: 5px 0px 0px 20px;
     font-family: Times New Roman !important;
+`
+
+const Text = styled.p`
+    font-size: 1.4rem;
+    color: gray;
+    margin: 80% 0 0 23%;
+    text-align: center;
 `

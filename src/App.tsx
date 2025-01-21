@@ -6,6 +6,7 @@ import { CommunityProvider } from './contexts/CommunityContext';
 import BoardList from './pages/Board/BoardRead/BoardList';
 import Layout from './components/Layout';
 import CustomSuspense from './components/Suspense';
+
 const BoardSubmit = lazy(() => import('./pages/Board/BoardSubmit/BoardSubmit'));
 const BoardRead = lazy(() => import('./pages/Board/BoardRead/BoardRead'));
 const Profile = lazy(() => import('./pages/User/Profile'));
@@ -27,6 +28,7 @@ const MobilePrivacyPolicyPage = lazy(
 );
 const ChatRoom = lazy(() => import('./pages/User/chat/ChatRoom'))
 const ChatList = lazy(() => import('./pages/User/chat/ChatList'))
+const ChatLayout = lazy(() => import(('./pages/User/chat/ChatLayout')))
 
 function App() {
   return (
@@ -126,8 +128,8 @@ function App() {
             />
 
             <Route
-              path={`/chatList`}
-              element={<ChatList/>}
+              path={`/chatLayout`}
+              element={<ChatLayout/>}
             />
           </Routes>
         </CommunityProvider>
