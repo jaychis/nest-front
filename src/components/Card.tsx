@@ -322,6 +322,7 @@ const Card = ({
         </ButtonContainer>
         <HrTag />
       </CardContainer>
+      
       <Modal
       isOpen={isOpen}
       onClose={() => {setIsOpen(false)}}
@@ -350,7 +351,7 @@ const CardContainer = styled.div.withConfig({
   height: 100%;
   max-height: 650px;
   max-width: 700px;
-
+  margin-left: 10vw;
   cursor: pointer;
   padding: 0 15px;
   background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
@@ -359,7 +360,7 @@ const CardContainer = styled.div.withConfig({
   box-sizing: border-box;
   border-radius: 30px;
 
-  @media (max-width: ${breakpoints.mobile}) {
+  @media (max-width: ${breakpoints.tablet}) {
     margin: 0 0 5px 0;
   }
 `;

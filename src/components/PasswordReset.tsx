@@ -3,8 +3,6 @@ import styled from 'styled-components';
 type modalType = 'login' | 'signup' | 'recovery' | 'verity';
 interface Props {
   readonly title: string;
-  readonly modalIsOpen: (state: boolean) => void;
-  readonly onSwitchView: (view: modalType) => void;
   readonly body: React.ReactNode;
   readonly footer?: React.ReactNode;
 }
@@ -13,8 +11,6 @@ const PassWordReset = ({
   title,
   body,
   footer,
-  onSwitchView,
-  modalIsOpen,
 }: Props) => {
   return (
     <Container>
@@ -37,7 +33,6 @@ const Container = styled.div`
   min-width: 400px;
   max-width: 600px;
   width: 80%;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   background: #fff;
   flex-direction: column;
@@ -54,9 +49,8 @@ const HeaderTitleWrapper = styled.div`
 const Title = styled.h2``;
 
 const UserRecoveryContainer = styled.div`
-  position: relative;
   margin-bottom: 10px;
-  display: flex;
+  display: inline;
   text-align: center;
   width: 100%;
 `;

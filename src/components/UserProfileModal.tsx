@@ -71,11 +71,11 @@ const Menu = styled.div`
 const Item = styled.div`
     display: flex;
     margin-bottom: 1vh;
-    border-bottom: 2px solid #ddd; /* 줄 색상 및 두께 설정 */
+    border-bottom: 2px solid #ddd; 
     align-items: center;
 
   &:last-child {
-    border-bottom: none; /* 마지막 Item에는 줄 없애기 */
+    border-bottom: none;
   }
 `
 

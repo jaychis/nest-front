@@ -59,7 +59,7 @@ const UserModalForm = () => {
   };
 
   return (
-    <>
+    <div style = {{textAlign: 'center'}}>
       <ButtonWrapper>
         <LoginButton
           onClick={() => {
@@ -102,8 +102,6 @@ const UserModalForm = () => {
         {activeView === 'recovery' && (
           <PassWordReset
             title={'비밀번호 찾기'}
-            onSwitchView={switchView}
-            modalIsOpen={setModalIsOpen}
             body={
               <SubmitInput
                 placeholder="이메일 *"
@@ -139,8 +137,6 @@ const UserModalForm = () => {
         {activeView === 'verity' && (
           <PassWordReset
             title={'비밀번호 찾기'}
-            onSwitchView={switchView}
-            modalIsOpen={setModalIsOpen}
             body={
               <SubmitInput
                 onChange={(event) => {
@@ -167,8 +163,6 @@ const UserModalForm = () => {
         {activeView === 'reset' && (
           <PassWordReset
             title={'비밀번호 재설정'}
-            onSwitchView={switchView}
-            modalIsOpen={setModalIsOpen}
             body={
               <>
                 <SubmitInput
@@ -204,7 +198,7 @@ const UserModalForm = () => {
           />
         )}
       </Modal>
-    </>
+    </div>
   );
 };
 
@@ -239,10 +233,10 @@ const LoginButton = styled.button<{ readonly isLoginHovered: boolean }>`
 const SubmitInput = styled.input`
   width: 100%;
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 25px;
   margin-bottom: 10px;
   box-sizing: border-box;
-  height: 100%;
+  height: 35px;
 `;
 
 const SwitchButton = styled.button`
