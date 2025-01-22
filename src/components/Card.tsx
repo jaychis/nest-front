@@ -11,7 +11,6 @@ import {
   ReactionStateTypes,
   ReactionType,
 } from '../_common/collectionTypes';
-
 import sanitizeHtml from 'sanitize-html';
 import debounce from 'lodash.debounce';
 import styled from 'styled-components';
@@ -20,9 +19,9 @@ import { breakpoints } from '../_common/breakpoint';
 import { handleReaction } from '../_common/handleUserReaction';
 import Modal from './Modal';
 import UserProfileModal from './UserProfileModal';
+
 const Carousel = lazy(() => import('./Carousel'))
 const YoutubeCard = lazy(() => import('./YoutubeCard'))
-
 
 const Card = ({
   id,
@@ -45,7 +44,6 @@ const Card = ({
   const [isCardCommentHovered, setIsCardCommentHovered] =
     useState<boolean>(false);
   const [isReaction, setIsReaction] = useState<ReactionStateTypes>(null);
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const mediaExtensions = {
     image: [
@@ -73,20 +71,6 @@ const Card = ({
   };
 
   const USER_ID: string = localStorage.getItem('id') as string;
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsSmallScreen(window.innerWidth <= 760);
-    };
-
-    handleResize();
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
 
   const safeHtml = (content: string) => {
     return sanitizeHtml(content, {
@@ -176,10 +160,6 @@ const Card = ({
     }
   };
 
-  const goBoardRead = () => {
-    navigate(`/boards/read?id=${id}`);
-  };
-
   const fetchReactionList = async (boardId: string) => {
     try {
       const res = await ReactionListAPI({ boardId });
@@ -263,7 +243,7 @@ const Card = ({
 
         {/* Card Content */}
         <ContentContainer>
-          <BoardTitle onClick={goBoardRead}>{title}</BoardTitle>
+          <BoardTitle onClick={() => {navigate(`/boards/read?id=${id}`)}}>{title}</BoardTitle>
 
           {type === 'TEXT' ? (
             <TextContainer fontcolor={color}>
@@ -325,7 +305,7 @@ const Card = ({
               isHovered={isCardCommentHovered}
               onMouseEnter={() => setIsCardCommentHovered(true)}
               onMouseLeave={() => setIsCardCommentHovered(false)}
-              onClick={goBoardRead}
+              onClick={() => {navigate(`/boards/read?id=${id}`)}}
             >
               댓글
             </CommentButton>
