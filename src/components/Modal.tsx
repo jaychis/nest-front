@@ -34,7 +34,7 @@ const ModalContainer = styled.div`
 
   @media (max-width: ${breakpoints.mobile}) {
     top: 35vh !important;
-    left: 2%;
+    left: 2% !important;
     width: 95%;
   }
 
@@ -45,7 +45,7 @@ const ModalContainer = styled.div`
   }
 
   @media (min-width: ${breakpoints.tablet}) {
-    left: 30%;
+    left: 38% !important;
   }
 `
 const ModalBody = styled.div`
