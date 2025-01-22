@@ -19,7 +19,15 @@ const ChatLayout = () => {
 
     return(
         <LayoutContainer>
-        {selectedChat && !clientWidth ? <ChatRoom/> : <ChatList selectedChat={selectedChat} setSelectedChat={setSelectedChat}/>}
+        {selectedChat && !clientWidth ? 
+        <ChatRoom 
+        setSelectedChat={setSelectedChat}
+        /> : 
+        <ChatList 
+        selectedChat={selectedChat} 
+        setSelectedChat={setSelectedChat}
+        />
+        }
         {(selectedChat && clientWidth) && (<ChatRoom/>)}
         </LayoutContainer>
     )

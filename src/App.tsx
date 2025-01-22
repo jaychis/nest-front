@@ -27,6 +27,7 @@ const MobilePrivacyPolicyPage = lazy(
   () => import('./components/MobilePrivacyPolicyPage'),
 );
 const ChatLayout = lazy(() => import(('./pages/User/chat/ChatLayout')))
+const LinkPreviewComponent = lazy(() => import(('./components/LinkPreviewComponent')))
 
 function App() {
   return (
@@ -123,6 +124,11 @@ function App() {
             <Route
               path={`/chatLayout`}
               element={<ChatLayout/>}
+            />
+
+            <Route
+              path={'/test'}
+              element={<LinkPreviewComponent/>}
             />
           </Routes>
         </CommunityProvider>

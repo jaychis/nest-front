@@ -13,14 +13,11 @@ const ChatList = ({selectedChat,setSelectedChat}:ChatListProps) => {
    
 
     const handleSelect = () => {
-        if(window.innerWidth < 768){
-            
-        }
+        setSelectedChat(true)
     }
 
     return(
         <ChatListContainer>
-
             <Header>
                 <Title>Message</Title>
                 <Icon width = '50px' height = '50px' src = "https://i.ibb.co/rHPPfvt/download.webp"/>
