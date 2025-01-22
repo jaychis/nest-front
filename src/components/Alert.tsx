@@ -1,16 +1,12 @@
-// Alert 컴포넌트
-import React from 'react';
 import { FaTimes } from '@react-icons/all-files/fa/FaTimes';
 import styled from 'styled-components';
 
-// Alert 컴포넌트의 타입 정의
 interface AlertProps {
   message: string;
   onClose: () => void;
   type?: 'success' | 'error' | 'warning' | 'info';
 }
 
-// Alert 컴포넌트 정의
 const Alert = ({ message, type, onClose }: AlertProps) => {
   return (
     <AlertContainer className={type}>

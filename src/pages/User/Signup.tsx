@@ -353,11 +353,10 @@ const Container = styled.div`
   border-radius: 25px;
   padding: 15px;
   box-sizing: border-box;
-  width: 100%;
+  width: 90%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
 const Title = styled.div`

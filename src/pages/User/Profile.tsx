@@ -98,7 +98,6 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    console.log(userId)
     if(!userId) return
     if (activeSection === 'POSTS') {
       const postsInquiry = async (): Promise<void> => {
@@ -106,7 +105,6 @@ const Profile = () => {
         if (!res) return;
         const response = res.data.response;
         setMyPosts(response);
-        console.log(response)
       };
       postsInquiry();
     }
@@ -227,7 +225,7 @@ const Profile = () => {
 
       {activeSection === 'POSTS' && (
         <Section>
-          <SectionTitle>{nickname}가 등록한 게시글</SectionTitle>
+          <SectionTitle>등록한 게시글</SectionTitle>
           {myPosts && myPosts.length > 0 ? (
             myPosts.map((post: CardType,index) => (
               <>

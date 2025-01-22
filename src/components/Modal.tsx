@@ -27,42 +27,48 @@ export default Modal;
 const ModalContainer = styled.div`
   position: fixed;
   z-index: 9999;
-  max-width: 600px;
-  max-height: 600px; 
-  overflow: hidden; 
-  left: 35% !important;
+  max-width: 500px;
+  max-height: 600px;
+  overflow: hidden;
+  left: 50%;  
+  top: 50%;  
+  transform: translate(-50%, -50%);  
+  border: 1px solid black;
+  border-radius: 25px;
+  width: 100%;
+  text-align: center;
 
   @media (max-width: ${breakpoints.mobile}) {
     top: 35vh !important;
-    left: 2%;
+    left: 50% !important; 
+    transform: translateX(-50%); 
     width: 95%;
   }
 
   @media (min-width: ${breakpoints.mobile}) and (max-width: ${breakpoints.tablet}) {
-    left: 25%;
-    top: 35vh !important 
+    left: 50%;
+    top: 35vh;
+    transform: translateX(-50%);
     width: 80%;
   }
 
   @media (min-width: ${breakpoints.tablet}) {
-    left: 30%;
+    left: 50%;
+    transform: translateX(-50%); 
   }
 `
+
 const ModalBody = styled.div`
   background-color: #fff;
   border-radius: 25px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  overflow: auto; /* 스크롤 활성화 */
-  max-height: 90vh; /* ModalContainer의 높이와 동일하게 설정 */
+  justify-content: center;
+  align-items: center;
+  max-height: 90vh; 
   
-  @media (max-width: ${breakpoints.mobile}) {
+  @media (max-width: ${breakpoints.tablet}) {
     width: 100%;
-  }
-
-  @media (min-width: ${breakpoints.mobile}) and (max-width: ${breakpoints.tablet}) {
-    width: 85%;
   }
 `
 
@@ -74,5 +80,5 @@ const CloseButton = styled.button`
   border: none;
   border-radius: 25px;
   cursor: pointer;
-  margin-bottom: 15px;
+  margin: 15px 15px 15px 0;
 `

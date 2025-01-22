@@ -192,7 +192,6 @@ const CardsContainer = styled.div`
   box-sizing: border-box;
   overflow: hidden;
   display: flex;
-  margin-left: 10vw;
 `;
 
 export default BoardList;
