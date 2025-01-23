@@ -192,12 +192,6 @@ const CardsContainer = styled.div`
   box-sizing: border-box;
   overflow: hidden;
   display: flex;
-  margin-left: 10vw;
-
-  @media(max-width: ${breakpoints.tablet}){
-  margin: 0;
-
-  }
 `;
 
 export default BoardList;

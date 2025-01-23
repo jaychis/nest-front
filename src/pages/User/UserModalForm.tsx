@@ -26,6 +26,7 @@ const UserModalForm = () => {
     if (email.trim() === '') return alert('메일을 입력해주세요');
 
     const res = await SendEmail(email);
+    console.log(res)
     if (res && res.data && res.status === 201) {
       switchView('verity');
       alert('메일로 인증번호가 발송되었습니다.');
@@ -38,7 +39,7 @@ const UserModalForm = () => {
     if (verificationCode.trim() === '') return alert('메일을 입력해주세요');
 
     const res = await VerifyEmail(email);
-
+    
     if (res && res.data && res.data.response.verification) {
       switchView('reset');
     } else {
@@ -59,7 +60,7 @@ const UserModalForm = () => {
   };
 
   return (
-    <>
+    <div style = {{textAlign: 'center'}}>
       <ButtonWrapper>
         <LoginButton
           onClick={() => {
@@ -102,8 +103,6 @@ const UserModalForm = () => {
         {activeView === 'recovery' && (
           <PassWordReset
             title={'비밀번호 찾기'}
-            onSwitchView={switchView}
-            modalIsOpen={setModalIsOpen}
             body={
               <SubmitInput
                 placeholder="이메일 *"
@@ -139,8 +138,6 @@ const UserModalForm = () => {
         {activeView === 'verity' && (
           <PassWordReset
             title={'비밀번호 찾기'}
-            onSwitchView={switchView}
-            modalIsOpen={setModalIsOpen}
             body={
               <SubmitInput
                 onChange={(event) => {
@@ -167,8 +164,6 @@ const UserModalForm = () => {
         {activeView === 'reset' && (
           <PassWordReset
             title={'비밀번호 재설정'}
-            onSwitchView={switchView}
-            modalIsOpen={setModalIsOpen}
             body={
               <>
                 <SubmitInput
@@ -204,7 +199,7 @@ const UserModalForm = () => {
           />
         )}
       </Modal>
-    </>
+    </div>
   );
 };
 
@@ -239,10 +234,10 @@ const LoginButton = styled.button<{ readonly isLoginHovered: boolean }>`
 const SubmitInput = styled.input`
   width: 100%;
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 25px;
   margin-bottom: 10px;
   box-sizing: border-box;
-  height: 100%;
+  height: 35px;
 `;
 
 const SwitchButton = styled.button`
@@ -252,6 +247,8 @@ const SwitchButton = styled.button`
   background-color: #000;
   color: white;
   cursor: pointer;
+  width: 140px;
+  height: 45px;
 
   &:hover {
     background-color: #333;
@@ -259,6 +256,8 @@ const SwitchButton = styled.button`
 `;
 
 const SubmitButton = styled.button`
+  width: 140px;
+  height: 45px;
   padding: 10px 20px;
   border-radius: 25px;
   border: none;
