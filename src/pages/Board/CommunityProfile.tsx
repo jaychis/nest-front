@@ -23,6 +23,7 @@ import {
   setJoinCommunity,
 } from '../../reducers/communitySlice';
 import { breakpoints } from '../../_common/breakpoint';
+
 interface User {
   readonly nickname: string;
   readonly id: string[];
@@ -313,7 +314,7 @@ const CommunityProfile = () => {
 
         {USER_ID === selectCommunity.creator_user_id && (
           <>
-            <EditButton
+            <EditWrapper
               ref={editButtonRef}
               onClick={() => {
                 setView(!view);
@@ -323,7 +324,7 @@ const CommunityProfile = () => {
                 src="https://img.icons8.com/material-outlined/24/menu-2.png"
                 alt="menu-2"
               />
-            </EditButton>
+            </EditWrapper>
 
             {view && (
               <DropDownElement ref={dropDownRef}>
@@ -354,12 +355,12 @@ const CommunityProfile = () => {
 
 const CommunityInfoContainer = styled.div`
   display: flex;
-  top: 20vh;
+  top: 27vh;
   left: 20%;
   position: absolute;
 
   @media (max-width: ${breakpoints.mobile}) {
-    top: 20vh;
+    top: 35vh;
     left: 5%;
   }
 `;
@@ -372,8 +373,8 @@ const ProfileCircle = styled.div`
   border: 2px solid black;
 
   @media (max-width: ${breakpoints.mobile}) {
-    width: 100px;
-    height: 100px;
+    width: 75px;
+    height: 75px;
   }
 `;
 
@@ -390,7 +391,7 @@ const CommunityNameWrapper = styled.div`
   margin-left: 1vw;
 
   @media (max-width: ${breakpoints.mobile}) {
-    margin-top: 2vh;
+    margin-top: 3vh;
   }
 `;
 
@@ -429,10 +430,15 @@ const JoinButton = styled.div<{ readonly isJoined: boolean }>`
   }
 `;
 
-const EditButton = styled.div`
+const EditWrapper = styled.div`
   position: absolute;
-  top: 18vh;
+  top: 12vh;
   left: 45vw;
+
+  @media(max-width: ${breakpoints.mobile}){
+  left: 72vw;
+  top: 5.5vh;
+  }
 `;
 
 const EditIcon = styled.img`

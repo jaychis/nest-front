@@ -62,11 +62,11 @@ const GlobalSideBarContainer = styled.div.withConfig({
     height: 100%;
     position: fixed;
 
-    @media (max-width: ${breakpoints.tablet}) {
-    left: ${(props) => (props.isOpen ? '0' : '-200px')};
+    @media (max-width: ${breakpoints.mobile}) {
+    left: ${(props) => (props.isOpen ? '0' : '150px')};
     z-index: 50;
     overflow: visible;
-    animation: ${({ isOpen }) => (isOpen ? slideIn : slideOut)} 0.25s forwards;
+    animation: ${({ isOpen }) => (isOpen ? slideIn : slideOut)} 0.5s forwards;
 
     // visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
     opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};

@@ -26,11 +26,13 @@ const CommunityBanner = () => {
 const BackgroundContainer = styled.div`
   display: flex;
   width: 100%;
-  height: 15vh;
+  height: 25vh;
   margin-bottom: 20vh;
+  margin-left: -2%;
 
   @media (max-width: ${breakpoints.mobile}) {
-    height: 12vh;
+    height: 25vh;
+    
   }
 `;
 

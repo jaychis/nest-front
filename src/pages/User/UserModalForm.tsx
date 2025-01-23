@@ -26,6 +26,7 @@ const UserModalForm = () => {
     if (email.trim() === '') return alert('메일을 입력해주세요');
 
     const res = await SendEmail(email);
+    console.log(res)
     if (res && res.data && res.status === 201) {
       switchView('verity');
       alert('메일로 인증번호가 발송되었습니다.');
@@ -38,7 +39,7 @@ const UserModalForm = () => {
     if (verificationCode.trim() === '') return alert('메일을 입력해주세요');
 
     const res = await VerifyEmail(email);
-
+    
     if (res && res.data && res.data.response.verification) {
       switchView('reset');
     } else {
@@ -246,6 +247,8 @@ const SwitchButton = styled.button`
   background-color: #000;
   color: white;
   cursor: pointer;
+  width: 140px;
+  height: 45px;
 
   &:hover {
     background-color: #333;
@@ -253,6 +256,8 @@ const SwitchButton = styled.button`
 `;
 
 const SubmitButton = styled.button`
+  width: 140px;
+  height: 45px;
   padding: 10px 20px;
   border-radius: 25px;
   border: none;

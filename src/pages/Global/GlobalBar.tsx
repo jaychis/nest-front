@@ -276,7 +276,7 @@ const GlobalTopBar = styled.nav.withConfig({
 `;
 
 const HamburgerMenu = styled.div`
-  @media (max-width: ${breakpoints.tablet}) {
+  @media (max-width: ${breakpoints.mobile}) {
     display: flex;
     flex-direction: column;
     cursor: pointer;
