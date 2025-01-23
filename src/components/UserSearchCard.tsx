@@ -20,11 +20,6 @@ const UserSearchCard = ({
   const [profilePreview, setProfilePreview] = useState<string | null>(null);
   const [isCardHovered, setIsCardHovered] = useState<boolean>(false);
 
-  useEffect(() => {
-    console.log('UserSearchCard');
-    console.log('profileImage : ', profileImage);
-  }, []);
-
   const handleProfilePictureChange = async (
     e: ChangeEvent<HTMLInputElement>,
   ) => {
