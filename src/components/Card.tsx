@@ -44,7 +44,6 @@ const Card = ({
   const [isCardDownHovered, setIsCardDownHovered] = useState<boolean>(false);
   const [isCardCommentHovered, setIsCardCommentHovered] =
     useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false)
   const [isReaction, setIsReaction] = useState<ReactionStateTypes>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const mediaExtensions = {
@@ -205,7 +204,6 @@ const Card = ({
     };
     startFunc();
     extractTextFromHTML(content[0]);
-    setLoading(true)
   }, []);
 
   useEffect(() => {
@@ -231,116 +229,112 @@ const Card = ({
 
   return (
     <>
-    {loading ? 
-    <>
-    <CardContainer
-      onMouseEnter={() => setIsCardHovered(true)}
-      onMouseLeave={() => setIsCardHovered(false)}
-      isHovered={isCardHovered}
-    >
-      <LogoContainer onClick={() => setIsOpen(true)}>
-        <LogoImg src={logo} />
-        <NicknameWrapper
-        >
-          {nickname}
-        </NicknameWrapper>
-      </LogoContainer>
-
-      {/* Card Content */}
-      <ContentContainer>
-        <BoardTitle onClick={() => {navigate(`/boards/read?id=${id}`)}}>{title}</BoardTitle>
-
-        {type === 'TEXT' ? (
-          <TextContainer fontcolor={color}>
-            {content?.map((co, index) => {
-              return (
-                <ContentWrapper
-                  key={`${id}-${index}`}
-                  dangerouslySetInnerHTML={{ __html: safeHtml(co) }}
-                />
-              );
-            })}
-          </TextContainer>
-        ) : type === 'MEDIA' ? (
-          <MediaContainer>
-            {isMediaType(content[0], 'image') && content.length === 1 && (
-              <Image src={content[0]} />
-            )}
-            {isMediaType(content[0], 'image') && content.length > 1 && (
-              <Carousel imageList={content} />
-            )}
-            {!isMediaType(content[0], 'image') && (
-              <Video controls preload="metadata">
-                {' '}
-                <source src={content[0]} />
-              </Video>
-            )}
-          </MediaContainer>
-        ) : (
-          <>
-            <YoutubeCard content={content} />
-          </>
-        )}
-      </ContentContainer>
-
-      <ButtonContainer>
-        <ReactionWrapper>
-          <LikeButton
-            isLiked={isReaction === 'LIKE'}
-            isHovered={isCardUpHovered}
-            onMouseEnter={() => setIsCardUpHovered(true)}
-            onMouseLeave={() => setIsCardUpHovered(false)}
-            onClick={() => reactionButton('LIKE')}
+      <CardContainer
+        onMouseEnter={() => setIsCardHovered(true)}
+        onMouseLeave={() => setIsCardHovered(false)}
+        isHovered={isCardHovered}
+      >
+        <LogoContainer onClick={() => setIsOpen(true)}>
+          <LogoImg src={logo} />
+          <NicknameWrapper
           >
-            좋아요
-          </LikeButton>
-          <ReactionCount>{isCardCount}</ReactionCount>
-          <DisLikeButton
-            isDisliked={isReaction === 'DISLIKE'}
-            isHovered={isCardDownHovered}
-            onMouseEnter={() => setIsCardDownHovered(true)}
-            onMouseLeave={() => setIsCardDownHovered(false)}
-            onClick={() => reactionButton('DISLIKE')}
-          >
-            싫어요
-          </DisLikeButton>
-        </ReactionWrapper>
-        <CommentWrapper>
-          <CommentButton
-            isHovered={isCardCommentHovered}
-            onMouseEnter={() => setIsCardCommentHovered(true)}
-            onMouseLeave={() => setIsCardCommentHovered(false)}
-            onClick={() => {navigate(`/boards/read?id=${id}`)}}
-          >
-            댓글
-          </CommentButton>
-        </CommentWrapper>
+            {nickname}
+          </NicknameWrapper>
+        </LogoContainer>
 
-        <ShareWrapper>
-          <ShareComponent
-            shareCount={shareCount}
-            title={title}
-            content={content}
-            id={id}
-          />
-        </ShareWrapper>
-      </ButtonContainer>
-      <HrTag />
-    </CardContainer>
-    
-    <Modal
-    isOpen={isOpen}
-    onClose={() => {setIsOpen(false)}}
-    top={'5%'}
-    >
-    <UserProfileModal
-    nickname={nickname}
-    logo={logo}
-    id={userId}
-    />  
-    </Modal>
-  </>
-  : <SkeletonUI/>}
+        {/* Card Content */}
+        <ContentContainer>
+          <BoardTitle onClick={() => {navigate(`/boards/read?id=${id}`)}}>{title}</BoardTitle>
+
+          {type === 'TEXT' ? (
+            <TextContainer fontcolor={color}>
+              {content?.map((co, index) => {
+                return (
+                  <ContentWrapper
+                    key={`${id}-${index}`}
+                    dangerouslySetInnerHTML={{ __html: safeHtml(co) }}
+                  />
+                );
+              })}
+            </TextContainer>
+          ) : type === 'MEDIA' ? (
+            <MediaContainer>
+              {isMediaType(content[0], 'image') && content.length === 1 && (
+                <Image src={content[0]} />
+              )}
+              {isMediaType(content[0], 'image') && content.length > 1 && (
+                <Carousel imageList={content} />
+              )}
+              {!isMediaType(content[0], 'image') && (
+                <Video controls preload="metadata">
+                  {' '}
+                  <source src={content[0]} />
+                </Video>
+              )}
+            </MediaContainer>
+          ) : (
+            <>
+              <YoutubeCard content={content} />
+            </>
+          )}
+        </ContentContainer>
+
+        <ButtonContainer>
+          <ReactionWrapper>
+            <LikeButton
+              isLiked={isReaction === 'LIKE'}
+              isHovered={isCardUpHovered}
+              onMouseEnter={() => setIsCardUpHovered(true)}
+              onMouseLeave={() => setIsCardUpHovered(false)}
+              onClick={() => reactionButton('LIKE')}
+            >
+              좋아요
+            </LikeButton>
+            <ReactionCount>{isCardCount}</ReactionCount>
+            <DisLikeButton
+              isDisliked={isReaction === 'DISLIKE'}
+              isHovered={isCardDownHovered}
+              onMouseEnter={() => setIsCardDownHovered(true)}
+              onMouseLeave={() => setIsCardDownHovered(false)}
+              onClick={() => reactionButton('DISLIKE')}
+            >
+              싫어요
+            </DisLikeButton>
+          </ReactionWrapper>
+          <CommentWrapper>
+            <CommentButton
+              isHovered={isCardCommentHovered}
+              onMouseEnter={() => setIsCardCommentHovered(true)}
+              onMouseLeave={() => setIsCardCommentHovered(false)}
+              onClick={() => {navigate(`/boards/read?id=${id}`)}}
+            >
+              댓글
+            </CommentButton>
+          </CommentWrapper>
+
+          <ShareWrapper>
+            <ShareComponent
+              shareCount={shareCount}
+              title={title}
+              content={content}
+              id={id}
+            />
+          </ShareWrapper>
+        </ButtonContainer>
+        <HrTag />
+      </CardContainer>
+      
+      <Modal
+      isOpen={isOpen}
+      onClose={() => {setIsOpen(false)}}
+      top={'5%'}
+      >
+      <UserProfileModal
+      nickname={nickname}
+      logo={logo}
+      id={userId}
+      />  
+      </Modal>
     </>
   );
 };
@@ -366,6 +360,9 @@ const CardContainer = styled.div.withConfig({
   box-sizing: border-box;
   border-radius: 30px;
 
+  @media (max-width: ${breakpoints.tablet}) {
+    margin: 0 0 5px 0;
+  }
 `;
 
 const MediaContainer = styled.div`
