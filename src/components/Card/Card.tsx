@@ -5,22 +5,21 @@ import {
   ReactionCountAPI,
   ReactionListAPI,
   ReactionParams,
-} from '../pages/api/reactionApi';
+} from '../../pages/api/reactionApi';
 import {
   BoardProps,
   ReactionStateTypes,
   ReactionType,
-} from '../_common/collectionTypes';
-import sanitizeHtml from 'sanitize-html';
+} from '../../_common/collectionTypes';
 import debounce from 'lodash.debounce';
 import styled from 'styled-components';
-import ShareComponent from './ShareComponent';
-import { breakpoints } from '../_common/breakpoint';
-import { handleReaction } from '../_common/handleUserReaction';
-import SkeletonUI from './SkeletonUI';
-import Modal from './Modal';
-import UserProfileModal from './UserProfileModal';
+import ShareComponent from '../ShareComponent';
+import { breakpoints } from '../../_common/breakpoint';
+import { handleReaction } from '../../_common/handleUserReaction';
+import Modal from '../Modal';
+import UserProfileModal from '../UserProfileModal';
 
+import ContentCard from './ContentCard';
 const Carousel = lazy(() => import('./Carousel'))
 const YoutubeCard = lazy(() => import('./YoutubeCard'))
 
@@ -64,7 +63,6 @@ const Card = ({
     ],
     video: ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv'],
   };
-  const [color, setColor] = useState<string>('');
   const logo = profileImage || "https://i.ibb.co/rHPPfvt/download.webp" 
   const isMediaType = (url: string, type: 'image' | 'video'): boolean => {
     const ext = url.split('.').pop()?.toLowerCase();
@@ -72,65 +70,6 @@ const Card = ({
   };
 
   const USER_ID: string = localStorage.getItem('id') as string;
-
-  const safeHtml = (content: string) => {
-    return sanitizeHtml(content, {
-      allowedTags: [
-        'img',
-        'a',
-        'br',
-        'p',
-        'div',
-        'span',
-        'pre',
-        'code',
-        'bold',
-        'em',
-        'u',
-        's',
-        'blockquote',
-        'ol',
-        'li',
-        'ul',
-      ],
-      allowedAttributes: {
-        img: [
-          'src',
-          'srcset',
-          'alt',
-          'title',
-          'width',
-          'height',
-          'loading',
-          'style',
-        ],
-        a: ['href', 'rel', 'target'],
-        span: ['style', 'contenteditable'],
-        p: ['style'],
-        div: ['class', 'spellcheck'],
-        pre: ['class'],
-        code: ['class'],
-        li: ['data-list', 'style', 'class'],
-      },
-      allowedClasses: {
-        div: ['ql-code-block', 'ql-code-block-container'],
-        code: ['language-*'],
-        li: ['ql-indent-*'],
-      },
-      transformTags: {
-        img: (tagName, attribs) => {
-          return {
-            tagName: 'img',
-            attribs: {
-              ...attribs,
-              style:
-                'width: 40%; height: auto; display: block; margin: 0 auto;',
-            },
-          };
-        },
-      },
-    });
-  };
 
   const reactionButton = async (userReaction: ReactionStateTypes) => {
     if (userReaction !== null) {
@@ -207,15 +146,6 @@ const Card = ({
   }, []);
 
   useEffect(() => {
-    if (content.some((item) => item.includes('span'))) {
-      const contentString = content.join('');
-      const colorMatch = contentString.match(/color:\s*rgb\([^\)]+\)/);
-
-      if (colorMatch) {
-        const extractedColor = colorMatch[0].replace('color: ', '').trim();
-        setColor(extractedColor);
-      }
-    }
     if (localCount < 0) {
       setLocalCount(0);
     }
@@ -247,16 +177,9 @@ const Card = ({
           <BoardTitle onClick={() => {navigate(`/boards/read?id=${id}`)}}>{title}</BoardTitle>
 
           {type === 'TEXT' ? (
-            <TextContainer fontcolor={color}>
-              {content?.map((co, index) => {
-                return (
-                  <ContentWrapper
-                    key={`${id}-${index}`}
-                    dangerouslySetInnerHTML={{ __html: safeHtml(co) }}
-                  />
-                );
-              })}
-            </TextContainer>
+              <ContentCard
+              content={content}
+              />
           ) : type === 'MEDIA' ? (
             <MediaContainer>
               {isMediaType(content[0], 'image') && content.length === 1 && (
@@ -426,31 +349,6 @@ const BoardTitle = styled.h3`
   text-align: left;
   white-space: normal;
   font-size: 1.5rem;
-`;
-
-const TextContainer = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'fontcolor',
-})<{ fontcolor: string }>`
-  text-align: left;
-  white-space: normal;
-  word-break: break-word;
-  width: 100%;
-
-  span {
-    color: ${(props) => props.fontcolor};
-  }
-`;
-
-const ContentWrapper = styled.div`
-  max-width: 100% !important;
-  max-height: 100% !important;
-
-  img {
-    max-width: 70% !important;
-    max-height: 450px !important;
-    height: auto !important;
-    display: block !important;
-  }
 `;
 
 const ButtonContainer = styled.div`

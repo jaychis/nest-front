@@ -6,7 +6,7 @@ import {
   BoardShareListAPI,
   BoardTagsRelatedAPI,
 } from '../../api/boardApi';
-import Card from '../../../components/Card';
+import Card from '../../../components/Card/Card';
 import { CardType } from '../../../_common/collectionTypes';
 import { MainListTypeState } from '../../../reducers/mainListTypeSlice';
 import { useSelector } from 'react-redux';

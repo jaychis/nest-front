@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styled, { keyframes } from "styled-components";
-import back from '../assets/img/icons8-뒤로-50.png';
-import next from '../assets/img/icons8-앞으로-50.png';
+import back from '../../assets/img/icons8-뒤로-50.png';
+import next from '../../assets/img/icons8-앞으로-50.png';
 
 interface CarouselProps {
     imageList: string[];
