@@ -2,11 +2,9 @@ import { useState, useEffect,useCallback } from "react";
 import { GetSearchCommunitiesAPI } from "../api/searchApi";
 import styled from "styled-components";
 import 돋보기 from '../../assets/img/icons8-돋보기-50.png'
-import { sortTypes } from "./SearchList";
 import debounce from "lodash.debounce";
 import logo from '../../assets/img/panda_logo.png'
 import { useNavigate } from "react-router-dom";
-import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
 import { AppDispatch } from '../../store/store';
 import { useDispatch } from 'react-redux';
 
