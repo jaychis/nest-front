@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 
 const Chat = () => {
-  const [socket, setSocket] = useState<WebSocket | null>(null);
+  const webSocket = useRef<WebSocket | null>(null);
   const [message, setMessage] = useState<string>('');
   const [serverMessage, setServerMessage] = useState<string>('');
 
@@ -11,45 +11,33 @@ const Chat = () => {
     const env = process.env.REACT_APP_NODE_ENV as string;
     const url =
       env === 'development'
-        ? 'ws://127.0.0.1:88/websocket-chat'
-        : 'wss://api.jaychis.com/websocket-chat';
+        ? 'ws://127.0.0.1:88?chatRoomType=SINGLE&nickname=benetric'
+        : 'wss://api.jaychis.com';
 
-    const socket = new WebSocket(
-      'ws://127.0.0.1:88/websocket-chat?chatRoomType=SINGLE&nickname=benetric',
-    );
-    socket.onopen = () => console.log('Connected to WebSocket');
-    socket.onmessage = (msg) => console.log('Message from server:', msg.data);
-    socket.onerror = (err) => console.error('WebSocket error:', err);
+    webSocket.current = new WebSocket(url);
 
-    // Create a new Socket.IO client connection
-    // const socket = io(url, {
-    //   transports: ['websocket'], // Use only WebSocket transport
-    //   query: {
-    //     chatRoomType: 'SINGLE', // Query parameters passed in the connection
-    //     nickname: 'benetric', // Customize based on the user or room
-    //   },
-    // });
-    //
-    // // Event listener for when the connection is established
-    // socket.on('connect', () => {
-    //   console.log('Connected to WebSocket server');
-    // });
-    //
-    // // Handle incoming messages
-    // socket.on('message', (data) => {
-    //   console.log('Received message:', data);
-    // });
-    //
-    // // Handle errors
-    // socket.on('connect_error', (error) => {
-    //   console.error('Connection failed:', error);
-    // });
+    webSocket.current.onopen = () => {
+      console.log('WebSocket 연결!');
+    };
+    webSocket.current.onclose = (error) => {
+      console.log(error);
+    };
+    webSocket.current.onerror = (error) => {
+      console.log(error);
+    };
+    webSocket.current.onmessage = (event: MessageEvent) => {
+      setMessage(event.data);
+    };
+
+    return () => {
+      webSocket.current?.close();
+    };
   }, []);
 
   const sendMessage = () => {
-    if (socket) {
-      socket.send(JSON.stringify({ message }));
-      setMessage('');
+    const readState = webSocket?.current?.readyState;
+    if (readState === WebSocket.OPEN) {
+      webSocket?.current?.send(message);
     }
   };
 
