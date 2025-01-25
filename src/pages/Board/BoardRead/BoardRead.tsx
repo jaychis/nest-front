@@ -56,12 +56,12 @@ const BoardRead = () => {
 
       setIsBoardStateBoard(response);
 
+      if(!localStorage.getItem('accessToken')) return
       const logViewBoard = await LogViewedBoardAPI({
         userId: USER_Id,
         boardId: response.id,
-      });
+      })
       if (!logViewBoard) return;
-      const resLogViewBoard = logViewBoard.data.response;
     };
 
     readBoard();
