@@ -6,6 +6,7 @@ const url =
   env === 'development' ? 'ws://localhost:88' : 'wss://api.jaychis.com';
 const socket = io(url, { transports: ['websocket'] });
 
+// https://socket.io/get-started/chat
 const Chat = () => {
   const [message, setMessage] = useState('');
   const [chatMessages, setChatMessages] = useState<
@@ -17,9 +18,10 @@ const Chat = () => {
   useEffect(() => {
     // Initialize WebSocket connection on component mount
     console.log('url :', url);
-    socket.on('connect', () => {
+    // socket.emit('register', { userId: 'benetric' });
+    socket.on('register', (sc) => {
       console.log('Connected to WebSocket server');
-      socket.emit('register', { userId: 'benetric' });
+      sc.emit('register', { userId: 'benetric' });
       console.log('socket : ', socket);
     });
 
@@ -33,15 +35,16 @@ const Chat = () => {
 
     return () => {
       socket.off('receive_message');
+      socket.off('connect');
     };
   }, [userId]);
 
   const handleSendMessage = () => {
-    if (message && recipientId) {
+    if (message.trim()) {
       socket.emit('send_message', {
-        fromUserId: userId,
-        toUserId: recipientId,
         message,
+        fromUserId: 'benetric',
+        toUserId: 'recipient',
       });
       setMessage('');
     }
