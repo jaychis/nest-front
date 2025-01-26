@@ -5,12 +5,11 @@ import next from '../../assets/img/icons8-앞으로-50.png';
 
 interface CarouselProps {
     imageList: string[];
-    
 }
 
 const Carousel = ({ imageList }: CarouselProps) => {
     const [carouselIndex, setCarouselIndex] = useState<number>(0);
-    const [direction, setDirection] = useState<'next' | 'prev'>('next'); // 방향 상태 추가
+    const [direction, setDirection] = useState<'next' | 'prev'>('next');
     const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
     const handelNext = () => {

@@ -23,9 +23,7 @@ const CommunityCreatePage3 = lazy(
 );
 const AdminList = lazy(() => import('./pages/Admin/AdminList'));
 const SearchMobile = lazy(() => import('./pages/Search/SearchMobile'));
-const MobilePrivacyPolicyPage = lazy(
-  () => import('./components/MobilePrivacyPolicyPage'),
-);
+const MobilePrivacyPolicyPage = lazy(() => import('./components/MobilePrivacyPolicyPage'));
 const ChatLayout = lazy(() => import(('./pages/User/chat/ChatLayout')))
 const LinkPreviewComponent = lazy(() => import(('./components/LinkPreviewComponent')))
 

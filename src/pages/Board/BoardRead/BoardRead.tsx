@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,lazy } from 'react';
 import styled from 'styled-components';
 import Card from '../../../components/Card/Card';
 import { BoardReadAPI } from '../../api/boardApi';
@@ -8,11 +8,13 @@ import {
   CommentSubmitAPI,
   CommentSubmitParams,
 } from '../../api/commentApi';
-import BoardComment, { CommentType } from './BoardComment';
+import  { CommentType } from './BoardComment';
 import BoardReply, {ReplyType} from './BoardReply';
 import { useLocation } from 'react-router-dom';
 import { LogViewedBoardAPI } from '../../api/viewedBoardsApi';
 import { breakpoints } from '../../../_common/breakpoint';
+
+const BoardComment = lazy(() => import('./BoardComment'))
 
 const BoardRead = () => {
   const useQuery = () => {
