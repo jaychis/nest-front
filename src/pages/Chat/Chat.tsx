@@ -2,25 +2,26 @@ import React, { useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 
 const env = process.env.REACT_APP_NODE_ENV as string;
-const bool = true;
-const localhost = bool
-  ? 'ws://127.0.0.1:88/SINGLE/benetric'
-  : 'ws://127.0.0.1:88';
-const url = env === 'development' ? localhost : 'wss://api.jaychis.com';
-const socket = io(url);
+const url =
+  env === 'development' ? 'ws://localhost:88' : 'wss://api.jaychis.com';
+const socket = io(url, { transports: ['websocket'] });
 
 const Chat = () => {
   const [message, setMessage] = useState('');
   const [chatMessages, setChatMessages] = useState<
-    { message: string; fromUserId: string }[]
+    { readonly message: string; readonly fromUserId: string }[]
   >([]);
   const [userId, setUserId] = useState('');
   const [recipientId, setRecipientId] = useState('');
 
   useEffect(() => {
     // Initialize WebSocket connection on component mount
-
-    socket.emit('register', userId);
+    console.log('url :', url);
+    socket.on('connect', () => {
+      console.log('Connected to WebSocket server');
+      socket.emit('register', { userId: 'benetric' });
+      console.log('socket : ', socket);
+    });
 
     // Listen for incoming messages
     socket.on('receive_message', (data) => {
