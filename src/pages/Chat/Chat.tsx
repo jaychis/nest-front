@@ -1,61 +1,83 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 
+const env = process.env.REACT_APP_NODE_ENV as string;
+const bool = true;
+const localhost = bool
+  ? 'ws://127.0.0.1:88/SINGLE/benetric'
+  : 'ws://127.0.0.1:88';
+const url = env === 'development' ? localhost : 'wss://api.jaychis.com';
+const socket = io(url);
+
 const Chat = () => {
-  const webSocket = useRef<WebSocket | null>(null);
-  const [message, setMessage] = useState<string>('');
-  const [serverMessage, setServerMessage] = useState<string>('');
+  const [message, setMessage] = useState('');
+  const [chatMessages, setChatMessages] = useState<
+    { message: string; fromUserId: string }[]
+  >([]);
+  const [userId, setUserId] = useState('');
+  const [recipientId, setRecipientId] = useState('');
 
   useEffect(() => {
     // Initialize WebSocket connection on component mount
-    const env = process.env.REACT_APP_NODE_ENV as string;
-    const url =
-      env === 'development'
-        ? 'ws://127.0.0.1:88?chatRoomType=SINGLE&nickname=benetric'
-        : 'wss://api.jaychis.com';
 
-    webSocket.current = new WebSocket(url);
+    socket.emit('register', userId);
 
-    webSocket.current.onopen = () => {
-      console.log('WebSocket 연결!');
-    };
-    webSocket.current.onclose = (error) => {
-      console.log(error);
-    };
-    webSocket.current.onerror = (error) => {
-      console.log(error);
-    };
-    webSocket.current.onmessage = (event: MessageEvent) => {
-      setMessage(event.data);
-    };
+    // Listen for incoming messages
+    socket.on('receive_message', (data) => {
+      setChatMessages((prevMessages) => [
+        ...prevMessages,
+        { message: data.message, fromUserId: data.fromUserId },
+      ]);
+    });
 
     return () => {
-      webSocket.current?.close();
+      socket.off('receive_message');
     };
-  }, []);
+  }, [userId]);
 
-  const sendMessage = () => {
-    const readState = webSocket?.current?.readyState;
-    if (readState === WebSocket.OPEN) {
-      webSocket?.current?.send(message);
+  const handleSendMessage = () => {
+    if (message && recipientId) {
+      socket.emit('send_message', {
+        fromUserId: userId,
+        toUserId: recipientId,
+        message,
+      });
+      setMessage('');
     }
   };
 
   return (
     <div>
-      <h3>WebSocket Test</h3>
       <div>
         <input
           type="text"
+          placeholder="Enter your user ID"
+          value={userId}
+          onChange={(e) => setUserId(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Enter recipient ID"
+          value={recipientId}
+          onChange={(e) => setRecipientId(e.target.value)}
+        />
+      </div>
+      <div>
+        <textarea
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="Type a message"
         />
-        <button onClick={sendMessage}>Send</button>
+        <button onClick={handleSendMessage}>Send</button>
       </div>
       <div>
-        <h4>Server Response:</h4>
-        <p>{serverMessage}</p>
+        <h3>Chat Messages:</h3>
+        {chatMessages.map((msg, idx) => (
+          <div key={idx}>
+            <strong>{msg.fromUserId}: </strong>
+            {msg.message}
+          </div>
+        ))}
       </div>
     </div>
   );
