@@ -188,14 +188,19 @@ const MainContainer = styled.div`
 
 const CardsContainer = styled.div`
   width: 100%;
-  height: 1200px;
+  height: 85vh;
   box-sizing: border-box;
   overflow: hidden;
   display: flex;
   margin-left: 10vw;
 
-  @media (max-width: ${breakpoints.tablet}) {
+  @media (max-width: ${breakpoints.mobile}) {
     margin: 0 0 5px 0;
+    height: 120vh;
+  }
+
+  @media(min-width: ${breakpoints.mobile}) and (max-width: ${breakpoints.tablet}){
+    height: 110vh;
   }
 `;
 

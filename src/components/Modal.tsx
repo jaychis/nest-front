@@ -67,6 +67,7 @@ const ModalBody = styled.div`
   align-items: center;
   max-height: 90vh; 
   
+  
   @media (max-width: ${breakpoints.tablet}) {
     width: 100%;
   }

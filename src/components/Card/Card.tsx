@@ -18,8 +18,8 @@ import { breakpoints } from '../../_common/breakpoint';
 import { handleReaction } from '../../_common/handleUserReaction';
 import Modal from '../Modal';
 import UserProfileModal from '../UserProfileModal';
-
 import ContentCard from './ContentCard';
+
 const Carousel = lazy(() => import('./Carousel'))
 const YoutubeCard = lazy(() => import('./YoutubeCard'))
 
