@@ -278,7 +278,6 @@ const CardContainer = styled.div.withConfig({
   cursor: pointer;
   padding: 0 15px;
   background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
-  position: relative;
   object-fit: contain;
   box-sizing: border-box;
   border-radius: 30px;

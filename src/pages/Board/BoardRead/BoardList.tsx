@@ -15,6 +15,7 @@ import styled from 'styled-components';
 import { breakpoints } from '../../../_common/breakpoint';
 import debounce from 'lodash.debounce';
 import { List, CellMeasurer, CellMeasurerCache, AutoSizer } from 'react-virtualized';
+import GlobalStyle from '../../../_common/globalStyled';
 
 const CommunityBanner = React.lazy(() => import('../CommunityBanner'))
 
@@ -157,6 +158,7 @@ const BoardList = () => {
             </>
           )}
         <CardsContainer>
+          <GlobalStyle/>
         <AutoSizer>
             {({ width, height }) => (
               <List
