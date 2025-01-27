@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import YouTube from 'react-youtube';
-import React, { useEffect } from 'react';
 import { breakpoints } from '../_common/breakpoint';
 
 interface VideoProps {

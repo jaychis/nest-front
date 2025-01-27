@@ -17,6 +17,7 @@ import styled from 'styled-components';
 import ShareComponent from './ShareComponent';
 import { breakpoints } from '../_common/breakpoint';
 import { handleReaction } from '../_common/handleUserReaction';
+import SkeletonUI from './SkeletonUI';
 import Modal from './Modal';
 import UserProfileModal from './UserProfileModal';
 
@@ -351,7 +352,6 @@ const CardContainer = styled.div.withConfig({
   height: 100%;
   max-height: 650px;
   max-width: 700px;
-  margin-left: 10vw;
   cursor: pointer;
   padding: 0 15px;
   background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
