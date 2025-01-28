@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import YouTube from 'react-youtube';
-import { breakpoints } from '../_common/breakpoint';
+import { breakpoints } from '../../_common/breakpoint';
 
 interface VideoProps {
   readonly content: string[];

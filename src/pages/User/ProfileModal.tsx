@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
+import { LogOut } from "../api/userApi";
 
 Modal.setAppElement("#root"); // or the correct selector where your app is mounted
 
@@ -38,6 +39,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onRequestClose, but
     localStorage.removeItem("refresh_token")
     localStorage.removeItem("nickname")
     localStorage.removeItem("id")
+    LogOut(true);
     window.location.href = '/';
   };
 

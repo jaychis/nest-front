@@ -1,6 +1,7 @@
 import { client } from './client';
 import { BoardType } from '../../_common/collectionTypes';
 import { errorHandling } from '../../_common/errorHandling';
+import { usePostClient } from './client';
 
 const BOARD_URL: string = 'boards';
 
@@ -115,6 +116,7 @@ export interface SubmitParams {
   // readonly links: string[]; // URL 배열
   // readonly youtubeLinks: string[]; // YouTube 링크 배열
 }
+
 
 export const BoardSubmitAPI = async (params: SubmitParams) => {
   const accessToken: string = localStorage.getItem('access_token') as string;

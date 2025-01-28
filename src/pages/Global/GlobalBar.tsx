@@ -1,13 +1,10 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect,lazy } from 'react';
 import { FaSistrix } from '@react-icons/all-files/fa/FaSistrix';
 import { FaPlus } from '@react-icons/all-files/fa/FaPlus';
 import { FaBell } from '@react-icons/all-files/fa/FaBell';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import UserModalForm from '../User/UserModalForm';
-import ProfileModal from '../User/ProfileModal';
 import { AddSearchAPI } from '../api/searchApi';
-import NotificationModal from '../User/NotificationModal';
 import { setSearchResults } from '../../reducers/searchSlice';
 import { RootState, AppDispatch } from '../../store/store';
 import debounce from 'lodash.debounce';
@@ -17,6 +14,10 @@ import { Tooltip } from 'react-tooltip';
 import styled from 'styled-components';
 import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
 import { breakpoints } from '../../_common/breakpoint';
+
+const UserModalForm = lazy(() => import('../User/UserModalForm'));
+const ProfileModal = lazy(() => import('../User/ProfileModal'));
+const NotificationModal = lazy(() => import('../User/NotificationModal'));
 
 const GlobalBar = () => {
   const logo = "https://i.ibb.co/rHPPfvt/download.webp" 
@@ -47,10 +48,8 @@ const GlobalBar = () => {
   const handleScroll = () => {
     const currentScrollY = window.scrollY;
     if (currentScrollY > lastScrollY && currentScrollY > 30) {
-      // 화면을 내릴 때, 특정 위치(30px 이상)에서 Top Bar 숨김
       setIsVisible(false);
     } else {
-      // 화면을 올릴 때 Top Bar 표시
       setIsVisible(true);
     }
     setLastScrollY(currentScrollY);
@@ -99,7 +98,6 @@ const GlobalBar = () => {
 
   const clickSearch = async () => {
     if (!searchTerm) {
-      // 나중에는 alert 제거하기
       alert('내용을 입력해주세요');
       return;
     }
