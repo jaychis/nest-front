@@ -6,7 +6,7 @@ import {
   BoardShareListAPI,
   BoardTagsRelatedAPI,
 } from '../../api/boardApi';
-import Card from '../../../components/Card';
+import Card from '../../../components/Card/Card';
 import { CardType } from '../../../_common/collectionTypes';
 import { MainListTypeState } from '../../../reducers/mainListTypeSlice';
 import { useSelector } from 'react-redux';
@@ -15,6 +15,7 @@ import styled from 'styled-components';
 import { breakpoints } from '../../../_common/breakpoint';
 import debounce from 'lodash.debounce';
 import { List, CellMeasurer, CellMeasurerCache, AutoSizer } from 'react-virtualized';
+import GlobalStyle from '../../../_common/globalStyled';
 
 const CommunityBanner = React.lazy(() => import('../CommunityBanner'))
 
@@ -157,6 +158,7 @@ const BoardList = () => {
             </>
           )}
         <CardsContainer>
+          <GlobalStyle/>
         <AutoSizer>
             {({ width, height }) => (
               <List
@@ -188,14 +190,19 @@ const MainContainer = styled.div`
 
 const CardsContainer = styled.div`
   width: 100%;
-  height: 1200px;
+  height: 85vh;
   box-sizing: border-box;
   overflow: hidden;
   display: flex;
   margin-left: 10vw;
 
-  @media (max-width: ${breakpoints.tablet}) {
+  @media (max-width: ${breakpoints.mobile}) {
     margin: 0 0 5px 0;
+    height: 120vh;
+  }
+
+  @media(min-width: ${breakpoints.mobile}) and (max-width: ${breakpoints.tablet}){
+    height: 110vh;
   }
 `;
 

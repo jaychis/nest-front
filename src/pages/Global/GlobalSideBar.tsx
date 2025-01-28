@@ -9,7 +9,6 @@ import {
   SelectCommunityParams,
 } from '../../reducers/communitySlice';
 import { RootState } from '../../store/store';
-import { UserModalState } from '../../reducers/modalStateSlice';
 import { CommunityListAPI } from '../api/communityApi';
 import Tooltip from '../../components/Tooltip';
 import styled from 'styled-components';
@@ -18,9 +17,6 @@ import { breakpoints } from '../../_common/breakpoint';
 const GlobalSideBar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const modalState: UserModalState = useSelector(
-    (state: RootState) => state.modalState,
-  );
   const { hamburgerState, buttonType } = useSelector(
     (state: RootState) => state.sideBarButton,
   );
@@ -119,7 +115,7 @@ const GlobalSideBar = () => {
 
   return (
     <>
-      <GlobalSideBarContainer isModalOpen={modalState.modalState}>
+      <GlobalSideBarContainer>
         <HomeList
           selectedButton={selectedButton}
           isSideHovered={isSideHovered}
@@ -259,9 +255,7 @@ const GlobalSideBar = () => {
 
 export default GlobalSideBar;
 
-const GlobalSideBarContainer = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'isModalOpen',
-})<{ readonly isModalOpen: boolean }>`
+const GlobalSideBarContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 200px;
