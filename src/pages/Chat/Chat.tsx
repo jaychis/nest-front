@@ -8,6 +8,7 @@ const socket = io(url, { transports: ['websocket'] });
 
 // https://socket.io/get-started/chat
 const Chat = () => {
+  
   const [message, setMessage] = useState('');
   const [chatMessages, setChatMessages] = useState<
     { readonly message: string; readonly fromUserId: string }[]
