@@ -185,9 +185,12 @@ export const getRecentCommunitiesAPI = async () => {
   }
 };
 
-export const communityLogVisitAPI = async () => {
+interface CommunityLogVisitParam {
+  readonly communityId: string
+}
+export const communityLogVisitAPI = async ({communityId}: CommunityLogVisitParam) => {
   try {
-    const response = await client.get(`${COMMUNITY_URL}/log/visit`);
+    const response = await client.get(`${COMMUNITY_URL}/log/visit?communityId=${communityId}`);
 
     return response;
   } catch (e: any) {

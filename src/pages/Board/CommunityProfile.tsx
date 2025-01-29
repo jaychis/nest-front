@@ -3,7 +3,7 @@ import DropDown from '../../components/Dropdown';
 import { useState, useEffect } from 'react';
 import React from 'react';
 import {
-  checkMembershipAPI,
+  checkMembershipAPI, communityLogVisitAPI,
   CommunityUpdateAPI,
   CreateInvitationAPI,
   joinCommunityAPI,
@@ -75,7 +75,14 @@ const CommunityProfile = () => {
 
   useEffect(() => {
     if (localStorage.getItem('id') && localStorage.getItem('nickname')) {
-      //
+      const communityLogVisit = async () => {
+        const response = await communityLogVisitAPI({communityId: selectCommunity.id})
+        if (!response) return
+
+        const res = response.data.response
+      }
+
+      communityLogVisit()
     }
   }, []);
 
