@@ -28,8 +28,7 @@ const MobilePrivacyPolicyPage = lazy(
   () => import('./components/MobilePrivacyPolicyPage'),
 );
 const ChatLayout = lazy(() => import('./pages/User/chat/ChatLayout'));
-const LinkPreviewComponent = lazy(
-  () => import('./components/LinkPreviewComponent'),
+const LinkPreviewComponent = lazy(() => import('./components/LinkPreviewComponent'),
 );
 
 function App() {

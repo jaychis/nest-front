@@ -80,14 +80,13 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@types/lodash.debounce": "^4.0.9",
     "@types/react": "^18.3.3",
     "@types/react-modal": "^3.16.3",
     "@types/react-redux": "^7.1.33",
     "@types/react-virtualized": "^9.22.0",
     "babel-plugin-styled-components": "^2.1.4",
-    "cross-env": "^7.0.3",
-    "postcss-loader": "^8.1.1",
-    "prettier": "^3.2.5"
+    "cross-env": "^7.0.3"
   }
 }
