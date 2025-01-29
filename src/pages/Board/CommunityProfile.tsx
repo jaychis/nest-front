@@ -61,8 +61,8 @@ const CommunityProfile = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [view, setView] = useState<boolean>(false);
   const [inviteeNickname, setInviteeNickname] = useState<string>('');
-  const logo = "https://i.ibb.co/rHPPfvt/download.webp" 
-  
+  const logo = 'https://i.ibb.co/rHPPfvt/download.webp';
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -72,6 +72,12 @@ const CommunityProfile = () => {
       }
     });
   }, [selectCommunity]);
+
+  useEffect(() => {
+    if (localStorage.getItem('id') && localStorage.getItem('nickname')) {
+      //
+    }
+  }, []);
 
   const communityEditHandler = (item: string) => {
     setEditType(item);
@@ -328,10 +334,13 @@ const CommunityProfile = () => {
 
             {view && (
               <DropDownElement ref={dropDownRef}>
-                <DropDown 
-                menu={editList} 
-                eventHandler={communityEditHandler}
-                onClose = {() => {setView(false)}} />
+                <DropDown
+                  menu={editList}
+                  eventHandler={communityEditHandler}
+                  onClose={() => {
+                    setView(false);
+                  }}
+                />
               </DropDownElement>
             )}
           </>
@@ -435,9 +444,9 @@ const EditWrapper = styled.div`
   top: 12vh;
   left: 45vw;
 
-  @media(max-width: ${breakpoints.mobile}){
-  left: 72vw;
-  top: 5.5vh;
+  @media (max-width: ${breakpoints.mobile}) {
+    left: 72vw;
+    top: 5.5vh;
   }
 `;
 
