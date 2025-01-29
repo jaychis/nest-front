@@ -172,3 +172,25 @@ export const joinCommunityAPI = async ({ communityId }: JoinedParams) => {
     errorHandling({ text: 'checkMembershipAPI', error: e });
   }
 };
+
+export const getRecentCommunitiesAPI = async () => {
+  try {
+    const response = await client.get(
+      `${COMMUNITY_URL}/get/recent/communities`,
+    );
+
+    return response;
+  } catch (e: any) {
+    errorHandling({ text: 'getRecentCommunitiesAPI', error: e });
+  }
+};
+
+export const communityLogVisitAPI = async () => {
+  try {
+    const response = await client.get(`${COMMUNITY_URL}/log/visit`);
+
+    return response;
+  } catch (e: any) {
+    errorHandling({ text: 'communityLogVisitAPI', error: e });
+  }
+};
