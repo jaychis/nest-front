@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import arrow from '../../../assets/img/icons8-뒤로-32.png'
+import { LeftArrow } from "../../../assets/img/ImgUrl";
 import { breakpoints } from "../../../_common/breakpoint";
 
 
@@ -20,7 +20,7 @@ const ChatRoom = ({logo, nickname,setSelectedChat}:ChatProps) => {
         <ChatContainer>
 
             <Header>
-                <Arrow width = '30px' height = '30px' src = {arrow} onClick={handleBack}/>
+                <Arrow width = '30px' height = '30px' src = {LeftArrow} onClick={handleBack}/>
                 <Logo width = '35px' height = '35px' src = "https://i.ibb.co/rHPPfvt/download.webp" />
                 <Text>user1</Text>
             </Header>

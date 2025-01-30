@@ -1,6 +1,6 @@
 import { useState,useEffect } from "react"
 import styled from "styled-components"
-import xIcon from '../../../assets/img/icons8-엑스-30.png';
+import { xIcon } from "../../../assets/img/ImgUrl";
 import {
     ImageLocalPreviewUrls,
     ImageLocalPreviewUrlsReturnType,

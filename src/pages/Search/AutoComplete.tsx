@@ -1,7 +1,7 @@
 import { useState, useEffect,useCallback } from "react";
 import { GetSearchCommunitiesAPI } from "../api/searchApi";
 import styled from "styled-components";
-import 돋보기 from '../../assets/img/icons8-돋보기-50.png'
+import { SearchIcon } from "../../assets/img/ImgUrl";
 import debounce from "lodash.debounce";
 import logo from '../../assets/img/panda_logo.png'
 import { useNavigate } from "react-router-dom";
@@ -58,7 +58,7 @@ const AutoComplete = ({query}:AutoProps) => {
     return(
         <AutoCompleteContainer>
             <SearchTermWrapper onClick={() => {navigate(`/search/list?query=${query}`)}}>
-                <Icon src = {돋보기}/> 
+                <Icon src = {SearchIcon}/> 
                 <Text>
                     {query}
                 </Text>

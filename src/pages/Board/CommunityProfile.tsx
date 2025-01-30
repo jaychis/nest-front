@@ -16,7 +16,7 @@ import { RootState } from '../../store/store';
 import DragAndDrop from '../../components/DragAndDrop';
 import { AwsImageUploadFunctionalityReturnType } from '../../_common/imageUploadFuntionality';
 import { GetSearchPeopleAPI } from '../api/searchApi';
-import vCheck from '../../assets/img/v-check.png';
+import { VIcon } from '../../assets/img/ImgUrl';
 import {
   SelectCommunityMembersType,
   SelectCommunityParams,
@@ -281,7 +281,7 @@ const CommunityProfile = () => {
                         }}
                       >
                         {result.nickname}
-                        <VCheckImg src={vCheck} />
+                        <VCheckImg src={VIcon} />
                       </SearchResultItem>
                     </>
                   ))}
