@@ -14,7 +14,7 @@ import styled from 'styled-components';
 import MultiStepNav from '../../../components/Buttons/MultiStepNav';
 import Button from '../../../components/Buttons/Button';
 import { GetSearchPeopleAPI } from '../../api/searchApi';
-import vCheck from '../../../assets/img/v-check.png';
+import { VIcon } from '../../../assets/img/ImgUrl';
 
 const CommunityCreatePage3: FC = () => {
   interface User {
@@ -206,7 +206,7 @@ const CommunityCreatePage3: FC = () => {
                         {isCommunity.id?.includes(
                           result.id.toLocaleString(),
                         ) ? (
-                          <VCheckImg src={vCheck} />
+                          <VCheckImg src={VIcon} />
                         ) : null}
                       </SearchResultItem>
                     )}
@@ -255,7 +255,7 @@ const CommunityCreatePage3: FC = () => {
                     >
                       {result.nickname}
                       {isCommunity.id?.includes(result.id.toLocaleString()) ? (
-                        <VCheckImg src={vCheck} />
+                        <VCheckImg src={VIcon} />
                       ) : null}
                     </SearchResultItem>
                   )}

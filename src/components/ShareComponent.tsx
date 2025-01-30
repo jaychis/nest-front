@@ -1,11 +1,7 @@
 import styled from 'styled-components';
 import React, { useState, useRef } from 'react';
 import { shareCountApi } from '../pages/api/boardApi';
-import kakao from '../assets/img/kakao.png';
-import instagram from '../assets/img/instagram.png';
-import twitter from '../assets/img/twitter.png';
-import facebook from '../assets/img/facebook.png';
-import copy from '../assets/img/copy.png';
+import { KakaoIcon, CopyIcon, InstagramIcon, FaceBookIcon, TwitterIcon } from '../assets/img/ImgUrl';
 import { breakpoints } from '../_common/breakpoint';
 
 interface ShareProps {
@@ -144,7 +140,7 @@ const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
                   handleShare('카카오톡');
                 }}
               >
-                <ShareIcon src={kakao} />
+                <ShareIcon src={KakaoIcon} />
                 카카오톡
               </DropdownItem>
               <DropdownItem
@@ -152,7 +148,7 @@ const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
                   handleShare('인스타그램');
                 }}
               >
-                <ShareIcon src={instagram} />
+                <ShareIcon src={InstagramIcon} />
                 인스타그램
               </DropdownItem>
               <DropdownItem
@@ -160,7 +156,7 @@ const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
                   handleShare('페이스북');
                 }}
               >
-                <ShareIcon src={facebook} />
+                <ShareIcon src={FaceBookIcon} />
                 페이스북
               </DropdownItem>
               <DropdownItem
@@ -168,7 +164,7 @@ const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
                   handleShare('트위터');
                 }}
               >
-                <ShareIcon src={twitter} />
+                <ShareIcon src={TwitterIcon} />
                 트위터
               </DropdownItem>
               <DropdownItem
@@ -176,7 +172,7 @@ const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
                   handleShare('링크복사');
                 }}
               >
-                <ShareIcon src={copy} />
+                <ShareIcon src={CopyIcon} />
                 링크 복사
               </DropdownItem>
             </DropdownMenu>

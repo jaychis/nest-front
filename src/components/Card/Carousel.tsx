@@ -1,7 +1,5 @@
 import { useState } from "react";
 import styled, { keyframes } from "styled-components";
-import back from '../../assets/img/icons8-뒤로-50.png';
-import next from '../../assets/img/icons8-앞으로-50.png';
 
 interface CarouselProps {
     imageList: string[];
@@ -11,6 +9,8 @@ const Carousel = ({ imageList }: CarouselProps) => {
     const [carouselIndex, setCarouselIndex] = useState<number>(0);
     const [direction, setDirection] = useState<'next' | 'prev'>('next');
     const [touchStartX, setTouchStartX] = useState<number | null>(null);
+    const back = "https://i.ibb.co/tPxhdPpB/download-7.webp"
+    const next = "https://i.ibb.co/N2Msc8Sk/download-8.webp"
 
     const handelNext = () => {
         setDirection('next');
