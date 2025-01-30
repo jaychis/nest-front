@@ -165,7 +165,7 @@ const Card = ({
         isHovered={isCardHovered}
       >
         <LogoContainer onClick={() => setIsOpen(true)}>
-          <LogoImg src={logo} />
+          <LogoImg style = {{width: '50px', height: '50px'}}src={logo} />
           <NicknameWrapper
           >
             {nickname}
@@ -327,8 +327,6 @@ const LogoContainer = styled.div`
 `;
 
 const LogoImg = styled.img`
-  width: 50px;
-  height: 50px;
   object-fit: cover;
   margin-right: 10px;
   border-radius: 30px;

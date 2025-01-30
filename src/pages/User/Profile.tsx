@@ -17,7 +17,7 @@ import {
 } from '../../_common/imageUploadFuntionality';
 import styled from 'styled-components';
 import { breakpoints } from '../../_common/breakpoint';
-import TRASH from '../../assets/img/trash.png';
+import { TrashIcon } from '../../assets/img/ImgUrl';
 import SAVE from '../../assets/img/save.png';
 import { UsersProfilePictureAPI } from '../api/usresProfileApi';
 import DropDown from '../../components/Dropdown';
@@ -324,7 +324,7 @@ const Profile = () => {
                         imageUrlListDelete();
                       }}
                     >
-                      <ImageIcon src={TRASH} alt="Trash Icon" />
+                      <ImageIcon src={TrashIcon} alt="Trash Icon" />
                     </TrashButton>
                   </>
                 ) : (

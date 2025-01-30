@@ -6,8 +6,8 @@ import { CommunityProvider } from './contexts/CommunityContext';
 import BoardList from './pages/Board/BoardRead/BoardList';
 import Layout from './components/Layout';
 import CustomSuspense from './components/Suspense';
-import Chat from './pages/Chat/Chat';
 
+const Chat = lazy(() => import('./pages/Chat/Chat'));
 const BoardSubmit = lazy(() => import('./pages/Board/BoardSubmit/BoardSubmit'));
 const BoardRead = lazy(() => import('./pages/Board/BoardRead/BoardRead'));
 const Profile = lazy(() => import('./pages/User/Profile'));
@@ -28,8 +28,7 @@ const MobilePrivacyPolicyPage = lazy(
   () => import('./components/MobilePrivacyPolicyPage'),
 );
 const ChatLayout = lazy(() => import('./pages/User/chat/ChatLayout'));
-const LinkPreviewComponent = lazy(() => import('./components/LinkPreviewComponent'),
-);
+const LinkPreviewComponent = lazy(() => import('./components/LinkPreviewComponent'),);
 
 function App() {
   return (
