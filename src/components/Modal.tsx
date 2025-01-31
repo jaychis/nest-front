@@ -13,7 +13,7 @@ const Modal = ({ children, isOpen, onClose, buttonLabel, top }: Props) => {
   if (!isOpen) return null;
 
   return (
-    <ModalContainer style={{ top: top }}>
+    <ModalContainer style={{ top: top }} className = 'modalContainer'>
       <ModalBody>
         <CloseButton onClick={onClose}>Close</CloseButton>
         {children}
