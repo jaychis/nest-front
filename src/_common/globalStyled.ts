@@ -7,7 +7,7 @@ const GlobalStyle = createGlobalStyle`
   .ReactVirtualized__Grid.ReactVirtualized__List {
     position: static !important;
   }
-  .ReactVirtualized__Grid__innerScrollContainer .sc-ixGGxD.jItaBC {
+  .ReactVirtualized__Grid__innerScrollContainer .modalContainer {
     left: 40% !important;
   }
 
