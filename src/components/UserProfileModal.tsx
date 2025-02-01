@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { breakpoints } from "../_common/breakpoint";
 import { useNavigate } from "react-router-dom";
+
 interface UserProps{
     readonly nickname?: string;
     readonly logo: string;

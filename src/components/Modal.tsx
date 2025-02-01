@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { breakpoints } from '../_common/breakpoint';
+import { useRef, useEffect } from 'react';
 
 interface Props {
   readonly children: React.ReactNode;
@@ -10,10 +11,27 @@ interface Props {
 }
 
 const Modal = ({ children, isOpen, onClose, buttonLabel, top }: Props) => {
-  if (!isOpen) return null;
+  
+  const modalRef = useRef<HTMLDivElement>(null)
 
+  useEffect(() => {
+    if (!isOpen) return;
+      
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+  
+      if (
+        modalRef?.current && !modalRef.current.contains(target)
+      ) { onClose();}
+    };
+  
+    document.addEventListener('mousedown', handleClickOutside);
+  },[onClose, modalRef])
+
+  if (!isOpen) return null;
+  
   return (
-    <ModalContainer style={{ top: top }} className = 'modalContainer'>
+    <ModalContainer style={{ top: top }} className = 'modalContainer' ref = {modalRef}>
       <ModalBody>
         <CloseButton onClick={onClose}>Close</CloseButton>
         {children}
