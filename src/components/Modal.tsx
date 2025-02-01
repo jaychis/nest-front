@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { breakpoints } from '../_common/breakpoint';
 import { useRef, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 
 interface Props {
   readonly children: React.ReactNode;
@@ -30,13 +31,14 @@ const Modal = ({ children, isOpen, onClose, buttonLabel, top }: Props) => {
 
   if (!isOpen) return null;
   
-  return (
+  return ReactDOM.createPortal(
     <ModalContainer style={{ top: top }} className = 'modalContainer' ref = {modalRef}>
       <ModalBody>
         <CloseButton onClick={onClose}>Close</CloseButton>
         {children}
       </ModalBody>
-    </ModalContainer>
+    </ModalContainer>,
+    document.body
   );
 };
 
@@ -49,7 +51,6 @@ const ModalContainer = styled.div`
   max-height: 600px;
   overflow: hidden;
   left: 50%;  
-  top: 50%;  
   transform: translate(-50%, -50%);  
   border: 1px solid black;
   border-radius: 25px;

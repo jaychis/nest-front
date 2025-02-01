@@ -250,7 +250,7 @@ const Card = ({
       <Modal
       isOpen={isOpen}
       onClose={() => {setIsOpen(false)}}
-      top={'5%'}
+      top={'20%'}
       >
       <UserProfileModal
       nickname={nickname}

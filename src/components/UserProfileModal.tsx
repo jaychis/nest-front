@@ -67,6 +67,12 @@ const Icon = styled.img`'
 const Menu = styled.div`
     display: flex;
     flex-direction: column;
+    width: 150px;
+    align-items: center;
+    
+    @media(max-width: ${breakpoints.mobile}){
+    margin-left: -20%;
+    }
 `
 
 const Item = styled.div`
