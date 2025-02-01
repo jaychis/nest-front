@@ -1,7 +1,6 @@
 import { client } from './client';
 import { BoardType } from '../../_common/collectionTypes';
 import { errorHandling } from '../../_common/errorHandling';
-import { usePostClient } from './client';
 
 const BOARD_URL: string = 'boards';
 
