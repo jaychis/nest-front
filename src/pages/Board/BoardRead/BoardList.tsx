@@ -163,7 +163,7 @@ const BoardList = () => {
             {({ width, height }) => (
               <List
                 width={width} 
-                height={height} 
+                height={height}
                 rowCount={list.length}
                 rowHeight={cache.rowHeight}
                 rowRenderer={rowRenderer}
@@ -192,7 +192,6 @@ const CardsContainer = styled.div`
   width: 100%;
   height: 85vh;
   box-sizing: border-box;
-  overflow: hidden;
   display: flex;
   margin-left: 10vw;
 

@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { breakpoints } from "../_common/breakpoint";
 import { useNavigate } from "react-router-dom";
+
 interface UserProps{
     readonly nickname?: string;
     readonly logo: string;
@@ -66,6 +67,12 @@ const Icon = styled.img`'
 const Menu = styled.div`
     display: flex;
     flex-direction: column;
+    width: 150px;
+    align-items: center;
+    
+    @media(max-width: ${breakpoints.mobile}){
+    margin-left: -20%;
+    }
 `
 
 const Item = styled.div`

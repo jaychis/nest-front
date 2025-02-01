@@ -14,7 +14,7 @@ interface UploadImageAndVideoProps {
 }
 
 const UploadImageAndVideo = ({content, setContent}: UploadImageAndVideoProps) => {
-
+  
     const mediaExtensions = {
         image: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'ico', 'tiff', 'tif', 'heif', 'heic', 'avif'],
         video: ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv']
