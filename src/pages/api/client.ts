@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { AxiosError } from 'axios';
-import { useError } from '../../_common/ErrorContext';
 
 const BACK_URL: string = process.env.REACT_APP_API_BASE_URL as string;
 
@@ -79,19 +78,3 @@ client.interceptors.response.use(
     return Promise.reject(error);
   },
 );
-
-export const usePostClient = (url: string, data: any) => {
-  const { showError } = useError();
-
-  const post = async () => {
-    try {
-      const response = await client.post(url, data);
-      return response;
-    } catch (error: any) {
-      showError(error.message || "알 수 없는 오류가 발생했습니다.");
-      throw error;
-    }
-  };
-
-  return { post };
-};

@@ -268,7 +268,7 @@ const GlobalSideBar = () => {
                 .map((community: SelectCommunityParams, index) => (
                   <CommunityItem key={community.id || index}>
                     <CommunityIcon
-                      style = {{width: '20px', height: '20px'}}
+                     width="20" height="20"
                       src={community.icon ? community.icon : JAYCHIS_LOGO}
                       alt={'community icon'}
                       onClick={() =>
