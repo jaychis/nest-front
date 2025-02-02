@@ -193,10 +193,8 @@ const CardsContainer = styled.div`
   height: 85vh;
   box-sizing: border-box;
   display: flex;
-  margin-left: 10vw;
-  
+
   @media (max-width: ${breakpoints.mobile}) {
-    margin: 0 0 5px 0;
     height: 120vh;
   }
 

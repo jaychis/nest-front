@@ -160,6 +160,7 @@ const Card = ({
   return (
     <>
       <CardContainer
+        className='CardContainer'
         onMouseEnter={() => setIsCardHovered(true)}
         onMouseLeave={() => setIsCardHovered(false)}
         isHovered={isCardHovered}
@@ -281,7 +282,7 @@ const CardContainer = styled.div.withConfig({
   object-fit: contain;
   box-sizing: border-box;
   border-radius: 30px;
-
+  
   @media (max-width: ${breakpoints.tablet}) {
     margin: 0 0 5px 0;
   }
