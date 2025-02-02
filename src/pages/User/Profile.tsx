@@ -1,9 +1,9 @@
 import React, { useEffect, useState, ChangeEvent, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
-import { UsersProfileAPI } from '../api/userApi';
+import {UsersGetJoinedCommunities, UsersProfileAPI} from '../api/userApi';
 import { ProfileState } from '../../reducers/profileSlice';
-import { CardType, UserType } from '../../_common/collectionTypes';
+import {CardType, CommunityType, UserType} from '../../_common/collectionTypes';
 import Card from '../../components/Card/Card';
 import BoardComment, {CommentType} from '../Board/BoardRead/BoardComment';
 import { BoardInquiryAPI,BoardDelete,BoardUpdate } from '../api/boardApi';
@@ -26,14 +26,15 @@ import SubmitQuill from '../../components/SubmitQuill';
 import UploadImageAndVideo from '../Board/BoardSubmit/UploadImageAndVideo';
 import { useParams } from 'react-router-dom';
 
-type ACTIVE_SECTION_TYPES = 'POSTS' | 'COMMENTS' | 'PROFILE';
+type ACTIVE_SECTION_TYPES = 'POSTS' | 'COMMENTS' | 'COMMUNITIES'|'PROFILE';
 const Profile = () => {
   
-  const {userId} = useParams<{userId: string}>()
+  const {userId} = useParams<{readonly userId: string}>()
   const user: ProfileState = useSelector((state: RootState) => state.profile);
   const dispatch = useDispatch<AppDispatch>();
   const [myPosts, setMyPosts] = useState<CardType[]>([]);
   const [myComments, setMyComments] = useState<CommentType[]>([]);
+  const [myJoinedCommunities, setMyJoinedCommunities] = useState<CommunityType[]>([]);
   const [activeSection, setActiveSection] = useState<ACTIVE_SECTION_TYPES>('POSTS');
   const [profilePreview, setProfilePreview] = useState<string[]>([]);
   const [profileList, setProfileList] = useState<File[]>([]);
@@ -117,6 +118,18 @@ const Profile = () => {
         const response = res.data.response;
 
         setMyComments(response);
+      };
+      commentInquiry();
+    }
+
+    if (activeSection === 'COMMUNITIES') {
+      const commentInquiry = async (): Promise<void> => {
+        const res = await UsersGetJoinedCommunities();
+        if (!res) return;
+
+        const response = res.data.response;
+
+        setMyJoinedCommunities(response);
       };
       commentInquiry();
     }
@@ -216,6 +229,12 @@ const Profile = () => {
           등록한 댓글
         </SectionButton>
         <SectionButton
+            isActive={activeSection === 'COMMUNITIES'}
+            onClick={() => setActiveSection('COMMUNITIES')}
+        >
+          가입한 커뮤니티
+        </SectionButton>
+        <SectionButton
           isActive={activeSection === 'PROFILE'}
           onClick={() => setActiveSection('PROFILE')}
         >
@@ -284,6 +303,27 @@ const Profile = () => {
             <p>작성된 댓글이 없습니다.</p>
           )}
         </Section>
+      )}
+
+      {activeSection === 'COMMUNITIES' && (
+          <Section>
+            <SectionTitle>가입한 커뮤니티</SectionTitle>
+            {myJoinedCommunities.length > 0 ? (
+                myJoinedCommunities.map((community: CommunityType) => (
+                    // <BoardComment
+                    //     key={community?.id}
+                    //     {...community}
+                    //     onReplySubmit={handleReplySubmit}
+                    // />
+                    <>
+                      <div>{community?.id}</div>
+                      <div>{community?.name}</div>
+                    </>
+                ))
+            ) : (
+                <p>가입한 커뮤니티가 없습니다.</p>
+            )}
+          </Section>
       )}
 
       {activeSection === 'PROFILE' && (
