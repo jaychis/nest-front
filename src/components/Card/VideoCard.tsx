@@ -173,7 +173,7 @@ export default VideoCard;
 
 const VideoContainer = styled.div`
   border-radius: 0px;
-  overflow: hidden;
+  overflow: hidden;z
 `;
 
 const StyledInstagramWrapperContainer = styled.div`

@@ -308,10 +308,8 @@ const Image = styled.img`
 `;
 
 const Video = styled.video`
-  max-width: 700px;
-  max-height: 400px;
-  width: 100%;
-  height: 100%;
+  width: 400px;
+  height: 400px;
   border-radius: 20px;
   display: block;
   object-fit: contain;
