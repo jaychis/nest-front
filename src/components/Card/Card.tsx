@@ -308,11 +308,11 @@ const Image = styled.img`
 `;
 
 const Video = styled.video`
-  width: 400px;
-  height: 400px;
+  width: 90%;
+  height: 90%;
   border-radius: 20px;
   display: block;
-  object-fit: contain;
+  object-fit: cover;
 `;
 
 const LogoContainer = styled.div`
