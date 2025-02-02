@@ -17,7 +17,7 @@ import {
 } from '../../_common/imageUploadFuntionality';
 import styled from 'styled-components';
 import { breakpoints } from '../../_common/breakpoint';
-import { TrashIcon } from '../../assets/img/ImgUrl';
+import TrashIcon from '../../assets/img/trash.webp';
 import SAVE from '../../assets/img/save.png';
 import { UsersProfilePictureAPI } from '../api/usresProfileApi';
 import DropDown from '../../components/Dropdown';

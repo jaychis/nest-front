@@ -1,7 +1,11 @@
 import styled from 'styled-components';
 import React, { useState, useRef } from 'react';
 import { shareCountApi } from '../pages/api/boardApi';
-import { KakaoIcon, CopyIcon, InstagramIcon, FaceBookIcon, TwitterIcon } from '../assets/img/ImgUrl';
+import KakaoIcon from '../assets/img/kakao.webp';
+import FaceBookIcon from '../assets/img/facebook.webp';
+import TwitterIcon from '../assets/img/twitter.webp';
+import CopyIcon from '../assets/img/copy.webp'
+import InstagramIcon from '../assets/img/Instagram.webp'
 import { breakpoints } from '../_common/breakpoint';
 
 interface ShareProps {

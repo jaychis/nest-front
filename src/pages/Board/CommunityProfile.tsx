@@ -16,7 +16,7 @@ import { RootState } from '../../store/store';
 import DragAndDrop from '../../components/DragAndDrop';
 import { AwsImageUploadFunctionalityReturnType } from '../../_common/imageUploadFuntionality';
 import { GetSearchPeopleAPI } from '../api/searchApi';
-import { VIcon } from '../../assets/img/ImgUrl';
+import VIcon from '../../assets/img/vicon.webp';
 import {
   SelectCommunityMembersType,
   SelectCommunityParams,

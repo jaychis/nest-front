@@ -19,6 +19,7 @@ import { handleReaction } from '../../_common/handleUserReaction';
 import Modal from '../Modal';
 import UserProfileModal from '../UserProfileModal';
 import ContentCard from './ContentCard';
+import panda from '../../assets/img/panda_logo.webp'
 
 const Carousel = lazy(() => import('./Carousel'))
 const YoutubeCard = lazy(() => import('./YoutubeCard'))
@@ -63,7 +64,7 @@ const Card = ({
     ],
     video: ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv'],
   };
-  const logo = profileImage || "https://i.ibb.co/rHPPfvt/download.webp" 
+  const logo = profileImage || panda
   const isMediaType = (url: string, type: 'image' | 'video'): boolean => {
     const ext = url.split('.').pop()?.toLowerCase();
     return ext ? mediaExtensions[type].includes(ext) : false;

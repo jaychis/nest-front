@@ -1,9 +1,9 @@
 import { useState, useEffect,useCallback } from "react";
 import { GetSearchCommunitiesAPI } from "../api/searchApi";
 import styled from "styled-components";
-import { SearchIcon } from "../../assets/img/ImgUrl";
+import SearchIcon from "../../assets/img/search.webp";
 import debounce from "lodash.debounce";
-import logo from '../../assets/img/panda_logo.png'
+import logo from '../../assets/img/panda_logo.webp'
 import { useNavigate } from "react-router-dom";
 import { AppDispatch } from '../../store/store';
 import { useDispatch } from 'react-redux';
