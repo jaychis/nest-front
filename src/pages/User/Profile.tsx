@@ -25,6 +25,7 @@ import Modal from '../../components/Modal';
 import SubmitQuill from '../../components/SubmitQuill';
 import UploadImageAndVideo from '../Board/BoardSubmit/UploadImageAndVideo';
 import { useParams } from 'react-router-dom';
+import {JAYCHIS_LOGO} from "../../_common/jaychisLogo";
 
 type ACTIVE_SECTION_TYPES = 'POSTS' | 'COMMENTS' | 'COMMUNITIES'|'PROFILE';
 const Profile = () => {
@@ -310,14 +311,27 @@ const Profile = () => {
             <SectionTitle>가입한 커뮤니티</SectionTitle>
             {myJoinedCommunities.length > 0 ? (
                 myJoinedCommunities.map((community: CommunityType) => (
-                    // <BoardComment
-                    //     key={community?.id}
-                    //     {...community}
-                    //     onReplySubmit={handleReplySubmit}
-                    // />
                     <>
-                      <div>{community?.id}</div>
-                      <div>{community?.name}</div>
+                      <CommunityContainer>
+
+                        <CommunityPreviewWrapper>
+                            <ImagePreview
+                                src={community?.icon ? community.icon : JAYCHIS_LOGO}
+                                alt="Profile Preview"
+                            />
+                        </CommunityPreviewWrapper>
+
+                        <CommunityInfo>
+                          <InfoRow>
+                            <Label>커뮤니티명:</Label>
+                            <Value>{community?.name }</Value>
+                          </InfoRow>
+                          <InfoRow>
+                            <Label>공개범위:</Label>
+                            <Value>{community?.visibility}</Value>
+                          </InfoRow>
+                        </CommunityInfo>
+                      </CommunityContainer>
                     </>
                 ))
             ) : (
@@ -398,21 +412,6 @@ const Profile = () => {
                   <Value>{email || '이메일을 입력하세요'}</Value>
                 )}
               </InfoRow>
-               {/*
-               <InfoRow>
-                <Label>전화번호:</Label>
-                {isEditing ? (
-                  <Input
-                    type="text"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                  />
-                ) : (
-                  <Value>{phone || '전화번호를 입력하세요'}</Value>
-                )}
-              </InfoRow>
-              */}
-              
             </ProfileInfo>
           </ProfileContainer>
         </Section>
@@ -462,11 +461,20 @@ const Section = styled.div`
   box-sizing: border-box;
 `;
 
+
+
+
 const SectionTitle = styled.h2`
   font-size: 24px;
   margin-bottom: 10px;
   border-bottom: 2px solid #333;
   padding-bottom: 5px;
+`;
+
+const CommunityContainer = styled.div`
+  display: flex;
+  align-items: flex-start;
+  margin: 5px 0;
 `;
 
 const ProfileContainer = styled.div`
@@ -484,6 +492,19 @@ const ImageUploadWrapper = styled.div`
 
 const HiddenFileInput = styled.input`
   display: none;
+`;
+
+const CommunityPreviewWrapper = styled.div`
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: relative;
+  margin-right: 10px;
 `;
 
 const ImagePreviewWrapper = styled.div`
@@ -508,6 +529,12 @@ const ImagePreview = styled.img`
 const Placeholder = styled.div`
   font-size: 14px;
   color: #888;
+`;
+
+const CommunityInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 `;
 
 const ProfileInfo = styled.div`

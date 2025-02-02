@@ -16,6 +16,7 @@ import { CommunityListAPI, getRecentCommunitiesAPI } from '../api/communityApi';
 import Tooltip from '../../components/Tooltip';
 import styled from 'styled-components';
 import { breakpoints } from '../../_common/breakpoint';
+import {JAYCHIS_LOGO} from "../../_common/jaychisLogo";
 
 const GlobalSideBar = () => {
   const navigate = useNavigate();
@@ -39,7 +40,6 @@ const GlobalSideBar = () => {
     new Set(),
   );
   const [displayCount, setDisplayCount] = useState(5);
-  const logo = 'https://i.ibb.co/rHPPfvt/download.webp';
 
   const [recentCommunityList, setRecentCommunityList] = useState<
     RecentCommunityListType[]
@@ -220,7 +220,7 @@ const GlobalSideBar = () => {
                       src={
                         community.community.icon
                           ? community.community.icon
-                          : logo
+                          : JAYCHIS_LOGO
                       }
                       alt={'recent visit community icon'}
                       onClick={() =>
@@ -269,7 +269,7 @@ const GlobalSideBar = () => {
                   <CommunityItem key={community.id || index}>
                     <CommunityIcon
                       style = {{width: '20px', height: '20px'}}
-                      src={community.icon ? community.icon : logo}
+                      src={community.icon ? community.icon : JAYCHIS_LOGO}
                       alt={'community icon'}
                       onClick={() =>
                         handleCommunityClick(
