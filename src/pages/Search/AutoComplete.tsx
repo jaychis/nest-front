@@ -17,19 +17,10 @@ interface Community {
     icon: string;
   }
 
-type SearchListTypes =
-| 'BOARDS'
-| 'COMMUNITIES'
-| 'COMMENTS'
-| 'IMAGE&VIDEO'
-| 'PEOPLE'
-| 'TAGS';
-
 const AutoComplete = ({query}:AutoProps) => {
 
     const [searchList, setSearchList] = useState<Community[]>([]);
     const navigate = useNavigate();
-    const dispatch = useDispatch<AppDispatch>();
     
     const searchBoard = useCallback(
         debounce(async (query: string) => {

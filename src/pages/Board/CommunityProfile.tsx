@@ -324,16 +324,15 @@ const CommunityProfile = () => {
                 src="https://img.icons8.com/material-outlined/24/menu-2.png"
                 alt="menu-2"
               />
-            </EditWrapper>
 
-            {view && (
-              <DropDownElement ref={dropDownRef}>
+              {view && (
                 <DropDown 
                 menu={editList} 
                 eventHandler={communityEditHandler}
                 onClose = {() => {setView(false)}} />
-              </DropDownElement>
-            )}
+              )}
+            </EditWrapper>
+
           </>
         )}
 
@@ -431,9 +430,10 @@ const JoinButton = styled.div<{ readonly isJoined: boolean }>`
 `;
 
 const EditWrapper = styled.div`
-  position: absolute;
+  position: relative;
   top: 12vh;
-  left: 45vw;
+  margin-left: 25vw;
+  height: 20px;
 
   @media(max-width: ${breakpoints.mobile}){
   left: 72vw;
@@ -448,7 +448,6 @@ const EditIcon = styled.img`
 `;
 
 const DropDownElement = styled.div`
-  position: absolute;
   top: 20vh;
   left: 47.5vw;
 `;
