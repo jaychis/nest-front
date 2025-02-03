@@ -39,6 +39,10 @@ const BoardList = () => {
     debouncListApi({ id: null, allDataLoaded: false });
   }, [buttonType]);
 
+  useEffect(() => {
+    window.scrollTo(0, window.pageYOffset);
+  }, [list]);
+
   const ListApi = async ({ id, allDataLoaded }: AllListParams) => {
     if (allDataLoaded) return;
 
@@ -162,6 +166,7 @@ const BoardList = () => {
         <AutoSizer>
             {({ width, height }) => (
               <List
+              useWindowScroll
                 width={width} 
                 height={height}
                 rowCount={list.length}

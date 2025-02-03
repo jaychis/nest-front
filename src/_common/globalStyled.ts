@@ -2,12 +2,6 @@ import { createGlobalStyle } from "styled-components";
 import { breakpoints } from "./breakpoint";
 
 const GlobalStyle = createGlobalStyle`
-  .ReactVirtualized__Grid__innerScrollContainer {
-    position: static !important;
-  }
-  .ReactVirtualized__Grid.ReactVirtualized__List {
-    position: static !important;
-  }
   .ReactVirtualized__Grid__innerScrollContainer .modalContainer {
     left: 40% !important;
   }

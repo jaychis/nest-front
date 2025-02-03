@@ -20,9 +20,8 @@ import Modal from '../Modal';
 import UserProfileModal from '../UserProfileModal';
 import ContentCard from './ContentCard';
 import panda from '../../assets/img/panda_logo.webp'
-
-const Carousel = lazy(() => import('./Carousel'))
-const YoutubeCard = lazy(() => import('./YoutubeCard'))
+import YoutubeCard from './YoutubeCard';
+import Carousel from './Carousel';
 
 const Card = ({
   id,
