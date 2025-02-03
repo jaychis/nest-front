@@ -8,7 +8,6 @@ import { AddSearchAPI } from '../api/searchApi';
 import { setSearchResults } from '../../reducers/searchSlice';
 import { RootState, AppDispatch } from '../../store/store';
 import debounce from 'lodash.debounce';
-import { UserModalState, setModalState } from '../../reducers/modalStateSlice';
 import 'react-tooltip/dist/react-tooltip.css';
 import { Tooltip } from 'react-tooltip';
 import styled from 'styled-components';
@@ -23,9 +22,6 @@ const GlobalBar = () => {
   const logo = "https://i.ibb.co/rHPPfvt/download.webp" 
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const modalState: UserModalState = useSelector(
-    (state: RootState) => state.modalState,
-  );
   const [searchTerm, setSearchTerm] = useState<string>('');
   const searchResults = useSelector(
     (state: RootState) => state.search.searchResults,
@@ -74,10 +70,6 @@ const GlobalBar = () => {
     setIsProfileModalOpen(!isProfileModalOpen);
   };
 
-  const openModal = () => {
-    dispatch(setModalState(!modalState.modalState));
-  };
-
   const debouncedSearch = debounce((value: string) => {
     if (value.length > 2) {
       dispatch(setSearchResults([value]));
@@ -119,17 +111,7 @@ const GlobalBar = () => {
     if (viewport && viewport.width < 767) navigate('/SearchMobile');
   };
 
-  useEffect(() => {
-    if (isProfileModalOpen === false && modalState.modalState === true) {
-      openModal();
-    }
-  }, [isProfileModalOpen]);
-
-  useEffect(() => {
-    if (isNotificationModalOpen === false && modalState.modalState === true) {
-      openModal();
-    }
-  }, [isNotificationModalOpen]);
+  
 
   return (
     <div>
@@ -176,7 +158,7 @@ const GlobalBar = () => {
                 onMouseLeave={() => setUserHover(false)}
                 onClick={toggleProfileModal}
               >
-                <ProfileImage src={logo} alt="Profile" onClick={openModal} />
+                <ProfileImage src={logo} alt="Profile"  />
               </ProfileButton>
               <ProfileModal
                 isOpen={isProfileModalOpen}
@@ -223,7 +205,6 @@ const GlobalBar = () => {
                 onMouseLeave={() => setBellHover(false)}
                 onClick={() => {
                   toggleNotificationModal();
-                  openModal();
                 }}
               >
                 <BellIcon bellHover={bellHover} />

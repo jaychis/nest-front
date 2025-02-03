@@ -11,8 +11,6 @@ import {
 } from '../api/communityApi';
 import Modal from '../../components/Modal';
 import { useDispatch, useSelector } from 'react-redux';
-import { setModalState, UserModalState } from '../../reducers/modalStateSlice';
-import { RootState } from '../../store/store';
 import DragAndDrop from '../../components/DragAndDrop';
 import { AwsImageUploadFunctionalityReturnType } from '../../_common/imageUploadFuntionality';
 import { GetSearchPeopleAPI } from '../api/searchApi';
@@ -35,10 +33,6 @@ const CommunityProfile = () => {
   const editButtonRef = React.useRef<HTMLDivElement>(null);
   const selectCommunity: SelectCommunityParams = useSelector(
     (state: any) => state.community,
-  );
-
-  const modalState: UserModalState = useSelector(
-    (state: RootState) => state.modalState,
   );
 
   const dispatch = useDispatch();
@@ -88,14 +82,12 @@ const CommunityProfile = () => {
 
   const communityEditHandler = (item: string) => {
     setEditType(item);
-    dispatch(setModalState(!modalState.modalState));
     handleModal();
     setView(false);
   };
 
   const handleModal = () => {
     setIsOpen(!isOpen);
-    dispatch(setModalState(!modalState.modalState));
   };
 
   const handleJoinedButtonClick = async () => {
@@ -220,7 +212,6 @@ const CommunityProfile = () => {
                     visibility: selectCommunity.visibility,
                     name: editCommunityName,
                   });
-                  dispatch(setModalState(!modalState.modalState));
                   handleModal();
                   alert('커뮤니티 이름이 변경되었습니다.');
                 }}
@@ -241,7 +232,6 @@ const CommunityProfile = () => {
                     visibility: selectCommunity.visibility,
                     banner: editBackground as string,
                   });
-                  dispatch(setModalState(!modalState.modalState));
                   handleModal();
                   alert('배경화면이 변경 되었습니다.');
                 }}
@@ -262,7 +252,6 @@ const CommunityProfile = () => {
                     visibility: selectCommunity.visibility,
                     icon: editProfile as string,
                   });
-                  dispatch(setModalState(!modalState.modalState));
                   handleModal();
                   alert('프로필 사진이 변경 되었습니다.');
                   window.location.reload();
@@ -303,7 +292,6 @@ const CommunityProfile = () => {
               <SubmitButton
                 onClick={() => {
                   createCommunityInvitation();
-                  dispatch(setModalState(!modalState.modalState));
                   handleModal();
                   alert('멤버가 변경 되었습니다.');
                 }}

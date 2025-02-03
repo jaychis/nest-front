@@ -166,7 +166,6 @@ const BoardList = () => {
         <AutoSizer>
             {({ width, height }) => (
               <List
-              useWindowScroll
                 width={width} 
                 height={height}
                 rowCount={list.length}
