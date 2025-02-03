@@ -184,13 +184,13 @@ const CommunityProfile = () => {
   return (
     <>
       <CommunityInfoContainer>
-        <Modal isOpen={isOpen} onClose={handleModal} top={'0%'}>
+        <Modal isOpen={isOpen} onClose={handleModal} top={'20%'}>
           {/* onChange에서 dispatch를 이용해 selectCommunity의 값을 변경하지 않고  
             edit관련 변수들을 거쳐서 변경한 이유는 이름이나 배경사진을 변경하려다가
             취소하고 나오게 되면 onChange와 dispatch를 통해 변경된 상태가 화면에 적용돼
             새로고침을 하기 전까지 유저에게 보여지는 화면에는 커뮤니티의 이름이나 사진들이 변경된 것으로 보이게 되기 떄문에
             다른 변수를 통해 한번 거쳐감  */}
-
+          <div style = {{height: '300px',width: '300px', marginBottom: '20px'}}>
           {editType === '이름 변경' && (
             <>
               <CommunityNameInput
@@ -299,6 +299,7 @@ const CommunityProfile = () => {
               </SubmitButton>
             </>
           )}
+          </div>
         </Modal>
 
         <ProfileCircle>
@@ -436,8 +437,17 @@ const EditWrapper = styled.div`
   height: 20px;
 
   @media(max-width: ${breakpoints.mobile}){
-  left: 72vw;
-  top: 5.5vh;
+  top: 6vh;
+  margin-left: 13vw;
+  }
+
+  @media(min-width: ${breakpoints.mobile}) and (max-width: ${breakpoints.tablet}){
+  top: 11.5vh;
+  margin-left: 9vw;
+  }
+
+  @media(min-width: ${breakpoints.tablet}) and (max-width: ${breakpoints.desktop}){
+  margin-left: 18vw;
   }
 `;
 
@@ -445,11 +455,6 @@ const EditIcon = styled.img`
   cursor: pointer;
   width: 24px;
   height: 24px;
-`;
-
-const DropDownElement = styled.div`
-  top: 20vh;
-  left: 47.5vw;
 `;
 
 const CommunityNameInput = styled.input`
@@ -479,13 +484,15 @@ const SubmitButton = styled.button`
 const UserSearchInput = styled.input`
   border-radius: 25px;
   height: 25px;
-  width: 90%;
+  width: 100%;
   margin: 10px 0 0 4%;
 `;
 
 const SearchResultList = styled.ul`
   list-style-type: none;
+  margin: 10px 0 0 4%;
   padding: 0;
+  width: 100%;
 `;
 
 const SearchResultItem = styled.li<{ readonly index: number }>`
@@ -494,7 +501,7 @@ const SearchResultItem = styled.li<{ readonly index: number }>`
   cursor: pointer;
   padding: 8px;
   background-color: ${(props) => (props.index % 2 === 0 ? '#f9f9f9' : '#fff')};
-  width: 90%;
+  width: 95%;
 `;
 
 const VCheckImg = styled.img`
