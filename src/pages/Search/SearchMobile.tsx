@@ -4,7 +4,7 @@ import { AddSearchAPI, GetTopTenSearchesAPI } from '../api/searchApi';
 import { useNavigate } from 'react-router-dom';
 import SearchHistory from './SearchHistory';
 import AutoComplete from './AutoComplete';
-import { LeftArrow } from '../../assets/img/ImgUrl';
+import LeftArrow  from '../../assets/img/arrow.webp';
 
 const SearchMobile = () => {
   const [isTopTenList, setIsTopTenList] = useState([]);

@@ -126,6 +126,7 @@ function App() {
 
               <Route path={'/test'} element={<LinkPreviewComponent />} />
               <Route path={'/chat'} element={<Chat />} />
+              <Route path={`/chatLayout`} element={<ChatLayout/>}/>
             </Routes>
           </CommunityProvider>
         </Router>

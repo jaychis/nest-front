@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { LeftArrow } from "../../../assets/img/ImgUrl";
+import LeftArrow from "../../../assets/img/logo.png";
 import { breakpoints } from "../../../_common/breakpoint";
 
 

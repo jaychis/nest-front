@@ -39,6 +39,10 @@ const BoardList = () => {
     debouncListApi({ id: null, allDataLoaded: false });
   }, [buttonType]);
 
+  useEffect(() => {
+    window.scrollTo(0, window.pageYOffset);
+  }, [list]);
+
   const ListApi = async ({ id, allDataLoaded }: AllListParams) => {
     if (allDataLoaded) return;
 
@@ -162,6 +166,7 @@ const BoardList = () => {
         <AutoSizer>
             {({ width, height }) => (
               <List
+              useWindowScroll
                 width={width} 
                 height={height}
                 rowCount={list.length}
@@ -193,10 +198,8 @@ const CardsContainer = styled.div`
   height: 85vh;
   box-sizing: border-box;
   display: flex;
-  margin-left: 10vw;
 
   @media (max-width: ${breakpoints.mobile}) {
-    margin: 0 0 5px 0;
     height: 120vh;
   }
 

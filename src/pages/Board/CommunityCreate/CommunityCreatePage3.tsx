@@ -14,7 +14,7 @@ import styled from 'styled-components';
 import MultiStepNav from '../../../components/Buttons/MultiStepNav';
 import Button from '../../../components/Buttons/Button';
 import { GetSearchPeopleAPI } from '../../api/searchApi';
-import { VIcon } from '../../../assets/img/ImgUrl';
+import VIcon from '../../../assets/img/vicon.webp';
 
 const CommunityCreatePage3: FC = () => {
   interface User {

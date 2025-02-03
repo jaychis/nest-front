@@ -58,7 +58,6 @@ const BoardRead = () => {
 
       setIsBoardStateBoard(response);
 
-     
       const logViewBoard = await LogViewedBoardAPI({
         userId: USER_Id,
         boardId: response.id,

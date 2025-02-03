@@ -10,7 +10,7 @@ import {
   ReactionParams,
 } from '../../api/reactionApi';
 import styled from 'styled-components';
-import logo from '../../../assets/img/panda_logo.png';
+import logo from '../../../assets/img/panda_logo.webp';
 import { breakpoints } from '../../../_common/breakpoint';
 import { handleReaction } from '../../../_common/handleUserReaction';
 import {

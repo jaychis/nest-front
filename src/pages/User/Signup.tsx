@@ -12,7 +12,8 @@ import {
   isValidPasswordFormat,
   isValidPhoneNumber,
 } from '../../_common/passwordRegex';
-import { xIcon, VIcon } from '../../assets/img/ImgUrl';
+import VIcon from '../../assets/img/vicon.webp';
+import XICon from '../../assets/img/vicon.webp';
 import Alert from '../../components/Alert';
 import styled from 'styled-components';
 
@@ -241,7 +242,7 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
           />
           {validSignup.email !== null && (
             <ValidationLogo
-              src={validSignup.email ? VIcon : xIcon}
+              src={validSignup.email ? VIcon : XICon}
               alt="validation logo"
             />
           )}
@@ -264,7 +265,7 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
           />
           {validSignup.nickname !== null && (
             <ValidationLogo
-              src={validSignup.nickname ? VIcon : xIcon}
+              src={validSignup.nickname ? VIcon : XICon}
               alt="validation logo"
             />
           )}
@@ -306,7 +307,7 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
             <ValidationLogo src={VIcon} alt="validation logo" />
           )}
           {!validPassword && signup.confirmPassword.length > 0 && (
-            <ValidationLogo src={xIcon} alt="validation logo" />
+            <ValidationLogo src={XICon} alt="validation logo" />
           )}
         </InputWrapper>
 
@@ -327,7 +328,7 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
           />
           {validSignup.phone !== null && (
             <ValidationLogo
-              src={validSignup.phone ? VIcon : xIcon}
+              src={validSignup.phone ? VIcon : XICon}
               alt="validation logo"
             />
           )}

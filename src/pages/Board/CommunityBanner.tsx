@@ -25,7 +25,7 @@ const CommunityBanner = () => {
 
 const BackgroundContainer = styled.div`
   display: flex;
-  width: 100%;
+  width: 102%;
   height: 25vh;
   margin-bottom: 20vh;
   margin-left: -2%;

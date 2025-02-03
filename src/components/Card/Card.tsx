@@ -19,9 +19,9 @@ import { handleReaction } from '../../_common/handleUserReaction';
 import Modal from '../Modal';
 import UserProfileModal from '../UserProfileModal';
 import ContentCard from './ContentCard';
-
-const Carousel = lazy(() => import('./Carousel'))
-const YoutubeCard = lazy(() => import('./YoutubeCard'))
+import panda from '../../assets/img/panda_logo.webp'
+import YoutubeCard from './YoutubeCard';
+import Carousel from './Carousel';
 
 const Card = ({
   id,
@@ -63,7 +63,7 @@ const Card = ({
     ],
     video: ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv'],
   };
-  const logo = profileImage || "https://i.ibb.co/rHPPfvt/download.webp" 
+  const logo = profileImage || panda
   const isMediaType = (url: string, type: 'image' | 'video'): boolean => {
     const ext = url.split('.').pop()?.toLowerCase();
     return ext ? mediaExtensions[type].includes(ext) : false;
@@ -160,6 +160,7 @@ const Card = ({
   return (
     <>
       <CardContainer
+        className='CardContainer'
         onMouseEnter={() => setIsCardHovered(true)}
         onMouseLeave={() => setIsCardHovered(false)}
         isHovered={isCardHovered}
@@ -281,7 +282,7 @@ const CardContainer = styled.div.withConfig({
   object-fit: contain;
   box-sizing: border-box;
   border-radius: 30px;
-
+  
   @media (max-width: ${breakpoints.tablet}) {
     margin: 0 0 5px 0;
   }
@@ -308,13 +309,11 @@ const Image = styled.img`
 `;
 
 const Video = styled.video`
-  max-width: 700px;
-  max-height: 400px;
-  width: 100%;
-  height: 100%;
+  width: 90%;
+  height: 90%;
   border-radius: 20px;
   display: block;
-  object-fit: contain;
+  object-fit: cover;
 `;
 
 const LogoContainer = styled.div`
