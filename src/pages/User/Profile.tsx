@@ -1,9 +1,9 @@
 import React, { useEffect, useState, ChangeEvent, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
-import { UsersProfileAPI } from '../api/userApi';
+import {UsersGetJoinedCommunities, UsersProfileAPI} from '../api/userApi';
 import { ProfileState } from '../../reducers/profileSlice';
-import { CardType, UserType } from '../../_common/collectionTypes';
+import {CardType, CommunityType, UserType} from '../../_common/collectionTypes';
 import Card from '../../components/Card/Card';
 import BoardComment, {CommentType} from '../Board/BoardRead/BoardComment';
 import { BoardInquiryAPI,BoardDelete,BoardUpdate } from '../api/boardApi';
@@ -25,15 +25,17 @@ import Modal from '../../components/Modal';
 import SubmitQuill from '../../components/SubmitQuill';
 import UploadImageAndVideo from '../Board/BoardSubmit/UploadImageAndVideo';
 import { useParams } from 'react-router-dom';
+import {JAYCHIS_LOGO} from "../../_common/jaychisLogo";
 
-type ACTIVE_SECTION_TYPES = 'POSTS' | 'COMMENTS' | 'PROFILE';
+type ACTIVE_SECTION_TYPES = 'POSTS' | 'COMMENTS' | 'COMMUNITIES'|'PROFILE';
 const Profile = () => {
   
-  const {userId} = useParams<{userId: string}>()
+  const {userId} = useParams<{readonly userId: string}>()
   const user: ProfileState = useSelector((state: RootState) => state.profile);
   const dispatch = useDispatch<AppDispatch>();
   const [myPosts, setMyPosts] = useState<CardType[]>([]);
   const [myComments, setMyComments] = useState<CommentType[]>([]);
+  const [myJoinedCommunities, setMyJoinedCommunities] = useState<CommunityType[]>([]);
   const [activeSection, setActiveSection] = useState<ACTIVE_SECTION_TYPES>('POSTS');
   const [profilePreview, setProfilePreview] = useState<string[]>([]);
   const [profileList, setProfileList] = useState<File[]>([]);
@@ -117,6 +119,18 @@ const Profile = () => {
         const response = res.data.response;
 
         setMyComments(response);
+      };
+      commentInquiry();
+    }
+
+    if (activeSection === 'COMMUNITIES') {
+      const commentInquiry = async (): Promise<void> => {
+        const res = await UsersGetJoinedCommunities();
+        if (!res) return;
+
+        const response = res.data.response;
+
+        setMyJoinedCommunities(response);
       };
       commentInquiry();
     }
@@ -216,6 +230,12 @@ const Profile = () => {
           등록한 댓글
         </SectionButton>
         <SectionButton
+            isActive={activeSection === 'COMMUNITIES'}
+            onClick={() => setActiveSection('COMMUNITIES')}
+        >
+          가입한 커뮤니티
+        </SectionButton>
+        <SectionButton
           isActive={activeSection === 'PROFILE'}
           onClick={() => setActiveSection('PROFILE')}
         >
@@ -284,6 +304,40 @@ const Profile = () => {
             <p>작성된 댓글이 없습니다.</p>
           )}
         </Section>
+      )}
+
+      {activeSection === 'COMMUNITIES' && (
+          <Section>
+            <SectionTitle>가입한 커뮤니티</SectionTitle>
+            {myJoinedCommunities.length > 0 ? (
+                myJoinedCommunities.map((community: CommunityType) => (
+                    <>
+                      <CommunityContainer>
+
+                        <CommunityPreviewWrapper>
+                            <ImagePreview
+                                src={community?.icon ? community.icon : JAYCHIS_LOGO}
+                                alt="Profile Preview"
+                            />
+                        </CommunityPreviewWrapper>
+
+                        <CommunityInfo>
+                          <InfoRow>
+                            <Label>커뮤니티명:</Label>
+                            <Value>{community?.name }</Value>
+                          </InfoRow>
+                          <InfoRow>
+                            <Label>공개범위:</Label>
+                            <Value>{community?.visibility}</Value>
+                          </InfoRow>
+                        </CommunityInfo>
+                      </CommunityContainer>
+                    </>
+                ))
+            ) : (
+                <p>가입한 커뮤니티가 없습니다.</p>
+            )}
+          </Section>
       )}
 
       {activeSection === 'PROFILE' && (
@@ -358,21 +412,6 @@ const Profile = () => {
                   <Value>{email || '이메일을 입력하세요'}</Value>
                 )}
               </InfoRow>
-               {/*
-               <InfoRow>
-                <Label>전화번호:</Label>
-                {isEditing ? (
-                  <Input
-                    type="text"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                  />
-                ) : (
-                  <Value>{phone || '전화번호를 입력하세요'}</Value>
-                )}
-              </InfoRow>
-              */}
-              
             </ProfileInfo>
           </ProfileContainer>
         </Section>
@@ -422,11 +461,20 @@ const Section = styled.div`
   box-sizing: border-box;
 `;
 
+
+
+
 const SectionTitle = styled.h2`
   font-size: 24px;
   margin-bottom: 10px;
   border-bottom: 2px solid #333;
   padding-bottom: 5px;
+`;
+
+const CommunityContainer = styled.div`
+  display: flex;
+  align-items: flex-start;
+  margin: 5px 0;
 `;
 
 const ProfileContainer = styled.div`
@@ -444,6 +492,19 @@ const ImageUploadWrapper = styled.div`
 
 const HiddenFileInput = styled.input`
   display: none;
+`;
+
+const CommunityPreviewWrapper = styled.div`
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: relative;
+  margin-right: 10px;
 `;
 
 const ImagePreviewWrapper = styled.div`
@@ -468,6 +529,12 @@ const ImagePreview = styled.img`
 const Placeholder = styled.div`
   font-size: 14px;
   color: #888;
+`;
+
+const CommunityInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 `;
 
 const ProfileInfo = styled.div`

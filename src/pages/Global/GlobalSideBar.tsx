@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { MainListTypes } from '../../_common/collectionTypes';
+import {
+  MainListTypes,
+  RecentCommunityListType,
+} from '../../_common/collectionTypes';
 import { AppDispatch } from '../../store/store';
 import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
 import {
@@ -9,10 +12,11 @@ import {
   SelectCommunityParams,
 } from '../../reducers/communitySlice';
 import { RootState } from '../../store/store';
-import { CommunityListAPI } from '../api/communityApi';
+import { CommunityListAPI, getRecentCommunitiesAPI } from '../api/communityApi';
 import Tooltip from '../../components/Tooltip';
 import styled from 'styled-components';
 import { breakpoints } from '../../_common/breakpoint';
+import {JAYCHIS_LOGO} from "../../_common/jaychisLogo";
 
 const GlobalSideBar = () => {
   const navigate = useNavigate();
@@ -36,7 +40,11 @@ const GlobalSideBar = () => {
     new Set(),
   );
   const [displayCount, setDisplayCount] = useState(5);
-  const logo = "https://i.ibb.co/rHPPfvt/download.webp"
+
+  const [recentCommunityList, setRecentCommunityList] = useState<
+    RecentCommunityListType[]
+  >([]);
+
   const fetchCommunities = async (page: number) => {
     setLoading(true);
 
@@ -65,6 +73,21 @@ const GlobalSideBar = () => {
   useEffect(() => {
     fetchCommunities(page);
   }, [page]);
+
+  useEffect(() => {
+    const fetchGetRectCommunities = async () => {
+      const response = await getRecentCommunitiesAPI();
+      if (!response) return;
+
+      const res = response.data.response;
+      console.log('fetchGetRectCommunities res: ', res);
+      setRecentCommunityList(res);
+    };
+
+    if (localStorage.getItem('id') && localStorage.getItem('nickname')) {
+      fetchGetRectCommunities();
+    }
+  }, []);
 
   useEffect(() => {
     const initialSet: Set<string> = new Set(
@@ -187,10 +210,44 @@ const GlobalSideBar = () => {
         </AllListSection>
 
         <RecentSection>RECENT</RecentSection>
-        <RecentItem>
-          <span>🇰🇷</span>
-          <span>j/korea</span>
-        </RecentItem>
+        <RecentContainer>
+          {recentCommunityList.length > 0
+            ? recentCommunityList
+                .slice(0, displayCount)
+                .map((community: RecentCommunityListType, index) => (
+                  <CommunityItem key={community.community.id || index}>
+                    <CommunityIcon
+                      src={
+                        community.community.icon
+                          ? community.community.icon
+                          : JAYCHIS_LOGO
+                      }
+                      alt={'recent visit community icon'}
+                      onClick={() =>
+                        handleCommunityClick(
+                          {
+                            button: community.community.name,
+                          } as CommunityClickType,
+                          index,
+                        )
+                      }
+                    />
+                    <CommunityName
+                      onClick={() =>
+                        handleCommunityClick(
+                          {
+                            button: community.community.name,
+                          } as CommunityClickType,
+                          index,
+                        )
+                      }
+                    >
+                      j/{community.community.name}
+                    </CommunityName>
+                  </CommunityItem>
+                ))
+            : []}
+        </RecentContainer>
 
         <CommunitySection>커뮤니티</CommunitySection>
 
@@ -212,7 +269,7 @@ const GlobalSideBar = () => {
                   <CommunityItem key={community.id || index}>
                     <CommunityIcon
                      width="20" height="20"
-                      src={community.icon ? community.icon : logo}
+                      src={community.icon ? community.icon : JAYCHIS_LOGO}
                       alt={'community icon'}
                       onClick={() =>
                         handleCommunityClick(
@@ -421,20 +478,8 @@ const RecentSection = styled.div`
   font-size: 1rem;
 `;
 
-const RecentItem = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 6px;
+const RecentContainer = styled.div`
   padding: 5px 0 10px 10px;
-
-  span {
-    font-size: 1.3rem;
-
-    &:nth-child(2) {
-      margin-left: 6px;
-      font-size: 1rem;
-    }
-  }
 `;
 
 const AllListSection = styled.div.withConfig({

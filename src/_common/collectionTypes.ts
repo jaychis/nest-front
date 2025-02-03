@@ -109,3 +109,22 @@ export interface InquiryType {
 }
 
 export type CommunityVisibilityType = 'PUBLIC' | 'RESTRICTED' | 'PRIVATE';
+
+export interface RecentCommunityListType {
+  readonly id: string;
+  readonly user_id: string;
+  readonly community_id: string;
+  readonly visited_at: Date;
+  readonly community: {
+    readonly id: string;
+    readonly name: string;
+    readonly description: string;
+    readonly banner: null | string;
+    readonly icon: null | string;
+    readonly visibility: CommunityVisibilityType;
+    readonly creator_user_id: string;
+    readonly created_at: Date;
+    readonly updated_at: Date;
+    readonly deleted_at: null | Date;
+  };
+}

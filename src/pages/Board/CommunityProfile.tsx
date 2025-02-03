@@ -3,7 +3,7 @@ import DropDown from '../../components/Dropdown';
 import { useState, useEffect } from 'react';
 import React from 'react';
 import {
-  checkMembershipAPI,
+  checkMembershipAPI, communityLogVisitAPI,
   CommunityUpdateAPI,
   CreateInvitationAPI,
   joinCommunityAPI,
@@ -61,8 +61,8 @@ const CommunityProfile = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [view, setView] = useState<boolean>(false);
   const [inviteeNickname, setInviteeNickname] = useState<string>('');
-  const logo = "https://i.ibb.co/rHPPfvt/download.webp" 
-  
+  const logo = 'https://i.ibb.co/rHPPfvt/download.webp';
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -72,6 +72,19 @@ const CommunityProfile = () => {
       }
     });
   }, [selectCommunity]);
+
+  useEffect(() => {
+    if (localStorage.getItem('id') && localStorage.getItem('nickname')) {
+      const communityLogVisit = async () => {
+        const response = await communityLogVisitAPI({communityId: selectCommunity.id})
+        if (!response) return
+
+        const res = response.data.response
+      }
+
+      communityLogVisit()
+    }
+  }, []);
 
   const communityEditHandler = (item: string) => {
     setEditType(item);

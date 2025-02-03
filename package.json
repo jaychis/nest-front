@@ -58,7 +58,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "clean": "rm -rf node_modules && npm ci && rm -rf build && npm cache clean --force",
+    "cleani": "rm -rf node_modules && npm i && rm -rf build && npm cache clean --force",
+    "cleanci": "rm -rf node_modules && npm ci && rm -rf build && npm cache clean --force",
     "analyze": "cross-env ANALYZE=true react-scripts build"
   },
   "eslintConfig": {
