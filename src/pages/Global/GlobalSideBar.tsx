@@ -217,6 +217,7 @@ const GlobalSideBar = () => {
                 .map((community: RecentCommunityListType, index) => (
                   <CommunityItem key={community.community.id || index}>
                     <CommunityIcon
+                    width="20" height="20"
                       src={
                         community.community.icon
                           ? community.community.icon

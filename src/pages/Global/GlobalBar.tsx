@@ -129,7 +129,7 @@ const GlobalBar = () => {
           onMouseLeave={() => setLogoHover(false)}
           onClick={handleLogoClick}
         >
-          <LogoImage src={logo} alt="Logo" />
+          <LogoImage src={logo} alt="Logo" width="50" height="50"/>
           <SiteName>{'제이치스'}</SiteName>
         </LogoWrapper>
 
@@ -158,7 +158,7 @@ const GlobalBar = () => {
                 onMouseLeave={() => setUserHover(false)}
                 onClick={toggleProfileModal}
               >
-                <ProfileImage src={logo} alt="Profile"  />
+                <ProfileImage src={logo} alt="Profile" width="40" height="40"  />
               </ProfileButton>
               <ProfileModal
                 isOpen={isProfileModalOpen}
