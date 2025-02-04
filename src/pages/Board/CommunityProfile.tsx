@@ -195,7 +195,7 @@ const CommunityProfile = () => {
             취소하고 나오게 되면 onChange와 dispatch를 통해 변경된 상태가 화면에 적용돼
             새로고침을 하기 전까지 유저에게 보여지는 화면에는 커뮤니티의 이름이나 사진들이 변경된 것으로 보이게 되기 떄문에
             다른 변수를 통해 한번 거쳐감  */}
-          <div style = {{height: '300px',width: '300px', marginBottom: '20px'}}>
+          <div style = {{height: '320px',width: '300px', marginBottom: '20px'}}>
           {editType === '이름 변경' && (
             <>
               <CommunityNameInput
@@ -222,9 +222,8 @@ const CommunityProfile = () => {
           )}
 
           {editType === '배경 변경' && (
-            <>
+            <div style = {{height:"70%"}}>
               <DragAndDrop onFileChange={setEditBackground} />
-
               <SubmitButton
                 onClick={() => {
                   CommunityUpdateAPI({
@@ -238,13 +237,12 @@ const CommunityProfile = () => {
               >
                 변경
               </SubmitButton>
-            </>
+            </div>
           )}
 
           {editType === '프로필 변경' && (
-            <>
+            <div style = {{height:"70%"}}>
               <DragAndDrop onFileChange={setEditProfile} />
-
               <SubmitButton
                 onClick={() => {
                   CommunityUpdateAPI({
@@ -259,7 +257,7 @@ const CommunityProfile = () => {
               >
                 변경
               </SubmitButton>
-            </>
+            </div>
           )}
 
           {editType === '초대하기' && (

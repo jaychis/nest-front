@@ -749,6 +749,7 @@ module.exports = function (webpackEnv) {
             rules: {
               ...(!hasJsxRuntime && {
                 'react/react-in-jsx-scope': 'error',
+                use: ['style-loader', 'css-loader'],
               }),
             },
           },
