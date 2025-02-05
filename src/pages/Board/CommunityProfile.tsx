@@ -11,8 +11,6 @@ import {
 } from '../api/communityApi';
 import Modal from '../../components/Modal';
 import { useDispatch, useSelector } from 'react-redux';
-import { setModalState, UserModalState } from '../../reducers/modalStateSlice';
-import { RootState } from '../../store/store';
 import DragAndDrop from '../../components/DragAndDrop';
 import { AwsImageUploadFunctionalityReturnType } from '../../_common/imageUploadFuntionality';
 import { GetSearchPeopleAPI } from '../api/searchApi';
@@ -35,10 +33,6 @@ const CommunityProfile = () => {
   const editButtonRef = React.useRef<HTMLDivElement>(null);
   const selectCommunity: SelectCommunityParams = useSelector(
     (state: any) => state.community,
-  );
-
-  const modalState: UserModalState = useSelector(
-    (state: RootState) => state.modalState,
   );
 
   const dispatch = useDispatch();
@@ -88,14 +82,12 @@ const CommunityProfile = () => {
 
   const communityEditHandler = (item: string) => {
     setEditType(item);
-    dispatch(setModalState(!modalState.modalState));
     handleModal();
     setView(false);
   };
 
   const handleModal = () => {
     setIsOpen(!isOpen);
-    dispatch(setModalState(!modalState.modalState));
   };
 
   const handleJoinedButtonClick = async () => {
@@ -203,7 +195,7 @@ const CommunityProfile = () => {
             취소하고 나오게 되면 onChange와 dispatch를 통해 변경된 상태가 화면에 적용돼
             새로고침을 하기 전까지 유저에게 보여지는 화면에는 커뮤니티의 이름이나 사진들이 변경된 것으로 보이게 되기 떄문에
             다른 변수를 통해 한번 거쳐감  */}
-          <div style = {{height: '300px',width: '300px', marginBottom: '20px'}}>
+          <div style = {{height: '320px',width: '300px', marginBottom: '20px'}}>
           {editType === '이름 변경' && (
             <>
               <CommunityNameInput
@@ -220,7 +212,6 @@ const CommunityProfile = () => {
                     visibility: selectCommunity.visibility,
                     name: editCommunityName,
                   });
-                  dispatch(setModalState(!modalState.modalState));
                   handleModal();
                   alert('커뮤니티 이름이 변경되었습니다.');
                 }}
@@ -231,9 +222,8 @@ const CommunityProfile = () => {
           )}
 
           {editType === '배경 변경' && (
-            <>
+            <div style = {{height:"70%"}}>
               <DragAndDrop onFileChange={setEditBackground} />
-
               <SubmitButton
                 onClick={() => {
                   CommunityUpdateAPI({
@@ -241,20 +231,18 @@ const CommunityProfile = () => {
                     visibility: selectCommunity.visibility,
                     banner: editBackground as string,
                   });
-                  dispatch(setModalState(!modalState.modalState));
                   handleModal();
                   alert('배경화면이 변경 되었습니다.');
                 }}
               >
                 변경
               </SubmitButton>
-            </>
+            </div>
           )}
 
           {editType === '프로필 변경' && (
-            <>
+            <div style = {{height:"70%"}}>
               <DragAndDrop onFileChange={setEditProfile} />
-
               <SubmitButton
                 onClick={() => {
                   CommunityUpdateAPI({
@@ -262,7 +250,6 @@ const CommunityProfile = () => {
                     visibility: selectCommunity.visibility,
                     icon: editProfile as string,
                   });
-                  dispatch(setModalState(!modalState.modalState));
                   handleModal();
                   alert('프로필 사진이 변경 되었습니다.');
                   window.location.reload();
@@ -270,7 +257,7 @@ const CommunityProfile = () => {
               >
                 변경
               </SubmitButton>
-            </>
+            </div>
           )}
 
           {editType === '초대하기' && (
@@ -303,7 +290,6 @@ const CommunityProfile = () => {
               <SubmitButton
                 onClick={() => {
                   createCommunityInvitation();
-                  dispatch(setModalState(!modalState.modalState));
                   handleModal();
                   alert('멤버가 변경 되었습니다.');
                 }}

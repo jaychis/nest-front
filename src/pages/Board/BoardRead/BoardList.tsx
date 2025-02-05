@@ -31,7 +31,7 @@ const BoardList = () => {
   const { buttonType }: MainListTypeState = useSelector((state: RootState) => state.sideBarButton,);
   const [id, setId] = useState<IdType>(null);
   const [allDataLoaded, setAllDataLoaded] = useState<boolean>(false);
-
+  
   useEffect(() => {
     setAllDataLoaded(false);
     setId(null);
@@ -166,13 +166,13 @@ const BoardList = () => {
         <AutoSizer>
             {({ width, height }) => (
               <List
-              useWindowScroll
-                width={width} 
-                height={height}
-                rowCount={list.length}
-                rowHeight={cache.rowHeight}
-                rowRenderer={rowRenderer}
-                onScroll={handleScroll}
+              width={width} 
+              height={height}
+              rowCount={list.length}
+              rowHeight={cache.rowHeight}
+              rowRenderer={rowRenderer}
+              onScroll={handleScroll}
+              overscanRowCount={15} 
               />
             )}
         </AutoSizer>

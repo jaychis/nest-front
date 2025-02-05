@@ -1,4 +1,4 @@
-import { useEffect, useState, lazy } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ReactionApi,
@@ -44,7 +44,7 @@ const Card = ({
   const [isCardCommentHovered, setIsCardCommentHovered] =
     useState<boolean>(false);
   const [isReaction, setIsReaction] = useState<ReactionStateTypes>(null);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false)
   const mediaExtensions = {
     image: [
       'jpg',

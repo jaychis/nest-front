@@ -13,6 +13,7 @@ import BoardReply, {ReplyType} from './BoardReply';
 import { useLocation } from 'react-router-dom';
 import { LogViewedBoardAPI } from '../../api/viewedBoardsApi';
 import { breakpoints } from '../../../_common/breakpoint';
+import { useError } from '../../../_common/ErrorContext';
 
 const BoardComment = lazy(() => import('./BoardComment'))
 
@@ -25,6 +26,7 @@ const BoardRead = () => {
   const query = useQuery();
   const ID: string = query.get('id') as string;
   const USER_Id: string = localStorage.getItem('id') as string;
+  const { showError } = useError();
 
   const [isBoardState, setIsBoardStateBoard] = useState<CardType>({
     id: ID,
@@ -57,12 +59,17 @@ const BoardRead = () => {
       const response = res.data.response;
 
       setIsBoardStateBoard(response);
+      if(!localStorage.getItem('accessToken')) return
 
-      const logViewBoard = await LogViewedBoardAPI({
-        userId: USER_Id,
-        boardId: response.id,
-      })
-      if (!logViewBoard) return;
+      try{
+        const logViewBoard = await LogViewedBoardAPI({
+          userId: USER_Id,
+          boardId: response.id,
+        })
+      }catch(error){
+        showError((error as Error).message);
+      }
+      
     };
 
     readBoard();
