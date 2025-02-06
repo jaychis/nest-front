@@ -360,14 +360,14 @@ const Profile = () => {
               (community: CommunityType, index: number) => (
                 <>
                   <CommunityContainer
-                    onClick={() =>
-                      handleCommunityClick(
-                        {
-                          button: community.name,
-                        } as CommunityClickType,
-                        index,
-                      )
-                    }
+                    // onClick={() =>
+                    //   handleCommunityClick(
+                        {/*{*/}
+                          // button: community.name,
+                        {/*} as CommunityClickType,*/}
+                        // index,
+                      {/*)*/}
+                    {/*}*/}
                   >
                     <CommunityPreviewWrapper>
                       <ImagePreview
