@@ -1,5 +1,4 @@
 import React, { useRef, useState, useEffect,lazy } from 'react';
-import { FaSistrix } from '@react-icons/all-files/fa/FaSistrix';
 import { FaPlus } from '@react-icons/all-files/fa/FaPlus';
 import { FaBell } from '@react-icons/all-files/fa/FaBell';
 import { useNavigate } from 'react-router-dom';
@@ -137,14 +136,15 @@ const GlobalBar = () => {
         <SearchContainer>
           <SearchInput
             type="search"
-            placeholder="Search"
+            placeholder="게시글 & 커뮤니티 통합 검색"
             value={searchTerm}
             name={'search'}
             onChange={(e) => handleSearchChange(e)}
             onKeyDown={handleKeyDown}
             onClick={handleDetectViewPort}
           />
-          <SearchIcon onClick={handleDetectViewPort} />
+          <SearchIcon onClick={handleDetectViewPort} width="30" height="30" src="https://img.icons8.com/neon/96/search.png" alt="search"/>
+            
         </SearchContainer>
 
         {/* Navigation Icons */}
@@ -322,17 +322,16 @@ const SearchInput = styled.input`
   width: 35%;
   padding: 10px;
   border-radius: 20px;
-  border: 1px solid #ccc;
+  border: 1.5px solid #ccc;
+  border-color: #60afff;
 
   @media (max-width: ${breakpoints.mobile}) {
     display: none;
   }
 `;
 
-const SearchIcon = styled(FaSistrix)`
+const SearchIcon = styled.img`
   margin-right: 20px;
-  width: 30px;
-  height: 30px;
   margin-top: 5px;
   cursor: pointer;
 

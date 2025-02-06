@@ -88,7 +88,7 @@ const hasJsxRuntime = (() => {
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
 module.exports = function (webpackEnv) {
-  mode: 'production'
+  
   const isEnvDevelopment = webpackEnv === 'development';
   const isEnvProduction = webpackEnv === 'production';
 
@@ -190,12 +190,6 @@ module.exports = function (webpackEnv) {
   return {
     target: ['browserslist'],
     // Webpack noise constrained to errors and warnings
-    stats: {
-      all: false,
-      assets: true,
-      entrypoints: true,
-      modules: true,
-    },
     mode: isEnvProduction ? 'production' : isEnvDevelopment && 'development',
     // Stop compilation early in production
     bail: isEnvProduction,
