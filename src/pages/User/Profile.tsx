@@ -67,15 +67,16 @@ const Profile = () => {
     index: number,
   ) => {
     console.log('button : ', button);
-    const getAllCommunityList = async () => {
-      const response = await UsersGetJoinedCommunities();
-      if (!response) return;
+    return;
+    // const getAllCommunityList = async () => {
+    // const response = await UsersGetJoinedCommunities();
+    // if (!response) return;
 
-      const res = response.data.response;
-      console.log('getAllCommunityList res : ', res);
-      // setMyJoinedCommunities(res);
-    };
-    await getAllCommunityList();
+    // const res = response.data.response;
+    // console.log('getAllCommunityList res : ', res);
+    // setMyJoinedCommunities(res);
+    // };
+    // await getAllCommunityList();
   };
 
   const handleEdit = (item: string, index?: number) => {
@@ -360,14 +361,14 @@ const Profile = () => {
               (community: CommunityType, index: number) => (
                 <>
                   <CommunityContainer
-                    // onClick={() =>
-                    //   handleCommunityClick(
-                        {/*{*/}
-                          // button: community.name,
-                        {/*} as CommunityClickType,*/}
-                        // index,
-                      {/*)*/}
-                    {/*}*/}
+                    onClick={() =>
+                      handleCommunityClick(
+                        {
+                          button: community.name,
+                        } as CommunityClickType,
+                        index,
+                      )
+                    }
                   >
                     <CommunityPreviewWrapper>
                       <ImagePreview
