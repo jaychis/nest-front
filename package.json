@@ -2,6 +2,11 @@
   "name": "nest-front",
   "version": "0.1.0",
   "private": true,
+  "sideEffects": [
+    "*.css",
+    "*.scss",
+    "*.less"
+  ],
   "dependencies": {
     "@ant-design/icons": "^5.5.1",
     "@babel/core": "^7.16.0",
@@ -103,7 +108,7 @@
     "test": "node scripts/test.js",
     "cleani": "rm -rf node_modules && npm i && rm -rf build && npm cache clean --force",
     "cleanci": "rm -rf node_modules && npm ci && rm -rf build && npm cache clean --force",
-    "analyze": "source-map-explorer build/static/js/*.js"
+    "analyze": "npx source-map-explorer build/static/js/*.js"
   },
   "eslintConfig": {
     "extends": [
