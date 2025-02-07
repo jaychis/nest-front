@@ -88,7 +88,6 @@ const hasJsxRuntime = (() => {
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
 module.exports = function (webpackEnv) {
-  mode: 'production'
   const isEnvDevelopment = webpackEnv === 'development';
   const isEnvProduction = webpackEnv === 'production';
 
@@ -190,12 +189,6 @@ module.exports = function (webpackEnv) {
   return {
     target: ['browserslist'],
     // Webpack noise constrained to errors and warnings
-    stats: {
-      all: false,
-      assets: true,
-      entrypoints: true,
-      modules: true,
-    },
     mode: isEnvProduction ? 'production' : isEnvDevelopment && 'development',
     // Stop compilation early in production
     bail: isEnvProduction,
@@ -486,11 +479,6 @@ module.exports = function (webpackEnv) {
                   mode: 'icss',
                 },
               }),
-              // Don't consider CSS imports dead code even if the
-              // containing package claims to have no side effects.
-              // Remove this when webpack adds a warning or an error for this.
-              // See https://github.com/webpack/webpack/issues/6571
-              sideEffects: false,
             },
             // Adds support for CSS Modules (https://github.com/css-modules/css-modules)
             // using the extension .module.css
@@ -749,7 +737,6 @@ module.exports = function (webpackEnv) {
             rules: {
               ...(!hasJsxRuntime && {
                 'react/react-in-jsx-scope': 'error',
-                use: ['style-loader', 'css-loader'],
               }),
             },
           },
