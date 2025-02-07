@@ -31,7 +31,7 @@ const BoardList = () => {
   const { buttonType }: MainListTypeState = useSelector((state: RootState) => state.sideBarButton,);
   const [id, setId] = useState<IdType>(null);
   const [allDataLoaded, setAllDataLoaded] = useState<boolean>(false);
-  console.log('test')
+  
   useEffect(() => {
     setAllDataLoaded(false);
     setId(null);
