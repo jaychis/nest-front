@@ -29,7 +29,7 @@ import DropDown from '../../components/Dropdown';
 import Modal from '../../components/Modal';
 import SubmitQuill from '../../components/SubmitQuill';
 import UploadImageAndVideo from '../Board/BoardSubmit/UploadImageAndVideo';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { JAYCHIS_LOGO } from '../../_common/jaychisLogo';
 import { setCommunity } from '../../reducers/communitySlice';
 
@@ -58,6 +58,7 @@ const Profile = () => {
   const [editContent, setEditContent] = useState<string[]>([]);
   const [editTitle, setEditTitle] = useState<string>('');
   const [editIndex, setEditIndex] = useState<number>(0);
+  const navigate = useNavigate();
 
   interface CommunityClickType {
     readonly button: MainListTypes;
@@ -77,6 +78,7 @@ const Profile = () => {
     // setMyJoinedCommunities(res);
     // };
     // await getAllCommunityList();
+    navigate(`/community/}`);
   };
 
   const handleEdit = (item: string, index?: number) => {
