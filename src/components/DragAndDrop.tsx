@@ -17,7 +17,7 @@ interface DragAndDropProps {
 
 const DragAndDrop: React.FC<DragAndDropProps> = ({ onFileChange }) => {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
-
+  const logo = "https://i.ibb.co/rHPPfvt/download.webp" 
   const props: UploadProps = {
     multiple: false,
     fileList: fileList,
@@ -59,7 +59,7 @@ const DragAndDrop: React.FC<DragAndDropProps> = ({ onFileChange }) => {
   return (
     <Dragger {...props}>
       <p className="ant-upload-drag-icon" style={{ marginTop: '12vh' }}>
-        <InboxOutlined />
+      <img src = {logo} width = '75' height = '75'/>
       </p>
       <p className="ant-upload-text">
         사진을 선택하거나 화면에 드래그 해주세요
