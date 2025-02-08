@@ -32,7 +32,6 @@ const BackgroundContainer = styled.div`
 
   @media (max-width: ${breakpoints.mobile}) {
     height: 25vh;
-    
   }
 `;
 

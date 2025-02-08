@@ -32,6 +32,8 @@ import UploadImageAndVideo from '../Board/BoardSubmit/UploadImageAndVideo';
 import { useNavigate, useParams } from 'react-router-dom';
 import { JAYCHIS_LOGO } from '../../_common/jaychisLogo';
 import { setCommunity } from '../../reducers/communitySlice';
+import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
+import { GetCommunitiesNameAPI } from '../api/communityApi';
 
 type ACTIVE_SECTION_TYPES = 'POSTS' | 'COMMENTS' | 'COMMUNITIES' | 'PROFILE';
 const Profile = () => {
@@ -68,18 +70,20 @@ const Profile = () => {
     index: number,
   ) => {
     console.log('button : ', button);
-    return;
-    // const getAllCommunityList = async () => {
-    // const response = await UsersGetJoinedCommunities();
-    // if (!response) return;
+    const communityName: string = button;
 
-    // const res = response.data.response;
-    // console.log('getAllCommunityList res : ', res);
-    // setMyJoinedCommunities(res);
-    // };
-    // await getAllCommunityList();
-    navigate(`/community/}`);
+    const response = await GetCommunitiesNameAPI({ name: communityName });
+    if (!response) return;
+
+    const community = response.data.response;
+    console.log('community : ', community);
+    dispatch(setCommunity(community));
+    navigate(`/j/${communityName}`);
   };
+
+  // const sendDispatchSideBtn = async ({ button }: CommunityClickType) => {
+  //   //   dispatch(sideButtonSliceActions.setButtonType({ buttonType: button }));
+  //   // };
 
   const handleEdit = (item: string, index?: number) => {
     if (item === '삭제하기') {

@@ -14,10 +14,15 @@ import { RootState } from '../../../store/store';
 import styled from 'styled-components';
 import { breakpoints } from '../../../_common/breakpoint';
 import debounce from 'lodash.debounce';
-import { List, CellMeasurer, CellMeasurerCache, AutoSizer } from 'react-virtualized';
+import {
+  List,
+  CellMeasurer,
+  CellMeasurerCache,
+  AutoSizer,
+} from 'react-virtualized';
 import GlobalStyle from '../../../_common/globalStyled';
 
-const CommunityBanner = React.lazy(() => import('../CommunityBanner'))
+const CommunityBanner = React.lazy(() => import('../CommunityBanner'));
 
 const BoardList = () => {
   interface AllListParams {
@@ -28,10 +33,12 @@ const BoardList = () => {
 
   const [list, setList] = useState<CardType[]>([]);
   const TAKE: number = 5;
-  const { buttonType }: MainListTypeState = useSelector((state: RootState) => state.sideBarButton,);
+  const { buttonType }: MainListTypeState = useSelector(
+    (state: RootState) => state.sideBarButton,
+  );
   const [id, setId] = useState<IdType>(null);
   const [allDataLoaded, setAllDataLoaded] = useState<boolean>(false);
-  
+
   useEffect(() => {
     setAllDataLoaded(false);
     setId(null);
@@ -44,6 +51,9 @@ const BoardList = () => {
   }, [list]);
 
   const ListApi = async ({ id, allDataLoaded }: AllListParams) => {
+    console.log('id : ', id);
+    console.log('allDataLoaded : ', allDataLoaded);
+
     if (allDataLoaded) return;
 
     try {
@@ -114,32 +124,38 @@ const BoardList = () => {
     }
   };
 
-  const debouncListApi = debounce(ListApi,300)
+  const debouncListApi = debounce(ListApi, 300);
 
   const cache = new CellMeasurerCache({
-    fixedWidth: true, 
-    defaultHeight: 250, 
+    fixedWidth: true,
+    defaultHeight: 250,
   });
 
-  const rowRenderer = ({ index, key, style,parent }: any) => {
+  const rowRenderer = ({ index, key, style, parent }: any) => {
     const el = list[index];
 
     return (
-      <CellMeasurer cache={cache} parent={parent} key={key} columnIndex={0} rowIndex={index}>
-      <div key={key} style={style}>
-        <Card
-          id={el.id}
-          category={el.category}
-          title={el.title}
-          nickname={el.nickname}
-          createdAt={el.created_at}
-          content={el.content}
-          type={el.type}
-          shareCount={el.share_count}
-          userId={el.user_id}
-          profileImage={el.user_profile?.profile_image as string}
-        />
-      </div>
+      <CellMeasurer
+        cache={cache}
+        parent={parent}
+        key={key}
+        columnIndex={0}
+        rowIndex={index}
+      >
+        <div key={key} style={style}>
+          <Card
+            id={el.id}
+            category={el.category}
+            title={el.title}
+            nickname={el.nickname}
+            createdAt={el.created_at}
+            content={el.content}
+            type={el.type}
+            shareCount={el.share_count}
+            userId={el.user_id}
+            profileImage={el.user_profile?.profile_image as string}
+          />
+        </div>
       </CellMeasurer>
     );
   };
@@ -148,36 +164,36 @@ const BoardList = () => {
     if (scrollTop + clientHeight >= scrollHeight - 100 && !allDataLoaded) {
       debouncListApi({ id, allDataLoaded });
     }
-  }
-  
+  };
+
   return (
-      <MainContainer>
-        {buttonType !== 'HOME' &&
-          buttonType !== 'POPULAR' &&
-          buttonType !== 'TAGMATCH' &&
-          buttonType !== 'FREQUENTSHARE' &&
-          buttonType !== 'ALL' && (
-            <>
-              <CommunityBanner />
-            </>
-          )}
-        <CardsContainer>
-          <GlobalStyle/>
+    <MainContainer>
+      {buttonType !== 'HOME' &&
+        buttonType !== 'POPULAR' &&
+        buttonType !== 'TAGMATCH' &&
+        buttonType !== 'FREQUENTSHARE' &&
+        buttonType !== 'ALL' && (
+          <>
+            <CommunityBanner />
+          </>
+        )}
+      <CardsContainer>
+        <GlobalStyle />
         <AutoSizer>
-            {({ width, height }) => (
-              <List
-              width={width} 
+          {({ width, height }) => (
+            <List
+              width={width}
               height={height}
               rowCount={list.length}
               rowHeight={cache.rowHeight}
               rowRenderer={rowRenderer}
               onScroll={handleScroll}
-              overscanRowCount={15} 
-              />
-            )}
+              overscanRowCount={15}
+            />
+          )}
         </AutoSizer>
-        </CardsContainer>
-      </MainContainer>
+      </CardsContainer>
+    </MainContainer>
   );
 };
 
@@ -186,7 +202,7 @@ const MainContainer = styled.div`
   height: 100%;
   box-sizing: border-box;
   margin-left: 2%;
- 
+
   @media (max-width: ${breakpoints.tablet}) {
     margin-left: 0;
     max-width: 100%;
@@ -203,7 +219,7 @@ const CardsContainer = styled.div`
     height: 120vh;
   }
 
-  @media(min-width: ${breakpoints.mobile}) and (max-width: ${breakpoints.tablet}){
+  @media (min-width: ${breakpoints.mobile}) and (max-width: ${breakpoints.tablet}) {
     height: 110vh;
   }
 `;

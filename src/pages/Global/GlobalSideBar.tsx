@@ -16,7 +16,7 @@ import { CommunityListAPI, getRecentCommunitiesAPI } from '../api/communityApi';
 import Tooltip from '../../components/Tooltip';
 import styled from 'styled-components';
 import { breakpoints } from '../../_common/breakpoint';
-import {JAYCHIS_LOGO} from "../../_common/jaychisLogo";
+import { JAYCHIS_LOGO } from '../../_common/jaychisLogo';
 
 const GlobalSideBar = () => {
   const navigate = useNavigate();
@@ -122,6 +122,7 @@ const GlobalSideBar = () => {
   ) => {
     dispatch(setCommunity(communityList[index]));
     await sendDispatchSideBtn({ button });
+    await navigate(`/j/${button}`);
   };
 
   const handleLoadMore = () => {
@@ -217,7 +218,8 @@ const GlobalSideBar = () => {
                 .map((community: RecentCommunityListType, index) => (
                   <CommunityItem key={community.community.id || index}>
                     <CommunityIcon
-                    width="20" height="20"
+                      width="20"
+                      height="20"
                       src={
                         community.community.icon
                           ? community.community.icon
@@ -269,7 +271,8 @@ const GlobalSideBar = () => {
                 .map((community: SelectCommunityParams, index) => (
                   <CommunityItem key={community.id || index}>
                     <CommunityIcon
-                     width="20" height="20"
+                      width="20"
+                      height="20"
                       src={community.icon ? community.icon : JAYCHIS_LOGO}
                       alt={'community icon'}
                       onClick={() =>

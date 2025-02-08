@@ -6,6 +6,8 @@ import { CommunityProvider } from './contexts/CommunityContext';
 import BoardList from './pages/Board/BoardRead/BoardList';
 import Layout from './components/Layout';
 import CustomSuspense from './components/Suspense';
+import CommunityProfile from './pages/Board/CommunityProfile';
+import CommunityBanner from './pages/Board/CommunityBanner';
 
 const Chat = lazy(() => import('./pages/Chat/Chat'));
 const BoardSubmit = lazy(() => import('./pages/Board/BoardSubmit/BoardSubmit'));
@@ -28,7 +30,9 @@ const MobilePrivacyPolicyPage = lazy(
   () => import('./components/MobilePrivacyPolicyPage'),
 );
 const ChatLayout = lazy(() => import('./pages/User/chat/ChatLayout'));
-const LinkPreviewComponent = lazy(() => import('./components/LinkPreviewComponent'),);
+const LinkPreviewComponent = lazy(
+  () => import('./components/LinkPreviewComponent'),
+);
 
 function App() {
   return (
@@ -74,8 +78,18 @@ function App() {
                 }
               />
               {/* 문의하기 게시판*/}
-
               <Route path="/users/inquiry" element={<UsersInquiry />} />
+
+              {/* 커뮤니티 */}
+              <Route
+                path={'/j/:communityName'}
+                element={
+                  <Layout>
+                    <BoardList />
+                  </Layout>
+                }
+              />
+
               {/* 커뮤니티 만들기*/}
               <Route
                 path="/community/create1"
@@ -126,7 +140,7 @@ function App() {
 
               <Route path={'/test'} element={<LinkPreviewComponent />} />
               <Route path={'/chat'} element={<Chat />} />
-              <Route path={`/chatLayout`} element={<ChatLayout/>}/>
+              <Route path={`/chatLayout`} element={<ChatLayout />} />
             </Routes>
           </CommunityProvider>
         </Router>
