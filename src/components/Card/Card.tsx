@@ -34,6 +34,7 @@ const Card = ({
   shareCount,
   userId,
   profileImage,
+  index
 }: BoardProps) => {
   const navigate = useNavigate();
   const [isCardCount, setIsCardCount] = useState<number>(0);
@@ -70,7 +71,7 @@ const Card = ({
   };
 
   const USER_ID: string = localStorage.getItem('id') as string;
-
+  
   const reactionButton = async (userReaction: ReactionStateTypes) => {
     if (userReaction !== null) {
       const params: ReactionParams = {
@@ -156,7 +157,7 @@ const Card = ({
     tempDiv.innerHTML = htmlString;
     return tempDiv.innerText || tempDiv.textContent || '';
   };
-
+  
   return (
     <>
       <CardContainer
@@ -175,7 +176,13 @@ const Card = ({
 
         {/* Card Content */}
         <ContentContainer>
-          <BoardTitle onClick={() => {navigate(`/boards/read?id=${id}`)}}>{title}</BoardTitle>
+          <BoardTitle 
+          onClick={() => {
+          navigate(`/boards/read?id=${id}`);
+          sessionStorage.setItem("scrollIndex",String(index))
+          }}>
+              {title}
+          </BoardTitle>
 
           {type === 'TEXT' ? (
               <ContentCard
@@ -230,8 +237,10 @@ const Card = ({
               isHovered={isCardCommentHovered}
               onMouseEnter={() => setIsCardCommentHovered(true)}
               onMouseLeave={() => setIsCardCommentHovered(false)}
-              onClick={() => {navigate(`/boards/read?id=${id}`)}}
-            >
+              onClick={() => {
+              navigate(`/boards/read?id=${id}`);
+              sessionStorage.setItem("scrollIndex",String(index))
+              }}>
               댓글
             </CommentButton>
           </CommentWrapper>
@@ -469,9 +478,10 @@ const ShareWrapper = styled.div`
 const HrTag = styled.hr`
   border: none;
   height: 2px;
-  background-color: #f0f0f0;
+  background-color: #d9d9d9;
   margin: 5px 0;
   width: 100%;
+  margin-top: 2vh
 `;
 
 export default Card;
