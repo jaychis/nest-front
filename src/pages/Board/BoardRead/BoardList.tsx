@@ -38,8 +38,6 @@ const BoardList = () => {
   const [initialScrollSet, setInitialScrollSet] = useState(false);
 
   useBeforeUnload((event) => {
-    event.preventDefault();
-    event.returnValue = "";
     sessionStorage.setItem("scrollIndex", '0');
   })
 
@@ -229,6 +227,14 @@ const CardsContainer = styled.div`
   @media(min-width: ${breakpoints.mobile}) and (max-width: ${breakpoints.tablet}){
     height: 110vh;
   }
+`;
+
+const HrTag = styled.hr`
+  border: none;
+  height: 2px;
+  background-color: #f0f0f0;
+  margin: 5px 0;
+  width: 100%;
 `;
 
 export default BoardList;

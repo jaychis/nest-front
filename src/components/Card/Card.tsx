@@ -478,9 +478,10 @@ const ShareWrapper = styled.div`
 const HrTag = styled.hr`
   border: none;
   height: 2px;
-  background-color: #f0f0f0;
+  background-color: #e0e0e0;
   margin: 5px 0;
   width: 100%;
+  margin-top: 2vh
 `;
 
 export default Card;
