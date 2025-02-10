@@ -96,6 +96,7 @@ export interface BoardProps {
   readonly shareCount: number;
   readonly userId: string;
   readonly profileImage?: string;
+  readonly index?: string;
 }
 
 export interface InquiryType {
