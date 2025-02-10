@@ -478,7 +478,7 @@ const ShareWrapper = styled.div`
 const HrTag = styled.hr`
   border: none;
   height: 2px;
-  background-color: #e0e0e0;
+  background-color: #d9d9d9;
   margin: 5px 0;
   width: 100%;
   margin-top: 2vh
