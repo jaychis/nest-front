@@ -13,10 +13,8 @@ const YoutubeCard = ({ content }: YoutubeProps) => {
       if(url.includes("v=")){
         return url?.split("v=")[1]?.split("&")[0]
       }else if(url.includes("si=") && !url.includes("shorts")){
-        console.log(url?.split("youtu.be/")[1]?.split("?")[0])
         return url?.split("youtu.be/")[1]?.split("?")[0]
       }else{
-        console.log(url?.split("shorts/")[1]?.split("?")[0])
         return url?.split("shorts/")[1]?.split("?")[0]
       }
     } catch (e) {
