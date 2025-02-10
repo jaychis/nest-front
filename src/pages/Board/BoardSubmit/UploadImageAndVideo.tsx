@@ -1,6 +1,6 @@
 import { useState,useEffect } from "react"
 import styled from "styled-components"
-import xIcon from '../../../assets/img/icons8-엑스-30.png';
+import xIcon from "../../../assets/img/deleteIcon.webp";
 import {
     ImageLocalPreviewUrls,
     ImageLocalPreviewUrlsReturnType,
@@ -14,7 +14,7 @@ interface UploadImageAndVideoProps {
 }
 
 const UploadImageAndVideo = ({content, setContent}: UploadImageAndVideoProps) => {
-
+  
     const mediaExtensions = {
         image: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'ico', 'tiff', 'tif', 'heif', 'heic', 'avif'],
         video: ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv']

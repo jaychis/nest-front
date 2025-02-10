@@ -12,7 +12,7 @@ interface DropDownProps {
 const DropDown = forwardRef<HTMLDivElement, DropDownProps>(
     ({ menu, eventHandler, eventIndex, onClose }, ref) => {
       const internalRef = useRef<HTMLDivElement>(null);
-      const dropDownRef = ref
+      const parentRef = ref
   
       useEffect(() => {
         if (!onClose) return;
@@ -21,10 +21,10 @@ const DropDown = forwardRef<HTMLDivElement, DropDownProps>(
           const target = event.target as Node;
       
           if (
-            dropDownRef &&
-            'current' in dropDownRef &&
-            dropDownRef.current &&
-            !dropDownRef.current.contains(target) &&
+            parentRef &&
+            'current' in parentRef &&
+            parentRef.current &&
+            !parentRef.current.contains(target) &&
             internalRef?.current &&
             !internalRef.current.contains(target)
           ) {
@@ -36,7 +36,7 @@ const DropDown = forwardRef<HTMLDivElement, DropDownProps>(
         return () => {
           document.removeEventListener('click', handleClickOutside);
         };
-      }, [onClose, dropDownRef, internalRef]);
+      }, [onClose, parentRef, internalRef]);
   
       return (
         <DropDownContainer ref={internalRef as React.RefObject<HTMLDivElement>}>

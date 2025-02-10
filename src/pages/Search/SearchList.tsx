@@ -8,7 +8,7 @@ import {
   GetSearchTagsAPI,
 } from '../api/searchApi';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import Card from '../../components/Card';
+import Card from '../../components/Card/Card';
 import {
   CardType,
   CommunityType,

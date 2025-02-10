@@ -5,7 +5,7 @@ import emailjs from 'emailjs-com';
 import { postContactApi, InquiryParam } from '../api/inquiryApi';
 import Modal from 'react-modal';
 import GlobalBar from '../Global/GlobalBar';
-import logo from '../../assets/img/panda_logo.png';
+import logo from '../../assets/img/panda_logo.webp';
 
 interface SubmitModalProps {
   isopen: boolean;

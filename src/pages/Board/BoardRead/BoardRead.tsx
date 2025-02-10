@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,lazy } from 'react';
 import styled from 'styled-components';
-import Card from '../../../components/Card';
+import Card from '../../../components/Card/Card';
 import { BoardReadAPI } from '../../api/boardApi';
 import { CardType, CollectionTypes } from '../../../_common/collectionTypes';
 import {
@@ -8,11 +8,14 @@ import {
   CommentSubmitAPI,
   CommentSubmitParams,
 } from '../../api/commentApi';
-import BoardComment, { CommentType } from './BoardComment';
+import  { CommentType } from './BoardComment';
 import BoardReply, {ReplyType} from './BoardReply';
 import { useLocation } from 'react-router-dom';
 import { LogViewedBoardAPI } from '../../api/viewedBoardsApi';
 import { breakpoints } from '../../../_common/breakpoint';
+import { useError } from '../../../_common/ErrorContext';
+
+const BoardComment = lazy(() => import('./BoardComment'))
 
 const BoardRead = () => {
   const useQuery = () => {
@@ -23,6 +26,7 @@ const BoardRead = () => {
   const query = useQuery();
   const ID: string = query.get('id') as string;
   const USER_Id: string = localStorage.getItem('id') as string;
+  const { showError } = useError();
 
   const [isBoardState, setIsBoardStateBoard] = useState<CardType>({
     id: ID,
@@ -55,13 +59,17 @@ const BoardRead = () => {
       const response = res.data.response;
 
       setIsBoardStateBoard(response);
+      if(!localStorage.getItem('accessToken')) return
 
-      const logViewBoard = await LogViewedBoardAPI({
-        userId: USER_Id,
-        boardId: response.id,
-      });
-      if (!logViewBoard) return;
-      const resLogViewBoard = logViewBoard.data.response;
+      try{
+        const logViewBoard = await LogViewedBoardAPI({
+          userId: USER_Id,
+          boardId: response.id,
+        })
+      }catch(error){
+        showError((error as Error).message);
+      }
+      
     };
 
     readBoard();

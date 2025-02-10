@@ -3,6 +3,7 @@ import { createAsyncThunk, isRejectedWithValue } from '@reduxjs/toolkit';
 import { Simulate } from 'react-dom/test-utils';
 import error = Simulate.error;
 import { errorHandling } from '../../_common/errorHandling';
+import { Client } from '@stomp/stompjs';
 
 const USERS_URL: string = 'users';
 
@@ -166,3 +167,25 @@ export const PasswordReset = async ({
     console.error(error);
   }
 };
+
+export const LogOut = async (logout: boolean) => {
+  const URL = `${USERS_URL}/logout`;
+  try{
+    const res = await client.patch(URL, {logout})
+  }catch(error){
+    console.error(error);
+  }
+}
+
+export const UsersGetJoinedCommunities = async () => {
+  const URL: string = `${USERS_URL}/joined/communities`
+
+  try {
+    const res = await client.get(URL)
+    
+    return res
+  } catch (e: any) {
+    errorHandling({text: 'UsersGetJoinedCommunities', error:e})
+  }
+
+}

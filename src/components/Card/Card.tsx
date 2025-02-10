@@ -1,27 +1,27 @@
-import { useEffect, useState, lazy } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ReactionApi,
   ReactionCountAPI,
   ReactionListAPI,
   ReactionParams,
-} from '../pages/api/reactionApi';
+} from '../../pages/api/reactionApi';
 import {
   BoardProps,
   ReactionStateTypes,
   ReactionType,
-} from '../_common/collectionTypes';
-import sanitizeHtml from 'sanitize-html';
+} from '../../_common/collectionTypes';
 import debounce from 'lodash.debounce';
 import styled from 'styled-components';
-import ShareComponent from './ShareComponent';
-import { breakpoints } from '../_common/breakpoint';
-import { handleReaction } from '../_common/handleUserReaction';
-import Modal from './Modal';
-import UserProfileModal from './UserProfileModal';
-
-const Carousel = lazy(() => import('./Carousel'))
-const YoutubeCard = lazy(() => import('./YoutubeCard'))
+import ShareComponent from '../ShareComponent';
+import { breakpoints } from '../../_common/breakpoint';
+import { handleReaction } from '../../_common/handleUserReaction';
+import Modal from '../Modal';
+import UserProfileModal from '../UserProfileModal';
+import ContentCard from './ContentCard';
+import panda from '../../assets/img/panda_logo.webp'
+import YoutubeCard from './YoutubeCard';
+import Carousel from './Carousel';
 
 const Card = ({
   id,
@@ -34,6 +34,7 @@ const Card = ({
   shareCount,
   userId,
   profileImage,
+  index
 }: BoardProps) => {
   const navigate = useNavigate();
   const [isCardCount, setIsCardCount] = useState<number>(0);
@@ -44,7 +45,7 @@ const Card = ({
   const [isCardCommentHovered, setIsCardCommentHovered] =
     useState<boolean>(false);
   const [isReaction, setIsReaction] = useState<ReactionStateTypes>(null);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false)
   const mediaExtensions = {
     image: [
       'jpg',
@@ -63,74 +64,14 @@ const Card = ({
     ],
     video: ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv'],
   };
-  const [color, setColor] = useState<string>('');
-  const logo = profileImage || "https://i.ibb.co/rHPPfvt/download.webp" 
+  const logo = profileImage || panda
   const isMediaType = (url: string, type: 'image' | 'video'): boolean => {
     const ext = url.split('.').pop()?.toLowerCase();
     return ext ? mediaExtensions[type].includes(ext) : false;
   };
 
   const USER_ID: string = localStorage.getItem('id') as string;
-
-  const safeHtml = (content: string) => {
-    return sanitizeHtml(content, {
-      allowedTags: [
-        'img',
-        'a',
-        'br',
-        'p',
-        'div',
-        'span',
-        'pre',
-        'code',
-        'bold',
-        'em',
-        'u',
-        's',
-        'blockquote',
-        'ol',
-        'li',
-        'ul',
-      ],
-      allowedAttributes: {
-        img: [
-          'src',
-          'srcset',
-          'alt',
-          'title',
-          'width',
-          'height',
-          'loading',
-          'style',
-        ],
-        a: ['href', 'rel', 'target'],
-        span: ['style', 'contenteditable'],
-        p: ['style'],
-        div: ['class', 'spellcheck'],
-        pre: ['class'],
-        code: ['class'],
-        li: ['data-list', 'style', 'class'],
-      },
-      allowedClasses: {
-        div: ['ql-code-block', 'ql-code-block-container'],
-        code: ['language-*'],
-        li: ['ql-indent-*'],
-      },
-      transformTags: {
-        img: (tagName, attribs) => {
-          return {
-            tagName: 'img',
-            attribs: {
-              ...attribs,
-              style:
-                'width: 40%; height: auto; display: block; margin: 0 auto;',
-            },
-          };
-        },
-      },
-    });
-  };
-
+  
   const reactionButton = async (userReaction: ReactionStateTypes) => {
     if (userReaction !== null) {
       const params: ReactionParams = {
@@ -206,15 +147,6 @@ const Card = ({
   }, []);
 
   useEffect(() => {
-    if (content.some((item) => item.includes('span'))) {
-      const contentString = content.join('');
-      const colorMatch = contentString.match(/color:\s*rgb\([^\)]+\)/);
-
-      if (colorMatch) {
-        const extractedColor = colorMatch[0].replace('color: ', '').trim();
-        setColor(extractedColor);
-      }
-    }
     if (localCount < 0) {
       setLocalCount(0);
     }
@@ -225,16 +157,17 @@ const Card = ({
     tempDiv.innerHTML = htmlString;
     return tempDiv.innerText || tempDiv.textContent || '';
   };
-
+  
   return (
     <>
       <CardContainer
+        className='CardContainer'
         onMouseEnter={() => setIsCardHovered(true)}
         onMouseLeave={() => setIsCardHovered(false)}
         isHovered={isCardHovered}
       >
         <LogoContainer onClick={() => setIsOpen(true)}>
-          <LogoImg src={logo} />
+        <LogoImg src = {logo} width="50" height="50" />
           <NicknameWrapper
           >
             {nickname}
@@ -243,19 +176,18 @@ const Card = ({
 
         {/* Card Content */}
         <ContentContainer>
-          <BoardTitle onClick={() => {navigate(`/boards/read?id=${id}`)}}>{title}</BoardTitle>
+          <BoardTitle 
+          onClick={() => {
+          navigate(`/boards/read?id=${id}`);
+          sessionStorage.setItem("scrollIndex",String(index))
+          }}>
+              {title}
+          </BoardTitle>
 
           {type === 'TEXT' ? (
-            <TextContainer fontcolor={color}>
-              {content?.map((co, index) => {
-                return (
-                  <ContentWrapper
-                    key={`${id}-${index}`}
-                    dangerouslySetInnerHTML={{ __html: safeHtml(co) }}
-                  />
-                );
-              })}
-            </TextContainer>
+              <ContentCard
+              content={content}
+              />
           ) : type === 'MEDIA' ? (
             <MediaContainer>
               {isMediaType(content[0], 'image') && content.length === 1 && (
@@ -305,8 +237,10 @@ const Card = ({
               isHovered={isCardCommentHovered}
               onMouseEnter={() => setIsCardCommentHovered(true)}
               onMouseLeave={() => setIsCardCommentHovered(false)}
-              onClick={() => {navigate(`/boards/read?id=${id}`)}}
-            >
+              onClick={() => {
+              navigate(`/boards/read?id=${id}`);
+              sessionStorage.setItem("scrollIndex",String(index))
+              }}>
               댓글
             </CommentButton>
           </CommentWrapper>
@@ -326,7 +260,7 @@ const Card = ({
       <Modal
       isOpen={isOpen}
       onClose={() => {setIsOpen(false)}}
-      top={'5%'}
+      top={'20%'}
       >
       <UserProfileModal
       nickname={nickname}
@@ -351,15 +285,13 @@ const CardContainer = styled.div.withConfig({
   height: 100%;
   max-height: 650px;
   max-width: 700px;
-  margin-left: 10vw;
   cursor: pointer;
   padding: 0 15px;
   background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
-  position: relative;
   object-fit: contain;
   box-sizing: border-box;
   border-radius: 30px;
-
+  
   @media (max-width: ${breakpoints.tablet}) {
     margin: 0 0 5px 0;
   }
@@ -386,13 +318,11 @@ const Image = styled.img`
 `;
 
 const Video = styled.video`
-  max-width: 700px;
-  max-height: 400px;
-  width: 100%;
-  height: 100%;
+  width: 90%;
+  height: 90%;
   border-radius: 20px;
   display: block;
-  object-fit: contain;
+  object-fit: cover;
 `;
 
 const LogoContainer = styled.div`
@@ -405,8 +335,6 @@ const LogoContainer = styled.div`
 `;
 
 const LogoImg = styled.img`
-  width: 50px;
-  height: 50px;
   object-fit: cover;
   margin-right: 10px;
   border-radius: 30px;
@@ -426,31 +354,6 @@ const BoardTitle = styled.h3`
   text-align: left;
   white-space: normal;
   font-size: 1.5rem;
-`;
-
-const TextContainer = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'fontcolor',
-})<{ fontcolor: string }>`
-  text-align: left;
-  white-space: normal;
-  word-break: break-word;
-  width: 100%;
-
-  span {
-    color: ${(props) => props.fontcolor};
-  }
-`;
-
-const ContentWrapper = styled.div`
-  max-width: 100% !important;
-  max-height: 100% !important;
-
-  img {
-    max-width: 70% !important;
-    max-height: 450px !important;
-    height: auto !important;
-    display: block !important;
-  }
 `;
 
 const ButtonContainer = styled.div`
@@ -575,9 +478,10 @@ const ShareWrapper = styled.div`
 const HrTag = styled.hr`
   border: none;
   height: 2px;
-  background-color: #f0f0f0;
+  background-color: #d9d9d9;
   margin: 5px 0;
   width: 100%;
+  margin-top: 2vh
 `;
 
 export default Card;

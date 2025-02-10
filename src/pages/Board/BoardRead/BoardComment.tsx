@@ -11,7 +11,7 @@ import {
   ReactionListAPI,
   ReactionParams,
 } from '../../api/reactionApi';
-import logo from '../../../assets/img/panda_logo.png';
+import logo from '../../../assets/img/panda_logo.webp';
 import { ReplyType } from './BoardReply';
 import { ReplySubmitAPI, ReplySubmitParams } from '../../api/replyApi';
 import { breakpoints } from '../../../_common/breakpoint';

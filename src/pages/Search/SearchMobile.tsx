@@ -4,7 +4,7 @@ import { AddSearchAPI, GetTopTenSearchesAPI } from '../api/searchApi';
 import { useNavigate } from 'react-router-dom';
 import SearchHistory from './SearchHistory';
 import AutoComplete from './AutoComplete';
-import arrow from '../../assets/img/icons8-뒤로-32.png'
+import LeftArrow  from '../../assets/img/arrow.webp';
 
 const SearchMobile = () => {
   const [isTopTenList, setIsTopTenList] = useState([]);
@@ -72,7 +72,7 @@ const SearchMobile = () => {
   return (
     <MobileSearchContainer>
       <SearchHeader>
-        <Icon src = {arrow} onClick={() => {navigate(-1)}}/>
+        <Icon src = {LeftArrow} onClick={() => {navigate(-1)}}/>
         <SearchInput
           type="search"
           placeholder="Search"

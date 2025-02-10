@@ -116,6 +116,7 @@ export interface SubmitParams {
   // readonly youtubeLinks: string[]; // YouTube 링크 배열
 }
 
+
 export const BoardSubmitAPI = async (params: SubmitParams) => {
   const accessToken: string = localStorage.getItem('access_token') as string;
   const URL: string = `${BOARD_URL}/`;

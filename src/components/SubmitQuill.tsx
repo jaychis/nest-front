@@ -1,8 +1,8 @@
-import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css'; 
 import { AwsImageUploadFunctionality } from "../_common/imageUploadFuntionality";
-import { useRef, useMemo, useEffect } from "react";
-import Quill from 'quill';
+import { useRef, useMemo, useEffect,lazy,useState } from "react";
+
+const ReactQuill = lazy(() => import('react-quill'))
 
 interface Props {
   readonly setContent: (item: string[] | ((prev: string[]) => string[])) => void;
@@ -13,18 +13,27 @@ interface Props {
 
 const SubmitQuill = ({ setContent, content, height, width }: Props) => {
 
-  const Link = Quill.import('formats/link');
+  const quillRef = useRef<any>(null);
 
-  class CustomLink extends Link {
-    static create(value: string) {
-      if (value && !value.startsWith('http://') && !value.startsWith('https://')) {
-        value = `https://${value}`;  
+  useEffect(() => {
+    import('react-quill').then(({ default: RQ }) => {
+    require('react-quill/dist/quill.snow.css');
+    const Quill = RQ.Quill;
+    const Link = Quill.import('formats/link');
+
+    class CustomLink extends Link {
+      static create(value: string) {
+        if (value && !value.startsWith('http://') && !value.startsWith('https://')) {
+          value = `https://${value}`;
+        }
+        return super.create(value);
       }
-      return super.create(value);
     }
-  }
 
-  Quill.register(CustomLink, true);
+    Quill.register(CustomLink, true);
+  });
+    
+  }, []);
 
   useEffect(() => {
     if (content[0].length > 65535) {
@@ -32,7 +41,7 @@ const SubmitQuill = ({ setContent, content, height, width }: Props) => {
     }
   }, [content]);
 
-  const quillRef = useRef<ReactQuill>(null);
+  
 
   const handleImageUpload = () => {
     const input = document.createElement('input');

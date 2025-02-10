@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { InboxOutlined } from '@ant-design/icons';
-import type { UploadProps, UploadFile } from 'antd';
-import { Upload } from 'antd';
+import InboxOutlined from '@ant-design/icons/InboxOutlined';
+import type { UploadProps, UploadFile } from 'antd/es/upload/interface';
+import Upload from 'antd/es/upload';
 import {
   AwsImageUploadFunctionality,
   AwsImageUploadFunctionalityReturnType,

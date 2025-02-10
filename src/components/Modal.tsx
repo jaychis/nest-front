@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import { breakpoints } from '../_common/breakpoint';
+import { useRef, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 
 interface Props {
   readonly children: React.ReactNode;
@@ -10,15 +12,33 @@ interface Props {
 }
 
 const Modal = ({ children, isOpen, onClose, buttonLabel, top }: Props) => {
-  if (!isOpen) return null;
+  
+  const modalRef = useRef<HTMLDivElement>(null)
 
-  return (
-    <ModalContainer style={{ top: top }}>
+  useEffect(() => {
+    if (!isOpen) return;
+      
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+  
+      if (
+        modalRef?.current && !modalRef.current.contains(target)
+      ) { onClose();}
+    };
+  
+    document.addEventListener('mousedown', handleClickOutside);
+  },[onClose, modalRef])
+
+  if (!isOpen) return null;
+  
+  return ReactDOM.createPortal(
+    <ModalContainer style={{ top: top }} className = 'modalContainer' ref = {modalRef}>
       <ModalBody>
         <CloseButton onClick={onClose}>Close</CloseButton>
         {children}
       </ModalBody>
-    </ModalContainer>
+    </ModalContainer>,
+    document.body
   );
 };
 
@@ -31,7 +51,6 @@ const ModalContainer = styled.div`
   max-height: 600px;
   overflow: hidden;
   left: 50%;  
-  top: 50%;  
   transform: translate(-50%, -50%);  
   border: 1px solid black;
   border-radius: 25px;
@@ -66,6 +85,7 @@ const ModalBody = styled.div`
   justify-content: center;
   align-items: center;
   max-height: 90vh; 
+  
   
   @media (max-width: ${breakpoints.tablet}) {
     width: 100%;

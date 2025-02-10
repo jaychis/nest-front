@@ -1,30 +1,26 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { FaSistrix } from '@react-icons/all-files/fa/FaSistrix';
+import React, { useRef, useState, useEffect,lazy } from 'react';
 import { FaPlus } from '@react-icons/all-files/fa/FaPlus';
 import { FaBell } from '@react-icons/all-files/fa/FaBell';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import UserModalForm from '../User/UserModalForm';
-import ProfileModal from '../User/ProfileModal';
 import { AddSearchAPI } from '../api/searchApi';
-import NotificationModal from '../User/NotificationModal';
 import { setSearchResults } from '../../reducers/searchSlice';
 import { RootState, AppDispatch } from '../../store/store';
 import debounce from 'lodash.debounce';
-import { UserModalState, setModalState } from '../../reducers/modalStateSlice';
 import 'react-tooltip/dist/react-tooltip.css';
 import { Tooltip } from 'react-tooltip';
 import styled from 'styled-components';
 import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
 import { breakpoints } from '../../_common/breakpoint';
 
+const UserModalForm = lazy(() => import('../User/UserModalForm'));
+const ProfileModal = lazy(() => import('../User/ProfileModal'));
+const NotificationModal = lazy(() => import('../User/NotificationModal'));
+
 const GlobalBar = () => {
   const logo = "https://i.ibb.co/rHPPfvt/download.webp" 
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const modalState: UserModalState = useSelector(
-    (state: RootState) => state.modalState,
-  );
   const [searchTerm, setSearchTerm] = useState<string>('');
   const searchResults = useSelector(
     (state: RootState) => state.search.searchResults,
@@ -47,10 +43,8 @@ const GlobalBar = () => {
   const handleScroll = () => {
     const currentScrollY = window.scrollY;
     if (currentScrollY > lastScrollY && currentScrollY > 30) {
-      // 화면을 내릴 때, 특정 위치(30px 이상)에서 Top Bar 숨김
       setIsVisible(false);
     } else {
-      // 화면을 올릴 때 Top Bar 표시
       setIsVisible(true);
     }
     setLastScrollY(currentScrollY);
@@ -75,10 +69,6 @@ const GlobalBar = () => {
     setIsProfileModalOpen(!isProfileModalOpen);
   };
 
-  const openModal = () => {
-    dispatch(setModalState(!modalState.modalState));
-  };
-
   const debouncedSearch = debounce((value: string) => {
     if (value.length > 2) {
       dispatch(setSearchResults([value]));
@@ -99,7 +89,6 @@ const GlobalBar = () => {
 
   const clickSearch = async () => {
     if (!searchTerm) {
-      // 나중에는 alert 제거하기
       alert('내용을 입력해주세요');
       return;
     }
@@ -121,17 +110,7 @@ const GlobalBar = () => {
     if (viewport && viewport.width < 767) navigate('/SearchMobile');
   };
 
-  useEffect(() => {
-    if (isProfileModalOpen === false && modalState.modalState === true) {
-      openModal();
-    }
-  }, [isProfileModalOpen]);
-
-  useEffect(() => {
-    if (isNotificationModalOpen === false && modalState.modalState === true) {
-      openModal();
-    }
-  }, [isNotificationModalOpen]);
+  
 
   return (
     <div>
@@ -149,7 +128,7 @@ const GlobalBar = () => {
           onMouseLeave={() => setLogoHover(false)}
           onClick={handleLogoClick}
         >
-          <LogoImage src={logo} alt="Logo" />
+          <LogoImage src={logo} alt="Logo" width="50" height="50"/>
           <SiteName>{'제이치스'}</SiteName>
         </LogoWrapper>
 
@@ -157,14 +136,15 @@ const GlobalBar = () => {
         <SearchContainer>
           <SearchInput
             type="search"
-            placeholder="Search"
+            placeholder="게시글 & 커뮤니티 통합 검색"
             value={searchTerm}
             name={'search'}
             onChange={(e) => handleSearchChange(e)}
             onKeyDown={handleKeyDown}
             onClick={handleDetectViewPort}
           />
-          <SearchIcon onClick={handleDetectViewPort} />
+          <SearchIcon onClick={handleDetectViewPort} width="30" height="30" src="https://img.icons8.com/neon/96/search.png" alt="search"/>
+            
         </SearchContainer>
 
         {/* Navigation Icons */}
@@ -178,7 +158,7 @@ const GlobalBar = () => {
                 onMouseLeave={() => setUserHover(false)}
                 onClick={toggleProfileModal}
               >
-                <ProfileImage src={logo} alt="Profile" onClick={openModal} />
+                <ProfileImage src={logo} alt="Profile" width="40" height="40"  />
               </ProfileButton>
               <ProfileModal
                 isOpen={isProfileModalOpen}
@@ -225,7 +205,6 @@ const GlobalBar = () => {
                 onMouseLeave={() => setBellHover(false)}
                 onClick={() => {
                   toggleNotificationModal();
-                  openModal();
                 }}
               >
                 <BellIcon bellHover={bellHover} />
@@ -341,19 +320,18 @@ const SearchContainer = styled.div`
 
 const SearchInput = styled.input`
   width: 35%;
-  padding: 10px;
+  padding: 13px;
   border-radius: 20px;
-  border: 1px solid #ccc;
+  border: 1.5px solid #ccc;
+  border-color: #60afff;
 
   @media (max-width: ${breakpoints.mobile}) {
     display: none;
   }
 `;
 
-const SearchIcon = styled(FaSistrix)`
+const SearchIcon = styled.img`
   margin-right: 20px;
-  width: 30px;
-  height: 30px;
   margin-top: 5px;
   cursor: pointer;
 
