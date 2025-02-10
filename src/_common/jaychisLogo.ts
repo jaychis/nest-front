@@ -1,0 +1,1 @@
+export const JAYCHIS_LOGO: string = 'https://i.ibb.co/rHPPfvt/download.webp';

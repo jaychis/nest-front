@@ -86,60 +86,39 @@ const VideoCard = ({ content }: VideoProps) => {
     <VideoContainer>
       {content.map((video: string, index: number) => {
         const { platform, id } = getVideoIdFromUrl({ url: video });
-        const isYoutube: boolean = platform === 'youtube';
-        const isTiktok: boolean = platform === 'tiktok';
-        const isInstagram: boolean = platform === 'instagram';
-        const videoHeight = isYoutube
-          ? '400px'
-          : isTiktok
-            ? '575px'
-            : isInstagram
-              ? '690px'
-              : '1000px';
 
         return (
-          <>
+          <VideoWrapper>
             {(platform === 'youtube' || platform === 'youtube_shorts') &&
               id && (
                 <YouTube
                   videoId={id}
                   opts={{
                     width: '100%',
-                    height: videoHeight,
+                    height: '100%',
                     playerVars: { modestbranding: 1 },
                   }}
                   style={{ borderRadius: '20px' }}
                 />
               )}
             {platform === 'instagram' && id && (
-              <StyledInstagramWrapperContainer>
-                <StyledInstagramWrapper>
-                  <StyledInstagramContainer height={videoHeight}>
-                    <StyledInstagramIframe
-                      src={`https://www.instagram.com/reel/${id}/embed`}
-                      height="1000px"
-                      width="500px"
-                    ></StyledInstagramIframe>
-                  </StyledInstagramContainer>
-                </StyledInstagramWrapper>
-              </StyledInstagramWrapperContainer>
+                <StyledInstagramIframe
+                  src={`https://www.instagram.com/reel/${id}/embed`}
+                  height="100%"
+                  width="100%"
+                ></StyledInstagramIframe>
             )}
             {platform === 'tiktok' && id && (
-              <StyledTikTokWrapper>
-                <StyledTiktokIframeContainer height={videoHeight}>
-                  <StyledIframe
-                    src={`https://www.tiktok.com/embed/${id}`}
-                    height="1000px"
-                    width="1000px"
-                  ></StyledIframe>
-                </StyledTiktokIframeContainer>
-              </StyledTikTokWrapper>
+                <iframe
+                  src={`https://www.tiktok.com/embed/${id}`}
+                  style={{ width: '100%', height: '100%',}}
+                ></iframe>
             )}
             {platform === 'facebook_video' && id && (
               <iframe
                 src={`https://www.facebook.com/video/embed?video_id=${id}`}
                 width="100%"
-                height={videoHeight}
+                height={'100%'}
                 style={{ borderRadius: '20px', border: 'none' }}
                 allowFullScreen
               ></iframe>
@@ -148,7 +127,7 @@ const VideoCard = ({ content }: VideoProps) => {
               <iframe
                 src={`https://www.reddit.com/embed/${id}`}
                 width="100%"
-                height={videoHeight}
+                height={'100%'}
                 style={{ borderRadius: '20px', border: 'none' }}
                 allowFullScreen
               ></iframe>
@@ -157,12 +136,12 @@ const VideoCard = ({ content }: VideoProps) => {
               <iframe
                 src={`https://www.threads.net/embed/post/${id}`}
                 width="100%"
-                height={videoHeight}
+                height={'100%'}
                 style={{ borderRadius: '20px', border: 'none' }}
                 allowFullScreen
               ></iframe>
             )}
-          </>
+          </VideoWrapper>
         );
       })}
     </VideoContainer>
@@ -172,45 +151,26 @@ const VideoCard = ({ content }: VideoProps) => {
 export default VideoCard;
 
 const VideoContainer = styled.div`
-  border-radius: 0px;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 20px; 
 `;
 
-const StyledInstagramWrapperContainer = styled.div`
-  overflow: hidden; /* 초과된 콘텐츠 숨김 */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: blue;
-  width: 100%;
+const VideoWrapper = styled.div`
+  position: relative;
   height: 100%;
-`;
+  width: 100%;
+  padding-top: 56.25%; 
+  border-radius: 20px;
+  overflow: hidden;
 
-const StyledInstagramWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: black;
-  height: 480px; /* 높이를 고정 */
-  border-radius: 30px;
-  overflow: hidden; /* 초과된 콘텐츠 숨김 */
-  background-color: brown;
-  width: 380px;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    height: 480px; /* 모바일 환경에서 높이 조정 */
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
   }
-`;
-
-const StyledInstagramContainer = styled.div<{ readonly height: string }>`
-  width: 100%; /* 부모 너비 고정 */
-  height: 100%; /* 부모 높이에 맞춤 */
-  overflow: hidden; /* 초과 콘텐츠 숨김 */
-
-  display: flex;
-  justify-content: center;
-  align-items: center; /* 중앙 정렬 */
-  background-color: red;
 `;
 
 const StyledInstagramIframe = styled.iframe<{
@@ -221,27 +181,6 @@ const StyledInstagramIframe = styled.iframe<{
   border: none;
   overflow: hidden; /* 초과 콘텐츠 숨김 */
   pointer-events: none; /* 사용자가 스크롤할 수 없도록 차단 */
-`;
-
-const StyledTikTokWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  background-color: black;
-  width: 100%;
-  border-radius: 30px;
-`;
-
-const StyledTiktokIframeContainer = styled.div<{ readonly height: string }>`
-  width: 323px;
-  height: ${(props) => props.height};
-  overflow: hidden;
-  position: relative;
-  border-radius: 10px;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    height: 570px;
-    width: 290px;
-  }
 `;
 
 const StyledIframe = styled.iframe<{

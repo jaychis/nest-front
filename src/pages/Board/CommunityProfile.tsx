@@ -3,7 +3,7 @@ import DropDown from '../../components/Dropdown';
 import { useState, useEffect } from 'react';
 import React from 'react';
 import {
-  checkMembershipAPI,
+  checkMembershipAPI, communityLogVisitAPI,
   CommunityUpdateAPI,
   CreateInvitationAPI,
   joinCommunityAPI,
@@ -11,12 +11,10 @@ import {
 } from '../api/communityApi';
 import Modal from '../../components/Modal';
 import { useDispatch, useSelector } from 'react-redux';
-import { setModalState, UserModalState } from '../../reducers/modalStateSlice';
-import { RootState } from '../../store/store';
 import DragAndDrop from '../../components/DragAndDrop';
 import { AwsImageUploadFunctionalityReturnType } from '../../_common/imageUploadFuntionality';
 import { GetSearchPeopleAPI } from '../api/searchApi';
-import { VIcon } from '../../assets/img/ImgUrl';
+import VIcon from '../../assets/img/vicon.webp';
 import {
   SelectCommunityMembersType,
   SelectCommunityParams,
@@ -35,10 +33,6 @@ const CommunityProfile = () => {
   const editButtonRef = React.useRef<HTMLDivElement>(null);
   const selectCommunity: SelectCommunityParams = useSelector(
     (state: any) => state.community,
-  );
-
-  const modalState: UserModalState = useSelector(
-    (state: RootState) => state.modalState,
   );
 
   const dispatch = useDispatch();
@@ -61,8 +55,8 @@ const CommunityProfile = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [view, setView] = useState<boolean>(false);
   const [inviteeNickname, setInviteeNickname] = useState<string>('');
-  const logo = "https://i.ibb.co/rHPPfvt/download.webp" 
-  
+  const logo = 'https://i.ibb.co/rHPPfvt/download.webp';
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -73,16 +67,27 @@ const CommunityProfile = () => {
     });
   }, [selectCommunity]);
 
+  useEffect(() => {
+    if (localStorage.getItem('id') && localStorage.getItem('nickname')) {
+      const communityLogVisit = async () => {
+        const response = await communityLogVisitAPI({communityId: selectCommunity.id})
+        if (!response) return
+
+        const res = response.data.response
+      }
+
+      communityLogVisit()
+    }
+  }, []);
+
   const communityEditHandler = (item: string) => {
     setEditType(item);
-    dispatch(setModalState(!modalState.modalState));
     handleModal();
     setView(false);
   };
 
   const handleModal = () => {
     setIsOpen(!isOpen);
-    dispatch(setModalState(!modalState.modalState));
   };
 
   const handleJoinedButtonClick = async () => {
@@ -184,13 +189,13 @@ const CommunityProfile = () => {
   return (
     <>
       <CommunityInfoContainer>
-        <Modal isOpen={isOpen} onClose={handleModal} top={'0%'}>
+        <Modal isOpen={isOpen} onClose={handleModal} top={'20%'}>
           {/* onChange에서 dispatch를 이용해 selectCommunity의 값을 변경하지 않고  
             edit관련 변수들을 거쳐서 변경한 이유는 이름이나 배경사진을 변경하려다가
             취소하고 나오게 되면 onChange와 dispatch를 통해 변경된 상태가 화면에 적용돼
             새로고침을 하기 전까지 유저에게 보여지는 화면에는 커뮤니티의 이름이나 사진들이 변경된 것으로 보이게 되기 떄문에
             다른 변수를 통해 한번 거쳐감  */}
-
+          <div style = {{height: '320px',width: '300px', marginBottom: '20px'}}>
           {editType === '이름 변경' && (
             <>
               <CommunityNameInput
@@ -207,7 +212,6 @@ const CommunityProfile = () => {
                     visibility: selectCommunity.visibility,
                     name: editCommunityName,
                   });
-                  dispatch(setModalState(!modalState.modalState));
                   handleModal();
                   alert('커뮤니티 이름이 변경되었습니다.');
                 }}
@@ -218,9 +222,8 @@ const CommunityProfile = () => {
           )}
 
           {editType === '배경 변경' && (
-            <>
+            <div style = {{height:"70%"}}>
               <DragAndDrop onFileChange={setEditBackground} />
-
               <SubmitButton
                 onClick={() => {
                   CommunityUpdateAPI({
@@ -228,20 +231,18 @@ const CommunityProfile = () => {
                     visibility: selectCommunity.visibility,
                     banner: editBackground as string,
                   });
-                  dispatch(setModalState(!modalState.modalState));
                   handleModal();
                   alert('배경화면이 변경 되었습니다.');
                 }}
               >
                 변경
               </SubmitButton>
-            </>
+            </div>
           )}
 
           {editType === '프로필 변경' && (
-            <>
+            <div style = {{height:"70%"}}>
               <DragAndDrop onFileChange={setEditProfile} />
-
               <SubmitButton
                 onClick={() => {
                   CommunityUpdateAPI({
@@ -249,7 +250,6 @@ const CommunityProfile = () => {
                     visibility: selectCommunity.visibility,
                     icon: editProfile as string,
                   });
-                  dispatch(setModalState(!modalState.modalState));
                   handleModal();
                   alert('프로필 사진이 변경 되었습니다.');
                   window.location.reload();
@@ -257,7 +257,7 @@ const CommunityProfile = () => {
               >
                 변경
               </SubmitButton>
-            </>
+            </div>
           )}
 
           {editType === '초대하기' && (
@@ -290,7 +290,6 @@ const CommunityProfile = () => {
               <SubmitButton
                 onClick={() => {
                   createCommunityInvitation();
-                  dispatch(setModalState(!modalState.modalState));
                   handleModal();
                   alert('멤버가 변경 되었습니다.');
                 }}
@@ -299,6 +298,7 @@ const CommunityProfile = () => {
               </SubmitButton>
             </>
           )}
+          </div>
         </Modal>
 
         <ProfileCircle>
@@ -324,16 +324,15 @@ const CommunityProfile = () => {
                 src="https://img.icons8.com/material-outlined/24/menu-2.png"
                 alt="menu-2"
               />
-            </EditWrapper>
 
-            {view && (
-              <DropDownElement ref={dropDownRef}>
+              {view && (
                 <DropDown 
                 menu={editList} 
                 eventHandler={communityEditHandler}
                 onClose = {() => {setView(false)}} />
-              </DropDownElement>
-            )}
+              )}
+            </EditWrapper>
+
           </>
         )}
 
@@ -403,7 +402,7 @@ const CommunityName = styled.h1`
 const JoinButton = styled.div<{ readonly isJoined: boolean }>`
   position: absolute;
   top: 11vh;
-  left: 50vw;
+  left: 52vw;
   background-color: ${(props) => (props.isJoined ? '#cccccc' : '#0056d2')};
   color: #ffffff;
   font-size: 1em;
@@ -426,18 +425,29 @@ const JoinButton = styled.div<{ readonly isJoined: boolean }>`
 
   @media (max-width: ${breakpoints.mobile}) {
     top: 5vh;
-    left: 85vw;
+    left: 90vw;
   }
 `;
 
 const EditWrapper = styled.div`
-  position: absolute;
+  position: relative;
   top: 12vh;
-  left: 45vw;
+  margin-left: 20vw;
+  height: 20px;
 
   @media(max-width: ${breakpoints.mobile}){
-  left: 72vw;
   top: 5.5vh;
+  margin-left: 1vw;
+  }
+
+  @media(min-width: ${breakpoints.mobile}) and (max-width: ${breakpoints.tablet}){
+  top: 11.5vh;
+  margin-left: 4vw;
+  }
+
+  @media(min-width: ${breakpoints.tablet}) and (max-width: ${breakpoints.desktop}){
+  top: 12vh;
+  margin-left: 13vw;
   }
 `;
 
@@ -445,12 +455,6 @@ const EditIcon = styled.img`
   cursor: pointer;
   width: 24px;
   height: 24px;
-`;
-
-const DropDownElement = styled.div`
-  position: absolute;
-  top: 20vh;
-  left: 47.5vw;
 `;
 
 const CommunityNameInput = styled.input`
@@ -480,13 +484,15 @@ const SubmitButton = styled.button`
 const UserSearchInput = styled.input`
   border-radius: 25px;
   height: 25px;
-  width: 90%;
+  width: 100%;
   margin: 10px 0 0 4%;
 `;
 
 const SearchResultList = styled.ul`
   list-style-type: none;
+  margin: 10px 0 0 4%;
   padding: 0;
+  width: 100%;
 `;
 
 const SearchResultItem = styled.li<{ readonly index: number }>`
@@ -495,7 +501,7 @@ const SearchResultItem = styled.li<{ readonly index: number }>`
   cursor: pointer;
   padding: 8px;
   background-color: ${(props) => (props.index % 2 === 0 ? '#f9f9f9' : '#fff')};
-  width: 90%;
+  width: 95%;
 `;
 
 const VCheckImg = styled.img`

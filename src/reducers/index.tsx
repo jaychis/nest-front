@@ -5,7 +5,6 @@ import userModalReducer from "./userModalSlice";
 import sideBarButtonReducer from "./mainListTypeSlice";
 import searchReducer from "./searchSlice"; // 새로 추가
 import recentPostsReducer from "./recentPostsSlice"; // 새로 추가
-import modalStateReducer from "./modalStateSlice";
 import communityReducer from "./communitySlice";
 
 const rootReducer = combineReducers({
@@ -15,7 +14,6 @@ const rootReducer = combineReducers({
   sideBarButton: sideBarButtonReducer,
   search: searchReducer, // 새로 추가
   recentPosts: recentPostsReducer, // 새로 추가
-  modalState: modalStateReducer,
   community: communityReducer
 });
 export type RootState = ReturnType<typeof rootReducer>;

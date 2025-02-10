@@ -1,14 +1,17 @@
 import { createGlobalStyle } from "styled-components";
+import { breakpoints } from "./breakpoint";
 
 const GlobalStyle = createGlobalStyle`
-  .ReactVirtualized__Grid__innerScrollContainer {
-    position: static !important;
-  }
-  .ReactVirtualized__Grid.ReactVirtualized__List {
-    position: static !important;
-  }
   .ReactVirtualized__Grid__innerScrollContainer .modalContainer {
     left: 40% !important;
+  }
+
+  .ReactVirtualized__Grid__innerScrollContainer .CardContainer {
+    margin-left: 10vw;
+
+    @media (max-width: ${breakpoints.mobile}) {
+        margin: 0 0 5px 0;
+      }
   }
 
 `;

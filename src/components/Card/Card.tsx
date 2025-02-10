@@ -1,4 +1,4 @@
-import { useEffect, useState, lazy } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ReactionApi,
@@ -19,9 +19,9 @@ import { handleReaction } from '../../_common/handleUserReaction';
 import Modal from '../Modal';
 import UserProfileModal from '../UserProfileModal';
 import ContentCard from './ContentCard';
-
-const Carousel = lazy(() => import('./Carousel'))
-const YoutubeCard = lazy(() => import('./YoutubeCard'))
+import panda from '../../assets/img/panda_logo.webp'
+import YoutubeCard from './YoutubeCard';
+import Carousel from './Carousel';
 
 const Card = ({
   id,
@@ -34,6 +34,7 @@ const Card = ({
   shareCount,
   userId,
   profileImage,
+  index
 }: BoardProps) => {
   const navigate = useNavigate();
   const [isCardCount, setIsCardCount] = useState<number>(0);
@@ -44,7 +45,7 @@ const Card = ({
   const [isCardCommentHovered, setIsCardCommentHovered] =
     useState<boolean>(false);
   const [isReaction, setIsReaction] = useState<ReactionStateTypes>(null);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false)
   const mediaExtensions = {
     image: [
       'jpg',
@@ -63,14 +64,14 @@ const Card = ({
     ],
     video: ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv'],
   };
-  const logo = profileImage || "https://i.ibb.co/rHPPfvt/download.webp" 
+  const logo = profileImage || panda
   const isMediaType = (url: string, type: 'image' | 'video'): boolean => {
     const ext = url.split('.').pop()?.toLowerCase();
     return ext ? mediaExtensions[type].includes(ext) : false;
   };
 
   const USER_ID: string = localStorage.getItem('id') as string;
-
+  
   const reactionButton = async (userReaction: ReactionStateTypes) => {
     if (userReaction !== null) {
       const params: ReactionParams = {
@@ -156,10 +157,11 @@ const Card = ({
     tempDiv.innerHTML = htmlString;
     return tempDiv.innerText || tempDiv.textContent || '';
   };
-
+  
   return (
     <>
       <CardContainer
+        className='CardContainer'
         onMouseEnter={() => setIsCardHovered(true)}
         onMouseLeave={() => setIsCardHovered(false)}
         isHovered={isCardHovered}
@@ -174,7 +176,13 @@ const Card = ({
 
         {/* Card Content */}
         <ContentContainer>
-          <BoardTitle onClick={() => {navigate(`/boards/read?id=${id}`)}}>{title}</BoardTitle>
+          <BoardTitle 
+          onClick={() => {
+          navigate(`/boards/read?id=${id}`);
+          sessionStorage.setItem("scrollIndex",String(index))
+          }}>
+              {title}
+          </BoardTitle>
 
           {type === 'TEXT' ? (
               <ContentCard
@@ -229,8 +237,10 @@ const Card = ({
               isHovered={isCardCommentHovered}
               onMouseEnter={() => setIsCardCommentHovered(true)}
               onMouseLeave={() => setIsCardCommentHovered(false)}
-              onClick={() => {navigate(`/boards/read?id=${id}`)}}
-            >
+              onClick={() => {
+              navigate(`/boards/read?id=${id}`);
+              sessionStorage.setItem("scrollIndex",String(index))
+              }}>
               댓글
             </CommentButton>
           </CommentWrapper>
@@ -281,7 +291,7 @@ const CardContainer = styled.div.withConfig({
   object-fit: contain;
   box-sizing: border-box;
   border-radius: 30px;
-
+  
   @media (max-width: ${breakpoints.tablet}) {
     margin: 0 0 5px 0;
   }
@@ -308,13 +318,11 @@ const Image = styled.img`
 `;
 
 const Video = styled.video`
-  max-width: 700px;
-  max-height: 400px;
-  width: 100%;
-  height: 100%;
+  width: 90%;
+  height: 90%;
   border-radius: 20px;
   display: block;
-  object-fit: contain;
+  object-fit: cover;
 `;
 
 const LogoContainer = styled.div`
@@ -470,9 +478,10 @@ const ShareWrapper = styled.div`
 const HrTag = styled.hr`
   border: none;
   height: 2px;
-  background-color: #f0f0f0;
+  background-color: #d9d9d9;
   margin: 5px 0;
   width: 100%;
+  margin-top: 2vh
 `;
 
 export default Card;

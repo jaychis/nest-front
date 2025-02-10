@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   BoardListAPI,
   BoardPopularListAPI,
@@ -16,6 +16,8 @@ import { breakpoints } from '../../../_common/breakpoint';
 import debounce from 'lodash.debounce';
 import { List, CellMeasurer, CellMeasurerCache, AutoSizer } from 'react-virtualized';
 import GlobalStyle from '../../../_common/globalStyled';
+import { useLocation } from 'react-router-dom';
+import { useBeforeUnload } from 'react-router-dom';
 
 const CommunityBanner = React.lazy(() => import('../CommunityBanner'))
 
@@ -31,6 +33,13 @@ const BoardList = () => {
   const { buttonType }: MainListTypeState = useSelector((state: RootState) => state.sideBarButton,);
   const [id, setId] = useState<IdType>(null);
   const [allDataLoaded, setAllDataLoaded] = useState<boolean>(false);
+  const [scrollIndex, setScrollIndex] = useState<number>(0)
+  const loaction = useLocation()
+  const [initialScrollSet, setInitialScrollSet] = useState(false);
+
+  useBeforeUnload((event) => {
+    sessionStorage.setItem("scrollIndex", '0');
+  })
 
   useEffect(() => {
     setAllDataLoaded(false);
@@ -38,6 +47,20 @@ const BoardList = () => {
     setList([]);
     debouncListApi({ id: null, allDataLoaded: false });
   }, [buttonType]);
+
+  useEffect(() => {
+    const handlePageShow = () => {
+      const savedScroll = sessionStorage.getItem("scrollIndex");
+      if (savedScroll) {
+        if(savedScroll !== '0') setScrollIndex(Number(savedScroll) + 1);
+        else setScrollIndex(Number(savedScroll));
+      }
+    }
+    handlePageShow()
+
+    setTimeout(function(){setInitialScrollSet(true)},2500)
+},[loaction.pathname])
+
 
   const ListApi = async ({ id, allDataLoaded }: AllListParams) => {
     if (allDataLoaded) return;
@@ -117,35 +140,36 @@ const BoardList = () => {
     defaultHeight: 250, 
   });
 
-  const rowRenderer = ({ index, key, style,parent }: any) => {
+  const rowRenderer = ({ index, key, style, parent }: any) => {
     const el = list[index];
-
+  
     return (
       <CellMeasurer cache={cache} parent={parent} key={key} columnIndex={0} rowIndex={index}>
-      <div key={key} style={style}>
-        <Card
-          id={el.id}
-          category={el.category}
-          title={el.title}
-          nickname={el.nickname}
-          createdAt={el.created_at}
-          content={el.content}
-          type={el.type}
-          shareCount={el.share_count}
-          userId={el.user_id}
-          profileImage={el.user_profile?.profile_image as string}
-        />
-      </div>
+        <div key={key} style={style}>
+          <Card
+            index={index}
+            id={el.id}
+            category={el.category}
+            title={el.title}
+            nickname={el.nickname}
+            createdAt={el.created_at}
+            content={el.content}
+            type={el.type}
+            shareCount={el.share_count}
+            userId={el.user_id}
+            profileImage={el.user_profile?.profile_image as string}
+          />
+        </div>
       </CellMeasurer>
     );
   };
 
   const handleScroll = ({ scrollTop, scrollHeight, clientHeight }: any) => {
-    if (scrollTop + clientHeight >= scrollHeight - 100 && !allDataLoaded) {
+    if (scrollTop + clientHeight >= scrollHeight - 10 && !allDataLoaded) {
       debouncListApi({ id, allDataLoaded });
     }
   }
-  
+
   return (
       <MainContainer>
         {buttonType !== 'HOME' &&
@@ -162,12 +186,14 @@ const BoardList = () => {
         <AutoSizer>
             {({ width, height }) => (
               <List
-                width={width} 
-                height={height}
-                rowCount={list.length}
-                rowHeight={cache.rowHeight}
-                rowRenderer={rowRenderer}
-                onScroll={handleScroll}
+              scrollToIndex={initialScrollSet ? undefined : scrollIndex}
+              scrollToAlignment="start"
+              width={width} 
+              height={height}
+              rowCount={list.length}
+              rowHeight={cache.rowHeight}
+              rowRenderer={rowRenderer}
+              onScroll={handleScroll}
               />
             )}
         </AutoSizer>
@@ -193,16 +219,22 @@ const CardsContainer = styled.div`
   height: 85vh;
   box-sizing: border-box;
   display: flex;
-  margin-left: 10vw;
 
   @media (max-width: ${breakpoints.mobile}) {
-    margin: 0 0 5px 0;
     height: 120vh;
   }
 
   @media(min-width: ${breakpoints.mobile}) and (max-width: ${breakpoints.tablet}){
     height: 110vh;
   }
+`;
+
+const HrTag = styled.hr`
+  border: none;
+  height: 2px;
+  background-color: #f0f0f0;
+  margin: 5px 0;
+  width: 100%;
 `;
 
 export default BoardList;

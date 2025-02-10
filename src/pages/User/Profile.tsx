@@ -1,12 +1,17 @@
 import React, { useEffect, useState, ChangeEvent, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
-import { UsersProfileAPI } from '../api/userApi';
+import { UsersGetJoinedCommunities, UsersProfileAPI } from '../api/userApi';
 import { ProfileState } from '../../reducers/profileSlice';
-import { CardType, UserType } from '../../_common/collectionTypes';
+import {
+  CardType,
+  CommunityType,
+  MainListTypes,
+  UserType,
+} from '../../_common/collectionTypes';
 import Card from '../../components/Card/Card';
-import BoardComment, {CommentType} from '../Board/BoardRead/BoardComment';
-import { BoardInquiryAPI,BoardDelete,BoardUpdate } from '../api/boardApi';
+import BoardComment, { CommentType } from '../Board/BoardRead/BoardComment';
+import { BoardInquiryAPI, BoardDelete, BoardUpdate } from '../api/boardApi';
 import { CommentUsersInquiryAPI } from '../api/commentApi';
 import {
   AwsImageUploadFunctionality,
@@ -17,7 +22,7 @@ import {
 } from '../../_common/imageUploadFuntionality';
 import styled from 'styled-components';
 import { breakpoints } from '../../_common/breakpoint';
-import { TrashIcon } from '../../assets/img/ImgUrl';
+import TrashIcon from '../../assets/img/trash.webp';
 import SAVE from '../../assets/img/save.png';
 import { UsersProfilePictureAPI } from '../api/usresProfileApi';
 import DropDown from '../../components/Dropdown';
@@ -25,16 +30,21 @@ import Modal from '../../components/Modal';
 import SubmitQuill from '../../components/SubmitQuill';
 import UploadImageAndVideo from '../Board/BoardSubmit/UploadImageAndVideo';
 import { useParams } from 'react-router-dom';
+import { JAYCHIS_LOGO } from '../../_common/jaychisLogo';
+import { setCommunity } from '../../reducers/communitySlice';
 
-type ACTIVE_SECTION_TYPES = 'POSTS' | 'COMMENTS' | 'PROFILE';
+type ACTIVE_SECTION_TYPES = 'POSTS' | 'COMMENTS' | 'COMMUNITIES' | 'PROFILE';
 const Profile = () => {
-  
-  const {userId} = useParams<{userId: string}>()
+  const { userId } = useParams<{ readonly userId: string }>();
   const user: ProfileState = useSelector((state: RootState) => state.profile);
   const dispatch = useDispatch<AppDispatch>();
   const [myPosts, setMyPosts] = useState<CardType[]>([]);
   const [myComments, setMyComments] = useState<CommentType[]>([]);
-  const [activeSection, setActiveSection] = useState<ACTIVE_SECTION_TYPES>('POSTS');
+  const [myJoinedCommunities, setMyJoinedCommunities] = useState<
+    CommunityType[]
+  >([]);
+  const [activeSection, setActiveSection] =
+    useState<ACTIVE_SECTION_TYPES>('POSTS');
   const [profilePreview, setProfilePreview] = useState<string[]>([]);
   const [profileList, setProfileList] = useState<File[]>([]);
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -42,25 +52,45 @@ const Profile = () => {
   const [email, setEmail] = useState<string>(user.data.email || '');
   const [phone, setPhone] = useState<string>(user.data.phone || '');
   const [dropdownisOpen, setDropdownIsOpen] = useState<boolean[]>([false]);
-  const dropdownList:string[] = ['삭제하기','수정하기']
-  const parentRef = useRef<HTMLDivElement>(null)
-  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
-  const [editContent, setEditContent] = useState<string[]>([])
+  const dropdownList: string[] = ['삭제하기', '수정하기'];
+  const parentRef = useRef<HTMLDivElement>(null);
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+  const [editContent, setEditContent] = useState<string[]>([]);
   const [editTitle, setEditTitle] = useState<string>('');
-  const [editIndex, setEditIndex] = useState<number>(0)
+  const [editIndex, setEditIndex] = useState<number>(0);
 
-  const handleEdit = (item:string, index?: number) => {
-    if(item === '삭제하기'){
-      if(index === undefined) return
-      BoardDelete(myPosts[index].id,myPosts[index].nickname)
-      alert('게시글이 삭제되었습니다.')
-    }else if(item === '수정하기' && index !== undefined){
-      setEditContent(myPosts[index].content)
-      setEditTitle(myPosts[index].title)
-      setEditIndex(index)
-      setModalIsOpen(true)
-    }
+  interface CommunityClickType {
+    readonly button: MainListTypes;
   }
+  const handleCommunityClick = async (
+    { button }: CommunityClickType,
+    index: number,
+  ) => {
+    console.log('button : ', button);
+    return;
+    // const getAllCommunityList = async () => {
+    // const response = await UsersGetJoinedCommunities();
+    // if (!response) return;
+
+    // const res = response.data.response;
+    // console.log('getAllCommunityList res : ', res);
+    // setMyJoinedCommunities(res);
+    // };
+    // await getAllCommunityList();
+  };
+
+  const handleEdit = (item: string, index?: number) => {
+    if (item === '삭제하기') {
+      if (index === undefined) return;
+      BoardDelete(myPosts[index].id, myPosts[index].nickname);
+      alert('게시글이 삭제되었습니다.');
+    } else if (item === '수정하기' && index !== undefined) {
+      setEditContent(myPosts[index].content);
+      setEditTitle(myPosts[index].title);
+      setEditIndex(index);
+      setModalIsOpen(true);
+    }
+  };
 
   const imageUrlListDelete = async () => {
     const res: ImageLocalPreviewUrlsDeleteType =
@@ -98,7 +128,7 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    if(!userId) return
+    if (!userId) return;
     if (activeSection === 'POSTS') {
       const postsInquiry = async (): Promise<void> => {
         const res = await BoardInquiryAPI({ userId: userId });
@@ -117,6 +147,18 @@ const Profile = () => {
         const response = res.data.response;
 
         setMyComments(response);
+      };
+      commentInquiry();
+    }
+
+    if (activeSection === 'COMMUNITIES') {
+      const commentInquiry = async (): Promise<void> => {
+        const res = await UsersGetJoinedCommunities();
+        if (!res) return;
+
+        const response = res.data.response;
+
+        setMyJoinedCommunities(response);
       };
       commentInquiry();
     }
@@ -143,8 +185,8 @@ const Profile = () => {
   }, [activeSection, userId, dispatch]);
 
   useEffect(() => {
-    setDropdownIsOpen(Array(myPosts.length).fill(false))
-  },[myPosts])
+    setDropdownIsOpen(Array(myPosts.length).fill(false));
+  }, [myPosts]);
 
   const handleReplySubmit = (reply: any) => {
     // Implement reply submit logic here
@@ -152,50 +194,57 @@ const Profile = () => {
 
   return (
     <Container>
-      <Modal  
+      <Modal
         top={'10vh'}
         isOpen={modalIsOpen}
-        onClose={() => {setModalIsOpen(false)}}
+        onClose={() => {
+          setModalIsOpen(false);
+        }}
       >
         <StyledInput
-        value={editTitle}
-        onChange={(e) => {setEditTitle(e.target.value)}}
-        placeholder='수정을 제목을 입력하세요'
+          value={editTitle}
+          onChange={(e) => {
+            setEditTitle(e.target.value);
+          }}
+          placeholder="수정을 제목을 입력하세요"
         />
-        
-        { myPosts[editIndex] && myPosts[editIndex].type === 'TEXT' && (
-        <SubmitQuill
-        setContent={setEditContent}
-        content={editContent}
-        height={'50vh'}
-        />
+
+        {myPosts[editIndex] && myPosts[editIndex].type === 'TEXT' && (
+          <SubmitQuill
+            setContent={setEditContent}
+            content={editContent}
+            height={'50vh'}
+          />
         )}
 
-        { myPosts[editIndex] && myPosts[editIndex].type === 'MEDIA' && (
-        <UploadImageAndVideo
-        setContent={setEditContent}
-        content={editContent}
-        />
+        {myPosts[editIndex] && myPosts[editIndex].type === 'MEDIA' && (
+          <UploadImageAndVideo
+            setContent={setEditContent}
+            content={editContent}
+          />
         )}
 
-        { myPosts[editIndex] && myPosts[editIndex].type === 'LINK' && (
-        <StyledInput
-        value={editContent}
-        onChange={(e) => {setEditContent([e.target.value])}}
-        placeholder='수정할 링크를 입력하세요'
-        />
+        {myPosts[editIndex] && myPosts[editIndex].type === 'LINK' && (
+          <StyledInput
+            value={editContent}
+            onChange={(e) => {
+              setEditContent([e.target.value]);
+            }}
+            placeholder="수정할 링크를 입력하세요"
+          />
         )}
-        
+
         <SubmitButtonStyle
-        onClick = {() => {
-          BoardUpdate({
-            id:myPosts[editIndex].id,
-            title:editTitle, 
-            content:editContent,
-            nickname:myPosts[editIndex].nickname,
-            category:myPosts[editIndex].category });
-            alert('수정이 완료되었습니다.')
-            setModalIsOpen(false)
+          onClick={() => {
+            BoardUpdate({
+              id: myPosts[editIndex].id,
+              title: editTitle,
+              content: editContent,
+              nickname: myPosts[editIndex].nickname,
+              category: myPosts[editIndex].category,
+            });
+            alert('수정이 완료되었습니다.');
+            setModalIsOpen(false);
           }}
         >
           보내기
@@ -216,6 +265,12 @@ const Profile = () => {
           등록한 댓글
         </SectionButton>
         <SectionButton
+          isActive={activeSection === 'COMMUNITIES'}
+          onClick={() => setActiveSection('COMMUNITIES')}
+        >
+          가입한 커뮤니티
+        </SectionButton>
+        <SectionButton
           isActive={activeSection === 'PROFILE'}
           onClick={() => setActiveSection('PROFILE')}
         >
@@ -227,40 +282,52 @@ const Profile = () => {
         <Section>
           <SectionTitle>등록한 게시글</SectionTitle>
           {myPosts && myPosts.length > 0 ? (
-            myPosts.map((post: CardType,index) => (
+            myPosts.map((post: CardType, index) => (
               <>
-              <div ref={parentRef} style={{margin: '0 2% 0 auto', width: '5%', position: 'relative' }}>
-                <EditIcon
-                  style={{ marginTop: '1%' }}
-                  src="https://img.icons8.com/material-outlined/24/menu-2.png"
-                  alt="menu-2"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setDropdownIsOpen((prev) =>
-                      prev.map((state, idx) => (idx === index ? !state : state))
-                    );
+                <div
+                  ref={parentRef}
+                  style={{
+                    margin: '0 2% 0 auto',
+                    width: '5%',
+                    position: 'relative',
                   }}
-                />
-                {dropdownisOpen[index] && (
-                  <DropDown
-                    menu={dropdownList}
-                    eventHandler={handleEdit}
-                    eventIndex={index}
-                    onClose={() => setDropdownIsOpen((prev) =>
-                      prev.map((state, idx) => (idx === index ? false : state))
-                    )
-                    }
-                    ref={parentRef}
+                >
+                  <EditIcon
+                    style={{ marginTop: '1%' }}
+                    src="https://img.icons8.com/material-outlined/24/menu-2.png"
+                    alt="menu-2"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setDropdownIsOpen((prev) =>
+                        prev.map((state, idx) =>
+                          idx === index ? !state : state,
+                        ),
+                      );
+                    }}
                   />
-                )}
-              </div>
-              <Card
-                key={post?.id}
-                shareCount={post?.share_count}
-                createdAt={post?.created_at}
-                userId={post?.user_id}
-                {...post}
-              />
+                  {dropdownisOpen[index] && (
+                    <DropDown
+                      menu={dropdownList}
+                      eventHandler={handleEdit}
+                      eventIndex={index}
+                      onClose={() =>
+                        setDropdownIsOpen((prev) =>
+                          prev.map((state, idx) =>
+                            idx === index ? false : state,
+                          ),
+                        )
+                      }
+                      ref={parentRef}
+                    />
+                  )}
+                </div>
+                <Card
+                  key={post?.id}
+                  shareCount={post?.share_count}
+                  createdAt={post?.created_at}
+                  userId={post?.user_id}
+                  {...post}
+                />
               </>
             ))
           ) : (
@@ -282,6 +349,50 @@ const Profile = () => {
             ))
           ) : (
             <p>작성된 댓글이 없습니다.</p>
+          )}
+        </Section>
+      )}
+
+      {activeSection === 'COMMUNITIES' && (
+        <Section>
+          <SectionTitle>가입한 커뮤니티</SectionTitle>
+          {myJoinedCommunities.length > 0 ? (
+            myJoinedCommunities.map(
+              (community: CommunityType, index: number) => (
+                <>
+                  <CommunityContainer
+                    onClick={() =>
+                      handleCommunityClick(
+                        {
+                          button: community.name,
+                        } as CommunityClickType,
+                        index,
+                      )
+                    }
+                  >
+                    <CommunityPreviewWrapper>
+                      <ImagePreview
+                        src={community?.icon ? community.icon : JAYCHIS_LOGO}
+                        alt="Profile Preview"
+                      />
+                    </CommunityPreviewWrapper>
+
+                    <CommunityInfo>
+                      <InfoRow>
+                        <Label>커뮤니티명:</Label>
+                        <Value>{community?.name}</Value>
+                      </InfoRow>
+                      <InfoRow>
+                        <Label>공개범위:</Label>
+                        <Value>{community?.visibility}</Value>
+                      </InfoRow>
+                    </CommunityInfo>
+                  </CommunityContainer>
+                </>
+              ),
+            )
+          ) : (
+            <p>가입한 커뮤니티가 없습니다.</p>
           )}
         </Section>
       )}
@@ -358,21 +469,6 @@ const Profile = () => {
                   <Value>{email || '이메일을 입력하세요'}</Value>
                 )}
               </InfoRow>
-               {/*
-               <InfoRow>
-                <Label>전화번호:</Label>
-                {isEditing ? (
-                  <Input
-                    type="text"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                  />
-                ) : (
-                  <Value>{phone || '전화번호를 입력하세요'}</Value>
-                )}
-              </InfoRow>
-              */}
-              
             </ProfileInfo>
           </ProfileContainer>
         </Section>
@@ -429,6 +525,12 @@ const SectionTitle = styled.h2`
   padding-bottom: 5px;
 `;
 
+const CommunityContainer = styled.div`
+  display: flex;
+  align-items: flex-start;
+  margin: 5px 0;
+`;
+
 const ProfileContainer = styled.div`
   display: flex;
   align-items: flex-start;
@@ -444,6 +546,20 @@ const ImageUploadWrapper = styled.div`
 
 const HiddenFileInput = styled.input`
   display: none;
+`;
+
+const CommunityPreviewWrapper = styled.div`
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: relative;
+  margin-right: 10px;
+  cursor: pointer;
 `;
 
 const ImagePreviewWrapper = styled.div`
@@ -468,6 +584,13 @@ const ImagePreview = styled.img`
 const Placeholder = styled.div`
   font-size: 14px;
   color: #888;
+`;
+
+const CommunityInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  cursor: pointer;
 `;
 
 const ProfileInfo = styled.div`

@@ -176,3 +176,16 @@ export const LogOut = async (logout: boolean) => {
     console.error(error);
   }
 }
+
+export const UsersGetJoinedCommunities = async () => {
+  const URL: string = `${USERS_URL}/joined/communities`
+
+  try {
+    const res = await client.get(URL)
+    
+    return res
+  } catch (e: any) {
+    errorHandling({text: 'UsersGetJoinedCommunities', error:e})
+  }
+
+}
