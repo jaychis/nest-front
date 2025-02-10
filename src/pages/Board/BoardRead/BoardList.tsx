@@ -51,17 +51,16 @@ const BoardList = () => {
   }, [buttonType]);
 
   useEffect(() => {
-    console.log(sessionStorage.getItem("scrollIndex"))
     const handlePageShow = () => {
-      console.log('실행됨됨2')
       const savedScroll = sessionStorage.getItem("scrollIndex");
       if (savedScroll) {
-        setScrollIndex(Number(savedScroll));
+        if(savedScroll !== '0') setScrollIndex(Number(savedScroll) + 1);
+        else setScrollIndex(Number(savedScroll));
       }
     }
     handlePageShow()
 
-    setTimeout(function(){setInitialScrollSet(true)},2000)
+    setTimeout(function(){setInitialScrollSet(true)},2500)
 },[loaction.pathname])
 
 
@@ -150,6 +149,7 @@ const BoardList = () => {
       <CellMeasurer cache={cache} parent={parent} key={key} columnIndex={0} rowIndex={index}>
         <div key={key} style={style}>
           <Card
+            index={index}
             id={el.id}
             category={el.category}
             title={el.title}
@@ -167,11 +167,8 @@ const BoardList = () => {
   };
 
   const handleScroll = ({ scrollTop, scrollHeight, clientHeight }: any) => {
-    if(scrollTop === 0) return
-
-    if (scrollTop + clientHeight >= scrollHeight - 100 && !allDataLoaded) {
+    if (scrollTop + clientHeight >= scrollHeight - 10 && !allDataLoaded) {
       debouncListApi({ id, allDataLoaded });
-      sessionStorage.setItem("scrollIndex", String(list.length));
     }
   }
 
