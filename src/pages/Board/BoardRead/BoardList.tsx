@@ -27,7 +27,7 @@ const BoardList = () => {
     readonly allDataLoaded: boolean;
   }
   type IdType = null | string;
-
+  console.log('test')
   const [list, setList] = useState<CardType[]>([]);
   const TAKE: number = 5;
   const { buttonType }: MainListTypeState = useSelector((state: RootState) => state.sideBarButton,);
