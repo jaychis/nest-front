@@ -402,7 +402,7 @@ const CommunityName = styled.h1`
 const JoinButton = styled.div<{ readonly isJoined: boolean }>`
   position: absolute;
   top: 11vh;
-  left: 50vw;
+  left: 52vw;
   background-color: ${(props) => (props.isJoined ? '#cccccc' : '#0056d2')};
   color: #ffffff;
   font-size: 1em;
@@ -425,28 +425,29 @@ const JoinButton = styled.div<{ readonly isJoined: boolean }>`
 
   @media (max-width: ${breakpoints.mobile}) {
     top: 5vh;
-    left: 85vw;
+    left: 90vw;
   }
 `;
 
 const EditWrapper = styled.div`
   position: relative;
   top: 12vh;
-  margin-left: 25vw;
+  margin-left: 20vw;
   height: 20px;
 
   @media(max-width: ${breakpoints.mobile}){
-  top: 6vh;
-  margin-left: 13vw;
+  top: 5.5vh;
+  margin-left: 1vw;
   }
 
   @media(min-width: ${breakpoints.mobile}) and (max-width: ${breakpoints.tablet}){
   top: 11.5vh;
-  margin-left: 9vw;
+  margin-left: 4vw;
   }
 
   @media(min-width: ${breakpoints.tablet}) and (max-width: ${breakpoints.desktop}){
-  margin-left: 18vw;
+  top: 12vh;
+  margin-left: 13vw;
   }
 `;
 
