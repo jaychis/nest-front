@@ -52,9 +52,11 @@ function App() {
               <Route
                 path="/boards/submit"
                 element={
+                  <Guard>
                   <Layout>
                     <BoardSubmit />
                   </Layout>
+                  </Guard>
                 }
               />
               <Route
@@ -83,26 +85,32 @@ function App() {
               <Route
                 path="/community/create1"
                 element={
+                  <Guard>
                   <Layout>
                     <CommunityCreatePage1 />
                   </Layout>
+                  </Guard>
                 }
               />
 
               <Route
                 path="/community/create2"
                 element={
+                  <Guard>
                   <Layout>
                     <CommunityCreatePage2 />
                   </Layout>
+                  </Guard>
                 }
               />
               <Route
                 path="/community/create3"
                 element={
+                  <Guard>
                   <Layout>
                     <CommunityCreatePage3 />
                   </Layout>
+                  </Guard>
                 }
               />
               {/*서치*/}
@@ -124,8 +132,6 @@ function App() {
                 path={'/privacy-policy/mobile'}
                 element={<MobilePrivacyPolicyPage />}
               />
-
-              <Route path={`/chatLayout`} element={<ChatLayout />} />
 
               <Route path={'/test'} element={<LinkPreviewComponent />} />
               <Route path={'/chat'} element={<Chat />} />
