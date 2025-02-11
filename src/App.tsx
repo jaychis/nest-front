@@ -29,6 +29,7 @@ const MobilePrivacyPolicyPage = lazy(
 );
 const ChatLayout = lazy(() => import('./pages/User/chat/ChatLayout'));
 const LinkPreviewComponent = lazy(() => import('./components/LinkPreviewComponent'),);
+const Guard = lazy(() => import('../src/_common/Guard')) 
 
 function App() {
   return (
@@ -68,9 +69,11 @@ function App() {
               <Route
                 path="/users/profile/:userId"
                 element={
+                  <Guard>
                   <Layout>
                     <Profile />
                   </Layout>
+                  </Guard>
                 }
               />
               {/* 문의하기 게시판*/}
