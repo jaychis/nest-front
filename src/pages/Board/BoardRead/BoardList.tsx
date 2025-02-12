@@ -27,7 +27,7 @@ const BoardList = () => {
     readonly allDataLoaded: boolean;
   }
   type IdType = null | string;
-  console.log('test')
+
   const [list, setList] = useState<CardType[]>([]);
   const TAKE: number = 5;
   const { buttonType }: MainListTypeState = useSelector((state: RootState) => state.sideBarButton,);
@@ -36,7 +36,7 @@ const BoardList = () => {
   const [scrollIndex, setScrollIndex] = useState<number>(0)
   const loaction = useLocation()
   const [initialScrollSet, setInitialScrollSet] = useState(false);
-
+  
   useBeforeUnload((event) => {
     sessionStorage.setItem("scrollIndex", '0');
   })
@@ -137,7 +137,7 @@ const BoardList = () => {
 
   const cache = new CellMeasurerCache({
     fixedWidth: true, 
-    defaultHeight: 250, 
+    defaultHeight: 400, 
   });
 
   const rowRenderer = ({ index, key, style, parent }: any) => {

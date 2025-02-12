@@ -22,8 +22,7 @@ const Guard = ({children}:GuardProps) => {
             errorMessage="로그인 후 이용해주세요"
             show={show}
             handleClose={handleClose}
-            />
-        )
+            />)
     }
 
     return(
