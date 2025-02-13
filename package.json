@@ -19,7 +19,6 @@
     "@svgr/webpack": "^5.5.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
     "@tippyjs/react": "^4.2.6",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.96",
@@ -131,6 +130,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@testing-library/user-event": "^14.6.1",
     "@types/lodash.debounce": "^4.0.9",
     "@types/react": "^18.3.3",
     "@types/react-modal": "^3.16.3",
