@@ -253,6 +253,7 @@ const Login = ({
             type="email"
             id="email"
             name="email"
+            data-testid = 'email-input'
             onChange={(value) =>
               handleChange({
                 name: value.target.name,
