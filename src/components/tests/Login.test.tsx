@@ -1,7 +1,6 @@
 import Login from "../../pages/User/Login";
 import { render, screen,waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { act } from 'react';
 import React from "react";
 
 describe('로그인 테스트', () => {
