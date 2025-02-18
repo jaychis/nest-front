@@ -80,7 +80,6 @@ const GlobalSideBar = () => {
       if (!response) return;
 
       const res = response.data.response;
-      console.log('fetchGetRectCommunities res: ', res);
       setRecentCommunityList(res);
     };
 
