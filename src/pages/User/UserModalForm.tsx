@@ -1,5 +1,5 @@
 import './UserModalForm.css';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Modal from '../../components/Modal';
 import Login from './Login';
 import Signup from './Signup';
@@ -26,7 +26,7 @@ const UserModalForm = () => {
     if (email.trim() === '') return alert('메일을 입력해주세요');
 
     const res = await SendEmail(email);
-    console.log(res)
+    
     if (res && res.data && res.status === 201) {
       switchView('verity');
       alert('메일로 인증번호가 발송되었습니다.');

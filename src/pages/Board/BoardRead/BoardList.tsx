@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   BoardListAPI,
   BoardPopularListAPI,
@@ -175,7 +175,7 @@ const BoardList = () => {
     if (scrollTop + clientHeight >= scrollHeight - 10 && !allDataLoaded) {
       debouncListApi({ id, allDataLoaded });
     }
-  };
+  }
 
   return (
     <MainContainer>

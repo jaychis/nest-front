@@ -15,20 +15,12 @@ const BoardRead = lazy(() => import('./pages/Board/BoardRead/BoardRead'));
 const Profile = lazy(() => import('./pages/User/Profile'));
 const UsersInquiry = lazy(() => import('./pages/User/UsersInquiry'));
 const SearchList = lazy(() => import('./pages/Search/SearchList'));
-const CommunityCreatePage1 = lazy(
-  () => import('./pages/Board/CommunityCreate/CommunityCreatePage1'),
-);
-const CommunityCreatePage2 = lazy(
-  () => import('./pages/Board/CommunityCreate/CommunityCreatePage2'),
-);
-const CommunityCreatePage3 = lazy(
-  () => import('./pages/Board/CommunityCreate/CommunityCreatePage3'),
-);
+const CommunityCreatePage1 = lazy(() => import('./pages/Board/CommunityCreate/CommunityCreatePage1'),);
+const CommunityCreatePage2 = lazy(() => import('./pages/Board/CommunityCreate/CommunityCreatePage2'),);
+const CommunityCreatePage3 = lazy(() => import('./pages/Board/CommunityCreate/CommunityCreatePage3'),);
 const AdminList = lazy(() => import('./pages/Admin/AdminList'));
 const SearchMobile = lazy(() => import('./pages/Search/SearchMobile'));
-const MobilePrivacyPolicyPage = lazy(
-  () => import('./components/MobilePrivacyPolicyPage'),
-);
+const MobilePrivacyPolicyPage = lazy(() => import('./components/MobilePrivacyPolicyPage'),);
 const ChatLayout = lazy(() => import('./pages/User/chat/ChatLayout'));
 const LinkPreviewComponent = lazy(() => import('./components/LinkPreviewComponent'),);
 const Guard = lazy(() => import('../src/_common/Guard'))
