@@ -43,7 +43,7 @@ const BoardList = () => {
   const [scrollIndex, setScrollIndex] = useState<number>(0)
   const loaction = useLocation()
   const [initialScrollSet, setInitialScrollSet] = useState(false);
-
+  
   useBeforeUnload((event) => {
     sessionStorage.setItem("scrollIndex", '0');
   })
@@ -143,8 +143,8 @@ const BoardList = () => {
   const debouncListApi = debounce(ListApi, 300);
 
   const cache = new CellMeasurerCache({
-    fixedWidth: true,
-    defaultHeight: 250,
+    fixedWidth: true, 
+    defaultHeight: 400, 
   });
 
   const rowRenderer = ({ index, key, style, parent }: any) => {

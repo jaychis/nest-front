@@ -80,7 +80,6 @@ const GlobalSideBar = () => {
       if (!response) return;
 
       const res = response.data.response;
-      console.log('fetchGetRectCommunities res: ', res);
       setRecentCommunityList(res);
     };
 
@@ -270,6 +269,8 @@ const GlobalSideBar = () => {
                 .slice(0, displayCount)
                 .map((community: SelectCommunityParams, index) => (
                   <CommunityItem key={community.id || index}>
+                    <picture>
+                    <source srcSet = {community.icon as string | undefined} type="image/webp"></source>
                     <CommunityIcon
                       width="20"
                       height="20"
@@ -282,6 +283,7 @@ const GlobalSideBar = () => {
                         )
                       }
                     />
+                    </picture>
                     <CommunityName
                       onClick={() =>
                         handleCommunityClick(
