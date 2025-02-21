@@ -104,8 +104,8 @@ const ContentContainer = styled.div.withConfig({
   `;
 
 const ContentWrapper = styled.div`
-  width: 400px !important;
-  height: 400px !important;
+  max-width: 400px !important;
+  max-height: 400px !important;
 
   img {
     max-width: 70% !important;
