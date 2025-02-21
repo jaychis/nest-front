@@ -26,7 +26,7 @@ const Login = ({
   });
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [showAlert, setShowAlert] = useState<boolean>(false);
-
+ 
   const setLoginProcess = ({
     id,
     nickname,

@@ -7,11 +7,11 @@ describe('로그인 테스트', () => {
     let user: ReturnType<typeof userEvent.setup>;
 
     beforeEach(() => {
-        user = userEvent.setup(); // user 할당
+        user = userEvent.setup(); 
         render(
             <Login
                 onSwitchView={jest.fn()}
-                modalIsOpen={jest.fn()} // modalIsOpen은 보통 boolean 값이므로 수정
+                modalIsOpen={jest.fn()} 
                 kakaoEmail=""
                 setKakaoEmail={jest.fn()}
             />
