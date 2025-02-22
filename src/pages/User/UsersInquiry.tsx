@@ -29,7 +29,6 @@ const MainContainer = ({ children }: ContainerProps) => {
   );
 };
 
-// const CardsContainer: React.FC<ContainerProps> = ({ children }) => {
 const CardsContainer = ({ children }: ContainerProps) => {
   return (
     <div
@@ -38,9 +37,9 @@ const CardsContainer = ({ children }: ContainerProps) => {
         flexDirection: 'column',
         alignItems: 'center',
         width: '100%',
-        maxWidth: '800px', // 적절한 최대 너비 설정
+        maxWidth: '800px', 
         boxSizing: 'border-box',
-        padding: '0 20px', // 좌우 패딩 추가
+        padding: '0 20px', 
       }}
     >
       {children}
@@ -49,12 +48,10 @@ const CardsContainer = ({ children }: ContainerProps) => {
 };
 
 const UsersInquiry = () => {
-  const [params, setParams] = useSearchParams();
   const [list, setList] = useState<InquiryType[]>([]);
   const TAKE: number = 10;
   const nickname: string = localStorage.getItem('nickname') as string;
   const [isopen, setIsopen] = useState<boolean>(false);
-  const userId: string = localStorage.getItem('id') as string;
   const [retry, setRetry] = useState<number>(0);
   const [active, setActive] = useState<string>('FAQ');
 
@@ -167,7 +164,7 @@ const UsersInquiry = () => {
               );
             })
           ) : (
-            <EmptyState /> // Use the EmptyState component
+            <EmptyState /> 
           )}
         </CardsContainer>
       </MainContainer>
@@ -196,7 +193,7 @@ const Button = styled.button`
     color 0.3s;
 
   &:hover {
-    background-color: #f8f9fa; // 예시: 호버 효과 추가
+    background-color: #f8f9fa;
   }
 `;
 

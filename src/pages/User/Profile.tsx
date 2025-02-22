@@ -31,7 +31,6 @@ import SubmitQuill from '../../components/SubmitQuill';
 import UploadImageAndVideo from '../Board/BoardSubmit/UploadImageAndVideo';
 import { useParams } from 'react-router-dom';
 import { JAYCHIS_LOGO } from '../../_common/jaychisLogo';
-import { setCommunity } from '../../reducers/communitySlice';
 
 type ACTIVE_SECTION_TYPES = 'POSTS' | 'COMMENTS' | 'COMMUNITIES' | 'PROFILE';
 const Profile = () => {

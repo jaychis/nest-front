@@ -26,7 +26,7 @@ const Login = ({
   });
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [showAlert, setShowAlert] = useState<boolean>(false);
- 
+  
   const setLoginProcess = ({
     id,
     nickname,
@@ -132,6 +132,7 @@ const Login = ({
   const KAKAO_CLIENT_ID = process.env.REACT_APP_KAKAO_CLIENT_ID as string;
 
   const env = process.env.REACT_APP_NODE_ENV as keyof typeof REDIRECT_URLS;
+  
   const REDIRECT_URLS: {
     readonly production: string;
     readonly stage: string;
