@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import {
   BoardListAPI,
   BoardPopularListAPI,
@@ -23,8 +23,6 @@ import {
 import GlobalStyle from '../../../_common/globalStyled';
 import { useLocation } from 'react-router-dom';
 import { useBeforeUnload } from 'react-router-dom';
-
-const CommunityBanner = React.lazy(() => import('../CommunityBanner'));
 
 const BoardList = () => {
   interface AllListParams {
@@ -230,14 +228,6 @@ const CardsContainer = styled.div`
   @media (min-width: ${breakpoints.mobile}) and (max-width: ${breakpoints.tablet}) {
     height: 110vh;
   }
-`;
-
-const HrTag = styled.hr`
-  border: none;
-  height: 2px;
-  background-color: #f0f0f0;
-  margin: 5px 0;
-  width: 100%;
 `;
 
 export default BoardList;
