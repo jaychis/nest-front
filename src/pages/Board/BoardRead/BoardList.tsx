@@ -183,11 +183,7 @@ const BoardList = () => {
         buttonType !== 'POPULAR' &&
         buttonType !== 'TAGMATCH' &&
         buttonType !== 'FREQUENTSHARE' &&
-        buttonType !== 'ALL' && (
-          <>
-            <CommunityBanner />
-          </>
-        )}
+        buttonType !== 'ALL'}
       <CardsContainer>
         <GlobalStyle />
         <AutoSizer>
