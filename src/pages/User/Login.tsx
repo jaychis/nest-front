@@ -26,7 +26,7 @@ const Login = ({
   });
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [showAlert, setShowAlert] = useState<boolean>(false);
-
+  
   const setLoginProcess = ({
     id,
     nickname,
@@ -268,6 +268,7 @@ const Login = ({
             type="password"
             id="password"
             name="password"
+            data-testid='password-input'
             onChange={(value) =>
               handleChange({
                 name: value.target.name,

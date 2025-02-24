@@ -73,7 +73,7 @@ const GlobalBar = () => {
     if (value.length > 2) {
       dispatch(setSearchResults([value]));
     }
-  }, 300); // 300ms 디바운싱
+  }, 300); 
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -147,7 +147,6 @@ const GlobalBar = () => {
             
         </SearchContainer>
 
-        {/* Navigation Icons */}
         <LoginStatusView>
           {localStorage.getItem('access_token') ? (
             <>

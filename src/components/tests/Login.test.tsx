@@ -33,11 +33,11 @@ describe('로그인 테스트', () => {
     let user: ReturnType<typeof userEvent.setup>;
 
     beforeEach(() => {
-        user = userEvent.setup(); // user 할당
+        user = userEvent.setup(); 
         render(
             <Login
                 onSwitchView={jest.fn()}
-                modalIsOpen={jest.fn()} // modalIsOpen은 보통 boolean 값이므로 수정
+                modalIsOpen={jest.fn()} 
                 kakaoEmail=""
                 setKakaoEmail={jest.fn()}
             />
@@ -56,7 +56,6 @@ describe('로그인 테스트', () => {
         const emailInput = screen.getByTestId('email-input');
         const submitButton = screen.getByTestId('submit-button');
     
-        // act로 감싸서 상태 업데이트를 기다림
         await React.act(async () => {
           await user.type(emailInput, 'wjnaver.com');
           await user.click(submitButton);
@@ -68,4 +67,3 @@ describe('로그인 테스트', () => {
         });
     });
 });
->>>>>>> jp
