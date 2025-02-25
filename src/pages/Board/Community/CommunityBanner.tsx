@@ -27,7 +27,7 @@ const BackgroundContainer = styled.div`
   display: flex;
   width: 102%;
   height: 25vh;
-  margin-bottom: 20vh;
+  margin-bottom: 15vh;
   margin-left: -2%;
 
   @media (max-width: ${breakpoints.mobile}) {

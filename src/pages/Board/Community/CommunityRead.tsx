@@ -13,7 +13,7 @@ const CommunityRead = () => {
                 <CommunityProfile/>
             </CommunityHeader>
             
-                
+            <BoardList/>
         </CommunityReadContainer>
     )
 }
@@ -21,7 +21,9 @@ const CommunityRead = () => {
 const CommunityReadContainer = styled.div`
     display: flex;
     flex-direction: column;
-    
+    width: 100%;
+    height: 120vh;
+ 
 `
 
 const CommunityHeader = styled.div`

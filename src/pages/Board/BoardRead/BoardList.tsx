@@ -69,7 +69,7 @@ const BoardList = () => {
 
   const ListApi = async ({ id, allDataLoaded }: AllListParams) => {
     if (allDataLoaded) return;
-
+    console.log(buttonType)
     try {
       let response;
       switch (buttonType) {
@@ -198,8 +198,8 @@ const BoardList = () => {
               />
             )}
         </AutoSizer>
-        </CardsContainer>
-      </MainContainer>
+      </CardsContainer>
+    </MainContainer>
   );
 };
 
