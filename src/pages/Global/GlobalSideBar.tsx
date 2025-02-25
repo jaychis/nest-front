@@ -121,6 +121,7 @@ const GlobalSideBar = () => {
   ) => {
     dispatch(setCommunity(communityList[index]));
     await sendDispatchSideBtn({ button });
+    console.log(button)
     await navigate(`/j/${button}`);
   };
 

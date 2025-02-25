@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import DragAndDrop from '../../../components/DragAndDrop';
 import { AwsImageUploadFunctionalityReturnType } from '../../../_common/imageUploadFuntionality';
 import { GetSearchPeopleAPI } from '../../api/searchApi';
-import VIcon from '../../assets/img/vicon.webp';
+import VIcon from '../../../assets/img/vicon.webp';
 import {
   SelectCommunityMembersType,
   SelectCommunityParams,

@@ -3,7 +3,7 @@ import CommunityProfile from './CommunityProfile';
 import { SelectCommunityParams } from '../../../reducers/communitySlice';
 import { useSelector } from 'react-redux';
 import { breakpoints } from '../../../_common/breakpoint';
-import BANNER from '../../assets/img/community_banner.png';
+import BANNER from '../../../assets/img/community_banner.png';
 
 const CommunityBanner = () => {
   const selectCommunity: SelectCommunityParams = useSelector(

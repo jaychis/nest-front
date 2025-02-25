@@ -6,8 +6,6 @@ import { CommunityProvider } from './contexts/CommunityContext';
 import BoardList from './pages/Board/BoardRead/BoardList';
 import Layout from './components/Layout';
 import CustomSuspense from './components/Suspense';
-import CommunityProfile from './pages/Board/Community/CommunityProfile';
-import CommunityBanner from './pages/Board/Community/CommunityBanner';
 
 const Chat = lazy(() => import('./pages/Chat/Chat'));
 const BoardSubmit = lazy(() => import('./pages/Board/BoardSubmit/BoardSubmit'));
@@ -24,7 +22,7 @@ const MobilePrivacyPolicyPage = lazy(() => import('./components/MobilePrivacyPol
 const ChatLayout = lazy(() => import('./pages/User/chat/ChatLayout'));
 const LinkPreviewComponent = lazy(() => import('./components/LinkPreviewComponent'),);
 const Guard = lazy(() => import('../src/_common/Guard'))
-
+const CommunityRead = lazy(() => import('../src/pages/Board/Community/CommunityRead'))
 function App() {
   return (
     <>
@@ -80,7 +78,7 @@ function App() {
                 path={'/j/:communityName'}
                 element={
                   <Layout>
-                    <BoardList />
+                    <CommunityRead/>
                   </Layout>
                 }
               />
