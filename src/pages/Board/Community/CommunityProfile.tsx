@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import DropDown from '../../components/Dropdown';
+import DropDown from '../../../components/Dropdown';
 import { useState, useEffect } from 'react';
 import React from 'react';
 import {
@@ -8,19 +8,19 @@ import {
   CreateInvitationAPI,
   joinCommunityAPI,
   leaveCommunityAPI,
-} from '../api/communityApi';
-import Modal from '../../components/Modal';
+} from '../../api/communityApi';
+import Modal from '../../../components/Modal';
 import { useDispatch, useSelector } from 'react-redux';
-import DragAndDrop from '../../components/DragAndDrop';
-import { AwsImageUploadFunctionalityReturnType } from '../../_common/imageUploadFuntionality';
-import { GetSearchPeopleAPI } from '../api/searchApi';
+import DragAndDrop from '../../../components/DragAndDrop';
+import { AwsImageUploadFunctionalityReturnType } from '../../../_common/imageUploadFuntionality';
+import { GetSearchPeopleAPI } from '../../api/searchApi';
 import VIcon from '../../assets/img/vicon.webp';
 import {
   SelectCommunityMembersType,
   SelectCommunityParams,
   setJoinCommunity,
-} from '../../reducers/communitySlice';
-import { breakpoints } from '../../_common/breakpoint';
+} from '../../../reducers/communitySlice';
+import { breakpoints } from '../../../_common/breakpoint';
 
 interface User {
   readonly nickname: string;

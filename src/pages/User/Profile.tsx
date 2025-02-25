@@ -31,6 +31,8 @@ import SubmitQuill from '../../components/SubmitQuill';
 import UploadImageAndVideo from '../Board/BoardSubmit/UploadImageAndVideo';
 import { useNavigate, useParams } from 'react-router-dom';
 import { JAYCHIS_LOGO } from '../../_common/jaychisLogo';
+import { GetCommunitiesNameAPI } from '../api/communityApi';
+import { setCommunity } from '../../reducers/communitySlice';
 
 type ACTIVE_SECTION_TYPES = 'POSTS' | 'COMMENTS' | 'COMMUNITIES' | 'PROFILE';
 const Profile = () => {
@@ -77,10 +79,6 @@ const Profile = () => {
     dispatch(setCommunity(community));
     navigate(`/j/${communityName}`);
   };
-
-  // const sendDispatchSideBtn = async ({ button }: CommunityClickType) => {
-  //   //   dispatch(sideButtonSliceActions.setButtonType({ buttonType: button }));
-  //   // };
 
   const handleEdit = (item: string, index?: number) => {
     if (item === '삭제하기') {
