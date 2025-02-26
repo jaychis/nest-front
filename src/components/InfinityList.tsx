@@ -1,25 +1,13 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import Card from './Card/Card';
-import styled from 'styled-components';
-import {
-    List,
-    CellMeasurer,
-    CellMeasurerCache,
-    AutoSizer,
-  } from 'react-virtualized';
+import {List,CellMeasurer,CellMeasurerCache,AutoSizer,} from 'react-virtualized';
 import debounce from 'lodash.debounce';
-import {
-    BoardListAPI,
-    BoardPopularListAPI,
-    BoardRecentListAPI,
-    BoardShareListAPI,
-    BoardTagsRelatedAPI,
-  } from '../pages/api/boardApi'
+import {BoardListAPI,BoardPopularListAPI,BoardRecentListAPI,BoardShareListAPI,BoardTagsRelatedAPI,} from '../pages/api/boardApi'
 import { useSelector } from 'react-redux';
 import { MainListTypeState } from '../reducers/mainListTypeSlice';
 import { RootState } from '../store/store';
 import { CardType } from '../_common/collectionTypes';
-
+import { useLocation,useBeforeUnload } from 'react-router-dom';
 
 const InfinitiList = () => {
 
@@ -27,13 +15,14 @@ const InfinitiList = () => {
     interface AllListParams {
         readonly id: IdType;
         readonly allDataLoaded: boolean;
-      }
+    }
 
     const { buttonType }: MainListTypeState = useSelector((state: RootState) => state.sideBarButton,);
     const [scrollIndex, setScrollIndex] = useState<number>(0)
     const [initialScrollSet, setInitialScrollSet] = useState(false);
     const [id, setId] = useState<IdType>(null);
     const [allDataLoaded, setAllDataLoaded] = useState<boolean>(false);
+    const loaction = useLocation()
     const [list, setList] = useState<CardType[]>([]);
     const TAKE: number = 5;
 
@@ -44,7 +33,7 @@ const InfinitiList = () => {
 
     const ListApi = async ({ id, allDataLoaded }: AllListParams) => {
         if (allDataLoaded) return;
-
+        console.log(buttonType)
         try {
           let response;
           switch (buttonType) {
@@ -99,6 +88,7 @@ const InfinitiList = () => {
           }
     
           const res = response?.data?.response;
+          
           if (!res) return;
           const newCards = res.current_list;
           setList((prevList) => [...prevList, ...newCards]);
@@ -120,6 +110,31 @@ const InfinitiList = () => {
             debouncListApi({ id, allDataLoaded });
         }
     }
+
+    useBeforeUnload((event) => {
+        console.log(sessionStorage.getItem)
+        
+    })
+
+    useEffect(() => {
+        setAllDataLoaded(false);
+        setId(null);
+        setList([]);
+        debouncListApi({ id: null, allDataLoaded: false });
+    }, [buttonType]);
+
+    useEffect(() => {
+        const handlePageShow = () => {
+          const savedScroll = sessionStorage.getItem("scrollIndex");
+          if (savedScroll) {
+            if(savedScroll !== '0') setScrollIndex(Number(savedScroll) + 1);
+            else setScrollIndex(Number(savedScroll));
+          }
+        }
+        handlePageShow()
+    
+        setTimeout(function(){setInitialScrollSet(true)},2500)
+    },[loaction.pathname])
 
     const rowRenderer = ({ index, key, style, parent }: any) => {
         const el = list[index];

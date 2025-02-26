@@ -120,8 +120,8 @@ const GlobalSideBar = () => {
     index: number,
   ) => {
     dispatch(setCommunity(communityList[index]));
+    sessionStorage.setItem('community_name',button)
     await sendDispatchSideBtn({ button });
-    console.log(button)
     await navigate(`/j/${button}`);
   };
 
