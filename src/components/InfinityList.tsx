@@ -33,7 +33,7 @@ const InfinitiList = () => {
 
     const ListApi = async ({ id, allDataLoaded }: AllListParams) => {
         if (allDataLoaded) return;
-        console.log(buttonType)
+        
         try {
           let response;
           switch (buttonType) {

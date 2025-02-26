@@ -33,9 +33,7 @@ const GlobalSideBar = () => {
   const [loading, setLoading] = useState(false);
   const isLoggedIn = !!localStorage.getItem('access_token');
 
-  const [communityList, setCommunityList] = useState<SelectCommunityParams[]>(
-    [],
-  );
+  const [communityList, setCommunityList] = useState<SelectCommunityParams[]>([],);
   const [communityNamesSet, setCommunityNamesSet] = useState<Set<string>>(
     new Set(),
   );
@@ -120,7 +118,9 @@ const GlobalSideBar = () => {
     index: number,
   ) => {
     dispatch(setCommunity(communityList[index]));
-    sessionStorage.setItem('community_name',button)
+    sessionStorage.setItem('community_name',communityList[index].name as string)
+    sessionStorage.setItem('community_icon',communityList[index].icon as string)
+    sessionStorage.setItem('community_banner',communityList[index].banner as string)
     await sendDispatchSideBtn({ button });
     await navigate(`/j/${button}`);
   };

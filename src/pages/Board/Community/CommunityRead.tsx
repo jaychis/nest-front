@@ -6,20 +6,35 @@ import { breakpoints } from "../../../_common/breakpoint";
 import { sideButtonSliceActions } from "../../../reducers/mainListTypeSlice";
 import { useDispatch } from "react-redux";
 import { MainListTypes } from "../../../_common/collectionTypes";
+import { setCommunity,community, SelectCommunityParams } from "../../../reducers/communitySlice";
 import { useState,useEffect } from "react";
 
 const CommunityRead = () => {
 
     const dispatch = useDispatch()
     const [reload, setReload] = useState<boolean>(false)
-
+    const [communityData, setCommunityData] = useState<SelectCommunityParams[]>([],)
+        
+    console.log(sessionStorage.getItem('community_banner'))
+    
     useEffect(() => {
         const [navigationEntry] = performance.getEntriesByType("navigation") as PerformanceNavigationTiming[];
-        
+        setCommunityData([...communityData])
         if (navigationEntry?.type === "reload") {
             const communityName = sessionStorage.getItem("community_name");
             if (communityName) {
                 dispatch(sideButtonSliceActions.setButtonType({ buttonType: communityName as MainListTypes }));
+                dispatch(setCommunity({
+                    name: sessionStorage.getItem('community_name'), 
+                    banner: sessionStorage.getItem('community_banner'),
+                    icon: sessionStorage.getItem('community_icon'),
+                    description: '',
+                    creator_user_id: '',
+                    id: '',
+                    members: [],
+                    is_joined: false,
+                    visibility: 'PUBLIC'
+                }))
             }
         } 
         setReload(true)
