@@ -6,28 +6,26 @@ import { breakpoints } from "../../../_common/breakpoint";
 import { sideButtonSliceActions } from "../../../reducers/mainListTypeSlice";
 import { useDispatch } from "react-redux";
 import { MainListTypes } from "../../../_common/collectionTypes";
-import { setCommunity,community, SelectCommunityParams } from "../../../reducers/communitySlice";
+import { setCommunity} from "../../../reducers/communitySlice";
 import { useState,useEffect } from "react";
 
 const CommunityRead = () => {
 
     const dispatch = useDispatch()
     const [reload, setReload] = useState<boolean>(false)
-    const [communityData, setCommunityData] = useState<SelectCommunityParams[]>([],)
-        
-    console.log(sessionStorage.getItem('community_banner'))
+    const communityData = sessionStorage.getItem('community')
+    const parseCommunityData = communityData ? JSON.parse(communityData) : null
     
     useEffect(() => {
         const [navigationEntry] = performance.getEntriesByType("navigation") as PerformanceNavigationTiming[];
-        setCommunityData([...communityData])
+        
         if (navigationEntry?.type === "reload") {
-            const communityName = sessionStorage.getItem("community_name");
-            if (communityName) {
-                dispatch(sideButtonSliceActions.setButtonType({ buttonType: communityName as MainListTypes }));
+            if (parseCommunityData.name) {
+                dispatch(sideButtonSliceActions.setButtonType({ buttonType: parseCommunityData.name as MainListTypes }));
                 dispatch(setCommunity({
-                    name: sessionStorage.getItem('community_name'), 
-                    banner: sessionStorage.getItem('community_banner'),
-                    icon: sessionStorage.getItem('community_icon'),
+                    name: parseCommunityData.name, 
+                    banner: parseCommunityData.banner,
+                    icon: parseCommunityData.icon,
                     description: '',
                     creator_user_id: '',
                     id: '',

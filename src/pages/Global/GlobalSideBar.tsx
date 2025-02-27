@@ -118,6 +118,7 @@ const GlobalSideBar = () => {
     index: number,
   ) => {
     dispatch(setCommunity(communityList[index]));
+    sessionStorage.setItem('community',JSON.stringify(communityList[index]))
     sessionStorage.setItem('community_name',communityList[index].name as string)
     sessionStorage.setItem('community_icon',communityList[index].icon as string)
     sessionStorage.setItem('community_banner',communityList[index].banner as string)
