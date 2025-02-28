@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import { breakpoints } from "../_common/breakpoint";
 import GlobalBar from "../pages/Global/GlobalBar";
-import GlobalSideBar from "../pages/Global/GlobalSideBar";
+import GlobalSideBar from "../pages/Global/GlobalSideBar/GlobalSideBar";
 import RightSideBar from "../pages/Global/RightSideBar";
 
 const Layout = ({ children }: { readonly children: React.ReactNode }) => {
