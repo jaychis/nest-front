@@ -109,7 +109,7 @@ const SubmitInquiry: React.FC<SubmitModalProps> = ({ isopen, setIsopen }) => {
               <SubmitQuill
               content={content}
               setContent={setContent}
-              height='350px'
+              height='60vh'
               width= '100%'
               />
             </ReactQuillWrapper>
