@@ -40,9 +40,10 @@ interface BoardCommentProps extends CommentType {
 }
 
 const BoardComment = (co: BoardCommentProps) => {
+
+  const [isCardCommentReplyHovered, setIsCardCommentReplyHovered] = useState<boolean>(false);
   const [isHovered, setIsHovered] = useState<boolean>(false);
-  const [isCommentReplyButton, setIsCommentReplyButton] =
-    useState<boolean>(false);
+  const [isCommentReplyButton, setIsCommentReplyButton] = useState<boolean>(false);
   const USER_ID: string = localStorage.getItem('id') as string;
   const ID: string = co.id;
   const navigate = useNavigate()
@@ -81,6 +82,7 @@ const BoardComment = (co: BoardCommentProps) => {
   };
 
   const [isProfile, setIsProfile] = useState<string | null>(null);
+
   const fetchCommentProfile = async ({
     userId,
   }: {
@@ -91,18 +93,10 @@ const BoardComment = (co: BoardCommentProps) => {
     });
     !profileImage ? setIsProfile(null) : setIsProfile(profileImage);
   };
-  useEffect(() => {
-    const startFunc = async () => {
-      await fetchCommentProfile({ userId: co.user_id });
-    };
-    startFunc();
-  }, [co.user_id]);
 
-  useEffect(() => {
-    if (localCount < 0) {
-      setLocalCount(0);
-    }
-  }, [localCount]);
+  const startFunc = async () => {
+    await fetchCommentProfile({ userId: co.user_id });
+  };
 
   const [isReplyState, setIsReplyState] = useState<ReplyType>({
     id: '',
@@ -143,6 +137,10 @@ const BoardComment = (co: BoardCommentProps) => {
   };
 
   useEffect(() => {
+    if (localCount < 0) {
+      setLocalCount(0);
+    }
+
     ReactionListAPI({ boardId: ID })
       .then((res) => {
         const response = res.data.response;
@@ -163,6 +161,10 @@ const BoardComment = (co: BoardCommentProps) => {
         setIsCardCommentCount(count);
       })
       .catch((err) => console.error(err));
+
+    if(!isProfile){
+      startFunc()
+    }
   }, [isCommentReaction]);
 
   return (
@@ -189,6 +191,17 @@ const BoardComment = (co: BoardCommentProps) => {
         clickEvent={reactionCommentButton}
         reactionState={isCommentReaction}
         />
+
+        <CommentWrapper>
+        <CommentButton
+            isHovered={isCardCommentReplyHovered}
+            onMouseEnter={() => setIsCardCommentReplyHovered(true)}
+            onMouseLeave={() => setIsCardCommentReplyHovered(false)}
+            onClick={() => setIsCommentReplyButton(!isCommentReplyButton)}
+          >
+            답글
+          </CommentButton>
+        </CommentWrapper>
       </CommentActions>
 
       {isCommentReplyButton && (
@@ -314,8 +327,8 @@ const CommentWrapper = styled.div`
   width: 75px;
   height: 40px;
   display: flex;
-  justify-content: center;
-  align-items: center;
+ 
+  
 
   @media (max-width: ${breakpoints.mobile}) {
     width: 45px;

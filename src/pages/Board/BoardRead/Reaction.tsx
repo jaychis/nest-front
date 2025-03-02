@@ -15,48 +15,35 @@ const Reaction = ({reactionCount, clickEvent, reactionState}: ReactionProps) => 
 
     return(
         <>
-            <ReactionContainer>
-        <ReactionWrapper>
-          <LikeReactionButton
-            isCommentReaction={reactionState}
-            onMouseEnter={() => setIsHovered('LIKE')}
-            onMouseLeave={() => setIsHovered(null)}
-            onClick={() => clickEvent('LIKE')}
-            isHovered={isHovered}
-          >
-            좋아요
-          </LikeReactionButton>
-          <ReactionCount>{reactionCount}</ReactionCount>
-          <DisLikeReactionButton
-            isCommentReaction={reactionState}
-            onMouseEnter={() => setIsHovered("DISLIKE")}
-            onMouseLeave={() => setIsHovered(null)}
-            onClick={() => clickEvent('DISLIKE')}
-            isHovered={isHovered}
-          >
-            싫어요
-          </DisLikeReactionButton>
-        </ReactionWrapper>
-      </ReactionContainer>
+            <ReactionWrapper>
+            <LikeReactionButton
+                isCommentReaction={reactionState}
+                onMouseEnter={() => setIsHovered('LIKE')}
+                onMouseLeave={() => setIsHovered(null)}
+                onClick={() => clickEvent('LIKE')}
+                isHovered={isHovered}
+            >
+                좋아요
+            </LikeReactionButton>
+            <ReactionCount>{reactionCount}</ReactionCount>
+            <DisLikeReactionButton
+                isCommentReaction={reactionState}
+                onMouseEnter={() => setIsHovered("DISLIKE")}
+                onMouseLeave={() => setIsHovered(null)}
+                onClick={() => clickEvent('DISLIKE')}
+                isHovered={isHovered}
+            >
+                싫어요
+            </DisLikeReactionButton>
+            </ReactionWrapper>
         </>
     )
 }
 
 export default Reaction;
 
-const ReactionContainer = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  width: 100%;
-  max-width: 800px;
-  height: 100%;
-  margin-top: 5px;
-  max-height: 80px;
-`;
-
 const ReactionWrapper = styled.div`
-  margin-right: 5px;
+  margin: 0 5px 0 0;
   border-radius: 30px;
   width: 160px;
   height: 40px;
