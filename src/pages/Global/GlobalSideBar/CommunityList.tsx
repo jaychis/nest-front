@@ -28,6 +28,7 @@ const CommunityList = ({list, type}: CommunityListProps) => {
         { button }: CommunityClickType,
         index: number,
         ) => {
+        console.log(button)
         dispatch(setCommunity(list[index]));
         sessionStorage.setItem('community',JSON.stringify(list[index]))
         await sendDispatchSideBtn({ button });

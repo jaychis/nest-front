@@ -10,7 +10,7 @@ import { setCommunity} from "../../../reducers/communitySlice";
 import { useState,useEffect } from "react";
 
 const CommunityRead = () => {
-
+    
     const dispatch = useDispatch()
     const [reload, setReload] = useState<boolean>(false)
     const communityData = sessionStorage.getItem('community')

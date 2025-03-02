@@ -60,6 +60,12 @@ const CommunityProfile = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
+    
+    if(!selectCommunity.members){
+      dispatch(setJoinCommunity({ is_joined: false }));
+      return
+    }
+
     selectCommunity.members.map((member: SelectCommunityMembersType) => {
       if (member.user_id === USER_ID) {
         dispatch(setJoinCommunity({ is_joined: true }));
