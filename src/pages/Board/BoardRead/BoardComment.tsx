@@ -21,6 +21,7 @@ import {
   FetchProfileImageType,
 } from '../../../_common/fetchCardProfile';
 import { useNavigate } from 'react-router-dom';
+import Reaction from './Reaction';
 
 export interface CommentType {
   readonly id: string;
@@ -40,20 +41,13 @@ interface BoardCommentProps extends CommentType {
 
 const BoardComment = (co: BoardCommentProps) => {
   const [isHovered, setIsHovered] = useState<boolean>(false);
-  const [isCardCommentUpHovered, setIsCardCommentUpHovered] =
-    useState<boolean>(false);
-  const [isCardCommentDownHovered, setIsCardCommentDownHovered] =
-    useState<boolean>(false);
-  const [isCardCommentReplyHovered, setIsCardCommentReplyHovered] =
-    useState<boolean>(false);
   const [isCommentReplyButton, setIsCommentReplyButton] =
     useState<boolean>(false);
   const USER_ID: string = localStorage.getItem('id') as string;
   const ID: string = co.id;
   const navigate = useNavigate()
   const [localCount, setLocalCount] = useState<number>(0);
-  const [isCommentReaction, setCommentIsReaction] =
-    useState<ReactionStateTypes>(null);
+  const [isCommentReaction, setCommentIsReaction] =useState<ReactionStateTypes>(null);
   const [isCardCommentCount, setIsCardCommentCount] = useState<number>(0);
 
   const reactionCommentButton = async (userReaction: ReactionStateTypes) => {
@@ -188,42 +182,13 @@ const BoardComment = (co: BoardCommentProps) => {
       >
         {co.content}
       </CommentContent>
-
+            
       <CommentActions>
-        <ReactionWrapper>
-          <LikeButton
-            isLiked={isCommentReaction === 'LIKE'}
-            isHovered={isCardCommentUpHovered}
-            onMouseEnter={() => setIsCardCommentUpHovered(true)}
-            onMouseLeave={() => setIsCardCommentUpHovered(false)}
-            onClick={() => reactionCommentButton('LIKE')}
-          >
-            좋아요
-          </LikeButton>
-
-          <ReactionCount>{isCardCommentCount}</ReactionCount>
-
-          <DisLikeButton
-            isDisliked={isCommentReaction === 'DISLIKE'}
-            isHovered={isCardCommentDownHovered}
-            onMouseEnter={() => setIsCardCommentDownHovered(true)}
-            onMouseLeave={() => setIsCardCommentDownHovered(false)}
-            onClick={() => reactionCommentButton('DISLIKE')}
-          >
-            싫어요
-          </DisLikeButton>
-        </ReactionWrapper>
-
-        <CommentWrapper>
-          <CommentButton
-            isHovered={isCardCommentReplyHovered}
-            onMouseEnter={() => setIsCardCommentReplyHovered(true)}
-            onMouseLeave={() => setIsCardCommentReplyHovered(false)}
-            onClick={() => setIsCommentReplyButton(!isCommentReplyButton)}
-          >
-            답글
-          </CommentButton>
-        </CommentWrapper>
+        <Reaction
+        reactionCount={isCardCommentCount}
+        clickEvent={reactionCommentButton}
+        reactionState={isCommentReaction}
+        />
       </CommentActions>
 
       {isCommentReplyButton && (
@@ -295,66 +260,6 @@ const CommentActions = styled.div`
   align-items: flex-start;
   width: 100%;
   margin: 5px 0;
-`;
-
-const ReactionWrapper = styled.div`
-  margin-right: 5px;
-  border-radius: 30px;
-  width: 160px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    width: 120px;
-  }
-`;
-
-const LikeButton = styled.button.withConfig({
-  shouldForwardProp: (prop) => !['isLiked', 'isHovered'].includes(prop),
-})<{
-  readonly isLiked: boolean;
-  readonly isHovered: boolean;
-}>`
-  border: ${(props) => (props.isLiked ? '2px solid blue' : '1px solid gray')};
-  background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
-  width: 100%;
-  height: 100%;
-  border-radius: 30px;
-  cursor: pointer;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    width: 50px;
-    height: 40px;
-    font-size: 10px;
-  }
-`;
-
-const ReactionCount = styled.span`
-  margin: 10px;
-  width: 10px;
-  height: 10px;
-`;
-
-const DisLikeButton = styled.button.withConfig({
-  shouldForwardProp: (prop) => !['isDisliked', 'isHovered'].includes(prop),
-})<{
-  readonly isDisliked: boolean;
-  readonly isHovered: boolean;
-}>`
-  border: ${(props) => (props.isDisliked ? '1px solid red' : '1px solid gray')};
-  background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
-  width: 100%;
-  height: 100%;
-  border-radius: 30px;
-  cursor: pointer;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    width: 50px;
-    height: 40px;
-    font-size: 10px;
-  }
 `;
 
 const ReplyBox = styled.div`

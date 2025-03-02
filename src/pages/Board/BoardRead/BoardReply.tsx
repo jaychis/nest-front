@@ -31,23 +31,13 @@ export interface ReplyType {
 
 const BoardReply = (re: ReplyType) => {
   const [isHovered, setIsHovered] = useState<boolean>(false);
-  const [isCardReplyUpHovered, setIsCardReplyUpHovered] =
-    useState<boolean>(false);
-  const [isCardReplyDownHovered, setIsCardReplyDownHovered] =
-    useState<boolean>(false);
-  const [isCardReplyShareHovered, setIsCardReplyShareHovered] =
-    useState<boolean>(false);
-  const [isCardReplySendHovered, setIsCardReplySendHovered] =
-    useState<boolean>(false);
-
+  const [isCardReplyUpHovered, setIsCardReplyUpHovered] = useState<boolean>(false);
+  const [isCardReplyDownHovered, setIsCardReplyDownHovered] = useState<boolean>(false);
   const [isReplyReplyButton, setIsReplyReplyButton] = useState<boolean>(false);
-
   const ID: string = re.id;
   const USER_ID: string = localStorage.getItem('id') as string;
-
   const [localCount, setLocalCount] = useState<number>(0);
-  const [isReplyReaction, setReplyIsReaction] =
-    useState<ReactionStateTypes>(null);
+  const [isReplyReaction, setReplyIsReaction] = useState<ReactionStateTypes>(null);
   const [isCardReplyCount, setIsCardReplyCount] = useState<number>(0);
 
   const reactionReplyButton = async (userReaction: ReactionStateTypes) => {

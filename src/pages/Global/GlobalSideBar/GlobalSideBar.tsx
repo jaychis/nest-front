@@ -51,7 +51,6 @@ const GlobalSideBar = () => {
         },
       );
       setList((prevList) => [...prevList, ...uniqueCommunities]);
-      console.log(list)
     } catch (err) {
       console.log('CommunityListAPI error: ', err);
     }
@@ -72,8 +71,6 @@ const GlobalSideBar = () => {
         temp.push(k.community)
       }
       setRecentCommunityList(temp);
-      console.log(response.data.response)
-      console.log(recentCommunityList)
     };
 
     if (localStorage.getItem('id') && localStorage.getItem('nickname')) {
@@ -143,7 +140,6 @@ const GlobalSideBar = () => {
         type={'recent'}
         list={recentCommunityList}
         />
-
         <CommunitySection>커뮤니티</CommunitySection>
         <CreateCommunityItem
           isSideHovered={isSideHovered}
@@ -154,7 +150,6 @@ const GlobalSideBar = () => {
           <span style={{ marginRight: '10px' }}>➕</span>
           커뮤니티 만들기
         </CreateCommunityItem>
-
         <CommunityList 
         type={'communityList'}
         list={list}
