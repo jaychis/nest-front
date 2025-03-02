@@ -17,6 +17,7 @@ import {
   fetchProfileImage,
   FetchProfileImageType,
 } from '../../../_common/fetchCardProfile';
+import Reaction from './Reaction';
 
 export interface ReplyType {
   readonly id: string;
@@ -131,27 +132,11 @@ const BoardReply = (re: ReplyType) => {
        {re.content}
       </ReplyContent>
       <ReactionContainer>
-        <ReactionWrapper>
-          <LikeReactionButton
-            isCommentReaction={isReplyReaction}
-            onMouseEnter={() => setIsCardReplyUpHovered(true)}
-            onMouseLeave={() => setIsCardReplyUpHovered(false)}
-            onClick={() => reactionReplyButton('LIKE')}
-            isHovered={isCardReplyUpHovered}
-          >
-            좋아요
-          </LikeReactionButton>
-          <ReactionCount>{isCardReplyCount}</ReactionCount>
-          <DisLikeReactionButton
-            isCommentReaction={isReplyReaction}
-            onMouseEnter={() => setIsCardReplyDownHovered(true)}
-            onMouseLeave={() => setIsCardReplyDownHovered(false)}
-            onClick={() => reactionReplyButton('DISLIKE')}
-            isHovered={isCardReplyDownHovered}
-          >
-            싫어요
-          </DisLikeReactionButton>
-        </ReactionWrapper>
+        <Reaction
+        reactionCount={isCardReplyCount}
+        clickEvent={reactionReplyButton}
+        reactionState={isReplyReaction}
+        />
       </ReactionContainer>
       {isReplyReplyButton && (
         <ReplyInputContainer>
@@ -216,68 +201,6 @@ const ReactionContainer = styled.div`
   height: 100%;
   margin-top: 5px;
   max-height: 80px;
-`;
-
-const ReactionWrapper = styled.div`
-  margin-right: 5px;
-  border-radius: 30px;
-  width: 160px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    width: 140px;
-  }
-`;
-
-const LikeReactionButton = styled.button<{
-  readonly isHovered: boolean;
-  readonly isCommentReaction: ReactionStateTypes;
-}>`
-  border: ${(props) =>
-    props.isCommentReaction === 'LIKE' ? '2px solid blue' : '1px solid gray'};
-
-  margin-right: 10px;
-  border-radius: 20px;
-  width: 100%;
-  height: 100%;
-  background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
-  cursor: pointer;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    width: 50px;
-    height: 40px;
-    font-size: 10px;
-  }
-`;
-
-const DisLikeReactionButton = styled.button<{
-  readonly isHovered: boolean;
-  readonly isCommentReaction: ReactionStateTypes;
-}>`
-  border: ${(props) =>
-    props.isCommentReaction === 'DISLIKE' ? '2px solid red' : '1px solid gray'};
-
-  margin-right: 10px;
-  border-radius: 20px;
-  width: 100%;
-  height: 100%;
-  background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
-  cursor: pointer;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    width: 50px;
-    height: 40px;
-    font-size: 10px;
-  }
-`;
-
-const ReactionCount = styled.span`
-  margin: 0 10px;
-  width: 10px;
-  height: 10px;
 `;
 
 const ReplyInputContainer = styled.div`
