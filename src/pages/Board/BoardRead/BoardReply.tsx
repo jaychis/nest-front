@@ -32,8 +32,6 @@ export interface ReplyType {
 
 const BoardReply = (re: ReplyType) => {
   const [isHovered, setIsHovered] = useState<boolean>(false);
-  const [isCardReplyUpHovered, setIsCardReplyUpHovered] = useState<boolean>(false);
-  const [isCardReplyDownHovered, setIsCardReplyDownHovered] = useState<boolean>(false);
   const [isReplyReplyButton, setIsReplyReplyButton] = useState<boolean>(false);
   const ID: string = re.id;
   const USER_ID: string = localStorage.getItem('id') as string;
@@ -79,20 +77,16 @@ const BoardReply = (re: ReplyType) => {
 
     !profileImage ? setIsProfile(null) : setIsProfile(profileImage);
   };
-  useEffect(() => {
-    const startFunc = async () => {
-      await fetchReplyProfile({ userId: re.user_id });
-    };
-    startFunc();
-  }, [re.user_id]);
+
+  const startFunc = async () => {
+    await fetchReplyProfile({ userId: re.user_id });
+  };
 
   useEffect(() => {
     if (localCount < 0) {
       setLocalCount(0);
     }
-  }, [localCount]);
 
-  useEffect(() => {
     ReactionListAPI({ boardId: ID })
       .then((res) => {
         res.data.response.forEach((el: ReactionType) => {
@@ -113,6 +107,10 @@ const BoardReply = (re: ReplyType) => {
         setIsCardReplyCount(count);
       })
       .catch((err) => console.error('BoardReply ReactionCountAPI err : ', err));
+
+    if(!isProfile){
+      startFunc()
+    }
   }, [isReplyReaction]);
 
   return (
