@@ -2,10 +2,10 @@ import React, { useRef, useState, useEffect,lazy } from 'react';
 import { FaPlus } from '@react-icons/all-files/fa/FaPlus';
 import { FaBell } from '@react-icons/all-files/fa/FaBell';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch} from 'react-redux';
 import { AddSearchAPI } from '../api/searchApi';
 import { setSearchResults } from '../../reducers/searchSlice';
-import { RootState, AppDispatch } from '../../store/store';
+import { AppDispatch } from '../../store/store';
 import debounce from 'lodash.debounce';
 import 'react-tooltip/dist/react-tooltip.css';
 import { Tooltip } from 'react-tooltip';
@@ -16,30 +16,31 @@ import { breakpoints } from '../../_common/breakpoint';
 const UserModalForm = lazy(() => import('../User/UserModalForm'));
 const ProfileModal = lazy(() => import('../User/ProfileModal'));
 const NotificationModal = lazy(() => import('../User/NotificationModal'));
+type hoverType = 'profile' | 'post' | 'inquiry' | 'notification' | null;
 
 const GlobalBar = () => {
+  
   const logo = "https://i.ibb.co/rHPPfvt/download.webp" 
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const searchResults = useSelector(
-    (state: RootState) => state.search.searchResults,
-  );
-  const postSubmit = () => navigate('/boards/submit');
-  const [userHover, setUserHover] = useState<boolean>(false);
-  const [bellHover, setBellHover] = useState<boolean>(false);
+  const [itemHover, setItemHover] = useState<hoverType>(null)
   const [logoHover, setLogoHover] = useState<boolean>(false);
-  const [plusHover, setPlusHover] = useState<boolean>(false);
-  const [inquiryHover, setInquiryHover] = useState<boolean>(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false);
-  const [isNotificationModalOpen, setIsNotificationModalOpen] =
-    useState<boolean>(false);
+  const [isNotificationModalOpen, setIsNotificationModalOpen] =useState<boolean>(false);
   const userButtonRef = useRef<HTMLDivElement>(null);
   const bellButtonRef = useRef<HTMLDivElement>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
   const [isVisible, setIsVisible] = useState<boolean>(true);
   const [lastScrollY, setLastScrollY] = useState<number>(0);
 
+  const buttonList = [
+    {type: 'profile',onClick: () => toggleProfileModal(),alt: 'Profile',ref: userButtonRef,tooltipContent: '프로필',src: logo},
+    {type: 'post',onClick: () => navigate('/boards/submit'),tooltipContent: '글쓰기', fa: <FaPlus/>},
+    {type: 'inquiry',onClick: () => navigate('/users/inquiry'),tooltipContent: '문의하기',src:"https://img.icons8.com/windows/32/question-mark.png"},
+    {type: 'notification',onClick: () => toggleNotificationModal(),tooltipContent: '알림' ,ref: bellButtonRef, fa: <FaBell/>},
+  ];
+  
   const handleScroll = () => {
     const currentScrollY = window.scrollY;
     if (currentScrollY > lastScrollY && currentScrollY > 30) {
@@ -49,6 +50,7 @@ const GlobalBar = () => {
     }
     setLastScrollY(currentScrollY);
   };
+
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
     return () => {
@@ -78,7 +80,7 @@ const GlobalBar = () => {
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setSearchTerm(value);
-    debouncedSearch(value); // Use debounced search
+    debouncedSearch(value); 
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -101,16 +103,10 @@ const GlobalBar = () => {
     setIsNotificationModalOpen(!isNotificationModalOpen);
   };
 
-  const handleLogoClick = () => {
-    window.location.href = '/';
-  };
-
   const handleDetectViewPort = () => {
     const viewport = window.visualViewport;
     if (viewport && viewport.width < 767) navigate('/SearchMobile');
   };
-
-  
 
   return (
     <div>
@@ -121,12 +117,11 @@ const GlobalBar = () => {
           <Bar />
         </HamburgerMenu>
 
-        {/* Logo and Site Name */}
         <LogoWrapper
           logoHover={logoHover}
           onMouseEnter={() => setLogoHover(true)}
           onMouseLeave={() => setLogoHover(false)}
-          onClick={handleLogoClick}
+          onClick={() => {window.location.href = '/'}}
         >
           <LogoImage src={logo} alt="Logo" width="50" height="50"/>
           <SiteName>{'제이치스'}</SiteName>
@@ -144,77 +139,36 @@ const GlobalBar = () => {
             onClick={handleDetectViewPort}
           />
           <SearchIcon onClick={handleDetectViewPort} width="30" height="30" src="https://img.icons8.com/neon/96/search.png" alt="search"/>
-            
         </SearchContainer>
-
         <LoginStatusView>
           {localStorage.getItem('access_token') ? (
             <>
-              <ProfileButton
-                ref={userButtonRef}
-                userHover={userHover}
-                onMouseEnter={() => setUserHover(true)}
-                onMouseLeave={() => setUserHover(false)}
-                onClick={toggleProfileModal}
-              >
-                <ProfileImage src={logo} alt="Profile" width="40" height="40"  />
-              </ProfileButton>
-              <ProfileModal
-                isOpen={isProfileModalOpen}
-                onRequestClose={toggleProfileModal}
-                buttonRef={userButtonRef}
-              />
-
-              <PostButtonContainer
-                plusHover={plusHover}
-                onMouseEnter={() => setPlusHover(true)}
-                onMouseLeave={() => setPlusHover(false)}
-              >
-                <SubmitButton plusHover={plusHover} onClick={postSubmit}>
-                  <Tooltip id="tooltip" place="top" arrowColor="transparent" />
-                  <PlusIcon
-                    data-tooltip-content="글쓰기"
-                    data-tooltip-id="tooltip"
-                  />
-                </SubmitButton>
-              </PostButtonContainer>
-
-              {/* Plus/Create Icon */}
-              <InquiryButtonContainer
-                inquiryHover={inquiryHover}
-                onMouseEnter={() => setInquiryHover(true)}
-                onMouseLeave={() => setInquiryHover(false)}
-              >
-                <InquiryButton
-                  inquiryHover={inquiryHover}
-                  onClick={() => navigate('/users/inquiry')}
-                >
-                  <Tooltip id="tooltip2" place="top" arrowColor="transparent" />
-                  <InquiryIcon
-                    data-tooltip-content="문의하기"
-                    data-tooltip-id="tooltip2"
-                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAB7klEQVR4nO3Yz4uNURzH8df4kfyakowsLGQU2diIiMjKhkiilJ3ZmRr/gFhYs5iFslMWSikLWSkZUjY2QpRQfqc0fvPoqe/iaRjm3rn3Pj867zrdOs/5fp9z7nnO5/v9HhKJRCJREllDmsYtpK5kjV3IoPox+LeFvMMW9WEDXk122L/ggOqzB+OTHfbR+P2JEdVlJOZYnPMfh324MOgsZqkOM3Em5vYLx/+nWnvxKfquYqHymY/Lhc//4FTldyNeR/8dLFUei3GzIEhbW40jK/Egnj3BGuXI68OYw2Osbjcg5v/GjXj+Htv0jk14E+++jYHpRvY5uBBjvuKQ7rMPn+OdlzCvUylKX6jERMXoBsMF5TyNGd3ItY7ge4w/h9k6K6+j4fsHjnY7adxdiKrX0G/6LMCV8Jl/Uvt7lf2ux8uwu4fl2mcZ7oavt9jc6zR+Be6H7Qusa8PHWjwNH4+wqqx6ZBGuh/1H7GzBdgc+hO0YlpRdWOXyfD585EIwNAWbw/gWNhcxtyoVYh9OFeT5RKjQRPK+kzEmC5vctnKl7lBBnvP8aFdE5IFQu7EWd67Umn07nv/jtuNZjKnF5UM/jkWONB7tVhRFnS4LssbeotSVLC2kYmRpRypGlnakYmSN3ZGs5k1jFpJIJBIJveY3S2K8l4EjqFIAAAAASUVORK5CYII="
-                  />
-                </InquiryButton>
-              </InquiryButtonContainer>
-
-              <NotificationButtonContainer
-                bellHover={bellHover}
-                onMouseEnter={() => setBellHover(true)}
-                onMouseLeave={() => setBellHover(false)}
-                onClick={() => {
-                  toggleNotificationModal();
-                }}
-              >
-                <BellIcon bellHover={bellHover} />
-              </NotificationButtonContainer>
-
-              <NotificationModal
-                isOpen={isNotificationModalOpen}
-                onRequestClose={toggleNotificationModal}
-                buttonRef={bellButtonRef}
-              />
-              {/* Notification Icon */}
+            <ProfileModal
+            isOpen={isProfileModalOpen}
+            onRequestClose={toggleProfileModal}
+            buttonRef={userButtonRef}
+             />
+            <NotificationModal
+            isOpen={isNotificationModalOpen}
+            onRequestClose={toggleNotificationModal}
+            buttonRef={bellButtonRef}
+            />
+                {buttonList.map((item, index) => {
+                  return(
+                    <ProfileButton itemType = {item.type} userHover = {itemHover} ref={item.ref ? item.ref : null}>
+                      <Tooltip id={`tooltipid${index}`} place="top" arrowColor="transparent" />
+                      <Item 
+                      data-tooltip-content={item.tooltipContent}
+                      data-tooltip-id={`tooltipid${index}`}
+                      onClick = {item.onClick} 
+                      onMouseEnter={() => {setItemHover(item.type as hoverType)}}
+                      onMouseLeave={() => {setItemHover(null)}}
+                      >
+                      {item.src ? <Icon src={item.src} /> : item.fa && React.cloneElement(item.fa, { size: 20 })}
+                      </Item>
+                    </ProfileButton>
+                  )
+                })}
             </>
           ) : (
             <>
@@ -339,133 +293,39 @@ const SearchIcon = styled.img`
   }
 `;
 
+const Item = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content:center;
+  width: 30px;
+  height: 40px;
+`
+
 const ProfileButton = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'userHover',
+  shouldForwardProp: (prop) => !['userHover', 'itemType'].includes(prop),
 })<{
-  readonly userHover: boolean;
+  readonly userHover: hoverType;
+  readonly itemType: string;
 }>`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content:center;
   border-radius: 50%;
   width: 40px;
   height: 40px;
-  background: ${(props) => (props.userHover ? '#D3D3D3' : 'transparent')};
+  background: ${(props) => (props.userHover === props.itemType && props.userHover !== 'profile' ? '#D3D3D3' : 'transparent')};
   cursor: pointer;
   position: relative;
   margin-top: 1vh;
 `;
 
-const ProfileImage = styled.img`
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  z-index: 2;
-`;
-
-const PostButtonContainer = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'plusHover',
-})<{
-  readonly plusHover: boolean;
-}>`
-  display: flex;
-  align-items: center;
+const Icon = styled.img`
+  height: 35px;
+  width: 30px;
   justify-content: center;
-  cursor: pointer;
-  font-size: 16px;
-  border-radius: 25px;
-  margin-left: 5px;
-  background: ${(props) => (props.plusHover ? '#D3D3D3' : 'white')};
-`;
 
-const SubmitButton = styled.button.withConfig({
-  shouldForwardProp: (prop) => prop !== 'plusHover',
-})<{
-  readonly plusHover: boolean;
-}>`
-  border: none;
-  background: ${(props) => (props.plusHover ? '#D3D3D3' : 'white')};
-  cursor: pointer;
-`;
-
-const PlusIcon = styled(FaPlus)`
-  height: 52.5px;
-  width: 24px;
-
-  @media (max-width: ${breakpoints.mobile}) {
+  @media (max-width: ) {
     margin-bottom: 2px;
-  }
-`;
-
-const InquiryButtonContainer = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'inquiryHover',
-})<{
-  readonly inquiryHover: boolean;
-}>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 16px;
-  border-radius: 25px;
-  background: ${(props) => (props.inquiryHover ? '#D3D3D3' : 'white')};
-`;
-
-const InquiryButton = styled.button.withConfig({
-  shouldForwardProp: (prop) => prop !== 'inquiryHover',
-})<{
-  readonly inquiryHover: boolean;
-}>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  font-size: 16px;
-  border-radius: 25px;
-  background: ${(props) => (props.inquiryHover ? '#D3D3D3' : 'white')};
-  cursor: pointer;
-  height: 60px;
-  width: 60px;
-`;
-
-const InquiryIcon = styled.img`
-  height: 57.5%;
-  width: 57.5%;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    margin-bottom: 2px;
-  }
-`;
-
-const NotificationButtonContainer = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'bellHover',
-})<{
-  readonly bellHover: boolean;
-}>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  background: ${(props) => (props.bellHover ? '#D3D3D3' : 'transparent')};
-  cursor: pointer;
-  margin-right: 2vw;
-`;
-
-const BellIcon = styled(FaBell).withConfig({
-  shouldForwardProp: (prop) => prop !== 'bellHover',
-})<{
-  readonly bellHover: boolean;
-}>`
-  color: ${(props) => (props.bellHover ? 'white' : 'black')};
-  width: 25px;
-  height: 25px;
-  margin-right: 1vw;
-  margin-top: 1vh;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    margin-right: 8vw;
   }
 `;
 
