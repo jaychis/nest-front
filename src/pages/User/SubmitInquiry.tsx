@@ -1,11 +1,11 @@
 import styled from 'styled-components';
-import ReactQuill from 'react-quill';
 import { useState, useRef } from 'react';
 import emailjs from 'emailjs-com';
-import { postContactApi, InquiryParam } from '../api/inquiryApi';
+import { postContactApi } from '../api/inquiryApi';
 import Modal from 'react-modal';
 import GlobalBar from '../Global/GlobalBar';
 import logo from '../../assets/img/panda_logo.webp';
+import SubmitQuill from '../../components/SubmitQuill';
 
 interface SubmitModalProps {
   isopen: boolean;
@@ -13,11 +13,12 @@ interface SubmitModalProps {
 }
 
 const SubmitInquiry: React.FC<SubmitModalProps> = ({ isopen, setIsopen }) => {
+
   const form = useRef<HTMLFormElement | null>(null);
   const serviceId: string = process.env.REACT_APP_SERVICE_ID || '';
   const templateId: string = process.env.REACT_APP_TEMPLATE_ID || '';
   const publicKey: string = process.env.REACT_APP_PUBLIC_KEY || '';
-  const [content, setContent] = useState<string>('');
+  const [content, setContent] = useState<string[]>(['']);
   const [title, setTitle] = useState<string>('');
   const nickname = localStorage.getItem('nickname') as string;
   const toDay = new Date();
@@ -33,7 +34,7 @@ const SubmitInquiry: React.FC<SubmitModalProps> = ({ isopen, setIsopen }) => {
       emailjs.send(serviceId, templateId, templateParams, publicKey).then(
         () => {
           console.log('SUCCESS!');
-          setContent('');
+          setContent(['']);
           setIsopen(false);
         },
         (error) => {
@@ -44,10 +45,11 @@ const SubmitInquiry: React.FC<SubmitModalProps> = ({ isopen, setIsopen }) => {
   };
 
   const checkForm = () => {
-    if (title.trim() === '' || content.trim() === '')
+    
+    if (title.trim() === '' || content[0].trim() === '')
       alert('제목과 내용은 필수 입력 항목입니다.');
     else {
-      postContactApi({ title, nickname, content });
+      postContactApi({ title, nickname, content: content[0] ?? null});
       sendEmail();
       setIsopen((prev) => !prev);
       alert('접수되었습니다.');
@@ -62,12 +64,12 @@ const SubmitInquiry: React.FC<SubmitModalProps> = ({ isopen, setIsopen }) => {
         onRequestClose={() => setIsopen(false)}
         style={{
           content: {
-            width: '50vw',
+            width: '60vw',
             height: '85vh',
             margin: 'auto',
             padding: '20px',
             background: 'white',
-            display: 'flex',
+            display: 'block',
             justifyContent: 'center',
             alignItems: 'center',
           },
@@ -104,11 +106,11 @@ const SubmitInquiry: React.FC<SubmitModalProps> = ({ isopen, setIsopen }) => {
               />
             </TitleWrapper>
             <ReactQuillWrapper>
-              <ReactQuill
-                value={content}
-                onChange={setContent}
-                theme="snow"
-                style={{ height: '400px', width: '40vw' }}
+              <SubmitQuill
+              content={content}
+              setContent={setContent}
+              height='60vh'
+              width= '100%'
               />
             </ReactQuillWrapper>
           </InquiryContainer>
@@ -144,7 +146,7 @@ const SectionTitle = styled.h2`
 
 const InquiryContainer = styled.div`
   width: 100%;
-  height: auto;
+  height: 100%;
   display: flex;
   flex-direction: column;
 `;

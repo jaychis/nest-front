@@ -298,6 +298,7 @@ const BoardSubmit = () => {
               name="title"
               type="text"
               placeholder="제목"
+              data-testid = 'title-input'
               onChange={(e) => {setTitle(e.target.value)}}
             />
 

@@ -13,15 +13,16 @@ const BoardRead = lazy(() => import('./pages/Board/BoardRead/BoardRead'));
 const Profile = lazy(() => import('./pages/User/Profile'));
 const UsersInquiry = lazy(() => import('./pages/User/UsersInquiry'));
 const SearchList = lazy(() => import('./pages/Search/SearchList'));
-const CommunityCreatePage1 = lazy(() => import('./pages/Board/CommunityCreate/CommunityCreatePage1'),);
-const CommunityCreatePage2 = lazy(() => import('./pages/Board/CommunityCreate/CommunityCreatePage2'),);
-const CommunityCreatePage3 = lazy(() => import('./pages/Board/CommunityCreate/CommunityCreatePage3'),);
+const CommunityCreatePage1 = lazy(() => import('./pages/Board/Community/CommunityCreatePage1'),);
+const CommunityCreatePage2 = lazy(() => import('./pages/Board/Community/CommunityCreatePage2'),);
+const CommunityCreatePage3 = lazy(() => import('./pages/Board/Community/CommunityCreatePage3'),);
 const AdminList = lazy(() => import('./pages/Admin/AdminList'));
 const SearchMobile = lazy(() => import('./pages/Search/SearchMobile'));
 const MobilePrivacyPolicyPage = lazy(() => import('./components/MobilePrivacyPolicyPage'),);
 const ChatLayout = lazy(() => import('./pages/User/chat/ChatLayout'));
 const LinkPreviewComponent = lazy(() => import('./components/LinkPreviewComponent'),);
-const Guard = lazy(() => import('../src/_common/Guard')) 
+const Guard = lazy(() => import('../src/_common/Guard'))
+const CommunityRead = lazy(() => import('../src/pages/Board/Community/CommunityRead'))
 
 function App() {
   return (
@@ -71,8 +72,18 @@ function App() {
                 }
               />
               {/* 문의하기 게시판*/}
-
               <Route path="/users/inquiry" element={<UsersInquiry />} />
+
+              {/* 커뮤니티 */}
+              <Route
+                path={'/j/:communityName'}
+                element={
+                  <Layout>
+                    <CommunityRead/>
+                  </Layout>
+                }
+              />
+
               {/* 커뮤니티 만들기*/}
               <Route
                 path="/community/create1"
@@ -127,7 +138,7 @@ function App() {
 
               <Route path={'/test'} element={<LinkPreviewComponent />} />
               <Route path={'/chat'} element={<Chat />} />
-              <Route path={`/chatLayout`} element={<ChatLayout/>}/>
+              <Route path={`/chatLayout`} element={<ChatLayout />} />
             </Routes>
           </CommunityProvider>
         </Router>
