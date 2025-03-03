@@ -231,6 +231,7 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
             type="email"
             id="email"
             name="email"
+            data-testid="email-input"
             value={signup.email}
             onChange={(value) =>
               handleChange({
@@ -254,6 +255,7 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
             type="text"
             id="nickname"
             name="nickname"
+            data-testid="nickname-input"
             value={signup.nickname}
             onChange={(value) =>
               handleChange({
@@ -277,6 +279,7 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
             type="password"
             id="password"
             name="password"
+            data-testid="password-input"
             value={signup.password}
             onChange={(value) =>
               handleChange({
@@ -294,6 +297,7 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
             type="password"
             id="confirmPassword"
             name="confirmPassword"
+            data-testid="confirmPassword-input"
             value={signup.confirmPassword}
             onChange={(value) =>
               handleChange({
@@ -317,6 +321,7 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
             type="text"
             id="phone"
             name="phone"
+            data-testid="phoneNumber-input"
             value={signup.phone}
             onChange={(value) =>
               handleChange({
@@ -336,7 +341,7 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
       </form>
 
       <ButtonWrapper>
-        <SubmitButton type="submit" onClick={handleSubmit}>
+        <SubmitButton data-testid = 'submit-button' type="submit" onClick={handleSubmit}>
           회원가입
         </SubmitButton>
       </ButtonWrapper>

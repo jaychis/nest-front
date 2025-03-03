@@ -1,5 +1,6 @@
 import React from 'react';
 import { AWSImageRegistAPI, getPresignedUrlAPI } from '../pages/api/awsApi';
+import { ImageUtils } from './imageUtils';
 
 type ImageLocalPreviewUrlsInputType = {
   readonly event: React.ChangeEvent<HTMLInputElement>;
@@ -62,12 +63,13 @@ async ({fileList,}: AwsImageUploadFunctionalityInputType): Promise<AwsImageUploa
 
   const uploadImageUrlList = files.map(async (file: File) => {
     try {
-      const sanitizedFileName: string = encodeURIComponent(file.name);
+      const webpfile = await ImageUtils(file)
+      const sanitizedFileName: string = encodeURIComponent(webpfile.name);
       const key = `uploads/${new Date().toISOString()}_${sanitizedFileName}`;
       const expires = 60;
 
       const res = await getPresignedUrlAPI({ key, expires });
-
+      
       if (res.data && res.data.response && res.data.response.url) {
         const presignedUrl = res.data.response.url;
 

@@ -1,204 +1,22 @@
-import React, { useEffect, useState, useRef } from 'react';
-import {
-  BoardListAPI,
-  BoardPopularListAPI,
-  BoardRecentListAPI,
-  BoardShareListAPI,
-  BoardTagsRelatedAPI,
-} from '../../api/boardApi';
-import Card from '../../../components/Card/Card';
-import { CardType } from '../../../_common/collectionTypes';
-import { MainListTypeState } from '../../../reducers/mainListTypeSlice';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../store/store';
 import styled from 'styled-components';
 import { breakpoints } from '../../../_common/breakpoint';
-import debounce from 'lodash.debounce';
-import { List, CellMeasurer, CellMeasurerCache, AutoSizer } from 'react-virtualized';
 import GlobalStyle from '../../../_common/globalStyled';
-import { useLocation } from 'react-router-dom';
 import { useBeforeUnload } from 'react-router-dom';
-
-const CommunityBanner = React.lazy(() => import('../CommunityBanner'))
+import InfinitiList from '../../../components/InfinityList';
 
 const BoardList = () => {
-  interface AllListParams {
-    readonly id: IdType;
-    readonly allDataLoaded: boolean;
-  }
-  type IdType = null | string;
-  console.log('test')
-  const [list, setList] = useState<CardType[]>([]);
-  const TAKE: number = 5;
-  const { buttonType }: MainListTypeState = useSelector((state: RootState) => state.sideBarButton,);
-  const [id, setId] = useState<IdType>(null);
-  const [allDataLoaded, setAllDataLoaded] = useState<boolean>(false);
-  const [scrollIndex, setScrollIndex] = useState<number>(0)
-  const loaction = useLocation()
-  const [initialScrollSet, setInitialScrollSet] = useState(false);
 
   useBeforeUnload((event) => {
     sessionStorage.setItem("scrollIndex", '0');
   })
 
-  useEffect(() => {
-    setAllDataLoaded(false);
-    setId(null);
-    setList([]);
-    debouncListApi({ id: null, allDataLoaded: false });
-  }, [buttonType]);
-
-  useEffect(() => {
-    const handlePageShow = () => {
-      const savedScroll = sessionStorage.getItem("scrollIndex");
-      if (savedScroll) {
-        if(savedScroll !== '0') setScrollIndex(Number(savedScroll) + 1);
-        else setScrollIndex(Number(savedScroll));
-      }
-    }
-    handlePageShow()
-
-    setTimeout(function(){setInitialScrollSet(true)},2500)
-},[loaction.pathname])
-
-
-  const ListApi = async ({ id, allDataLoaded }: AllListParams) => {
-    if (allDataLoaded) return;
-
-    try {
-      let response;
-      switch (buttonType) {
-        case 'HOME':
-          response = await BoardListAPI({
-            take: TAKE,
-            lastId: id,
-            category: null,
-          });
-          break;
-
-        case 'POPULAR':
-          response = await BoardPopularListAPI({
-            take: TAKE,
-            lastId: id,
-            category: null,
-          });
-          break;
-
-        case 'TAGMATCH':
-          response = await BoardTagsRelatedAPI({
-            take: TAKE,
-            lastId: id,
-            category: null,
-            userId: localStorage.getItem('id') as string,
-          });
-          break;
-
-        case 'FREQUENTSHARE':
-          response = await BoardShareListAPI({
-            take: TAKE,
-            lastId: id,
-            category: null,
-          });
-          break;
-
-        case 'ALL':
-          response = await BoardRecentListAPI({
-            take: TAKE,
-            lastId: id,
-            category: null,
-          });
-          break;
-
-        default:
-          response = await BoardListAPI({
-            take: TAKE,
-            lastId: id,
-            category: buttonType,
-          });
-          break;
-      }
-
-      const res = response?.data?.response;
-      if (!res) return;
-      const newCards = res.current_list;
-      setList((prevList) => [...prevList, ...newCards]);
-
-      if (newCards.length > 0) {
-        setId(newCards[newCards.length - 1].id);
-      } else {
-        setAllDataLoaded(true);
-      }
-    } catch (err) {
-      console.error('API error: ', err);
-    }
-  };
-
-  const debouncListApi = debounce(ListApi,300)
-
-  const cache = new CellMeasurerCache({
-    fixedWidth: true, 
-    defaultHeight: 250, 
-  });
-
-  const rowRenderer = ({ index, key, style, parent }: any) => {
-    const el = list[index];
-  
-    return (
-      <CellMeasurer cache={cache} parent={parent} key={key} columnIndex={0} rowIndex={index}>
-        <div key={key} style={style}>
-          <Card
-            index={index}
-            id={el.id}
-            category={el.category}
-            title={el.title}
-            nickname={el.nickname}
-            createdAt={el.created_at}
-            content={el.content}
-            type={el.type}
-            shareCount={el.share_count}
-            userId={el.user_id}
-            profileImage={el.user_profile?.profile_image as string}
-          />
-        </div>
-      </CellMeasurer>
-    );
-  };
-
-  const handleScroll = ({ scrollTop, scrollHeight, clientHeight }: any) => {
-    if (scrollTop + clientHeight >= scrollHeight - 10 && !allDataLoaded) {
-      debouncListApi({ id, allDataLoaded });
-    }
-  }
-
   return (
-      <MainContainer>
-        {buttonType !== 'HOME' &&
-          buttonType !== 'POPULAR' &&
-          buttonType !== 'TAGMATCH' &&
-          buttonType !== 'FREQUENTSHARE' &&
-          buttonType !== 'ALL' && (
-            <>
-              <CommunityBanner />
-            </>
-          )}
-        <CardsContainer>
-          <GlobalStyle/>
-        <AutoSizer>
-            {({ width, height }) => (
-              <List
-              scrollToIndex={initialScrollSet ? undefined : scrollIndex}
-              scrollToAlignment="start"
-              width={width} 
-              height={height}
-              rowCount={list.length}
-              rowHeight={cache.rowHeight}
-              rowRenderer={rowRenderer}
-              onScroll={handleScroll}
-              />
-            )}
-        </AutoSizer>
-        </CardsContainer>
-      </MainContainer>
+    <MainContainer>
+      <CardsContainer>
+        <GlobalStyle />
+        <InfinitiList/>
+      </CardsContainer>
+    </MainContainer>
   );
 };
 
@@ -224,17 +42,9 @@ const CardsContainer = styled.div`
     height: 120vh;
   }
 
-  @media(min-width: ${breakpoints.mobile}) and (max-width: ${breakpoints.tablet}){
+  @media (min-width: ${breakpoints.mobile}) and (max-width: ${breakpoints.tablet}) {
     height: 110vh;
   }
-`;
-
-const HrTag = styled.hr`
-  border: none;
-  height: 2px;
-  background-color: #f0f0f0;
-  margin: 5px 0;
-  width: 100%;
 `;
 
 export default BoardList;

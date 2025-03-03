@@ -29,8 +29,9 @@ import DropDown from '../../components/Dropdown';
 import Modal from '../../components/Modal';
 import SubmitQuill from '../../components/SubmitQuill';
 import UploadImageAndVideo from '../Board/BoardSubmit/UploadImageAndVideo';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { JAYCHIS_LOGO } from '../../_common/jaychisLogo';
+import { GetCommunitiesNameAPI } from '../api/communityApi';
 import { setCommunity } from '../../reducers/communitySlice';
 
 type ACTIVE_SECTION_TYPES = 'POSTS' | 'COMMENTS' | 'COMMUNITIES' | 'PROFILE';
@@ -58,6 +59,7 @@ const Profile = () => {
   const [editContent, setEditContent] = useState<string[]>([]);
   const [editTitle, setEditTitle] = useState<string>('');
   const [editIndex, setEditIndex] = useState<number>(0);
+  const navigate = useNavigate();
 
   interface CommunityClickType {
     readonly button: MainListTypes;
@@ -67,16 +69,15 @@ const Profile = () => {
     index: number,
   ) => {
     console.log('button : ', button);
-    return;
-    // const getAllCommunityList = async () => {
-    // const response = await UsersGetJoinedCommunities();
-    // if (!response) return;
+    const communityName: string = button;
 
-    // const res = response.data.response;
-    // console.log('getAllCommunityList res : ', res);
-    // setMyJoinedCommunities(res);
-    // };
-    // await getAllCommunityList();
+    const response = await GetCommunitiesNameAPI({ name: communityName });
+    if (!response) return;
+
+    const community = response.data.response;
+    console.log('community : ', community);
+    dispatch(setCommunity(community));
+    navigate(`/j/${communityName}`);
   };
 
   const handleEdit = (item: string, index?: number) => {
