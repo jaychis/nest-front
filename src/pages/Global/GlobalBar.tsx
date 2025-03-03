@@ -285,11 +285,10 @@ const SearchInput = styled.input`
 
 const SearchIcon = styled.img`
   margin-right: 20px;
-  margin-top: 5px;
   cursor: pointer;
 
   @media (max-width: ${breakpoints.mobile}) {
-    margin: 0 5px 5px 0;
+    margin: 10px 5px 5px 0;
   }
 `;
 
