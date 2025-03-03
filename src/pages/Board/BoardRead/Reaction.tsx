@@ -53,6 +53,7 @@ const ReactionWrapper = styled.div`
 
   @media (max-width: ${breakpoints.mobile}) {
     width: 140px;
+    margin-left: -15px;
   }
 `;
 
@@ -103,4 +104,9 @@ const ReactionCount = styled.span`
   height: 30px;
   display: flex;
   align-items: center;
+
+  @media(max-width: ${breakpoints.mobile}){
+    padding: 0px;
+    margin: 0 5px 0 5px;
+  }
 `;

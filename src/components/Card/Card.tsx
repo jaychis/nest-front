@@ -22,6 +22,7 @@ import ContentCard from './ContentCard';
 import panda from '../../assets/img/panda_logo.webp'
 import YoutubeCard from './YoutubeCard';
 import Carousel from './Carousel';
+import Reaction from '../../pages/Board/BoardRead/Reaction';
 
 const Card = ({
   id,
@@ -40,10 +41,7 @@ const Card = ({
   const [isCardCount, setIsCardCount] = useState<number>(0);
   const [localCount, setLocalCount] = useState<number>(0);
   const [isCardHovered, setIsCardHovered] = useState<boolean>(false);
-  const [isCardUpHovered, setIsCardUpHovered] = useState<boolean>(false);
-  const [isCardDownHovered, setIsCardDownHovered] = useState<boolean>(false);
-  const [isCardCommentHovered, setIsCardCommentHovered] =
-    useState<boolean>(false);
+  const [isCardCommentHovered, setIsCardCommentHovered] =useState<boolean>(false);
   const [isReaction, setIsReaction] = useState<ReactionStateTypes>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const mediaExtensions = {
@@ -211,40 +209,23 @@ const Card = ({
         </ContentContainer>
 
         <ButtonContainer>
-          <ReactionWrapper>
-            <LikeButton
-              isLiked={isReaction === 'LIKE'}
-              isHovered={isCardUpHovered}
-              onMouseEnter={() => setIsCardUpHovered(true)}
-              onMouseLeave={() => setIsCardUpHovered(false)}
-              onClick={() => reactionButton('LIKE')}
-            >
-              좋아요
-            </LikeButton>
-            <ReactionCount>{isCardCount}</ReactionCount>
-            <DisLikeButton
-              isDisliked={isReaction === 'DISLIKE'}
-              isHovered={isCardDownHovered}
-              onMouseEnter={() => setIsCardDownHovered(true)}
-              onMouseLeave={() => setIsCardDownHovered(false)}
-              onClick={() => reactionButton('DISLIKE')}
-            >
-              싫어요
-            </DisLikeButton>
-          </ReactionWrapper>
-          <CommentWrapper>
-            <CommentButton
-              isHovered={isCardCommentHovered}
-              onMouseEnter={() => setIsCardCommentHovered(true)}
-              onMouseLeave={() => setIsCardCommentHovered(false)}
-              onClick={() => {
-              navigate(`/boards/read?id=${id}`);
-              sessionStorage.setItem("scrollIndex",String(index))
-              }}>
-              댓글
-            </CommentButton>
-          </CommentWrapper>
-
+          <Reaction
+          clickEvent={reactionButton}
+          reactionCount={isCardCount}
+          reactionState={isReaction}
+          />
+          
+          <CommentButton
+            isHovered={isCardCommentHovered}
+            onMouseEnter={() => setIsCardCommentHovered(true)}
+            onMouseLeave={() => setIsCardCommentHovered(false)}
+            onClick={() => {
+            navigate(`/boards/read?id=${id}`);
+            sessionStorage.setItem("scrollIndex",String(index))
+            }}>
+            댓글
+          </CommentButton>
+          
           <ShareWrapper>
             <ShareComponent
               shareCount={shareCount}
@@ -366,83 +347,6 @@ const ButtonContainer = styled.div`
   margin-top: 5px;
 `;
 
-const ReactionWrapper = styled.div`
-  margin-right: 5px;
-  border-radius: 30px;
-  width: 150px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    width: 170px;
-  }
-`;
-
-const LikeButton = styled.button.withConfig({
-  shouldForwardProp: (prop) => !['isLiked', 'isHovered'].includes(prop),
-})<{
-  readonly isLiked: boolean;
-  readonly isHovered: boolean;
-}>`
-  border: ${(props) => (props.isLiked ? '2px solid blue' : '1px solid gray')};
-  background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
-  width: 100%;
-  height: 100%;
-  border-radius: 30px;
-  cursor: pointer;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    width: 70px;
-    height: 40px;
-    font-size: 10px;
-  }
-`;
-
-const ReactionCount = styled.span`
-  margin: 10px;
-  width: 10px;
-  height: 10px;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    margin: 3px;
-    text-align: center;
-  }
-`;
-
-const DisLikeButton = styled.button.withConfig({
-  shouldForwardProp: (prop) => !['isDisliked', 'isHovered'].includes(prop),
-})<{
-  readonly isDisliked: boolean;
-  readonly isHovered: boolean;
-}>`
-  border: ${(props) => (props.isDisliked ? '1px solid red' : '1px solid gray')};
-  background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
-  width: 100%;
-  height: 100%;
-  border-radius: 30px;
-  cursor: pointer;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    width: 70px;
-    height: 40px;
-    font-size: 10px;
-  }
-`;
-
-const CommentWrapper = styled.div`
-  width: 75px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    margin-right: 7px;
-  }
-`;
-
 const CommentButton = styled.button.withConfig({
   shouldForwardProp: (prop) => prop !== 'isHovered',
 })<{
@@ -450,8 +354,8 @@ const CommentButton = styled.button.withConfig({
 }>`
   border: 1px solid gray;
   background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
-  height: 100%;
-  width: 100%;
+   width: 75px;
+  height: 40px;
   border-radius: 30px;
   cursor: pointer;
 

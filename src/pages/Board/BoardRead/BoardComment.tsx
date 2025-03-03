@@ -327,8 +327,6 @@ const CommentWrapper = styled.div`
   width: 75px;
   height: 40px;
   display: flex;
- 
-  
 
   @media (max-width: ${breakpoints.mobile}) {
     width: 45px;
