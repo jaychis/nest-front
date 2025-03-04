@@ -58,19 +58,18 @@ const CommunityProfile = () => {
   const logo = 'https://i.ibb.co/rHPPfvt/download.webp';
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
+  console.log(localStorage.getItem('id'))
   useEffect(() => {
-    
-    if(!selectCommunity.members){
-      dispatch(setJoinCommunity({ is_joined: false }));
-      return
+
+    const temp = [];
+
+    for(let k of selectCommunity.members){
+      temp.push(k.user_id)
     }
 
-    selectCommunity.members.map((member: SelectCommunityMembersType) => {
-      if (member.user_id === USER_ID) {
-        dispatch(setJoinCommunity({ is_joined: true }));
-      }
-    });
+    if(temp.includes(USER_ID)) dispatch(setJoinCommunity({ is_joined: true }));
+    else dispatch(setJoinCommunity({ is_joined: false }));
+    
   }, [selectCommunity]);
 
   useEffect(() => {

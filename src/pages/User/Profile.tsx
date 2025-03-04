@@ -41,17 +41,13 @@ const Profile = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [myPosts, setMyPosts] = useState<CardType[]>([]);
   const [myComments, setMyComments] = useState<CommentType[]>([]);
-  const [myJoinedCommunities, setMyJoinedCommunities] = useState<
-    CommunityType[]
-  >([]);
-  const [activeSection, setActiveSection] =
-    useState<ACTIVE_SECTION_TYPES>('POSTS');
+  const [myJoinedCommunities, setMyJoinedCommunities] = useState<CommunityType[]>([]);
+  const [activeSection, setActiveSection] = useState<ACTIVE_SECTION_TYPES>('POSTS');
   const [profilePreview, setProfilePreview] = useState<string[]>([]);
   const [profileList, setProfileList] = useState<File[]>([]);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [nickname, setNickname] = useState<string>(user.data.nickname || '');
   const [email, setEmail] = useState<string>(user.data.email || '');
-  const [phone, setPhone] = useState<string>(user.data.phone || '');
   const [dropdownisOpen, setDropdownIsOpen] = useState<boolean[]>([false]);
   const dropdownList: string[] = ['삭제하기', '수정하기'];
   const parentRef = useRef<HTMLDivElement>(null);
@@ -68,14 +64,12 @@ const Profile = () => {
     { button }: CommunityClickType,
     index: number,
   ) => {
-    console.log('button : ', button);
     const communityName: string = button;
 
     const response = await GetCommunitiesNameAPI({ name: communityName });
     if (!response) return;
 
     const community = response.data.response;
-    console.log('community : ', community);
     dispatch(setCommunity(community));
     navigate(`/j/${communityName}`);
   };
@@ -158,7 +152,6 @@ const Profile = () => {
         if (!res) return;
 
         const response = res.data.response;
-
         setMyJoinedCommunities(response);
       };
       commentInquiry();
@@ -173,7 +166,6 @@ const Profile = () => {
         if (response) {
           setNickname(response.nickname);
           setEmail(response.email);
-          setPhone(response.phone);
 
           const userProfile = response.users_profile[0].profile_image;
           if (userProfile !== null) {

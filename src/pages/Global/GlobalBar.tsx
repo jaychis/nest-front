@@ -124,7 +124,7 @@ const GlobalBar = () => {
           onClick={() => {window.location.href = '/'}}
         >
           <LogoImage src={logo} alt="Logo" width="50" height="50"/>
-          <SiteName>{'제이치스'}</SiteName>
+          <SiteName>제이치스</SiteName>
         </LogoWrapper>
 
         {/* Search Bar */}
