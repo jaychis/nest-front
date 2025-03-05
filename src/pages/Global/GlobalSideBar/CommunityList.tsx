@@ -1,6 +1,6 @@
 import { useState} from "react";
 import styled from "styled-components";
-import {setCommunity,SelectCommunityParams,} from '../../../reducers/communitySlice';
+import {setCommunity,SelectCommunityParams, community,} from '../../../reducers/communitySlice';
 import { MainListTypes} from '../../../_common/collectionTypes';
 import { JAYCHIS_LOGO } from "../../../_common/jaychisLogo";
 import { useNavigate } from "react-router-dom";
@@ -28,7 +28,7 @@ const CommunityList = ({list, type}: CommunityListProps) => {
         { button }: CommunityClickType,
         index: number,
         ) => {
-        console.log(button)
+        
         dispatch(setCommunity(list[index]));
         sessionStorage.setItem('community',JSON.stringify(list[index]))
         await sendDispatchSideBtn({ button });
