@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import EmptyState from '../../components/EmptyState';
 import { getContactAllListAPi } from '../api/inquiryApi';
 import { InquiryType } from '../../_common/collectionTypes';
@@ -52,36 +51,26 @@ const UsersInquiry = () => {
   const TAKE: number = 10;
   const nickname: string = localStorage.getItem('nickname') as string;
   const [isopen, setIsopen] = useState<boolean>(false);
-  const [retry, setRetry] = useState<number>(0);
   const [active, setActive] = useState<string>('FAQ');
 
-  const getAllList = () => {
-    getContactAllListAPi({ take: TAKE, page: 1, nickname: nickname })
-      .then((res) => {
-        const status = res?.data.response.current_list;
-        setList(status);
-        console.log(status);
-      })
-      .catch((error) => {
-        console.error(error);
-        setRetry((prev) => prev + 1);
-        console.log(`재시도 ${retry}`);
-      });
-  };
-
-  const handleChangeQuestion = () => {
-    setActive('Q&A');
-  };
-
-  const handleChangeFAQ = () => {
-    setActive('FAQ');
+  const handleChangeActiveSection = (e:string) => {
+    setActive(e);
   };
 
   useEffect(() => {
-    if (retry < 10) {
-      getAllList();
-    }
-  }, [retry]);
+    const getAllList = () => {
+      getContactAllListAPi({ take: TAKE, page: 1, nickname: nickname })
+        .then((res) => {
+          const status = res?.data.response.current_list;
+          setList(status);
+          console.log(status);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    };
+    getAllList()
+  }, []);
 
   if (!list) {
     return (
@@ -105,34 +94,24 @@ const UsersInquiry = () => {
           {active === 'FAQ' ? (
             <ButtonContainer>
               <ActiveButton>FAQ</ActiveButton>
-              <Button
-                onClick={() => {
-                  handleChangeQuestion();
-                }}
-              >
+              <Button onClick={() => {handleChangeActiveSection('Q&A')}}>
                 Q&A
               </Button>
             </ButtonContainer>
           ) : (
             <ButtonContainer>
-              <Button
-                onClick={() => {
-                  handleChangeFAQ();
-                }}
-              >
+              <ButtonGroup>
+              <Button onClick={() => handleChangeActiveSection('FAQ')}>
                 FAQ
               </Button>
-              <ActiveButton>Q&A</ActiveButton>
+              <ActiveButton>
+                Q&A
+              </ActiveButton>
+            </ButtonGroup>
+              <SubmitButton onClick={() => {setIsopen(true);}}>
+                1:1 문의하기
+              </SubmitButton>
             </ButtonContainer>
-          )}
-
-          {active === 'Q&A' && (
-            <SubmitButton
-            onClick={() => {
-            setIsopen(true);
-            }}>
-              1:1 문의하기
-            </SubmitButton>
           )}
 
           {list.length > 0 ? (
@@ -176,7 +155,9 @@ export default UsersInquiry;
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
   margin-bottom: 20px;
+  width: 100%;
 `;
 
 const Button = styled.button`
@@ -214,6 +195,10 @@ const SubmitButton = styled.button`
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin-left: auto;
-  margin-bottom: 15px;
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-grow: 1;
 `;

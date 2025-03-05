@@ -60,7 +60,6 @@ const communitySlice = createSlice({
       state.is_joined = action.payload.is_joined;
     },
     setCommunity(state, action: PayloadAction<SelectCommunityParams>) {
-      console.log('action2 : ', action);
       state.id = action.payload.id;
       state.name = action.payload.name;
       state.description = action.payload.description;

@@ -124,7 +124,7 @@ const GlobalBar = () => {
           onClick={() => {window.location.href = '/'}}
         >
           <LogoImage src={logo} alt="Logo" width="50" height="50"/>
-          <SiteName>{'제이치스'}</SiteName>
+          <SiteName>제이치스</SiteName>
         </LogoWrapper>
 
         {/* Search Bar */}
@@ -285,11 +285,10 @@ const SearchInput = styled.input`
 
 const SearchIcon = styled.img`
   margin-right: 20px;
-  margin-top: 5px;
   cursor: pointer;
 
   @media (max-width: ${breakpoints.mobile}) {
-    margin: 0 5px 5px 0;
+    margin: 10px 5px 5px 0;
   }
 `;
 
