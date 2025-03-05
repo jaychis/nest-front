@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import DropDown from '../../components/Dropdown';
+import DropDown from '../../../components/Dropdown';
 import { useState, useEffect } from 'react';
 import React from 'react';
 import {
@@ -8,19 +8,19 @@ import {
   CreateInvitationAPI,
   joinCommunityAPI,
   leaveCommunityAPI,
-} from '../api/communityApi';
-import Modal from '../../components/Modal';
+} from '../../api/communityApi';
+import Modal from '../../../components/Modal';
 import { useDispatch, useSelector } from 'react-redux';
-import DragAndDrop from '../../components/DragAndDrop';
-import { AwsImageUploadFunctionalityReturnType } from '../../_common/imageUploadFuntionality';
-import { GetSearchPeopleAPI } from '../api/searchApi';
-import VIcon from '../../assets/img/vicon.webp';
+import DragAndDrop from '../../../components/DragAndDrop';
+import { AwsImageUploadFunctionalityReturnType } from '../../../_common/imageUploadFuntionality';
+import { GetSearchPeopleAPI } from '../../api/searchApi';
+import VIcon from '../../../assets/img/vicon.webp';
 import {
   SelectCommunityMembersType,
   SelectCommunityParams,
   setJoinCommunity,
-} from '../../reducers/communitySlice';
-import { breakpoints } from '../../_common/breakpoint';
+} from '../../../reducers/communitySlice';
+import { breakpoints } from '../../../_common/breakpoint';
 
 interface User {
   readonly nickname: string;
@@ -58,21 +58,26 @@ const CommunityProfile = () => {
   const logo = 'https://i.ibb.co/rHPPfvt/download.webp';
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
+  
   useEffect(() => {
-    selectCommunity.members.map((member: SelectCommunityMembersType) => {
-      if (member.user_id === USER_ID) {
-        dispatch(setJoinCommunity({ is_joined: true }));
-      }
-    });
-  }, [selectCommunity]);
 
+    const temp = [];
+
+    for(let k of selectCommunity.members){
+      temp.push(k.user_id)
+    }
+
+    if(temp.includes(USER_ID)) dispatch(setJoinCommunity({ is_joined: true }));
+    else dispatch(setJoinCommunity({ is_joined: false }));
+    
+  }, [selectCommunity]);
+  
   useEffect(() => {
     if (localStorage.getItem('id') && localStorage.getItem('nickname')) {
       const communityLogVisit = async () => {
         const response = await communityLogVisitAPI({communityId: selectCommunity.id})
         if (!response) return
-
+        
         const res = response.data.response
       }
 

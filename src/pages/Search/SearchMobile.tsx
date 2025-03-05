@@ -27,7 +27,6 @@ const SearchMobile = () => {
       const searchHistory = localStorage.getItem('searchHistory',)
 
       if (!searchTerm) {
-        // 나중에는 alert 제거하기
         alert('내용을 입력해주세요');
         return;
       }

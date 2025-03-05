@@ -6,8 +6,6 @@ import { CommunityProvider } from './contexts/CommunityContext';
 import BoardList from './pages/Board/BoardRead/BoardList';
 import Layout from './components/Layout';
 import CustomSuspense from './components/Suspense';
-import CommunityProfile from './pages/Board/CommunityProfile';
-import CommunityBanner from './pages/Board/CommunityBanner';
 
 const Chat = lazy(() => import('./pages/Chat/Chat'));
 const BoardSubmit = lazy(() => import('./pages/Board/BoardSubmit/BoardSubmit'));
@@ -15,15 +13,16 @@ const BoardRead = lazy(() => import('./pages/Board/BoardRead/BoardRead'));
 const Profile = lazy(() => import('./pages/User/Profile'));
 const UsersInquiry = lazy(() => import('./pages/User/UsersInquiry'));
 const SearchList = lazy(() => import('./pages/Search/SearchList'));
-const CommunityCreatePage1 = lazy(() => import('./pages/Board/CommunityCreate/CommunityCreatePage1'),);
-const CommunityCreatePage2 = lazy(() => import('./pages/Board/CommunityCreate/CommunityCreatePage2'),);
-const CommunityCreatePage3 = lazy(() => import('./pages/Board/CommunityCreate/CommunityCreatePage3'),);
+const CommunityCreatePage1 = lazy(() => import('./pages/Board/Community/CommunityCreatePage1'),);
+const CommunityCreatePage2 = lazy(() => import('./pages/Board/Community/CommunityCreatePage2'),);
+const CommunityCreatePage3 = lazy(() => import('./pages/Board/Community/CommunityCreatePage3'),);
 const AdminList = lazy(() => import('./pages/Admin/AdminList'));
 const SearchMobile = lazy(() => import('./pages/Search/SearchMobile'));
 const MobilePrivacyPolicyPage = lazy(() => import('./components/MobilePrivacyPolicyPage'),);
 const ChatLayout = lazy(() => import('./pages/User/chat/ChatLayout'));
 const LinkPreviewComponent = lazy(() => import('./components/LinkPreviewComponent'),);
 const Guard = lazy(() => import('../src/_common/Guard'))
+const CommunityRead = lazy(() => import('../src/pages/Board/Community/CommunityRead'))
 
 function App() {
   return (
@@ -80,7 +79,7 @@ function App() {
                 path={'/j/:communityName'}
                 element={
                   <Layout>
-                    <BoardList />
+                    <CommunityRead/>
                   </Layout>
                 }
               />

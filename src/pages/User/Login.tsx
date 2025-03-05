@@ -26,7 +26,7 @@ const Login = ({
   });
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [showAlert, setShowAlert] = useState<boolean>(false);
-
+  
   const setLoginProcess = ({
     id,
     nickname,
@@ -268,6 +268,7 @@ const Login = ({
             type="password"
             id="password"
             name="password"
+            data-testid='password-input'
             onChange={(value) =>
               handleChange({
                 name: value.target.name,
@@ -277,7 +278,7 @@ const Login = ({
             onKeyDown={handleKeyDown}
             required
           />
-          {errorMessage && <ErrorText>{errorMessage}</ErrorText>}
+          {errorMessage && <ErrorText data-testid = 'error-text'>{errorMessage}</ErrorText>}
           <ForgotPasswordContainer>
             <ForgotPasswordLink onClick={() => onSwitchView('recovery')}>
               비밀번호를 잊으셨나요?
@@ -286,7 +287,7 @@ const Login = ({
         </form>
 
         <SubmitContainer>
-          <SubmitButton type="submit" onClick={handleSubmit}>
+          <SubmitButton data-testid = 'submit-button' type="submit" onClick={handleSubmit}>
             로그인
           </SubmitButton>
         </SubmitContainer>

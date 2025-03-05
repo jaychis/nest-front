@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import CommunityProfile from './CommunityProfile';
-import { SelectCommunityParams } from '../../reducers/communitySlice';
+import { SelectCommunityParams } from '../../../reducers/communitySlice';
 import { useSelector } from 'react-redux';
-import { breakpoints } from '../../_common/breakpoint';
-import BANNER from '../../assets/img/community_banner.png';
+import { breakpoints } from '../../../_common/breakpoint';
+import BANNER from '../../../assets/img/community_banner.png';
 
 const CommunityBanner = () => {
   const selectCommunity: SelectCommunityParams = useSelector(
@@ -27,7 +27,7 @@ const BackgroundContainer = styled.div`
   display: flex;
   width: 102%;
   height: 25vh;
-  margin-bottom: 20vh;
+  margin-bottom: 15vh;
   margin-left: -2%;
 
   @media (max-width: ${breakpoints.mobile}) {
