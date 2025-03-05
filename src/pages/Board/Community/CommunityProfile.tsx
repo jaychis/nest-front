@@ -58,7 +58,7 @@ const CommunityProfile = () => {
   const logo = 'https://i.ibb.co/rHPPfvt/download.webp';
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  console.log(localStorage.getItem('id'))
+  
   useEffect(() => {
 
     const temp = [];
@@ -71,13 +71,13 @@ const CommunityProfile = () => {
     else dispatch(setJoinCommunity({ is_joined: false }));
     
   }, [selectCommunity]);
-
+  
   useEffect(() => {
     if (localStorage.getItem('id') && localStorage.getItem('nickname')) {
       const communityLogVisit = async () => {
         const response = await communityLogVisitAPI({communityId: selectCommunity.id})
         if (!response) return
-
+        
         const res = response.data.response
       }
 
