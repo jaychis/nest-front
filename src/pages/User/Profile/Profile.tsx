@@ -1,38 +1,38 @@
 import React, { useEffect, useState, ChangeEvent, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../store/store';
-import { UsersGetJoinedCommunities, UsersProfileAPI } from '../api/userApi';
-import { ProfileState } from '../../reducers/profileSlice';
+import { AppDispatch, RootState } from '../../../store/store';
+import { UsersGetJoinedCommunities, UsersProfileAPI } from '../../api/userApi';
+import { ProfileState } from '../../../reducers/profileSlice';
 import {
   CardType,
   CommunityType,
   MainListTypes,
   UserType,
-} from '../../_common/collectionTypes';
-import Card from '../../components/Card/Card';
-import BoardComment, { CommentType } from '../Board/BoardRead/BoardComment';
-import { BoardInquiryAPI, BoardDelete, BoardUpdate } from '../api/boardApi';
-import { CommentUsersInquiryAPI } from '../api/commentApi';
+} from '../../../_common/collectionTypes';
+import Card from '../../../components/Card/Card';
+import BoardComment, { CommentType } from '../../Board/BoardRead/BoardComment';
+import { BoardInquiryAPI, BoardDelete, BoardUpdate } from '../../api/boardApi';
+import { CommentUsersInquiryAPI } from '../../api/commentApi';
 import {
   AwsImageUploadFunctionality,
   ImageLocalPreviewUrls,
   ImageLocalPreviewUrlsDelete,
   ImageLocalPreviewUrlsDeleteType,
   ImageLocalPreviewUrlsReturnType,
-} from '../../_common/imageUploadFuntionality';
+} from '../../../_common/imageUploadFuntionality';
 import styled from 'styled-components';
-import { breakpoints } from '../../_common/breakpoint';
-import TrashIcon from '../../assets/img/trash.webp';
-import SAVE from '../../assets/img/save.png';
-import { UsersProfilePictureAPI } from '../api/usresProfileApi';
-import DropDown from '../../components/Dropdown';
-import Modal from '../../components/Modal';
-import SubmitQuill from '../../components/SubmitQuill';
-import UploadImageAndVideo from '../Board/BoardSubmit/UploadImageAndVideo';
+import { breakpoints } from '../../../_common/breakpoint';
+import TrashIcon from '../../../assets/img/trash.webp';
+import SAVE from '../../../assets/img/save.png';
+import { UsersProfilePictureAPI } from '../../api/usresProfileApi';
+import DropDown from '../../../components/Dropdown';
+import Modal from '../../../components/Modal';
+import SubmitQuill from '../../../components/SubmitQuill';
+import UploadImageAndVideo from '../../Board/BoardSubmit/UploadImageAndVideo';
 import { useNavigate, useParams } from 'react-router-dom';
-import { JAYCHIS_LOGO } from '../../_common/jaychisLogo';
-import { GetCommunitiesNameAPI } from '../api/communityApi';
-import { setCommunity } from '../../reducers/communitySlice';
+import { JAYCHIS_LOGO } from '../../../_common/jaychisLogo';
+import { GetCommunitiesNameAPI } from '../../api/communityApi';
+import { setCommunity } from '../../../reducers/communitySlice';
 
 type ACTIVE_SECTION_TYPES = 'POSTS' | 'COMMENTS' | 'COMMUNITIES' | 'PROFILE';
 const Profile = () => {

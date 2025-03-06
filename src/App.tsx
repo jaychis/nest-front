@@ -10,7 +10,7 @@ import CustomSuspense from './components/Suspense';
 const Chat = lazy(() => import('./pages/Chat/Chat'));
 const BoardSubmit = lazy(() => import('./pages/Board/BoardSubmit/BoardSubmit'));
 const BoardRead = lazy(() => import('./pages/Board/BoardRead/BoardRead'));
-const Profile = lazy(() => import('./pages/User/Profile'));
+const Profile = lazy(() => import('./pages/User/Profile/Profile'));
 const UsersInquiry = lazy(() => import('./pages/User/UsersInquiry'));
 const SearchList = lazy(() => import('./pages/Search/SearchList'));
 const CommunityCreatePage1 = lazy(() => import('./pages/Board/Community/CommunityCreatePage1'),);
