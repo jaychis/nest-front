@@ -6,6 +6,7 @@ import { CommunityProvider } from './contexts/CommunityContext';
 import BoardList from './pages/Board/BoardRead/BoardList';
 import Layout from './components/Layout';
 import CustomSuspense from './components/Suspense';
+import { AnimatePresence } from 'framer-motion';
 
 const Chat = lazy(() => import('./pages/Chat/Chat'));
 const BoardSubmit = lazy(() => import('./pages/Board/BoardSubmit/BoardSubmit'));
@@ -28,6 +29,7 @@ function App() {
   return (
     <>
       <Suspense fallback={<CustomSuspense />}>
+      <AnimatePresence>
         <Router>
           <ScrollToTop />
           <CommunityProvider>
@@ -142,6 +144,7 @@ function App() {
             </Routes>
           </CommunityProvider>
         </Router>
+      </AnimatePresence>
       </Suspense>
     </>
   );

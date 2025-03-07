@@ -14,6 +14,7 @@ import { useLocation } from 'react-router-dom';
 import { LogViewedBoardAPI } from '../../api/viewedBoardsApi';
 import { breakpoints } from '../../../_common/breakpoint';
 import { useError } from '../../../_common/ErrorContext';
+import PageTransition from '../../../components/PageTransition';
 
 const BoardComment = lazy(() => import('./BoardComment'))
 
@@ -169,6 +170,7 @@ const BoardRead = () => {
   };
 
   return (
+    <PageTransition>
     <BoardReadContainer>
       <CardContainer>
         {!isBoardState?.id ? null : (
@@ -204,6 +206,7 @@ const BoardRead = () => {
         {isCommentState?.length > 0 ? renderComments(isCommentState) : null}
       </CardContainer>
     </BoardReadContainer>
+    </PageTransition>
   );
 };
 

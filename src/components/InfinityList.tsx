@@ -8,6 +8,7 @@ import { MainListTypeState } from '../reducers/mainListTypeSlice';
 import { RootState } from '../store/store';
 import { CardType } from '../_common/collectionTypes';
 import { useLocation,useBeforeUnload } from 'react-router-dom';
+import PageTransition from './PageTransition';
 
 const InfinitiList = () => {
 
@@ -140,6 +141,7 @@ const InfinitiList = () => {
         const el = list[index];
     
         return (
+          <PageTransition>
           <CellMeasurer cache={cache} parent={parent} key={key} columnIndex={0} rowIndex={index}>
             <div key={key} style={style}>
               <Card
@@ -157,6 +159,7 @@ const InfinitiList = () => {
               />
             </div>
           </CellMeasurer>
+          </PageTransition>
         );
       };
 

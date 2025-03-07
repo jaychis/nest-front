@@ -33,6 +33,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { JAYCHIS_LOGO } from '../../../_common/jaychisLogo';
 import { GetCommunitiesNameAPI } from '../../api/communityApi';
 import { setCommunity } from '../../../reducers/communitySlice';
+import PageTransition from '../../../components/PageTransition';
 
 type ACTIVE_SECTION_TYPES = 'POSTS' | 'COMMENTS' | 'COMMUNITIES' | 'PROFILE';
 const Profile = () => {
@@ -186,6 +187,7 @@ const Profile = () => {
   };
 
   return (
+    <PageTransition>
     <Container>
       <Modal
         top={'10vh'}
@@ -467,6 +469,7 @@ const Profile = () => {
         </Section>
       )}
     </Container>
+    </PageTransition>
   );
 };
 
