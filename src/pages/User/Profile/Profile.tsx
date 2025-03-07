@@ -205,11 +205,13 @@ const Profile = () => {
         />
 
         {myPosts[editIndex] && myPosts[editIndex].type === 'TEXT' && (
-          <SubmitQuill
+          <div style= {{width: '90%'}}>
+            <SubmitQuill
             setContent={setEditContent}
             content={editContent}
             height={'50vh'}
           />
+          </div>
         )}
 
         {myPosts[editIndex] && myPosts[editIndex].type === 'MEDIA' && (
@@ -664,7 +666,7 @@ const EditIcon = styled.img`
 
 const StyledInput = styled.input`
   flex: 1;
-  width: 96%;
+  width: 85%;
   padding: 10px;
   border-radius: 12px;
   border: 1px solid #ccc;
