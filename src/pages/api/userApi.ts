@@ -128,17 +128,6 @@ export const SignupAPI = async (params: SignupParams) => {
   return res;
 };
 
-export const SendEmail = async (email: string) => {
-  let URL = `${USERS_URL}/send-email`;
-  try {
-    const res = await client.post(URL, { email });
-    return res;
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-};
-
 export const VerifyEmail = async (email: string) => {
   let URL = 'users/verify-email';
   try {
