@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { MainListTypes,RecentCommunityListType,} from '../../../_common/collectionTypes';
-import { AppDispatch } from '../../../store/store';
-import { sideButtonSliceActions } from '../../../reducers/mainListTypeSlice';
-import {SelectCommunityParams,} from '../../../reducers/communitySlice';
-import { RootState } from '../../../store/store';
-import { CommunityListAPI, getRecentCommunitiesAPI } from '../../api/communityApi';
-import Tooltip from '../../../components/Tooltip';
+import { MainListTypes,RecentCommunityListType,} from '../../_common/collectionTypes';
+import { AppDispatch } from '../../store/store';
+import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
+import {SelectCommunityParams,} from '../../reducers/communitySlice';
+import { RootState } from '../../store/store';
+import { CommunityListAPI, getRecentCommunitiesAPI } from '../api/communityApi';
+import Tooltip from '../../components/Tooltip';
 import styled from 'styled-components';
-import { breakpoints } from '../../../_common/breakpoint';
+import { breakpoints } from '../../_common/breakpoint';
 import CommunityList from './CommunityList';
 
 const GlobalSideBar = () => {
