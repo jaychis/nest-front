@@ -11,7 +11,7 @@ import {
 } from '../../../_common/collectionTypes';
 import Card from '../../../components/Card/Card';
 import BoardComment, { CommentType } from '../../Board/BoardRead/BoardComment';
-import { BoardInquiryAPI, BoardDelete, BoardUpdate } from '../../api/boardApi';
+import { BoardInquiryAPI, BoardDelete} from '../../api/boardApi';
 import { CommentUsersInquiryAPI } from '../../api/commentApi';
 import {
   AwsImageUploadFunctionality,
@@ -26,14 +26,13 @@ import TrashIcon from '../../../assets/img/trash.webp';
 import SAVE from '../../../assets/img/save.png';
 import { UsersProfilePictureAPI } from '../../api/usresProfileApi';
 import DropDown from '../../../components/Dropdown';
-import Modal from '../../../components/Modal';
-import SubmitQuill from '../../../components/SubmitQuill';
-import UploadImageAndVideo from '../../Board/BoardSubmit/UploadImageAndVideo';
 import { useNavigate, useParams } from 'react-router-dom';
 import { JAYCHIS_LOGO } from '../../../_common/jaychisLogo';
 import { GetCommunitiesNameAPI } from '../../api/communityApi';
 import { setCommunity } from '../../../reducers/communitySlice';
 import PageTransition from '../../../components/PageTransition';
+import Modal from '../../../components/Modal';
+import BoardEdit from '../../Board/BoardRead/BoardEdit';
 
 type ACTIVE_SECTION_TYPES = 'POSTS' | 'COMMENTS' | 'COMMUNITIES' | 'PROFILE';
 const Profile = () => {
@@ -190,63 +189,21 @@ const Profile = () => {
     <PageTransition>
     <Container>
       <Modal
-        top={'10vh'}
-        isOpen={modalIsOpen}
-        onClose={() => {
-          setModalIsOpen(false);
-        }}
+      top={'10vh'}
+      isOpen={modalIsOpen}
+      onClose={() => {setModalIsOpen(false);}}
       >
-        <StyledInput
-          value={editTitle}
-          onChange={(e) => {
-            setEditTitle(e.target.value);
-          }}
-          placeholder="수정을 제목을 입력하세요"
+        <BoardEdit
+        setModalIsOpen={setModalIsOpen}
+        editContent={editContent}
+        editIndex={editIndex}
+        editTitle={editTitle}
+        setEditContent={setEditContent}
+        setEditIndex={setEditIndex}
+        setEditTitle={setEditTitle}
+        myPosts={myPosts}
         />
-
-        {myPosts[editIndex] && myPosts[editIndex].type === 'TEXT' && (
-          <div style= {{width: '90%'}}>
-            <SubmitQuill
-            setContent={setEditContent}
-            content={editContent}
-            height={'50vh'}
-          />
-          </div>
-        )}
-
-        {myPosts[editIndex] && myPosts[editIndex].type === 'MEDIA' && (
-          <UploadImageAndVideo
-            setContent={setEditContent}
-            content={editContent}
-          />
-        )}
-
-        {myPosts[editIndex] && myPosts[editIndex].type === 'LINK' && (
-          <StyledInput
-            value={editContent}
-            onChange={(e) => {
-              setEditContent([e.target.value]);
-            }}
-            placeholder="수정할 링크를 입력하세요"
-          />
-        )}
-
-        <SubmitButtonStyle
-          onClick={() => {
-            BoardUpdate({
-              id: myPosts[editIndex].id,
-              title: editTitle,
-              content: editContent,
-              nickname: myPosts[editIndex].nickname,
-              category: myPosts[editIndex].category,
-            });
-            alert('수정이 완료되었습니다.');
-            setModalIsOpen(false);
-          }}
-        >
-          보내기
-        </SubmitButtonStyle>
-      </Modal>
+    </Modal>
 
       <ButtonContainer>
         <SectionButton
@@ -662,31 +619,6 @@ const EditIcon = styled.img`
   height: 30px;
   position: absolute;
   z-index: 1000;
-`;
-
-const StyledInput = styled.input`
-  flex: 1;
-  width: 85%;
-  padding: 10px;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-  background-color: #f7f7f7;
-  margin-top: 3vh;
-  margin-bottom: 3vh;
-`;
-
-const SubmitButtonStyle = styled.button`
-  width: 80px;
-  padding: 10px 20px;
-  background-color: #84d7fb;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-  margin-top: 5vh;
-  margin-bottom: 5vh;
 `;
 
 export default Profile;
