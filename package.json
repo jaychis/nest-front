@@ -110,6 +110,7 @@
     "test": "node scripts/test.js",
     "cleani": "rm -rf node_modules && npm i && rm -rf build && npm cache clean --force",
     "cleanci": "rm -rf node_modules && npm ci && rm -rf build && npm cache clean --force",
+    "cleanwci": "rd /s /q node_modules & npm ci & rd /s /q build & npm cache clean --force",
     "analyze": "npx source-map-explorer build/static/js/*.js"
   },
   "eslintConfig": {
