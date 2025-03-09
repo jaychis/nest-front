@@ -112,11 +112,6 @@ const InfinitiList = () => {
         }
     }
 
-    useBeforeUnload((event) => {
-        console.log(sessionStorage.getItem)
-        
-    })
-
     useEffect(() => {
         setAllDataLoaded(false);
         setId(null);
