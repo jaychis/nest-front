@@ -15,6 +15,7 @@ import MultiStepNav from '../../../components/Buttons/MultiStepNav';
 import Button from '../../../components/Buttons/Button';
 import { GetSearchPeopleAPI } from '../../api/searchApi';
 import VIcon from '../../../assets/img/vicon.webp';
+import PageTransition from '../../../components/PageTransition';
 
 const CommunityCreatePage3: FC = () => {
   interface User {
@@ -139,6 +140,7 @@ const CommunityCreatePage3: FC = () => {
   };
 
   return (
+    <PageTransition>
     <Container>
       <Heading>커뮤니티 공개 설정</Heading>
       <Form onSubmit={(e) => e.preventDefault()}>
@@ -275,6 +277,7 @@ const CommunityCreatePage3: FC = () => {
         </MultiStepNav>
       </Form>
     </Container>
+    </PageTransition>
   );
 };
 

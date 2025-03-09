@@ -56,6 +56,7 @@ const ModalContainer = styled.div`
   border-radius: 25px;
   width: 100%;
   text-align: center;
+  overflow: auto;
 
   @media (max-width: ${breakpoints.mobile}) {
     top: 35vh !important;
@@ -84,8 +85,6 @@ const ModalBody = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  max-height: 90vh; 
-  
   
   @media (max-width: ${breakpoints.tablet}) {
     width: 100%;

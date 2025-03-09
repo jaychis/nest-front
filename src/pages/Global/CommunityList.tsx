@@ -1,12 +1,12 @@
 import { useState} from "react";
 import styled from "styled-components";
-import {setCommunity,SelectCommunityParams, community,} from '../../../reducers/communitySlice';
-import { MainListTypes} from '../../../_common/collectionTypes';
-import { JAYCHIS_LOGO } from "../../../_common/jaychisLogo";
+import {setCommunity,SelectCommunityParams, community,} from '../../reducers/communitySlice';
+import { MainListTypes} from '../../_common/collectionTypes';
+import { JAYCHIS_LOGO } from "../../_common/jaychisLogo";
 import { useNavigate } from "react-router-dom";
 import { useDispatch} from 'react-redux';
-import { AppDispatch } from "../../../store/store";
-import { sideButtonSliceActions } from '../../../reducers/mainListTypeSlice';
+import { AppDispatch } from "../../store/store";
+import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
 
 interface CommunityListProps {
     readonly list: any[];

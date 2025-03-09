@@ -90,13 +90,17 @@ const GlobalBar = () => {
   };
 
   const clickSearch = async () => {
-    if (!searchTerm) {
-      alert('내용을 입력해주세요');
-      return;
+    const viewport = window.visualViewport;
+    if (viewport && viewport.width < 767) navigate('/SearchMobile');
+    else{
+      if (!searchTerm) {
+        alert('내용을 입력해주세요');
+        return;
+      }
+  
+      await AddSearchAPI({ query: searchTerm });
+      navigate(`/search/list?query=${searchTerm}`);
     }
-
-    await AddSearchAPI({ query: searchTerm });
-    navigate(`/search/list?query=${searchTerm}`);
   };
 
   const toggleNotificationModal = () => {
@@ -138,7 +142,7 @@ const GlobalBar = () => {
             onKeyDown={handleKeyDown}
             onClick={handleDetectViewPort}
           />
-          <SearchIcon onClick={handleDetectViewPort} width="30" height="30" src="https://img.icons8.com/neon/96/search.png" alt="search"/>
+          <SearchIcon onClick={clickSearch} width="30" height="30" src="https://img.icons8.com/neon/96/search.png" alt="search"/>
         </SearchContainer>
         <LoginStatusView>
           {localStorage.getItem('access_token') ? (
@@ -284,7 +288,7 @@ const SearchInput = styled.input`
 `;
 
 const SearchIcon = styled.img`
-  margin-right: 20px;
+  margin: 5px 20px 0 0;
   cursor: pointer;
 
   @media (max-width: ${breakpoints.mobile}) {

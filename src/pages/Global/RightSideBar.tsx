@@ -134,9 +134,6 @@ const RightSideBar = () => {
                         <Rank>{index + 1}</Rank>
                         <Query>{search.query}</Query>
                       </div>
-                      {/*<Details>*/}
-                      {/*  <Count>{search.count}</Count>*/}
-                      {/*</Details>*/}
                     </ListItem>
                   ),
                 )

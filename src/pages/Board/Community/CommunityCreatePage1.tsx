@@ -11,6 +11,7 @@ import styled from 'styled-components';
 import MultiStepNav from '../../../components/Buttons/MultiStepNav';
 import Button from '../../../components/Buttons/Button';
 import { GetSearchCommunitiesAPI, SearchParam } from '../../api/searchApi';
+import PageTransition from '../../../components/PageTransition';
 
 const CommunityCreatePage1: FC = () => {
   const navigate = useNavigate();
@@ -138,6 +139,7 @@ const CommunityCreatePage1: FC = () => {
   }, [communityName]);
 
   return (
+    <PageTransition>
     <Container textareaHeight={textareaHeight}>
       <Heading>커뮤니티 만들기</Heading>
       <Form onSubmit={(e) => e.preventDefault()}>
@@ -220,6 +222,7 @@ const CommunityCreatePage1: FC = () => {
         </MultiStepNav>
       </Form>
     </Container>
+    </PageTransition>
   );
 };
 

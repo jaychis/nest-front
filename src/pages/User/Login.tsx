@@ -6,6 +6,8 @@ import Alert from '../../components/Alert';
 import { LoginAPI, LoginParams, RefreshTokenAPI } from '../api/userApi';
 import { KakaoOAuthLoginAPI } from '../api/oAuthApi';
 import styled from 'styled-components';
+import PageTransition from '../../components/PageTransition';
+
 type modalType = 'login' | 'signup' | 'recovery' | 'verity';
 
 interface Props {
@@ -218,6 +220,7 @@ const Login = ({
   }, []);
 
   return (
+    <PageTransition>
     <Container>
       {showAlert && (
         <Alert
@@ -296,6 +299,7 @@ const Login = ({
         </SwitchContainer>
       </div>
     </Container>
+    </PageTransition>
   );
 };
 
