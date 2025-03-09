@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import Button from '../../../components/Buttons/Button';
 import MultiStepNav from '../../../components/Buttons/MultiStepNav';
 import DeleteButton from '../../../components/Buttons/DeleteButton';
+import PageTransition from '../../../components/PageTransition';
 
 const CommunityCreatePage2: React.FC = () => {
   const navigate = useNavigate();
@@ -59,6 +60,7 @@ const CommunityCreatePage2: React.FC = () => {
   }, [searchTerm]);
 
   return (
+    <PageTransition>
     <Container>
       <Heading>태그 추가</Heading>
       <Form onSubmit={(e) => e.preventDefault()}>
@@ -122,6 +124,7 @@ const CommunityCreatePage2: React.FC = () => {
         </MultiStepNav>
       </Form>
     </Container>
+    </PageTransition>
   );
 };
 

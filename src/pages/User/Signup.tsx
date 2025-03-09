@@ -16,6 +16,7 @@ import VIcon from '../../assets/img/vicon.webp';
 import XICon from '../../assets/img/vicon.webp';
 import Alert from '../../components/Alert';
 import styled from 'styled-components';
+import PageTransition from '../../components/PageTransition';
 
 interface Props {
   readonly onSwitchView: () => void;
@@ -214,6 +215,7 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
 
   return (
     <Container>
+      <PageTransition>
       {showAlert && (
         <Alert
           message="회원가입이 완료되었습니다."
@@ -349,6 +351,7 @@ const Signup = ({ onSwitchView, modalIsOpen, kakaoEmail }: Props) => {
       <SwitchButtonWrapper>
         <SwitchButton onClick={onSwitchView}>로그인으로 전환</SwitchButton>
       </SwitchButtonWrapper>
+      </PageTransition>
     </Container>
   );
 };

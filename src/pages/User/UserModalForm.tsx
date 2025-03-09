@@ -5,7 +5,7 @@ import Login from './Login';
 import Signup from './Signup';
 import PassWordReset from '../../components/PasswordReset';
 import styled from 'styled-components';
-import { SendEmail, VerifyEmail, PasswordReset } from '../api/userApi';
+import { VerifyEmail, PasswordReset } from '../api/userApi';
 
 type modalType = 'login' | 'signup' | 'recovery' | 'verity' | 'reset';
 const UserModalForm = () => {
@@ -14,6 +14,7 @@ const UserModalForm = () => {
   const [isLoginHovered, setIsLoginHovered] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
   const [verificationCode, setVerificationCode] = useState<string>('');
+  const [userVerificationCode, setUserVerificationCode] = useState<string>('')
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [kakaoEmail, setKakaoEmail] = useState<string>('');
@@ -25,22 +26,19 @@ const UserModalForm = () => {
   const handleVerityEmail = async () => {
     if (email.trim() === '') return alert('메일을 입력해주세요');
 
-    const res = await SendEmail(email);
-    
+    const res = await VerifyEmail(email);
     if (res && res.data && res.status === 201) {
-      switchView('verity');
       alert('메일로 인증번호가 발송되었습니다.');
+      setVerificationCode(res.data.response.verification_code)
     } else {
       alert('존재하지 않는 이메일 입니다.');
     }
   };
 
   const handleSubmitVerify = async () => {
-    if (verificationCode.trim() === '') return alert('메일을 입력해주세요');
-
-    const res = await VerifyEmail(email);
+    if (userVerificationCode.trim() === '') return alert('인증번호를 입력해주세요');
     
-    if (res && res.data && res.data.response.verification) {
+    if (userVerificationCode === verificationCode) {
       switchView('reset');
     } else {
       alert('인증에 실패 하였습니다.');
@@ -76,7 +74,7 @@ const UserModalForm = () => {
       </ButtonWrapper>
 
       <Modal
-        top={'20vh'}
+        top={'15vh'}
         buttonLabel={activeView}
         isOpen={modalIsOpen}
         onClose={() => {
@@ -104,59 +102,39 @@ const UserModalForm = () => {
           <PassWordReset
             title={'비밀번호 찾기'}
             body={
-              <SubmitInput
-                placeholder="이메일 *"
-                onChange={(event) => {
-                  setEmail(event.target.value);
-                }}
+              <>
+              <ButtonWrapper>
+                <SubmitInput
+                placeholder="  이메일 *"
+                onChange={(event) => { setEmail(event.target.value);}}
                 type="email"
                 id="email"
                 name="email"
               />
-            }
-            footer={
-              <>
-                <SubmitButton
-                  onClick={() => {
-                    handleVerityEmail();
-                  }}
-                >
-                  비밀번호 찾기
-                </SubmitButton>
-                <SwitchButton
-                  onClick={() => {
-                    switchView('login');
-                  }}
-                >
-                  로그인으로 전환
-                </SwitchButton>
-              </>
-            }
-          />
-        )}
-
-        {activeView === 'verity' && (
-          <PassWordReset
-            title={'비밀번호 찾기'}
-            body={
-              <SubmitInput
-                onChange={(event) => {
-                  setVerificationCode(event.target.value);
-                }}
-                placeholder="인증번호"
+              <SubmitButton type="button" onClick={() => {handleVerityEmail()}}>
+                  전송
+              </SubmitButton>
+              </ButtonWrapper>
+              <ButtonWrapper>
+                <SubmitInput
+                placeholder="  인증번호 *"
+                onChange={(event) => {setUserVerificationCode(event.target.value);}}
                 type="text"
                 id="text"
                 name="text"
               />
+              <SubmitButton type="button" onClick={() => {handleSubmitVerify()}}>
+                  확인
+              </SubmitButton>
+              </ButtonWrapper>
+              </>
             }
             footer={
-              <SubmitButton
-                onClick={() => {
-                  handleSubmitVerify();
-                }}
-              >
-                확인
-              </SubmitButton>
+              <>
+                <SwitchButton onClick={() => {switchView('login');}}>
+                  로그인으로 전환
+                </SwitchButton>
+              </>
             }
           />
         )}
@@ -166,35 +144,30 @@ const UserModalForm = () => {
             title={'비밀번호 재설정'}
             body={
               <>
+              <ButtonWrapper>
                 <SubmitInput
-                  onChange={(event) => {
-                    setPassword(event.target.value);
-                  }}
+                  onChange={(event) => {setPassword(event.target.value);}}
                   placeholder="비밀번호"
                   type="password"
                   id="password"
                   name="password"
                 />
-
+              </ButtonWrapper>
+              <ButtonWrapper>
                 <SubmitInput
-                  onChange={(event) => {
-                    setConfirmPassword(event.target.value);
-                  }}
+                  onChange={(event) => {setConfirmPassword(event.target.value);}}
                   placeholder="비밀번호 확인"
                   type="password"
                   id="confirmPassword"
                   name="confirmPassword"
                 />
+              </ButtonWrapper>
               </>
             }
             footer={
-              <SubmitButton
-                onClick={() => {
-                  handlePasswordReset();
-                }}
-              >
+              <SwitchButton onClick={() => {handlePasswordReset();}}>
                 확인
-              </SubmitButton>
+              </SwitchButton>
             }
           />
         )}
@@ -208,8 +181,7 @@ export default UserModalForm;
 const ButtonWrapper = styled.div`
   display: flex;
   justify-content: center;
-  align-items: center;
-  margin-right: 30px;
+  margin: 10px 30px 0 0;
 `;
 
 const LoginButton = styled.button<{ readonly isLoginHovered: boolean }>`
@@ -232,12 +204,12 @@ const LoginButton = styled.button<{ readonly isLoginHovered: boolean }>`
 `;
 
 const SubmitInput = styled.input`
-  width: 100%;
+  width: 70%;
   border: 1px solid #ddd;
   border-radius: 25px;
-  margin-bottom: 10px;
   box-sizing: border-box;
   height: 35px;
+  margin-right: 15px;
 `;
 
 const SwitchButton = styled.button`
@@ -249,6 +221,7 @@ const SwitchButton = styled.button`
   cursor: pointer;
   width: 140px;
   height: 45px;
+  margin-top: 50px;
 
   &:hover {
     background-color: #333;
@@ -256,15 +229,14 @@ const SwitchButton = styled.button`
 `;
 
 const SubmitButton = styled.button`
-  width: 140px;
-  height: 45px;
+  width: 70px;
+  height: 35px;
   padding: 10px 20px;
   border-radius: 25px;
   border: none;
   background-color: #84d7fb;
   color: white;
   cursor: pointer;
-  margin-bottom: 10px;
 
   &:hover {
     background-color: #72c2e9;
