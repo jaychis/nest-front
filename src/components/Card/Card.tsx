@@ -23,7 +23,7 @@ import panda from '../../assets/img/panda_logo.webp'
 import YoutubeCard from './YoutubeCard';
 import Carousel from './Carousel';
 import Reaction from '../../pages/Board/BoardRead/Reaction';
-
+import PageTransition from '../PageTransition';
 const Card = ({
   id,
   category,
@@ -158,6 +158,7 @@ const Card = ({
   
   return (
     <>
+    <PageTransition>
       <CardContainer
         className='CardContainer'
         onMouseEnter={() => setIsCardHovered(true)}
@@ -249,6 +250,7 @@ const Card = ({
       id={userId}
       />  
       </Modal>
+      </PageTransition>
     </>
   );
 };
