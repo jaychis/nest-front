@@ -14,18 +14,12 @@ type RecentViewedPost = {
 };
 
 const RightSideBar = () => {
-  const searchResults = useSelector(
-    (state: RootState) => state.search.searchResults,
-  );
+  const searchResults = useSelector((state: RootState) => state.search.searchResults,);
   const [isTopTenList, setIsTopTenList] = useState([]);
-  const [recentViewedList, setRecentViewedList] = useState<RecentViewedPost[]>(
-    [],
-  );
+  const [recentViewedList, setRecentViewedList] = useState<RecentViewedPost[]>([],);
   const [selectedTab, setSelectedTab] = useState<SelectTapTypes>('topSearches');
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [hoveredRecentPostIndex, setHoveredRecentPostIndex] = useState<
-    number | null
-  >(null);
+  const [hoveredRecentPostIndex, setHoveredRecentPostIndex] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const isLoggedIn = !!localStorage.getItem('access_token');
@@ -134,9 +128,6 @@ const RightSideBar = () => {
                         <Rank>{index + 1}</Rank>
                         <Query>{search.query}</Query>
                       </div>
-                      {/*<Details>*/}
-                      {/*  <Count>{search.count}</Count>*/}
-                      {/*</Details>*/}
                     </ListItem>
                   ),
                 )

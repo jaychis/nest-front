@@ -55,7 +55,6 @@ const UserSearchCard = ({
               src={profileImage[0].profile_image || profilePreview || undefined}
               alt="Profile Preview"
             />
-            )
           </ImagePreviewWrapper>
         </ImageUploadWrapper>
 
@@ -145,9 +144,4 @@ const ImagePreview = styled.img`
 
 const HiddenFileInput = styled.input`
   display: none;
-`;
-
-const Placeholder = styled.div`
-  font-size: 14px;
-  color: #888;
 `;

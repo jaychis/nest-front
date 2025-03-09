@@ -1,6 +1,5 @@
-import React from 'react';
-
 import styled from 'styled-components';
+
 const EmptyState = () => {
   const logo = "https://i.ibb.co/rHPPfvt/download.webp" 
 

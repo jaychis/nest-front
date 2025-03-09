@@ -1,39 +1,38 @@
 import React, { useEffect, useState, ChangeEvent, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../store/store';
-import { UsersGetJoinedCommunities, UsersProfileAPI } from '../api/userApi';
-import { ProfileState } from '../../reducers/profileSlice';
+import { AppDispatch, RootState } from '../../../store/store';
+import { UsersGetJoinedCommunities, UsersProfileAPI } from '../../api/userApi';
+import { ProfileState } from '../../../reducers/profileSlice';
 import {
   CardType,
   CommunityType,
   MainListTypes,
   UserType,
-} from '../../_common/collectionTypes';
-import Card from '../../components/Card/Card';
-import BoardComment, { CommentType } from '../Board/BoardRead/BoardComment';
-import { BoardInquiryAPI, BoardDelete, BoardUpdate } from '../api/boardApi';
-import { CommentUsersInquiryAPI } from '../api/commentApi';
+} from '../../../_common/collectionTypes';
+import Card from '../../../components/Card/Card';
+import BoardComment, { CommentType } from '../../Board/BoardRead/BoardComment';
+import { BoardInquiryAPI, BoardDelete} from '../../api/boardApi';
+import { CommentUsersInquiryAPI } from '../../api/commentApi';
 import {
   AwsImageUploadFunctionality,
   ImageLocalPreviewUrls,
   ImageLocalPreviewUrlsDelete,
   ImageLocalPreviewUrlsDeleteType,
   ImageLocalPreviewUrlsReturnType,
-} from '../../_common/imageUploadFuntionality';
+} from '../../../_common/imageUploadFuntionality';
 import styled from 'styled-components';
-import { breakpoints } from '../../_common/breakpoint';
-import TrashIcon from '../../assets/img/trash.webp';
-import SAVE from '../../assets/img/save.png';
-import { UsersProfilePictureAPI } from '../api/usresProfileApi';
-import DropDown from '../../components/Dropdown';
-import Modal from '../../components/Modal';
-import SubmitQuill from '../../components/SubmitQuill';
-import UploadImageAndVideo from '../Board/BoardSubmit/UploadImageAndVideo';
+import { breakpoints } from '../../../_common/breakpoint';
+import TrashIcon from '../../../assets/img/trash.webp';
+import SAVE from '../../../assets/img/save.png';
+import { UsersProfilePictureAPI } from '../../api/usresProfileApi';
+import DropDown from '../../../components/Dropdown';
 import { useNavigate, useParams } from 'react-router-dom';
-import { JAYCHIS_LOGO } from '../../_common/jaychisLogo';
-import { setCommunity } from '../../reducers/communitySlice';
-import { sideButtonSliceActions } from '../../reducers/mainListTypeSlice';
-import { GetCommunitiesNameAPI } from '../api/communityApi';
+import { JAYCHIS_LOGO } from '../../../_common/jaychisLogo';
+import { GetCommunitiesNameAPI } from '../../api/communityApi';
+import { setCommunity } from '../../../reducers/communitySlice';
+import PageTransition from '../../../components/PageTransition';
+import Modal from '../../../components/Modal';
+import BoardEdit from '../../Board/BoardRead/BoardEdit';
 
 type ACTIVE_SECTION_TYPES = 'POSTS' | 'COMMENTS' | 'COMMUNITIES' | 'PROFILE';
 const Profile = () => {
@@ -42,17 +41,13 @@ const Profile = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [myPosts, setMyPosts] = useState<CardType[]>([]);
   const [myComments, setMyComments] = useState<CommentType[]>([]);
-  const [myJoinedCommunities, setMyJoinedCommunities] = useState<
-    CommunityType[]
-  >([]);
-  const [activeSection, setActiveSection] =
-    useState<ACTIVE_SECTION_TYPES>('POSTS');
+  const [myJoinedCommunities, setMyJoinedCommunities] = useState<CommunityType[]>([]);
+  const [activeSection, setActiveSection] = useState<ACTIVE_SECTION_TYPES>('POSTS');
   const [profilePreview, setProfilePreview] = useState<string[]>([]);
   const [profileList, setProfileList] = useState<File[]>([]);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [nickname, setNickname] = useState<string>(user.data.nickname || '');
   const [email, setEmail] = useState<string>(user.data.email || '');
-  const [phone, setPhone] = useState<string>(user.data.phone || '');
   const [dropdownisOpen, setDropdownIsOpen] = useState<boolean[]>([false]);
   const dropdownList: string[] = ['삭제하기', '수정하기'];
   const parentRef = useRef<HTMLDivElement>(null);
@@ -69,21 +64,15 @@ const Profile = () => {
     { button }: CommunityClickType,
     index: number,
   ) => {
-    console.log('button : ', button);
     const communityName: string = button;
 
     const response = await GetCommunitiesNameAPI({ name: communityName });
     if (!response) return;
 
     const community = response.data.response;
-    console.log('community : ', community);
     dispatch(setCommunity(community));
     navigate(`/j/${communityName}`);
   };
-
-  // const sendDispatchSideBtn = async ({ button }: CommunityClickType) => {
-  //   //   dispatch(sideButtonSliceActions.setButtonType({ buttonType: button }));
-  //   // };
 
   const handleEdit = (item: string, index?: number) => {
     if (item === '삭제하기') {
@@ -163,7 +152,6 @@ const Profile = () => {
         if (!res) return;
 
         const response = res.data.response;
-
         setMyJoinedCommunities(response);
       };
       commentInquiry();
@@ -178,7 +166,6 @@ const Profile = () => {
         if (response) {
           setNickname(response.nickname);
           setEmail(response.email);
-          setPhone(response.phone);
 
           const userProfile = response.users_profile[0].profile_image;
           if (userProfile !== null) {
@@ -199,63 +186,24 @@ const Profile = () => {
   };
 
   return (
+    <PageTransition>
     <Container>
       <Modal
-        top={'10vh'}
-        isOpen={modalIsOpen}
-        onClose={() => {
-          setModalIsOpen(false);
-        }}
+      top={'10vh'}
+      isOpen={modalIsOpen}
+      onClose={() => {setModalIsOpen(false);}}
       >
-        <StyledInput
-          value={editTitle}
-          onChange={(e) => {
-            setEditTitle(e.target.value);
-          }}
-          placeholder="수정을 제목을 입력하세요"
+        <BoardEdit
+        setModalIsOpen={setModalIsOpen}
+        editContent={editContent}
+        editIndex={editIndex}
+        editTitle={editTitle}
+        setEditContent={setEditContent}
+        setEditIndex={setEditIndex}
+        setEditTitle={setEditTitle}
+        myPosts={myPosts}
         />
-
-        {myPosts[editIndex] && myPosts[editIndex].type === 'TEXT' && (
-          <SubmitQuill
-            setContent={setEditContent}
-            content={editContent}
-            height={'50vh'}
-          />
-        )}
-
-        {myPosts[editIndex] && myPosts[editIndex].type === 'MEDIA' && (
-          <UploadImageAndVideo
-            setContent={setEditContent}
-            content={editContent}
-          />
-        )}
-
-        {myPosts[editIndex] && myPosts[editIndex].type === 'LINK' && (
-          <StyledInput
-            value={editContent}
-            onChange={(e) => {
-              setEditContent([e.target.value]);
-            }}
-            placeholder="수정할 링크를 입력하세요"
-          />
-        )}
-
-        <SubmitButtonStyle
-          onClick={() => {
-            BoardUpdate({
-              id: myPosts[editIndex].id,
-              title: editTitle,
-              content: editContent,
-              nickname: myPosts[editIndex].nickname,
-              category: myPosts[editIndex].category,
-            });
-            alert('수정이 완료되었습니다.');
-            setModalIsOpen(false);
-          }}
-        >
-          보내기
-        </SubmitButtonStyle>
-      </Modal>
+    </Modal>
 
       <ButtonContainer>
         <SectionButton
@@ -480,6 +428,7 @@ const Profile = () => {
         </Section>
       )}
     </Container>
+    </PageTransition>
   );
 };
 
@@ -670,31 +619,6 @@ const EditIcon = styled.img`
   height: 30px;
   position: absolute;
   z-index: 1000;
-`;
-
-const StyledInput = styled.input`
-  flex: 1;
-  width: 96%;
-  padding: 10px;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-  background-color: #f7f7f7;
-  margin-top: 3vh;
-  margin-bottom: 3vh;
-`;
-
-const SubmitButtonStyle = styled.button`
-  width: 80px;
-  padding: 10px 20px;
-  background-color: #84d7fb;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-  margin-top: 5vh;
-  margin-bottom: 5vh;
 `;
 
 export default Profile;

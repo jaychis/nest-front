@@ -17,6 +17,7 @@ import {
   fetchProfileImage,
   FetchProfileImageType,
 } from '../../../_common/fetchCardProfile';
+import Reaction from './Reaction';
 
 export interface ReplyType {
   readonly id: string;
@@ -31,23 +32,11 @@ export interface ReplyType {
 
 const BoardReply = (re: ReplyType) => {
   const [isHovered, setIsHovered] = useState<boolean>(false);
-  const [isCardReplyUpHovered, setIsCardReplyUpHovered] =
-    useState<boolean>(false);
-  const [isCardReplyDownHovered, setIsCardReplyDownHovered] =
-    useState<boolean>(false);
-  const [isCardReplyShareHovered, setIsCardReplyShareHovered] =
-    useState<boolean>(false);
-  const [isCardReplySendHovered, setIsCardReplySendHovered] =
-    useState<boolean>(false);
-
   const [isReplyReplyButton, setIsReplyReplyButton] = useState<boolean>(false);
-
   const ID: string = re.id;
   const USER_ID: string = localStorage.getItem('id') as string;
-
   const [localCount, setLocalCount] = useState<number>(0);
-  const [isReplyReaction, setReplyIsReaction] =
-    useState<ReactionStateTypes>(null);
+  const [isReplyReaction, setReplyIsReaction] = useState<ReactionStateTypes>(null);
   const [isCardReplyCount, setIsCardReplyCount] = useState<number>(0);
 
   const reactionReplyButton = async (userReaction: ReactionStateTypes) => {
@@ -88,20 +77,16 @@ const BoardReply = (re: ReplyType) => {
 
     !profileImage ? setIsProfile(null) : setIsProfile(profileImage);
   };
-  useEffect(() => {
-    const startFunc = async () => {
-      await fetchReplyProfile({ userId: re.user_id });
-    };
-    startFunc();
-  }, [re.user_id]);
+
+  const startFunc = async () => {
+    await fetchReplyProfile({ userId: re.user_id });
+  };
 
   useEffect(() => {
     if (localCount < 0) {
       setLocalCount(0);
     }
-  }, [localCount]);
 
-  useEffect(() => {
     ReactionListAPI({ boardId: ID })
       .then((res) => {
         res.data.response.forEach((el: ReactionType) => {
@@ -122,6 +107,10 @@ const BoardReply = (re: ReplyType) => {
         setIsCardReplyCount(count);
       })
       .catch((err) => console.error('BoardReply ReactionCountAPI err : ', err));
+
+    if(!isProfile){
+      startFunc()
+    }
   }, [isReplyReaction]);
 
   return (
@@ -141,27 +130,11 @@ const BoardReply = (re: ReplyType) => {
        {re.content}
       </ReplyContent>
       <ReactionContainer>
-        <ReactionWrapper>
-          <LikeReactionButton
-            isCommentReaction={isReplyReaction}
-            onMouseEnter={() => setIsCardReplyUpHovered(true)}
-            onMouseLeave={() => setIsCardReplyUpHovered(false)}
-            onClick={() => reactionReplyButton('LIKE')}
-            isHovered={isCardReplyUpHovered}
-          >
-            좋아요
-          </LikeReactionButton>
-          <ReactionCount>{isCardReplyCount}</ReactionCount>
-          <DisLikeReactionButton
-            isCommentReaction={isReplyReaction}
-            onMouseEnter={() => setIsCardReplyDownHovered(true)}
-            onMouseLeave={() => setIsCardReplyDownHovered(false)}
-            onClick={() => reactionReplyButton('DISLIKE')}
-            isHovered={isCardReplyDownHovered}
-          >
-            싫어요
-          </DisLikeReactionButton>
-        </ReactionWrapper>
+        <Reaction
+        reactionCount={isCardReplyCount}
+        clickEvent={reactionReplyButton}
+        reactionState={isReplyReaction}
+        />
       </ReactionContainer>
       {isReplyReplyButton && (
         <ReplyInputContainer>
@@ -226,68 +199,6 @@ const ReactionContainer = styled.div`
   height: 100%;
   margin-top: 5px;
   max-height: 80px;
-`;
-
-const ReactionWrapper = styled.div`
-  margin-right: 5px;
-  border-radius: 30px;
-  width: 160px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    width: 140px;
-  }
-`;
-
-const LikeReactionButton = styled.button<{
-  readonly isHovered: boolean;
-  readonly isCommentReaction: ReactionStateTypes;
-}>`
-  border: ${(props) =>
-    props.isCommentReaction === 'LIKE' ? '2px solid blue' : '1px solid gray'};
-
-  margin-right: 10px;
-  border-radius: 20px;
-  width: 100%;
-  height: 100%;
-  background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
-  cursor: pointer;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    width: 50px;
-    height: 40px;
-    font-size: 10px;
-  }
-`;
-
-const DisLikeReactionButton = styled.button<{
-  readonly isHovered: boolean;
-  readonly isCommentReaction: ReactionStateTypes;
-}>`
-  border: ${(props) =>
-    props.isCommentReaction === 'DISLIKE' ? '2px solid red' : '1px solid gray'};
-
-  margin-right: 10px;
-  border-radius: 20px;
-  width: 100%;
-  height: 100%;
-  background-color: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
-  cursor: pointer;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    width: 50px;
-    height: 40px;
-    font-size: 10px;
-  }
-`;
-
-const ReactionCount = styled.span`
-  margin: 0 10px;
-  width: 10px;
-  height: 10px;
 `;
 
 const ReplyInputContainer = styled.div`
