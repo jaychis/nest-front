@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, forwardRef } from "react";
 import styled from "styled-components";
 import { breakpoints } from "../_common/breakpoint";
+import useOutsideClick from "../Hook/UseOutsideClick";
 
 interface DropDownProps {
   readonly menu: string[];
@@ -11,33 +12,8 @@ interface DropDownProps {
 
 const DropDown = forwardRef<HTMLDivElement, DropDownProps>(
     ({ menu, eventHandler, eventIndex, onClose }, ref) => {
-      const internalRef = useRef<HTMLDivElement>(null);
-      const parentRef = ref
-  
-      useEffect(() => {
-        if (!onClose) return;
-      
-        const handleClickOutside = (event: MouseEvent) => {
-          const target = event.target as Node;
-      
-          if (
-            parentRef &&
-            'current' in parentRef &&
-            parentRef.current &&
-            !parentRef.current.contains(target) &&
-            internalRef?.current &&
-            !internalRef.current.contains(target)
-          ) {
-            onClose();
-          }
-        };
-      
-        document.addEventListener('click', handleClickOutside);
-        return () => {
-          document.removeEventListener('click', handleClickOutside);
-        };
-      }, [onClose, parentRef, internalRef]);
-  
+    const internalRef = useOutsideClick(onClose, ref as React.RefObject<HTMLDivElement>);
+
       return (
         <DropDownContainer ref={internalRef as React.RefObject<HTMLDivElement>}>
           <DropDownList>
