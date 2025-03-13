@@ -165,8 +165,8 @@ const Card = ({
         onMouseLeave={() => setIsCardHovered(false)}
         isHovered={isCardHovered}
       >
-        <LogoContainer onClick={() => setIsOpen(true)}>
-        <LogoImg src = {logo} width="50" height="50" />
+        <LogoContainer>
+        <LogoImg src = {logo} width="50" height="50" onClick={() => setIsOpen(true)}/>
           <NicknameWrapper
           >
             {nickname}

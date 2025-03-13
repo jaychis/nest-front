@@ -264,6 +264,7 @@ const Profile = () => {
                       menu={dropdownList}
                       eventHandler={handleEdit}
                       eventIndex={index}
+                      ref={parentRef}
                       onClose={() =>
                         setDropdownIsOpen((prev) =>
                           prev.map((state, idx) =>
@@ -271,7 +272,6 @@ const Profile = () => {
                           ),
                         )
                       }
-                      ref={parentRef}
                     />
                   )}
                 </div>
