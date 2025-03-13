@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import YouTube from "react-youtube";
-
+import { memo } from "react";
 interface YoutubeProps {
   readonly content: string[];
 }

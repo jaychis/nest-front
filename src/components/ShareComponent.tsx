@@ -21,6 +21,13 @@ const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
   const [active, setIsActive] = useState<boolean>(false);
   const kakaoApiKey = process.env.REACT_APP_KAKAO_API_KEY;
 
+  const ShareList = [
+    {platform: '카카오톡', icon: KakaoIcon},
+    {platform: '인스타그램', icon: InstagramIcon},
+    {platform: '페이스븍', icon: FaceBookIcon},
+    {platform: '트위터', icon: TwitterIcon},
+    {platform: '링크복사', icon: CopyIcon},]
+
   React.useEffect(() => {
     if (window.Kakao && !window.Kakao.isInitialized()) {
       window.Kakao.init(kakaoApiKey);
@@ -51,19 +58,16 @@ const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
     else domain = 'jaychis.com';
 
     domain = domain + `/boards/read?id=${id}&title=${title}&content=${content}`;
-
+    shareCountApi(id);
+    setIsActive(false);
     switch (platform) {
       case '트위터':
         const twitterShareUrl = `https://twitter.com/intent/tweet?text=${title}%0A${domain}`;
-        shareCountApi(id);
-        setIsActive(false);
         window.open(twitterShareUrl, '_blank', 'noopener,noreferrer');
         break;
 
       case '인스타그램':
         navigator.clipboard.writeText(domain);
-        shareCountApi(id);
-        setIsActive(false);
         window.open(
           `https://www.instagram.com/direct/`,
           '_blank',
@@ -73,15 +77,11 @@ const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
 
       case '페이스북':
         const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(domain)}`;
-        shareCountApi(id);
-        setIsActive(false);
         window.open(facebookShareUrl, '_blank', 'noopener,noreferrer');
         break;
 
       case '링크복사':
         navigator.clipboard.writeText(domain);
-        shareCountApi(id);
-        setIsActive(false);
         alert('링크가 복사되었습니다.');
         break;
 
@@ -127,58 +127,23 @@ const ShareComponent = ({ shareCount, id, title, content }: ShareProps) => {
             isHovered={isCardShareHovered}
             onMouseEnter={() => setIsCardShareHovered(true)}
             onMouseLeave={() => setIsCardShareHovered(false)}
-            onClick={() => {
-              setIsActive((prev) => !prev);
-            }}
+            onClick={() => {setIsActive((prev) => !prev);}}
           >
             <ShareImageTag
               src="https://img.icons8.com/ios/50/forward-arrow.png"
               alt="Share Icon"
             />
-            {/*<ShareCountTag>{shareCount}</ShareCountTag>*/}
           </ShareButton>
           {active && (
             <DropdownMenu>
-              <DropdownItem
-                onClick={() => {
-                  handleShare('카카오톡');
-                }}
-              >
-                <ShareIcon src={KakaoIcon} />
-                카카오톡
-              </DropdownItem>
-              <DropdownItem
-                onClick={() => {
-                  handleShare('인스타그램');
-                }}
-              >
-                <ShareIcon src={InstagramIcon} />
-                인스타그램
-              </DropdownItem>
-              <DropdownItem
-                onClick={() => {
-                  handleShare('페이스북');
-                }}
-              >
-                <ShareIcon src={FaceBookIcon} />
-                페이스북
-              </DropdownItem>
-              <DropdownItem
-                onClick={() => {
-                  handleShare('트위터');
-                }}
-              >
-                <ShareIcon src={TwitterIcon} />
-                트위터
-              </DropdownItem>
-              <DropdownItem
-                onClick={() => {
-                  handleShare('링크복사');
-                }}
-              >
-                <ShareIcon src={CopyIcon} />
-                링크 복사
-              </DropdownItem>
+              {ShareList.map((item, index) => {
+                return(
+                  <DropdownItem onClick={() => { handleShare(item.platform);}}>
+                    <ShareIcon src={item.icon} />
+                    {item.platform}
+                  </DropdownItem>
+                )
+              })}
             </DropdownMenu>
           )}
         </DropdownContainer>
@@ -269,11 +234,4 @@ const ShareButton = styled.button.withConfig({
 const ShareImageTag = styled.img`
   height: 40px;
   width: 40px;
-`;
-
-const ShareCountTag = styled.p`
-  display: flex;
-  font-size: 15px;
-  margin-bottom: 15px;
-  font-weight: 700;
 `;

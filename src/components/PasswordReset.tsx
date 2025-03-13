@@ -1,6 +1,6 @@
 import styled from 'styled-components';
+import PageTransition from './PageTransition';
 
-type modalType = 'login' | 'signup' | 'recovery' | 'verity';
 interface Props {
   readonly title: string;
   readonly body: React.ReactNode;
@@ -14,6 +14,7 @@ const PassWordReset = ({
 }: Props) => {
   return (
     <Container>
+      <PageTransition>
       <HeaderTitleWrapper>
         <Title>{title}</Title>
       </HeaderTitleWrapper>
@@ -23,6 +24,7 @@ const PassWordReset = ({
       </UserRecoveryContainer>
 
       <FooterWrapper>{footer}</FooterWrapper>
+      </PageTransition>
     </Container>
   );
 };

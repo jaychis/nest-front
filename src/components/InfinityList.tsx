@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { MainListTypeState } from '../reducers/mainListTypeSlice';
 import { RootState } from '../store/store';
 import { CardType } from '../_common/collectionTypes';
-import { useLocation,useBeforeUnload } from 'react-router-dom';
+import { useLocation} from 'react-router-dom';
 
 const InfinitiList = () => {
 
@@ -111,11 +111,6 @@ const InfinitiList = () => {
         }
     }
 
-    useBeforeUnload((event) => {
-        console.log(sessionStorage.getItem)
-        
-    })
-
     useEffect(() => {
         setAllDataLoaded(false);
         setId(null);
@@ -164,16 +159,16 @@ const InfinitiList = () => {
         <>
             <AutoSizer>
                 {({ width, height }) => (
-                    <List
-                    scrollToIndex={initialScrollSet ? undefined : scrollIndex}
-                    scrollToAlignment="start"
-                    width={width}
-                    height={height}
-                    rowCount={list.length}
-                    rowHeight={cache.rowHeight}
-                    rowRenderer={rowRenderer}
-                    onScroll={handleScroll}
-                    />
+                <List
+                scrollToIndex={initialScrollSet ? undefined : scrollIndex}
+                scrollToAlignment="start"
+                width={width}
+                height={height}
+                rowCount={list.length}
+                rowHeight={cache.rowHeight}
+                rowRenderer={rowRenderer}
+                onScroll={handleScroll}
+                />
                 )}
             </AutoSizer>
         </>
