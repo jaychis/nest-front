@@ -149,62 +149,46 @@ const Login = ({
 
   const kakaoOauthLogin = () => {
     const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}`;
-
-    const popup = window.open(
-      KAKAO_AUTH_URL,
-      'PopupWin',
-      'width=500,height=600',
-    );
+  
+    const popup = window.open(KAKAO_AUTH_URL, 'PopupWin', 'width=500,height=600');
+  
     if (!popup) {
-      console.error(
-        '팝업 창을 열 수 없습니다. 팝업 차단이 설정되었는지 확인하세요.',
-      );
+      console.error('팝업 차단이 설정되었을 수 있습니다.');
       return;
     }
-
-    // 팝업에서 부모 창으로 메시지가 전달될 때를 위한 이벤트 리스너
-    window.addEventListener(
-      'message',
-      async (event) => {
-        if (event.origin !== window.location.origin) {
-          return;
-        }
-        const { code } = event.data;
-        if (code) {
-          const response = await KakaoOAuthLoginAPI({ code });
-          if (!response) return;
-          
-          const {
-            id,
-            nickname,
-            access_token,
-            refresh_token,
-            isNewUser,
-            email,
-          } = response.data.response as {
-            readonly id: string;
-            readonly email: string;
-            readonly nickname: string;
-            readonly access_token: string;
-            readonly refresh_token: string;
-            readonly isNewUser: boolean;
-          };
-
-          if (!isNewUser) {
-            modalIsOpen(false);
-            localStorage.setItem('access_token', access_token);
-            localStorage.setItem('refresh_token', refresh_token);
-            localStorage.setItem('id', id);
-            localStorage.setItem('nickname', nickname);
-            window.location.reload();
-          } else {
-            localStorage.setItem('email', email);
-            goSignup();
-          }
-        }
-      },
-      { once: true },
-    );
+  
+    const handleMessage = async (event: MessageEvent) => {
+      if (event.origin !== window.location.origin) return;
+      
+      const { code } = event.data;
+      if (!code) return;
+  
+      const response = await KakaoOAuthLoginAPI({ code });
+      if (!response) return;
+  
+      const {
+        id,
+        nickname,
+        access_token,
+        refresh_token,
+        isNewUser,
+        email,
+      } = response.data.response;
+  
+      if (!isNewUser) {
+        modalIsOpen(false);
+        localStorage.setItem('access_token', access_token);
+        localStorage.setItem('refresh_token', refresh_token);
+        localStorage.setItem('id', id);
+        localStorage.setItem('nickname', nickname);
+        window.location.reload();
+      } else {
+        localStorage.setItem('email', email);
+        goSignup();
+      }
+    };
+  
+    window.addEventListener('message', handleMessage, { once: true });
   };
 
   useEffect(() => {
