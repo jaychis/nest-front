@@ -29,7 +29,7 @@ interface User {
 
 const CommunityProfile = () => {
   const USER_ID: string = localStorage.getItem('id') as string;
-  const dropDownRef = React.useRef<HTMLDivElement>(null);
+  const parentRef = React.useRef<HTMLDivElement>(null);
   const editButtonRef = React.useRef<HTMLDivElement>(null);
   const selectCommunity: SelectCommunityParams = useSelector(
     (state: any) => state.community,
@@ -153,24 +153,6 @@ const CommunityProfile = () => {
       console.log(error);
     }
   };
-
-  useEffect(() => {
-    const handleClickOutside = (event: any) => {
-      if (
-        editButtonRef.current &&
-        dropDownRef.current &&
-        !editButtonRef.current.contains(event.target) &&
-        !dropDownRef.current.contains(event.target)
-      ) {
-        setView(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
 
   const handleChangeInviteeNickname = async ({
     inviteeNickname,
@@ -320,7 +302,7 @@ const CommunityProfile = () => {
         {USER_ID === selectCommunity.creator_user_id && (
           <>
             <EditWrapper
-              ref={editButtonRef}
+              ref={parentRef}
               onClick={() => {
                 setView(!view);
               }}
@@ -334,7 +316,9 @@ const CommunityProfile = () => {
                 <DropDown 
                 menu={editList} 
                 eventHandler={communityEditHandler}
-                onClose = {() => {setView(false)}} />
+                onClose = {() => {setView(false)}}
+                ref={parentRef} 
+                />
               )}
             </EditWrapper>
 

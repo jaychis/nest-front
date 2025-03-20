@@ -15,6 +15,7 @@ const PageTransition = ({children}:PageTransitionProps) => {
         exit='out'
         transition={{ duration: 0.5 }}
         variants={pageEffect}
+        style={{width: '100%', height: '100%'}}
         >
             {children}
         </motion.div>
