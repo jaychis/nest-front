@@ -13,6 +13,7 @@ import styled from 'styled-components';
 import { TagListAPI } from '../../api/tagApi';
 import { breakpoints } from '../../../_common/breakpoint';
 import UploadImageAndVideo from './UploadImageAndVideo';
+import useDebounce from '../../../Hook/UseDebounce';
 
 const BoardSubmit = () => {
   const navigate = useNavigate();
@@ -28,7 +29,12 @@ const BoardSubmit = () => {
   const [tagSearchTerm, setTagSearchTerm] = useState('');
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [textContent, setTextContent] = useState<string[]>(['']); 
-
+  const [selectedCommunity, setSelectedCommunity] = useState<string>('jaychis');
+  const [searchTerm, setSearchTerm] = useState<string>('jaychis');
+  const [searchResults, setSearchResults] = useState<string[]>([]);
+  const [imgUrl, setImgUrl] = useState<string[]>([]);
+  const debounceSearchTerm = useDebounce({value:searchTerm ,delay: 500})
+  
   const handleRemoveTopic = (index: number) => {
     const newTopics = topics.filter((_, i) => i !== index);
     setTopics(newTopics);
@@ -101,11 +107,6 @@ const BoardSubmit = () => {
     const { value } = event.target;
     setLinkContent(value);
   };
-
-  const [selectedCommunity, setSelectedCommunity] = useState<string>('jaychis');
-  const [searchTerm, setSearchTerm] = useState<string>('jaychis');
-  const [searchResults, setSearchResults] = useState<string[]>([]);
-  const [imgUrl, setImgUrl] = useState<string[]>([]);
 
   const handleCommunitySearchChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -224,7 +225,7 @@ const BoardSubmit = () => {
 
   useEffect(() => {
     const fetchDefaultCommunities = async () => {
-      if (searchTerm) {
+      if (debounceSearchTerm.trim()) {
         try {
           const res = await GetCommunitiesNameAPI({ name: searchTerm });
           if (res && res.data && res.data.response) {
@@ -242,7 +243,7 @@ const BoardSubmit = () => {
     };
 
     fetchDefaultCommunities();
-  }, []);
+  }, [debounceSearchTerm]);
 
   return (
     <>
