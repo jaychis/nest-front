@@ -1,5 +1,5 @@
 import userEvent from "@testing-library/user-event";
-import BoardSubmit from "../../pages/Board/BoardSubmit/BoardSubmit";
+import BoardSubmit from "../pages/Board/BoardSubmit/BoardSubmit";
 import { render, screen } from '@testing-library/react';
 
 describe('글 작성 테스트', () => {
