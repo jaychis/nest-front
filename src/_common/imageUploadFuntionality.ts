@@ -33,14 +33,14 @@ export const ImageLocalPreviewUrls = async ({
   };
 };
 
-type ImageLocalPreviewUrlsDelete = {
+type DeleteImagePreviewUrlsParams = {
   readonly urls: string[];
 };
-export type ImageLocalPreviewUrlsDeleteType = string[] | null;
+export type DeleteImagePreviewUrlsResult = string[] | null;
 
 export const ImageLocalPreviewUrlsDelete = async ({
   urls,
-}: ImageLocalPreviewUrlsDelete): Promise<ImageLocalPreviewUrlsDeleteType> => {
+}: DeleteImagePreviewUrlsParams): Promise<DeleteImagePreviewUrlsResult> => {
   if (urls.length === 0) {
     alert('삭제할 이미지가 없습니다.');
     return null;
@@ -57,19 +57,20 @@ export type AwsImageUploadFunctionalityReturnType = {
   readonly imageUrls: string[];
 } | null;
 
-export const AwsImageUploadFunctionality = 
-async ({fileList,}: AwsImageUploadFunctionalityInputType): Promise<AwsImageUploadFunctionalityReturnType> => {
+export const AwsImageUploadFunctionality = async ({
+  fileList,
+}: AwsImageUploadFunctionalityInputType): Promise<AwsImageUploadFunctionalityReturnType> => {
   const files: File[] = Array.from(fileList);
 
   const uploadImageUrlList = files.map(async (file: File) => {
     try {
-      const webpfile = await ImageUtils(file)
+      const webpfile = await ImageUtils(file);
       const sanitizedFileName: string = encodeURIComponent(webpfile.name);
       const key = `uploads/${new Date().toISOString()}_${sanitizedFileName}`;
       const expires = 60;
 
       const res = await getPresignedUrlAPI({ key, expires });
-      
+
       if (res.data && res.data.response && res.data.response.url) {
         const presignedUrl = res.data.response.url;
 

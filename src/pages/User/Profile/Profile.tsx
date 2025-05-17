@@ -11,13 +11,13 @@ import {
 } from '../../../_common/collectionTypes';
 import Card from '../../../components/Card/Card';
 import BoardComment, { CommentType } from '../../Board/BoardRead/BoardComment';
-import { BoardInquiryAPI, BoardDelete} from '../../api/boardApi';
+import { BoardInquiryAPI, BoardDelete } from '../../api/boardApi';
 import { CommentUsersInquiryAPI } from '../../api/commentApi';
 import {
   AwsImageUploadFunctionality,
   ImageLocalPreviewUrls,
   ImageLocalPreviewUrlsDelete,
-  ImageLocalPreviewUrlsDeleteType,
+  DeleteImagePreviewUrlsResult,
   ImageLocalPreviewUrlsReturnType,
 } from '../../../_common/imageUploadFuntionality';
 import styled from 'styled-components';
@@ -41,8 +41,11 @@ const Profile = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [myPosts, setMyPosts] = useState<CardType[]>([]);
   const [myComments, setMyComments] = useState<CommentType[]>([]);
-  const [myJoinedCommunities, setMyJoinedCommunities] = useState<CommunityType[]>([]);
-  const [activeSection, setActiveSection] = useState<ACTIVE_SECTION_TYPES>('POSTS');
+  const [myJoinedCommunities, setMyJoinedCommunities] = useState<
+    CommunityType[]
+  >([]);
+  const [activeSection, setActiveSection] =
+    useState<ACTIVE_SECTION_TYPES>('POSTS');
   const [profilePreview, setProfilePreview] = useState<string[]>([]);
   const [profileList, setProfileList] = useState<File[]>([]);
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -88,8 +91,9 @@ const Profile = () => {
   };
 
   const imageUrlListDelete = async () => {
-    const res: ImageLocalPreviewUrlsDeleteType =
-      await ImageLocalPreviewUrlsDelete({ urls: profilePreview });
+    const res: DeleteImagePreviewUrlsResult = await ImageLocalPreviewUrlsDelete(
+      { urls: profilePreview },
+    );
     if (!res) return;
 
     setProfilePreview(res);
@@ -187,247 +191,249 @@ const Profile = () => {
 
   return (
     <PageTransition>
-    <Container>
-      <Modal
-      top={'10vh'}
-      isOpen={modalIsOpen}
-      onClose={() => {setModalIsOpen(false);}}
-      >
-        <BoardEdit
-        setModalIsOpen={setModalIsOpen}
-        editContent={editContent}
-        editIndex={editIndex}
-        editTitle={editTitle}
-        setEditContent={setEditContent}
-        setEditIndex={setEditIndex}
-        setEditTitle={setEditTitle}
-        myPosts={myPosts}
-        />
-    </Modal>
-
-      <ButtonContainer>
-        <SectionButton
-          isActive={activeSection === 'POSTS'}
-          onClick={() => setActiveSection('POSTS')}
+      <Container>
+        <Modal
+          top={'10vh'}
+          isOpen={modalIsOpen}
+          onClose={() => {
+            setModalIsOpen(false);
+          }}
         >
-          등록한 게시글
-        </SectionButton>
-        <SectionButton
-          isActive={activeSection === 'COMMENTS'}
-          onClick={() => setActiveSection('COMMENTS')}
-        >
-          등록한 댓글
-        </SectionButton>
-        <SectionButton
-          isActive={activeSection === 'COMMUNITIES'}
-          onClick={() => setActiveSection('COMMUNITIES')}
-        >
-          가입한 커뮤니티
-        </SectionButton>
-        <SectionButton
-          isActive={activeSection === 'PROFILE'}
-          onClick={() => setActiveSection('PROFILE')}
-        >
-          정보
-        </SectionButton>
-      </ButtonContainer>
+          <BoardEdit
+            setModalIsOpen={setModalIsOpen}
+            editContent={editContent}
+            editIndex={editIndex}
+            editTitle={editTitle}
+            setEditContent={setEditContent}
+            setEditIndex={setEditIndex}
+            setEditTitle={setEditTitle}
+            myPosts={myPosts}
+          />
+        </Modal>
 
-      {activeSection === 'POSTS' && (
-        <Section>
-          <SectionTitle>등록한 게시글</SectionTitle>
-          {myPosts && myPosts.length > 0 ? (
-            myPosts.map((post: CardType, index) => (
-              <>
-                <div
-                  ref={parentRef}
-                  style={{
-                    margin: '0 2% 0 auto',
-                    width: '5%',
-                    position: 'relative',
-                  }}
-                >
-                  <EditIcon
-                    style={{ marginTop: '1%' }}
-                    src="https://img.icons8.com/material-outlined/24/menu-2.png"
-                    alt="menu-2"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setDropdownIsOpen((prev) =>
-                        prev.map((state, idx) =>
-                          idx === index ? !state : state,
-                        ),
-                      );
-                    }}
-                  />
-                  {dropdownisOpen[index] && (
-                    <DropDown
-                      menu={dropdownList}
-                      eventHandler={handleEdit}
-                      eventIndex={index}
-                      ref={parentRef}
-                      onClose={() =>
-                        setDropdownIsOpen((prev) =>
-                          prev.map((state, idx) =>
-                            idx === index ? false : state,
-                          ),
-                        )
-                      }
-                    />
-                  )}
-                </div>
-                <Card
-                  key={post?.id}
-                  shareCount={post?.share_count}
-                  createdAt={post?.created_at}
-                  userId={post?.user_id}
-                  {...post}
-                />
-              </>
-            ))
-          ) : (
-            <p>등록된 포스트가 없습니다.</p>
-          )}
-        </Section>
-      )}
+        <ButtonContainer>
+          <SectionButton
+            isActive={activeSection === 'POSTS'}
+            onClick={() => setActiveSection('POSTS')}
+          >
+            등록한 게시글
+          </SectionButton>
+          <SectionButton
+            isActive={activeSection === 'COMMENTS'}
+            onClick={() => setActiveSection('COMMENTS')}
+          >
+            등록한 댓글
+          </SectionButton>
+          <SectionButton
+            isActive={activeSection === 'COMMUNITIES'}
+            onClick={() => setActiveSection('COMMUNITIES')}
+          >
+            가입한 커뮤니티
+          </SectionButton>
+          <SectionButton
+            isActive={activeSection === 'PROFILE'}
+            onClick={() => setActiveSection('PROFILE')}
+          >
+            정보
+          </SectionButton>
+        </ButtonContainer>
 
-      {activeSection === 'COMMENTS' && (
-        <Section>
-          <SectionTitle>등록한 댓글</SectionTitle>
-          {myComments.length > 0 ? (
-            myComments.map((comment: CommentType) => (
-              <BoardComment
-                key={comment?.id}
-                {...comment}
-                onReplySubmit={handleReplySubmit}
-              />
-            ))
-          ) : (
-            <p>작성된 댓글이 없습니다.</p>
-          )}
-        </Section>
-      )}
-
-      {activeSection === 'COMMUNITIES' && (
-        <Section>
-          <SectionTitle>가입한 커뮤니티</SectionTitle>
-          {myJoinedCommunities.length > 0 ? (
-            myJoinedCommunities.map(
-              (community: CommunityType, index: number) => (
+        {activeSection === 'POSTS' && (
+          <Section>
+            <SectionTitle>등록한 게시글</SectionTitle>
+            {myPosts && myPosts.length > 0 ? (
+              myPosts.map((post: CardType, index) => (
                 <>
-                  <CommunityContainer
-                    onClick={() =>
-                      handleCommunityClick(
-                        {
-                          button: community.name,
-                        } as CommunityClickType,
-                        index,
-                      )
-                    }
+                  <div
+                    ref={parentRef}
+                    style={{
+                      margin: '0 2% 0 auto',
+                      width: '5%',
+                      position: 'relative',
+                    }}
                   >
-                    <CommunityPreviewWrapper>
-                      <ImagePreview
-                        src={community?.icon ? community.icon : JAYCHIS_LOGO}
-                        alt="Profile Preview"
-                      />
-                    </CommunityPreviewWrapper>
-
-                    <CommunityInfo>
-                      <InfoRow>
-                        <Label>커뮤니티명:</Label>
-                        <Value>{community?.name}</Value>
-                      </InfoRow>
-                      <InfoRow>
-                        <Label>공개범위:</Label>
-                        <Value>{community?.visibility}</Value>
-                      </InfoRow>
-                    </CommunityInfo>
-                  </CommunityContainer>
-                </>
-              ),
-            )
-          ) : (
-            <p>가입한 커뮤니티가 없습니다.</p>
-          )}
-        </Section>
-      )}
-
-      {activeSection === 'PROFILE' && (
-        <Section>
-          <SectionTitle>프로필</SectionTitle>
-          <ProfileContainer>
-            <ImageUploadWrapper>
-              <HiddenFileInput
-                type="file"
-                id="profilePicture"
-                accept="image/*"
-                onChange={handleProfilePictureChange}
-              />
-
-              <ImagePreviewWrapper
-                onClick={() => {
-                  document.getElementById('profilePicture')?.click();
-                }}
-              >
-                <SaveButton
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    profileImageSave();
-                  }}
-                >
-                  <ImageIcon src={SAVE} alt={'Save Icon'} />
-                </SaveButton>
-                {profilePreview.length > 0 ? (
-                  <>
-                    <ImagePreview
-                      src={profilePreview[0]}
-                      alt="Profile Preview"
-                    />
-
-                    <TrashButton
+                    <EditIcon
+                      style={{ marginTop: '1%' }}
+                      src="https://img.icons8.com/material-outlined/24/menu-2.png"
+                      alt="menu-2"
                       onClick={(e) => {
                         e.stopPropagation();
-                        imageUrlListDelete();
+                        setDropdownIsOpen((prev) =>
+                          prev.map((state, idx) =>
+                            idx === index ? !state : state,
+                          ),
+                        );
                       }}
-                    >
-                      <ImageIcon src={TrashIcon} alt="Trash Icon" />
-                    </TrashButton>
-                  </>
-                ) : (
-                  <Placeholder>프로필</Placeholder>
-                )}
-              </ImagePreviewWrapper>
-            </ImageUploadWrapper>
+                    />
+                    {dropdownisOpen[index] && (
+                      <DropDown
+                        menu={dropdownList}
+                        eventHandler={handleEdit}
+                        eventIndex={index}
+                        ref={parentRef}
+                        onClose={() =>
+                          setDropdownIsOpen((prev) =>
+                            prev.map((state, idx) =>
+                              idx === index ? false : state,
+                            ),
+                          )
+                        }
+                      />
+                    )}
+                  </div>
+                  <Card
+                    key={post?.id}
+                    shareCount={post?.share_count}
+                    createdAt={post?.created_at}
+                    userId={post?.user_id}
+                    {...post}
+                  />
+                </>
+              ))
+            ) : (
+              <p>등록된 포스트가 없습니다.</p>
+            )}
+          </Section>
+        )}
 
-            <ProfileInfo>
-              <InfoRow>
-                <Label>닉네임:</Label>
-                {isEditing ? (
-                  <Input
-                    type="text"
-                    value={nickname}
-                    onChange={(e) => setNickname(e.target.value)}
-                  />
-                ) : (
-                  <Value>{nickname || '닉네임을 입력하세요'}</Value>
-                )}
-              </InfoRow>
-              <InfoRow>
-                <Label>이메일:</Label>
-                {isEditing ? (
-                  <Input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                ) : (
-                  <Value>{email || '이메일을 입력하세요'}</Value>
-                )}
-              </InfoRow>
-            </ProfileInfo>
-          </ProfileContainer>
-        </Section>
-      )}
-    </Container>
+        {activeSection === 'COMMENTS' && (
+          <Section>
+            <SectionTitle>등록한 댓글</SectionTitle>
+            {myComments.length > 0 ? (
+              myComments.map((comment: CommentType) => (
+                <BoardComment
+                  key={comment?.id}
+                  {...comment}
+                  onReplySubmit={handleReplySubmit}
+                />
+              ))
+            ) : (
+              <p>작성된 댓글이 없습니다.</p>
+            )}
+          </Section>
+        )}
+
+        {activeSection === 'COMMUNITIES' && (
+          <Section>
+            <SectionTitle>가입한 커뮤니티</SectionTitle>
+            {myJoinedCommunities.length > 0 ? (
+              myJoinedCommunities.map(
+                (community: CommunityType, index: number) => (
+                  <>
+                    <CommunityContainer
+                      onClick={() =>
+                        handleCommunityClick(
+                          {
+                            button: community.name,
+                          } as CommunityClickType,
+                          index,
+                        )
+                      }
+                    >
+                      <CommunityPreviewWrapper>
+                        <ImagePreview
+                          src={community?.icon ? community.icon : JAYCHIS_LOGO}
+                          alt="Profile Preview"
+                        />
+                      </CommunityPreviewWrapper>
+
+                      <CommunityInfo>
+                        <InfoRow>
+                          <Label>커뮤니티명:</Label>
+                          <Value>{community?.name}</Value>
+                        </InfoRow>
+                        <InfoRow>
+                          <Label>공개범위:</Label>
+                          <Value>{community?.visibility}</Value>
+                        </InfoRow>
+                      </CommunityInfo>
+                    </CommunityContainer>
+                  </>
+                ),
+              )
+            ) : (
+              <p>가입한 커뮤니티가 없습니다.</p>
+            )}
+          </Section>
+        )}
+
+        {activeSection === 'PROFILE' && (
+          <Section>
+            <SectionTitle>프로필</SectionTitle>
+            <ProfileContainer>
+              <ImageUploadWrapper>
+                <HiddenFileInput
+                  type="file"
+                  id="profilePicture"
+                  accept="image/*"
+                  onChange={handleProfilePictureChange}
+                />
+
+                <ImagePreviewWrapper
+                  onClick={() => {
+                    document.getElementById('profilePicture')?.click();
+                  }}
+                >
+                  <SaveButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      profileImageSave();
+                    }}
+                  >
+                    <ImageIcon src={SAVE} alt={'Save Icon'} />
+                  </SaveButton>
+                  {profilePreview.length > 0 ? (
+                    <>
+                      <ImagePreview
+                        src={profilePreview[0]}
+                        alt="Profile Preview"
+                      />
+
+                      <TrashButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          imageUrlListDelete();
+                        }}
+                      >
+                        <ImageIcon src={TrashIcon} alt="Trash Icon" />
+                      </TrashButton>
+                    </>
+                  ) : (
+                    <Placeholder>프로필</Placeholder>
+                  )}
+                </ImagePreviewWrapper>
+              </ImageUploadWrapper>
+
+              <ProfileInfo>
+                <InfoRow>
+                  <Label>닉네임:</Label>
+                  {isEditing ? (
+                    <Input
+                      type="text"
+                      value={nickname}
+                      onChange={(e) => setNickname(e.target.value)}
+                    />
+                  ) : (
+                    <Value>{nickname || '닉네임을 입력하세요'}</Value>
+                  )}
+                </InfoRow>
+                <InfoRow>
+                  <Label>이메일:</Label>
+                  {isEditing ? (
+                    <Input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  ) : (
+                    <Value>{email || '이메일을 입력하세요'}</Value>
+                  )}
+                </InfoRow>
+              </ProfileInfo>
+            </ProfileContainer>
+          </Section>
+        )}
+      </Container>
     </PageTransition>
   );
 };
