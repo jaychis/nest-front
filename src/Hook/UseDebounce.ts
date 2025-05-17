@@ -16,7 +16,7 @@ function useDebounce<T>({ value, delay }: debounceProps<T>): T {
     return () => {
       clearTimeout(handler);
     };
-  }, [value]);
+  }, [value, delay]);
 
   return debouncedValue;
 }
