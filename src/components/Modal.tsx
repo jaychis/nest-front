@@ -12,33 +12,36 @@ interface Props {
 }
 
 const Modal = ({ children, isOpen, onClose, buttonLabel, top }: Props) => {
-  
-  const modalRef = useRef<HTMLDivElement>(null)
+  const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isOpen) return;
-      
+
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
-  
-      if (
-        modalRef?.current && !modalRef.current.contains(target)
-      ) { onClose();}
+
+      if (modalRef?.current && !modalRef.current.contains(target)) {
+        onClose();
+      }
     };
-  
+
     document.addEventListener('mousedown', handleClickOutside);
-  },[onClose, modalRef])
+  }, [onClose, modalRef]);
 
   if (!isOpen) return null;
-  
+
   return ReactDOM.createPortal(
-    <ModalContainer style={{ top: top }} className = 'modalContainer' ref = {modalRef}>
+    <ModalContainer
+      style={{ top: top }}
+      className="modalContainer"
+      ref={modalRef}
+    >
       <ModalBody>
         <CloseButton onClick={onClose}>Close</CloseButton>
         {children}
       </ModalBody>
     </ModalContainer>,
-    document.body
+    document.body,
   );
 };
 
@@ -50,8 +53,8 @@ const ModalContainer = styled.div`
   max-width: 500px;
   max-height: 600px;
   overflow: hidden;
-  left: 50%;  
-  transform: translate(-50%, -50%);  
+  left: 50%;
+  transform: translate(-50%, -50%);
   border: 1px solid black;
   border-radius: 25px;
   width: 100%;
@@ -60,8 +63,8 @@ const ModalContainer = styled.div`
 
   @media (max-width: ${breakpoints.mobile}) {
     top: 35vh !important;
-    left: 50% !important; 
-    transform: translateX(-50%); 
+    left: 50% !important;
+    transform: translateX(-50%);
     width: 95%;
   }
 
@@ -74,9 +77,9 @@ const ModalContainer = styled.div`
 
   @media (min-width: ${breakpoints.tablet}) {
     left: 50%;
-    transform: translateX(-50%); 
+    transform: translateX(-50%);
   }
-`
+`;
 
 const ModalBody = styled.div`
   background-color: #fff;
@@ -85,11 +88,11 @@ const ModalBody = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  
+
   @media (max-width: ${breakpoints.tablet}) {
     width: 100%;
   }
-`
+`;
 
 const CloseButton = styled.button`
   align-self: flex-end;
@@ -100,4 +103,4 @@ const CloseButton = styled.button`
   border-radius: 25px;
   cursor: pointer;
   margin: 15px 15px 15px 0;
-`
+`;

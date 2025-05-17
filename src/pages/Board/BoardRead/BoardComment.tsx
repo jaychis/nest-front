@@ -40,15 +40,17 @@ interface BoardCommentProps extends CommentType {
 }
 
 const BoardComment = (co: BoardCommentProps) => {
-
-  const [isCardCommentReplyHovered, setIsCardCommentReplyHovered] = useState<boolean>(false);
+  const [isCardCommentReplyHovered, setIsCardCommentReplyHovered] =
+    useState<boolean>(false);
   const [isHovered, setIsHovered] = useState<boolean>(false);
-  const [isCommentReplyButton, setIsCommentReplyButton] = useState<boolean>(false);
+  const [isCommentReplyButton, setIsCommentReplyButton] =
+    useState<boolean>(false);
   const USER_ID: string = localStorage.getItem('id') as string;
   const ID: string = co.id;
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [localCount, setLocalCount] = useState<number>(0);
-  const [isCommentReaction, setCommentIsReaction] =useState<ReactionStateTypes>(null);
+  const [isCommentReaction, setCommentIsReaction] =
+    useState<ReactionStateTypes>(null);
   const [isCardCommentCount, setIsCardCommentCount] = useState<number>(0);
 
   const reactionCommentButton = async (userReaction: ReactionStateTypes) => {
@@ -162,14 +164,14 @@ const BoardComment = (co: BoardCommentProps) => {
       })
       .catch((err) => console.error(err));
 
-    if(!isProfile){
-      startFunc()
+    if (!isProfile) {
+      startFunc();
     }
   }, [isCommentReaction]);
 
   return (
     <CommentContainer>
-      <CommentHeader onClick = {() => navigate(`/users/profile/${USER_ID}`)}>
+      <CommentHeader onClick={() => navigate(`/users/profile/${USER_ID}`)}>
         <Avatar
           src={isProfile ? isProfile : logo}
           alt={`${co.nickname}'s avatar`}
@@ -184,16 +186,16 @@ const BoardComment = (co: BoardCommentProps) => {
       >
         {co.content}
       </CommentContent>
-            
+
       <CommentActions>
         <Reaction
-        reactionCount={isCardCommentCount}
-        clickEvent={reactionCommentButton}
-        reactionState={isCommentReaction}
+          reactionCount={isCardCommentCount}
+          clickEvent={reactionCommentButton}
+          reactionState={isCommentReaction}
         />
 
         <CommentWrapper>
-        <CommentButton
+          <CommentButton
             isHovered={isCardCommentReplyHovered}
             onMouseEnter={() => setIsCardCommentReplyHovered(true)}
             onMouseLeave={() => setIsCardCommentReplyHovered(false)}

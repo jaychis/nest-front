@@ -1,4 +1,4 @@
-import React, { useEffect, useState,lazy } from 'react';
+import React, { useEffect, useState, lazy } from 'react';
 import styled from 'styled-components';
 import Card from '../../../components/Card/Card';
 import { BoardReadAPI } from '../../api/boardApi';
@@ -8,15 +8,15 @@ import {
   CommentSubmitAPI,
   CommentSubmitParams,
 } from '../../api/commentApi';
-import  { CommentType } from './BoardComment';
-import BoardReply, {ReplyType} from './BoardReply';
+import { CommentType } from './BoardComment';
+import BoardReply, { ReplyType } from './BoardReply';
 import { useLocation } from 'react-router-dom';
 import { LogViewedBoardAPI } from '../../api/viewedBoardsApi';
 import { breakpoints } from '../../../_common/breakpoint';
 import { useError } from '../../../_common/ErrorContext';
 import PageTransition from '../../../components/PageTransition';
 
-const BoardComment = lazy(() => import('./BoardComment'))
+const BoardComment = lazy(() => import('./BoardComment'));
 
 const BoardRead = () => {
   const useQuery = () => {
@@ -60,17 +60,16 @@ const BoardRead = () => {
       const response = res.data.response;
 
       setIsBoardStateBoard(response);
-      if(!localStorage.getItem('accessToken')) return
+      if (!localStorage.getItem('accessToken')) return;
 
-      try{
+      try {
         const logViewBoard = await LogViewedBoardAPI({
           userId: USER_Id,
           boardId: response.id,
-        })
-      }catch(error){
+        });
+      } catch (error) {
         showError((error as Error).message);
       }
-      
     };
 
     readBoard();
@@ -171,41 +170,41 @@ const BoardRead = () => {
 
   return (
     <PageTransition>
-    <BoardReadContainer>
-      <CardContainer>
-        {!isBoardState?.id ? null : (
-          <Card
-            id={isBoardState.id}
-            category={isBoardState.category}
-            title={isBoardState.title}
-            nickname={isBoardState.nickname}
-            createdAt={isBoardState.created_at}
-            content={isBoardState.content}
-            type={isBoardState.type}
-            shareCount={isBoardState.share_count}
-            userId={isBoardState.user_id}
-          />
-        )}
-        <CommentSection>
-          <CommentTextArea
-            wrap="hard"
-            name={'content'}
-            value={writeComment.content}
-            onChange={(value) =>
-              commentHandleChange({
-                name: value.target.name,
-                value: value.target.value,
-              })
-            }
-          />
-          <ButtonGroup>
-            <CancelButton>취소</CancelButton>
-            <CommentButton onClick={commentWrite}>댓글</CommentButton>
-          </ButtonGroup>
-        </CommentSection>
-        {isCommentState?.length > 0 ? renderComments(isCommentState) : null}
-      </CardContainer>
-    </BoardReadContainer>
+      <BoardReadContainer>
+        <CardContainer>
+          {!isBoardState?.id ? null : (
+            <Card
+              id={isBoardState.id}
+              category={isBoardState.category}
+              title={isBoardState.title}
+              nickname={isBoardState.nickname}
+              createdAt={isBoardState.created_at}
+              content={isBoardState.content}
+              type={isBoardState.type}
+              shareCount={isBoardState.share_count}
+              userId={isBoardState.user_id}
+            />
+          )}
+          <CommentSection>
+            <CommentTextArea
+              wrap="hard"
+              name={'content'}
+              value={writeComment.content}
+              onChange={(value) =>
+                commentHandleChange({
+                  name: value.target.name,
+                  value: value.target.value,
+                })
+              }
+            />
+            <ButtonGroup>
+              <CancelButton>취소</CancelButton>
+              <CommentButton onClick={commentWrite}>댓글</CommentButton>
+            </ButtonGroup>
+          </CommentSection>
+          {isCommentState?.length > 0 ? renderComments(isCommentState) : null}
+        </CardContainer>
+      </BoardReadContainer>
     </PageTransition>
   );
 };

@@ -1,27 +1,25 @@
-import styled from "styled-components";
-import YouTube from "react-youtube";
-import { memo } from "react";
+import styled from 'styled-components';
+import YouTube from 'react-youtube';
 interface YoutubeProps {
   readonly content: string[];
 }
 
 const YoutubeCard = ({ content }: YoutubeProps) => {
-  
   const getYouTubeVideoId = ({ url }: { readonly url: string }): string => {
     try {
-      if(url.includes("v=")){
-        return url?.split("v=")[1]?.split("&")[0]
-      }else if(url.includes("si=") && !url.includes("shorts")){
-        return url?.split("youtu.be/")[1]?.split("?")[0]
-      }else{
-        return url?.split("shorts/")[1]?.split("?")[0]
+      if (url.includes('v=')) {
+        return url?.split('v=')[1]?.split('&')[0];
+      } else if (url.includes('si=') && !url.includes('shorts')) {
+        return url?.split('youtu.be/')[1]?.split('?')[0];
+      } else {
+        return url?.split('shorts/')[1]?.split('?')[0];
       }
     } catch (e) {
-      console.error("Invalid URL", e);
-      return "";
+      console.error('Invalid URL', e);
+      return '';
     }
   };
-  
+
   return (
     <VideoContainer>
       {content.map((video: string, index: number) => (
@@ -29,8 +27,8 @@ const YoutubeCard = ({ content }: YoutubeProps) => {
           <YouTube
             videoId={getYouTubeVideoId({ url: video })}
             opts={{
-              width: "100%",
-              height: "100%",
+              width: '100%',
+              height: '100%',
               playerVars: { modestbranding: 1 },
             }}
           />
@@ -45,13 +43,13 @@ export default YoutubeCard;
 const VideoContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px; 
+  gap: 20px;
 `;
 
 const VideoWrapper = styled.div`
   position: relative;
   width: 100%;
-  padding-top: 56.25%; 
+  padding-top: 56.25%;
   border-radius: 20px;
   overflow: hidden;
 

@@ -19,7 +19,7 @@ import { handleReaction } from '../../_common/handleUserReaction';
 import Modal from '../Modal';
 import UserProfileModal from '../UserProfileModal';
 import ContentCard from './ContentCard';
-import panda from '../../assets/img/panda_logo.webp'
+import panda from '../../assets/img/panda_logo.webp';
 import YoutubeCard from './YoutubeCard';
 import Carousel from './Carousel';
 import Reaction from '../../pages/Board/BoardRead/Reaction';
@@ -35,15 +35,16 @@ const Card = ({
   shareCount,
   userId,
   profileImage,
-  index
+  index,
 }: BoardProps) => {
   const navigate = useNavigate();
   const [isCardCount, setIsCardCount] = useState<number>(0);
   const [localCount, setLocalCount] = useState<number>(0);
   const [isCardHovered, setIsCardHovered] = useState<boolean>(false);
-  const [isCardCommentHovered, setIsCardCommentHovered] =useState<boolean>(false);
+  const [isCardCommentHovered, setIsCardCommentHovered] =
+    useState<boolean>(false);
   const [isReaction, setIsReaction] = useState<ReactionStateTypes>(null);
-  const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const mediaExtensions = {
     image: [
       'jpg',
@@ -62,14 +63,14 @@ const Card = ({
     ],
     video: ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv'],
   };
-  const logo = profileImage || panda
+  const logo = profileImage || panda;
   const isMediaType = (url: string, type: 'image' | 'video'): boolean => {
     const ext = url.split('.').pop()?.toLowerCase();
     return ext ? mediaExtensions[type].includes(ext) : false;
   };
 
   const USER_ID: string = localStorage.getItem('id') as string;
-  
+
   const reactionButton = async (userReaction: ReactionStateTypes) => {
     if (userReaction !== null) {
       const params: ReactionParams = {
@@ -155,101 +156,101 @@ const Card = ({
     tempDiv.innerHTML = htmlString;
     return tempDiv.innerText || tempDiv.textContent || '';
   };
-  
+
   return (
     <>
-    <PageTransition>
-      <CardContainer
-        className='CardContainer'
-        onMouseEnter={() => setIsCardHovered(true)}
-        onMouseLeave={() => setIsCardHovered(false)}
-        isHovered={isCardHovered}
-      >
-        <LogoContainer>
-        <LogoImg src = {logo} width="50" height="50" onClick={() => setIsOpen(true)}/>
-          <NicknameWrapper
-          >
-            {nickname}
-          </NicknameWrapper>
-        </LogoContainer>
-
-        {/* Card Content */}
-        <ContentContainer>
-          <BoardTitle 
-          onClick={() => {
-          navigate(`/boards/read?id=${id}`);
-          sessionStorage.setItem("scrollIndex",String(index))
-          }}>
-              {title}
-          </BoardTitle>
-
-          {type === 'TEXT' ? (
-              <ContentCard
-              content={content}
-              />
-          ) : type === 'MEDIA' ? (
-            <MediaContainer>
-              {isMediaType(content[0], 'image') && content.length === 1 && (
-                <Image src={content[0]} />
-              )}
-              {isMediaType(content[0], 'image') && content.length > 1 && (
-                <Carousel imageList={content} />
-              )}
-              {!isMediaType(content[0], 'image') && (
-                <Video controls preload="metadata">
-                  {' '}
-                  <source src={content[0]} />
-                </Video>
-              )}
-            </MediaContainer>
-          ) : (
-            <>
-              <YoutubeCard content={content} />
-            </>
-          )}
-        </ContentContainer>
-
-        <ButtonContainer>
-          <Reaction
-          clickEvent={reactionButton}
-          reactionCount={isCardCount}
-          reactionState={isReaction}
-          />
-          
-          <CommentButton
-            isHovered={isCardCommentHovered}
-            onMouseEnter={() => setIsCardCommentHovered(true)}
-            onMouseLeave={() => setIsCardCommentHovered(false)}
-            onClick={() => {
-            navigate(`/boards/read?id=${id}`);
-            sessionStorage.setItem("scrollIndex",String(index))
-            }}>
-            댓글
-          </CommentButton>
-          
-          <ShareWrapper>
-            <ShareComponent
-              shareCount={shareCount}
-              title={title}
-              content={content}
-              id={id}
+      <PageTransition>
+        <CardContainer
+          className="CardContainer"
+          onMouseEnter={() => setIsCardHovered(true)}
+          onMouseLeave={() => setIsCardHovered(false)}
+          isHovered={isCardHovered}
+        >
+          <LogoContainer>
+            <LogoImg
+              src={logo}
+              width="50"
+              height="50"
+              onClick={() => setIsOpen(true)}
             />
-          </ShareWrapper>
-        </ButtonContainer>
-        <HrTag />
-      </CardContainer>
-      
-      <Modal
-      isOpen={isOpen}
-      onClose={() => {setIsOpen(false)}}
-      top={'20%'}
-      >
-      <UserProfileModal
-      nickname={nickname}
-      logo={logo}
-      id={userId}
-      />  
-      </Modal>
+            <NicknameWrapper>{nickname}</NicknameWrapper>
+          </LogoContainer>
+
+          {/* Card Content */}
+          <ContentContainer>
+            <BoardTitle
+              onClick={() => {
+                navigate(`/boards/read?id=${id}`);
+                sessionStorage.setItem('scrollIndex', String(index));
+              }}
+            >
+              {title}
+            </BoardTitle>
+
+            {type === 'TEXT' ? (
+              <ContentCard content={content} />
+            ) : type === 'MEDIA' ? (
+              <MediaContainer>
+                {isMediaType(content[0], 'image') && content.length === 1 && (
+                  <Image src={content[0]} />
+                )}
+                {isMediaType(content[0], 'image') && content.length > 1 && (
+                  <Carousel imageList={content} />
+                )}
+                {!isMediaType(content[0], 'image') && (
+                  <Video controls preload="metadata">
+                    {' '}
+                    <source src={content[0]} />
+                  </Video>
+                )}
+              </MediaContainer>
+            ) : (
+              <>
+                <YoutubeCard content={content} />
+              </>
+            )}
+          </ContentContainer>
+
+          <ButtonContainer>
+            <Reaction
+              clickEvent={reactionButton}
+              reactionCount={isCardCount}
+              reactionState={isReaction}
+            />
+
+            <CommentButton
+              isHovered={isCardCommentHovered}
+              onMouseEnter={() => setIsCardCommentHovered(true)}
+              onMouseLeave={() => setIsCardCommentHovered(false)}
+              onClick={() => {
+                navigate(`/boards/read?id=${id}`);
+                sessionStorage.setItem('scrollIndex', String(index));
+              }}
+            >
+              댓글
+            </CommentButton>
+
+            <ShareWrapper>
+              <ShareComponent
+                shareCount={shareCount}
+                title={title}
+                content={content}
+                id={id}
+              />
+            </ShareWrapper>
+          </ButtonContainer>
+          <HrTag />
+        </CardContainer>
+
+        <Modal
+          isOpen={isOpen}
+          onClose={() => {
+            setIsOpen(false);
+          }}
+          top={'20%'}
+        >
+          <UserProfileModal nickname={nickname} logo={logo} id={userId} />
+        </Modal>
       </PageTransition>
     </>
   );
@@ -274,7 +275,7 @@ const CardContainer = styled.div.withConfig({
   object-fit: contain;
   box-sizing: border-box;
   border-radius: 30px;
-  
+
   @media (max-width: ${breakpoints.tablet}) {
     margin: 0 0 5px 0;
   }
@@ -356,7 +357,7 @@ const CommentButton = styled.button.withConfig({
 }>`
   border: 1px solid gray;
   background: ${(props) => (props.isHovered ? '#f0f0f0' : 'white')};
-   width: 75px;
+  width: 75px;
   height: 40px;
   border-radius: 30px;
   cursor: pointer;
@@ -387,7 +388,7 @@ const HrTag = styled.hr`
   background-color: #d9d9d9;
   margin: 5px 0;
   width: 100%;
-  margin-top: 2vh
+  margin-top: 2vh;
 `;
 
 export default Card;

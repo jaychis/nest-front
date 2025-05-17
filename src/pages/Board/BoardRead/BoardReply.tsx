@@ -1,4 +1,4 @@
-import  { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   ReactionStateTypes,
   ReactionType,
@@ -11,7 +11,6 @@ import {
 } from '../../api/reactionApi';
 import styled from 'styled-components';
 import logo from '../../../assets/img/panda_logo.webp';
-import { breakpoints } from '../../../_common/breakpoint';
 import { handleReaction } from '../../../_common/handleUserReaction';
 import {
   fetchProfileImage,
@@ -36,7 +35,8 @@ const BoardReply = (re: ReplyType) => {
   const ID: string = re.id;
   const USER_ID: string = localStorage.getItem('id') as string;
   const [localCount, setLocalCount] = useState<number>(0);
-  const [isReplyReaction, setReplyIsReaction] = useState<ReactionStateTypes>(null);
+  const [isReplyReaction, setReplyIsReaction] =
+    useState<ReactionStateTypes>(null);
   const [isCardReplyCount, setIsCardReplyCount] = useState<number>(0);
 
   const reactionReplyButton = async (userReaction: ReactionStateTypes) => {
@@ -108,8 +108,8 @@ const BoardReply = (re: ReplyType) => {
       })
       .catch((err) => console.error('BoardReply ReactionCountAPI err : ', err));
 
-    if(!isProfile){
-      startFunc()
+    if (!isProfile) {
+      startFunc();
     }
   }, [isReplyReaction]);
 
@@ -127,13 +127,13 @@ const BoardReply = (re: ReplyType) => {
         onMouseLeave={() => setIsHovered(false)}
         isHovered={isHovered}
       >
-       {re.content}
+        {re.content}
       </ReplyContent>
       <ReactionContainer>
         <Reaction
-        reactionCount={isCardReplyCount}
-        clickEvent={reactionReplyButton}
-        reactionState={isReplyReaction}
+          reactionCount={isCardReplyCount}
+          clickEvent={reactionReplyButton}
+          reactionState={isReplyReaction}
         />
       </ReactionContainer>
       {isReplyReplyButton && (

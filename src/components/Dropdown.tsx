@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, forwardRef } from "react";
-import styled from "styled-components";
-import { breakpoints } from "../_common/breakpoint";
-import useOutsideClick from "../Hook/UseOutsideClick";
+import React, { forwardRef } from 'react';
+import styled from 'styled-components';
+import { breakpoints } from '../_common/breakpoint';
+import useOutsideClick from '../Hook/UseOutsideClick';
 
 interface DropDownProps {
   readonly menu: string[];
@@ -11,30 +11,37 @@ interface DropDownProps {
 }
 
 const DropDown = forwardRef<HTMLDivElement, DropDownProps>(
-    ({ menu, eventHandler, eventIndex, onClose }, ref) => {
-    const internalRef = useOutsideClick(onClose, ref as React.RefObject<HTMLDivElement>);
+  ({ menu, eventHandler, eventIndex, onClose }, ref) => {
+    const internalRef = useOutsideClick(
+      onClose,
+      ref as React.RefObject<HTMLDivElement>,
+    );
 
-      return (
-        <DropDownContainer ref={internalRef as React.RefObject<HTMLDivElement>}>
-          <DropDownList>
-            {menu.map((item, index) => (
-              <DropDownItem
-                key={index}
-                onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#f5f5f5')}
-                onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#fff')}
-                onClick={() => {
-                    eventHandler(item, eventIndex);
-                    onClose()
-                }}
-              >
-                {item}
-              </DropDownItem>
-            ))}
-          </DropDownList>
-        </DropDownContainer>
-      );
-    }
-  );
+    return (
+      <DropDownContainer ref={internalRef as React.RefObject<HTMLDivElement>}>
+        <DropDownList>
+          {menu.map((item, index) => (
+            <DropDownItem
+              key={index}
+              onMouseOver={(e) =>
+                (e.currentTarget.style.backgroundColor = '#f5f5f5')
+              }
+              onMouseOut={(e) =>
+                (e.currentTarget.style.backgroundColor = '#fff')
+              }
+              onClick={() => {
+                eventHandler(item, eventIndex);
+                onClose();
+              }}
+            >
+              {item}
+            </DropDownItem>
+          ))}
+        </DropDownList>
+      </DropDownContainer>
+    );
+  },
+);
 
 const DropDownContainer = styled.div`
   position: absolute;
@@ -74,15 +81,14 @@ const DropDownList = styled.ul`
 `;
 
 const DropDownItem = styled.li`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 40px;
-    padding: 5px;
-    font-size: 1rem;
-    padding: 5px;
-
-`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 40px;
+  padding: 5px;
+  font-size: 1rem;
+  padding: 5px;
+`;
 
 export default DropDown;

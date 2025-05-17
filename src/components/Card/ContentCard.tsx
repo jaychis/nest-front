@@ -1,28 +1,44 @@
-import { useState, useEffect } from "react";
-import styled from "styled-components";
+import { useState, useEffect } from 'react';
+import styled from 'styled-components';
 import sanitizeHtml from 'sanitize-html';
 
 interface ContentCardProps {
-    readonly content: string[];
+  readonly content: string[];
 }
 
-const ContentCard = ({content}:ContentCardProps) => {
+const ContentCard = ({ content }: ContentCardProps) => {
+  const [color, setColor] = useState<string>('');
 
-    const [color, setColor] = useState<string>('');
-
-    const safeHtml = (content: string) => {
-        return sanitizeHtml(content, {
-        allowedTags: ['img','a','br','p','div','span','pre','code','bold','em','u','s','blockquote','ol','li','ul',],
-        allowedAttributes: {
+  const safeHtml = (content: string) => {
+    return sanitizeHtml(content, {
+      allowedTags: [
+        'img',
+        'a',
+        'br',
+        'p',
+        'div',
+        'span',
+        'pre',
+        'code',
+        'bold',
+        'em',
+        'u',
+        's',
+        'blockquote',
+        'ol',
+        'li',
+        'ul',
+      ],
+      allowedAttributes: {
         img: [
-            'src',
-            'srcset',
-            'alt',
-            'title',
-            'width',
-            'height',
-            'loading',
-            'style',
+          'src',
+          'srcset',
+          'alt',
+          'title',
+          'width',
+          'height',
+          'loading',
+          'style',
         ],
         a: ['href', 'rel', 'target'],
         span: ['style', 'contenteditable'],
@@ -31,77 +47,75 @@ const ContentCard = ({content}:ContentCardProps) => {
         pre: ['class'],
         code: ['class'],
         li: ['data-list', 'style', 'class'],
-        },
-        allowedClasses: {
+      },
+      allowedClasses: {
         div: ['ql-code-block', 'ql-code-block-container'],
         code: ['language-*'],
         li: ['ql-indent-*'],
-        },
-        transformTags: {
+      },
+      transformTags: {
         img: (tagName, attribs) => {
-            return {
+          return {
             tagName: 'img',
             attribs: {
-                ...attribs,
-                style:
+              ...attribs,
+              style:
                 'width: 40%; height: auto; display: block; margin: 0 auto;',
             },
-            };
+          };
         },
-        },
+      },
     });
-    };
+  };
 
-    useEffect(() => {
-
+  useEffect(() => {
     if (content.some((item) => item.includes('span'))) {
-        const contentString = content.join('');
-        const colorMatch = contentString.match(/color:\s*rgb\([^\)]+\)/);
-    
-    if (colorMatch) {
+      const contentString = content.join('');
+      const colorMatch = contentString.match(/color:\s*rgb\([^\)]+\)/);
+
+      if (colorMatch) {
         const extractedColor = colorMatch[0].replace('color: ', '').trim();
         setColor(extractedColor);
-    }
+      }
     }
 
     const extractTextFromHTML = (htmlString: string): string => {
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = htmlString;
-        return tempDiv.innerText || tempDiv.textContent || '';
-        };
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = htmlString;
+      return tempDiv.innerText || tempDiv.textContent || '';
+    };
 
-        extractTextFromHTML(content[0]);
-    },[])
+    extractTextFromHTML(content[0]);
+  }, []);
 
-
-    return(
-        <ContentContainer fontcolor={color}>
-            {content?.map((co, index) => {
-                return (
-                  <ContentWrapper
-                    key={`-${index}`}
-                    dangerouslySetInnerHTML={{ __html: safeHtml(co) }}
-                  />
-                );
-              })}
-        </ContentContainer>
-    )
-}
+  return (
+    <ContentContainer fontcolor={color}>
+      {content?.map((co, index) => {
+        return (
+          <ContentWrapper
+            key={`-${index}`}
+            dangerouslySetInnerHTML={{ __html: safeHtml(co) }}
+          />
+        );
+      })}
+    </ContentContainer>
+  );
+};
 
 export default ContentCard;
 
 const ContentContainer = styled.div.withConfig({
-    shouldForwardProp: (prop) => prop !== 'fontcolor',
-  })<{ fontcolor: string }>`
-    text-align: left;
-    white-space: normal;
-    word-break: break-word;
-    width: 100%;
-  
-    span {
-      color: ${(props) => props.fontcolor};
-    }
-  `;
+  shouldForwardProp: (prop) => prop !== 'fontcolor',
+})<{ fontcolor: string }>`
+  text-align: left;
+  white-space: normal;
+  word-break: break-word;
+  width: 100%;
+
+  span {
+    color: ${(props) => props.fontcolor};
+  }
+`;
 
 const ContentWrapper = styled.div`
   max-width: 400px !important;

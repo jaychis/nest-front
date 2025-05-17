@@ -144,16 +144,15 @@ const InquiryList = ({
                 name={'content'}
               ></InputAdmin>
               <HiddenButtonContainer>
-                <StyledButton
-                color={'#333'}
-                backgroundColor={'#f5f5f5'}
-                >
+                <StyledButton color={'#333'} backgroundColor={'#f5f5f5'}>
                   Cancel
                 </StyledButton>
                 <StyledButton
-                onClick={() => {submitComment();}}
-                backgroundColor= {'#84d7fb'}
-                color= {'white'}
+                  onClick={() => {
+                    submitComment();
+                  }}
+                  backgroundColor={'#84d7fb'}
+                  color={'white'}
                 >
                   Comment
                 </StyledButton>
@@ -259,7 +258,7 @@ const HiddenButtonContainer = styled.div`
   margin-top: 10px;
 `;
 
-const StyledButton = styled.button<{color:string, backgroundColor: string}>`
+const StyledButton = styled.button<{ color: string; backgroundColor: string }>`
   padding: 6px 12px;
   margin-left: 5px;
   border: none;
